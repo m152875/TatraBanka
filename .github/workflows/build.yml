@@ -58,7 +58,7 @@ jobs:
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
 
       - name: Restore NuGet packages
-        run: nuget restore Cora.CommIss.Iss.sln
+        run: nuget restore Cora.CommIss.sln
 
       - name: Build solution with MSBuild
         run: msbuild TatraBankaTest.sln /p:Configuration=Release
