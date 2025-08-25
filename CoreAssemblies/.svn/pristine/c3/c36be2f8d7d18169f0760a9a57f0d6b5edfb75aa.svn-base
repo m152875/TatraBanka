@@ -1,0 +1,225 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.WebControls.CKEditor</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.WebControls.CKEditor.JsConfigSpecifyType">
+            <summary>Typ umiestnenia javascript-ového konfigu.</summary>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.JsConfigSpecifyType.Custom">
+            <summary>Špeciálny konfig, ktorého umiestnenie je určené vlastnosťou <see cref="P:Cora.WebControls.CKEditor.JsConfigSpecify.Place"/>. </summary>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.JsConfigSpecifyType.Original">
+            <summary>Zakompilovaný originálny konfig od dodávateľa CKEditor-a. V toolbare všetky ikony. [Cora.WebControls.CKEditor.dll/ckeditor/config.js]</summary>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.JsConfigSpecifyType.Preview">
+            <summary>Zakompilovaný preview konfig. V toolbare iba ikona Source. [Cora.WebControls.CKEditor.dll/ckeditor/config_only_source.js]</summary>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.JsConfigSpecifyType.Default">
+            <summary>Zakompilovaný štandardný editačný konfig. V toolbare štandardné ikony pre editáciu html textu. [Cora.WebControls.CKEditor.dll/ckeditor/config_default.js]</summary>
+        </member>
+        <member name="T:Cora.WebControls.CKEditor.JsConfigSpecify">
+            <summary>Trieda na špecifikáciu umiestnenia javascript-ového konfigu.</summary>
+        </member>
+        <member name="P:Cora.WebControls.CKEditor.JsConfigSpecify.Type">
+            <summary>Zistí alebo nastaví zdroj javascript-ového konfigu.</summary>
+            <value>Typ umiestnenia javascript-ového konfigu.</value>
+        </member>
+        <member name="P:Cora.WebControls.CKEditor.JsConfigSpecify.Place">
+            <summary>Zistí alebo nastaví umiestnenie javascript-ového konfigu pre typ <see cref="F:Cora.WebControls.CKEditor.JsConfigSpecifyType.Custom"/>.</summary>
+            <value>Názov špeciálneho javascript-ového konfigu (aj s cestou).</value>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.JsConfigSpecify.#ctor(System.Int32,System.String)">
+            <summary>
+            Vytvorenie novej inštancie triedy <see cref="T:Cora.WebControls.CKEditor.JsConfigSpecify"/>.
+            </summary>
+            <param name="type">Int-reprezentácia typu umiestnenia javascript-ového konfigu.</param>
+            <param name="name">Názov špeciálneho javascript-ového konfigu</param>
+            Poznámka: Ak pre typ <see cref="F:Cora.WebControls.CKEditor.JsConfigSpecifyType.Custom"/> nie je zadané <see cref="P:Cora.WebControls.CKEditor.JsConfigSpecify.Place"/>, zmení sa na typ <see cref="F:Cora.WebControls.CKEditor.JsConfigSpecifyType.Default"/>.
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.JsConfigSpecify.#ctor(System.Int32)">
+            <summary>
+            Vytvorenie novej inštancie triedy <see cref="T:Cora.WebControls.CKEditor.JsConfigSpecify"/>.
+            </summary>
+            <param name="type">Int-reprezentácia typu umiestnenia javascript-ového konfigu.</param>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.JsConfigSpecify.#ctor">
+            <summary>
+            Vytvorenie novej inštancie triedy <see cref="T:Cora.WebControls.CKEditor.JsConfigSpecify"/> typu <see cref="F:Cora.WebControls.CKEditor.JsConfigSpecifyType.Default"/>.
+            </summary>
+        </member>
+        <member name="T:Cora.WebControls.CKEditor.CKEditorHttpHandler">
+            <summary>HttpHandler pre CKEditor.</summary>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.CKEditorHttpHandler.HTTP_HANDLER_NAME">
+            <summary>Default názov handlera. Hodnota je "CKEditorHttpHandler.ashx".</summary>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.CKEditorHttpHandler.IMAGE_FILE_REGULAR_EXPRESSION">
+            <summary>Regulárny výraz pre vyhľadanie odkazov na obrázky. Hodnota je url\\(.*?\\.(gif|png)\\)</summary>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorHttpHandler.GetResourceHandlerUrl(System.String)">
+            <summary>
+            Získanie url pre získanie resource-ov s default názvom handler-a.
+            </summary>
+            <param name="resourceName">Názov resource-u.</param>
+            <returns>Url pre získanie resource-ov.</returns>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorHttpHandler.ParseResourceHandlerUrl">
+            <summary>
+            Rozparsovanie url pre získanie resource-ov.
+            </summary>
+            <returns>Úspešné parsovanie url?</returns>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorHttpHandler.GetResourceStream">
+            <summary>
+            Získanie stream-u pre požadovaný resource.
+            </summary>
+            <returns>Stream pre požadovaný resource.</returns>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorHttpHandler.GetResourceStreamByStringBuilder(System.String)">
+            <summary>
+            Získanie resource stream-u css súboru s tým, že sa upravia cesty v url() výrazoch.
+            </summary>
+            <param name="initialContents">Pôvodný obsah css súboru.</param>
+            <returns>Upravený obsah css súboru.</returns>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorHttpHandler.AppendScriptLoadedNotification">
+            <summary>
+            Má sa do výslednej odpovede pridať js kód notifikácie? Pridáva sa len do súboru <c>ckeditor.ckeditor.js</c>.
+            Ostatné skripty totiž vkladá do stránky samotný <c>ckeditor.ckeditor.js</c> a nie .Net-ovský <see cref="T:System.Web.UI.ScriptManager"/>.
+            </summary>
+            <returns>Má sa do výslednej odpovede pridať js kód notifikácie?</returns>
+            <remarks>Vyzerá to tak, že .Net-ovský <see cref="T:System.Web.UI.ScriptManager"/> počíta,
+            koľko skriptov je už dotiahnutých, takže pri nesprávnom (väčšom) počte notifikácií
+            oznamuje chyby a ani CKEditor nefunguje spoľalivo.</remarks>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorHttpHandler.SetExpiration">
+            <summary>
+            Nastavenie hlavičky odpovede - zákaz cache-ovania js súborov.
+            </summary>
+            <remarks>Je to potrebné kvôli chybe CKEditor-a v IE po F5. Tam po refresh-i nebol reload-nutý <c>lang.sk.js</c>,
+            kvôli čomu bol CKEditor nefunkčný. Zrejme zase preto, lebo <c>ckeditor.ckeditor.js</c></remarks>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.CKEditorHttpHandler._LocalPath">
+            <summary>Relatívna cesta.</summary>
+        </member>
+        <member name="T:Cora.WebControls.CKEditor.CKEditorPanel">
+            <summary>Editačný <see cref="T:System.Web.UI.WebControls.Panel"/> pre CKEditor.</summary>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.CKEditorPanel.TEXT_BOX_ID">
+            <summary>ID <see cref="F:Cora.WebControls.CKEditor.CKEditorPanel.TextBox"/>-u, ktorý obsahuje hodnotu symbolu.</summary>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.CKEditorPanel.TextBox">
+            <summary><see cref="F:Cora.WebControls.CKEditor.CKEditorPanel.TextBox"/>, ktorý obsahuje hodnotu symbolu.</summary>
+        </member>
+        <member name="F:Cora.WebControls.CKEditor.CKEditorPanel.JsConfigSpecify">
+            <summary>Objekt <see cref="F:Cora.WebControls.CKEditor.CKEditorPanel.JsConfigSpecify"/>, ktorý obsahuje špecifikáciu javascript-ového konfigu </summary>
+        </member>
+        <member name="P:Cora.WebControls.CKEditor.CKEditorPanel.JsInstance">
+            <summary> Vráti javascript-ový odkaz na inštanciu CKEditora, pre editačný objekt editačného okna.</summary>
+            <value>Odkaz na inštanciu CKEditora, pre editačný objekt.</value>
+        </member>
+        <member name="P:Cora.WebControls.CKEditor.CKEditorPanel.Text">
+            <summary>Získa alebo nastaví hodnotu editačného objektu.</summary>
+            <value>Hodnota editačného objektu.</value>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorPanel.#ctor(Cora.WebControls.CKEditor.JsConfigSpecify)">
+            <summary>
+            Vytvorenie novej inštancie triedy <see cref="T:Cora.WebControls.CKEditor.CKEditorPanel"/>.
+            </summary>
+            <param name="jsConfigSpecify">Špecifikácia javascript-ového konfigu</param>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorPanel.#ctor">
+            <summary>
+            Inicializuje novú inštanciu triedy <see cref="T:Cora.WebControls.CKEditor.CKEditorPanel"/> s default Js konfigom.
+            </summary>
+        </member>
+        <member name="P:Cora.WebControls.CKEditor.CKEditorPanel.ShowAsHtml">
+            <summary>
+            Ziska alebo nastavuje určenie módu editačného okna (Html alebo Memo).
+            </summary>
+            <value>
+            Ak <c>true</c>, editačné okno sa zobrazí v HTML móde, inak MEMO móde.
+            </value>
+        </member>
+        <member name="P:Cora.WebControls.CKEditor.CKEditorPanel.FitToParent">
+            <summary>Nastavenie, či sa má veľkosť vyrobeného CKEditor-a riadiť podľa nadradeného html prvku.</summary>
+            <remarks>Toto nastavenie má význam použiť napr. keď zaraďujeme CKEditor do Ext layout-u.</remarks>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorPanel.GetDestroyJsCode(System.Boolean)">
+            <summary>
+            Získanie js kódu, ktorým sa ruší CKEditor s možnosťou odovzdať údaje editačnému objektu (textboxu).
+            </summary>
+            <param name="updateElement">Odovzdať údaje z CKEditora editačnému objektu (textboxu)?</param>
+            <returns>Js kód, ktorým sa ruší CKEditor.</returns>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorPanel.OnInit(System.EventArgs)">
+            <summary>
+            Spracovanie udalosti inicializácie --> Vytvorenie štruktúry.
+            </summary>
+            <param name="e">Argumenty udalosti.</param>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorPanel.OnPreRender(System.EventArgs)">
+            <summary>
+            Spracovanie udalosti pred vykreslením --> Prekastovanie editovacieho objektu na CKEditor
+            </summary>
+            <param name="e">Argumenty udalosti.</param>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.CKEditorPanel.TextBox_TextChanged(System.Object,System.EventArgs)">
+            <summary>
+            Spracovanie udalosti zmeny hodnoty <see cref="F:Cora.WebControls.CKEditor.CKEditorPanel.TextBox"/>-u - nastavenie hodnoty tag-u.
+            </summary>
+            <param name="sender">Odosielateľ udalosti.</param>
+            <param name="e">Argumenty udalosti.</param>
+        </member>
+        <member name="T:Cora.WebControls.CKEditor.ExtensionMethods">
+            <summary>Extension metódy.</summary>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.ExtensionMethods.CastToCKEditor(System.Web.UI.Control)">
+            <summary>
+            Prekastovanie editačného objektu na CKEditor so štandardným javascript-ovým konfigom.
+            </summary>
+            <param name="control">Editačný objekt.</param>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.ExtensionMethods.CastToCKEditor(System.Web.UI.Control,Cora.WebControls.CKEditor.JsConfigSpecify)">
+            <summary>
+            Prekastovanie editačného objektu na CKEditor.
+            </summary>
+            <param name="control">Editačný objekt.</param>
+            <param name="jsConfigSpecify">Objekt <see cref="T:Cora.WebControls.CKEditor.JsConfigSpecify"/>, ktorý obsahuje špecifikáciu javascript-ového konfigu.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="control"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="control"/> nie je umiestnený v stránke.</exception>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.ExtensionMethods.CastToCKEditor(System.Web.UI.Control,Cora.WebControls.CKEditor.JsConfigSpecify,System.Boolean)">
+            <summary>
+            Prekastovanie editačného objektu na CKEditor.
+            </summary>
+            <param name="control">Editačný objekt.</param>
+            <param name="jsConfigSpecify">Objekt <see cref="T:Cora.WebControls.CKEditor.JsConfigSpecify"/>, ktorý obsahuje špecifikáciu javascript-ového konfigu.</param>
+            <param name="fitToParent">Má sa veľkosť vyrobeného CKEditor-a riadiť podľa nadradeného html prvku?</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="control"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="control"/> nie je umiestnený v stránke.</exception>
+        </member>
+        <member name="T:Cora.WebControls.CKEditor.ICKEditorControl">
+            <summary>Interface pre objekty pracujúce s CKEditorom</summary>
+        </member>
+        <member name="P:Cora.WebControls.CKEditor.ICKEditorControl.ShowAsHtml">
+            <summary>
+            Ziska alebo nastavuje určenie módu editačného okna (Html alebo Memo).
+            </summary>
+            <value>Ak <c>true</c>, editačné okno sa zobrazí v HTML móde, inak MEMO móde.</value>
+        </member>
+        <member name="P:Cora.WebControls.CKEditor.ICKEditorControl.FitToParent">
+            <summary>Nastavenie, či sa má veľkosť vyrobeného CKEditor-a riadiť podľa nadradeného html prvku.</summary>
+            <remarks>Toto nastavenie má význam použiť napr. keď zaraďujeme CKEditor do Ext layout-u.</remarks>
+        </member>
+        <member name="M:Cora.WebControls.CKEditor.ICKEditorControl.GetDestroyJsCode(System.Boolean)">
+            <summary>
+            Získanie js kódu, ktorým sa ruší CKEditor s možnosťou odovzdať údaje editačnému objektu (textboxu).
+            </summary>
+            <param name="updateElement">Odovzdať údaje z CKEditora editačnému objektu (textboxu)?</param>
+            <returns>Js kód, ktorým sa ruší CKEditor.</returns>
+        </member>
+    </members>
+</doc>

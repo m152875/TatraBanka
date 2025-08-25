@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.dovera.sk/b2b/types" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:s0="http://b2b.dovera.sk" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://b2b.dovera.sk" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://b2b.dovera.sk">
+      <s:import namespace="http://schemas.dovera.sk/b2b/types" />
+      <s:element name="AktualizujUdajeZamestnavatela">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:AktualizujUdajeZamestnavatelaVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AktualizujUdajeZamestnavatelaVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="RegistracneUdaje" type="ns2:APIRegistracneUdaje" />
+          <s:element name="KodZmeny" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AktualizujUdajeZamestnavatelaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:AktualizujUdajeZamestnavatelaVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AktualizujUdajeZamestnavatelaVystup">
+        <s:sequence>
+          <s:element name="Vysledok" type="s:boolean" />
+          <s:element minOccurs="0" name="Chyby" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavUctu">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajStavUctuVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavUctuVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavUctuResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajStavUctuVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavUctuVystup">
+        <s:sequence>
+          <s:element name="VS" type="s:string" />
+          <s:element name="DatumCasOverenia" type="s:dateTime" />
+          <s:element name="DlhPoSplatnosti" type="s:decimal" />
+          <s:element name="DlhCelkom" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajUdajeZamestnavatela">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajUdajeZamestnavatelaVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajUdajeZamestnavatelaVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajUdajeZamestnavatelaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajUdajeZamestnavatelaVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajUdajeZamestnavatelaVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="UdajeZamestnavatelov" type="s0:ArrayOfUdajeZamestnavatelaAPIUdajeZamestnavatela" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfUdajeZamestnavatelaAPIUdajeZamestnavatela">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UdajeZamestnavatela" nillable="true" type="ns2:APIUdajeZamestnavatela" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajVysledokOvereniaZnizenaSadzba">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajVysledokOvereniaZnizenaSadzbaVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajVysledokOvereniaZnizenaSadzbaVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajVysledokOvereniaZnizenaSadzbaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajVysledokOvereniaZnizenaSadzbaVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajVysledokOvereniaZnizenaSadzbaVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="Vysledok" type="ns2:APIVysledokOverenia" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajZoznamZamestnancov">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajZoznamZamestnancovVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajZoznamZamestnancovVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="DatumOd" type="s:date" />
+          <s:element minOccurs="0" name="DatumDo" type="s:date" />
+          <s:element minOccurs="0" name="IdKategorieOd" type="s:long" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RodneCisla" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfRodneCislaItemString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RodneCislaItem" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajZoznamZamestnancovResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajZoznamZamestnancovVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajZoznamZamestnancovVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="ZoznamZamestnancov" type="s0:ArrayOfZamestnanecAPIZamestnanec" />
+          <s:element minOccurs="0" name="IdKategorieOd" type="s:long" />
+          <s:element name="ExistujeDalsi" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfZamestnanecAPIZamestnanec">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Zamestnanec" nillable="true" type="ns2:APIZamestnanec" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OverNarokNaZnizenuSadzbu">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:OverNarokNaZnizenuSadzbuVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OverNarokNaZnizenuSadzbuVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element minOccurs="0" name="RodneCisla" type="s0:ArrayOfRodneCisloString" />
+          <s:element name="Obdobie" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfRodneCisloString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RodneCislo" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OverNarokNaZnizenuSadzbuResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:OverNarokNaZnizenuSadzbuVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OverNarokNaZnizenuSadzbuVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="Vysledok" type="ns2:APIVysledokOverenia" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OverOOP">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:OverOOPVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OverOOPVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="RC" type="s:string" />
+          <s:element minOccurs="0" name="ICP" type="s:string" />
+          <s:element minOccurs="0" name="RozhodnyDen" type="s:date" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OverOOPResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:OverOOPVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OverOOPVystup">
+        <s:sequence>
+          <s:element name="VS" type="s:string" />
+          <s:element name="RC" type="s:string" />
+          <s:element name="RozhodnyDen" type="s:date" />
+          <s:element name="DatumCasOverenia" type="s:dateTime" />
+          <s:element name="NarokNaOOP" type="ns2:APINarokNaOOP" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OverPlatitela">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:OverPlatitelaVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OverPlatitelaVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="ICORC" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OverPlatitelaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:OverPlatitelaVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OverPlatitelaVystup">
+        <s:sequence>
+          <s:element name="ICORC" type="s:string" />
+          <s:element name="DatumCasOverenia" type="s:dateTime" />
+          <s:element name="StavPlatitela">
+            <s:simpleType>
+              <s:restriction base="s:string">
+                <s:enumeration value="N" />
+                <s:enumeration value="RN" />
+                <s:enumeration value="RD" />
+                <s:enumeration value="PN" />
+                <s:enumeration value="PD" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+          <s:element name="MaSPK" type="s:boolean" />
+          <s:element minOccurs="0" name="SumaDlzna" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.dovera.sk/b2b/types">
+      <s:complexType name="APITokenPouzivatela">
+        <s:sequence>
+          <s:element name="Login" type="s:string" />
+          <s:element name="DodavatelSW" type="s:string" />
+          <s:element minOccurs="0" name="KodNZ" type="s:string" />
+          <s:element minOccurs="0" name="KodVZ" type="s:string" />
+          <s:element minOccurs="0" name="VS" type="s:string" />
+          <s:element minOccurs="0" name="UnikatnyKodPLA" type="s:string" />
+          <s:element minOccurs="0" name="CasovyLimitVolania" type="s:int" />
+          <s:element minOccurs="0" name="ICO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIRegistracneUdaje">
+        <s:sequence>
+          <s:element minOccurs="0" name="Nazov" type="s:string" />
+          <s:element minOccurs="0" name="NazovOJ" type="s:string" />
+          <s:element minOccurs="0" name="Adresy" type="ns2:ArrayOfAdresaAPIAdresa" />
+          <s:element minOccurs="0" name="BankoveUcty" type="ns2:ArrayOfBankovyUcetAPIBankovyUcet" />
+          <s:element minOccurs="0" name="VyplatnyTermin" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAdresaAPIAdresa">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Adresa" nillable="true" type="ns2:APIAdresa" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIAdresa">
+        <s:sequence>
+          <s:element minOccurs="0" name="Id" type="s:long" />
+          <s:element name="Typ" type="s:string" />
+          <s:element name="Obec" type="s:string" />
+          <s:element minOccurs="0" name="Ulica" type="s:string" />
+          <s:element name="PopisneCislo" type="s:string" />
+          <s:element name="PSC" type="s:string" />
+          <s:element name="Stat" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfBankovyUcetAPIBankovyUcet">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="BankovyUcet" nillable="true" type="ns2:APIBankovyUcet" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIBankovyUcet">
+        <s:sequence>
+          <s:element minOccurs="0" name="Id" type="s:long" />
+          <s:element name="IBAN" type="s:string" />
+          <s:element name="PlatnostOd" type="s:date" />
+          <s:element minOccurs="0" name="PlatnostDo" type="s:date" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIUdajeZamestnavatela">
+        <s:sequence>
+          <s:element name="VS" type="s:string" />
+          <s:element name="RegistracneUdaje" type="ns2:APIRegistracneUdaje" />
+          <s:element minOccurs="0" name="SS" type="s:string" />
+          <s:element minOccurs="0" name="UnikatnyKodPla" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIVysledokOverenia">
+        <s:sequence>
+          <s:element name="Stav" type="s:string" />
+          <s:element minOccurs="0" name="VysledokZnizeneSadzby" type="ns2:ArrayOfVysledokZnizenaSadzbaAPIVysledokZnizenaSadzba" />
+          <s:element minOccurs="0" name="Error" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfVysledokZnizenaSadzbaAPIVysledokZnizenaSadzba">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VysledokZnizenaSadzba" nillable="true" type="ns2:APIVysledokZnizenaSadzba" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIVysledokZnizenaSadzba">
+        <s:sequence>
+          <s:element name="Obdobie" type="s:int" />
+          <s:element minOccurs="0" name="RodneCislo" type="s:string" />
+          <s:element name="DatumCasOverenia" type="s:dateTime" />
+          <s:element name="Vysledok" type="s:string" />
+          <s:element minOccurs="0" name="Log" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIZamestnanec">
+        <s:sequence>
+          <s:element name="RC" type="s:string" />
+          <s:element minOccurs="0" name="Meno" type="s:string" />
+          <s:element minOccurs="0" name="Priezvisko" type="s:string" />
+          <s:element minOccurs="0" name="JeNeplatic" type="s:boolean" />
+          <s:element minOccurs="0" name="PoisteniaPoistenca" type="ns2:ArrayOfPoisteniePoistencaAPIPoisteniePoistenca" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPoisteniePoistencaAPIPoisteniePoistenca">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PoisteniePoistenca" nillable="true" type="ns2:APIPoisteniePoistenca" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIPoisteniePoistenca">
+        <s:sequence>
+          <s:element minOccurs="0" name="DatumOd" type="s:date" />
+          <s:element minOccurs="0" name="DatumDo" type="s:date" />
+          <s:element minOccurs="0" name="Kategorie" type="ns2:ArrayOfKategoriaAPIKategoria" />
+          <s:element name="StavPoistenia" type="ns2:APIPoistnyVztahPoistenca" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfKategoriaAPIKategoria">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Kategoria" nillable="true" type="ns2:APIKategoria" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIKategoria">
+        <s:sequence>
+          <s:element name="DatumOd" type="s:date" />
+          <s:element minOccurs="0" name="DatumDo" type="s:date" />
+          <s:element name="Typ" type="s:string" />
+          <s:element minOccurs="0" name="Podtyp" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="APIPoistnyVztahPoistenca">
+        <s:restriction base="s:string">
+          <s:enumeration value="NieJePoistencom" />
+          <s:enumeration value="JePoistencom" />
+          <s:enumeration value="JePoistencomEU" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="APINarokNaOOP">
+        <s:sequence>
+          <s:element name="DatumOd" type="s:date" />
+          <s:element name="DatumDo" type="s:date" />
+          <s:element name="Vysledok" type="s:string" />
+          <s:element minOccurs="0" name="Dovody" type="ns2:ArrayOfDovodString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfDovodString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Dovod" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AktualizujUdajeZamestnavatelaSoapIn">
+    <wsdl:part name="parameters" element="s0:AktualizujUdajeZamestnavatela" />
+  </wsdl:message>
+  <wsdl:message name="AktualizujUdajeZamestnavatelaSoapOut">
+    <wsdl:part name="parameters" element="s0:AktualizujUdajeZamestnavatelaResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajStavUctuSoapIn">
+    <wsdl:part name="parameters" element="s0:DajStavUctu" />
+  </wsdl:message>
+  <wsdl:message name="DajStavUctuSoapOut">
+    <wsdl:part name="parameters" element="s0:DajStavUctuResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajUdajeZamestnavatelaSoapIn">
+    <wsdl:part name="parameters" element="s0:DajUdajeZamestnavatela" />
+  </wsdl:message>
+  <wsdl:message name="DajUdajeZamestnavatelaSoapOut">
+    <wsdl:part name="parameters" element="s0:DajUdajeZamestnavatelaResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajVysledokOvereniaZnizenaSadzbaSoapIn">
+    <wsdl:part name="parameters" element="s0:DajVysledokOvereniaZnizenaSadzba" />
+  </wsdl:message>
+  <wsdl:message name="DajVysledokOvereniaZnizenaSadzbaSoapOut">
+    <wsdl:part name="parameters" element="s0:DajVysledokOvereniaZnizenaSadzbaResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajZoznamZamestnancovSoapIn">
+    <wsdl:part name="parameters" element="s0:DajZoznamZamestnancov" />
+  </wsdl:message>
+  <wsdl:message name="DajZoznamZamestnancovSoapOut">
+    <wsdl:part name="parameters" element="s0:DajZoznamZamestnancovResponse" />
+  </wsdl:message>
+  <wsdl:message name="OverNarokNaZnizenuSadzbuSoapIn">
+    <wsdl:part name="parameters" element="s0:OverNarokNaZnizenuSadzbu" />
+  </wsdl:message>
+  <wsdl:message name="OverNarokNaZnizenuSadzbuSoapOut">
+    <wsdl:part name="parameters" element="s0:OverNarokNaZnizenuSadzbuResponse" />
+  </wsdl:message>
+  <wsdl:message name="OverOOPSoapIn">
+    <wsdl:part name="parameters" element="s0:OverOOP" />
+  </wsdl:message>
+  <wsdl:message name="OverOOPSoapOut">
+    <wsdl:part name="parameters" element="s0:OverOOPResponse" />
+  </wsdl:message>
+  <wsdl:message name="OverPlatitelaSoapIn">
+    <wsdl:part name="parameters" element="s0:OverPlatitela" />
+  </wsdl:message>
+  <wsdl:message name="OverPlatitelaSoapOut">
+    <wsdl:part name="parameters" element="s0:OverPlatitelaResponse" />
+  </wsdl:message>
+  <wsdl:portType name="PlatitelSoapServiceSoap">
+    <wsdl:operation name="AktualizujUdajeZamestnavatela">
+      <wsdl:input message="s0:AktualizujUdajeZamestnavatelaSoapIn" />
+      <wsdl:output message="s0:AktualizujUdajeZamestnavatelaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajStavUctu">
+      <wsdl:input message="s0:DajStavUctuSoapIn" />
+      <wsdl:output message="s0:DajStavUctuSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajUdajeZamestnavatela">
+      <wsdl:input message="s0:DajUdajeZamestnavatelaSoapIn" />
+      <wsdl:output message="s0:DajUdajeZamestnavatelaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajVysledokOvereniaZnizenaSadzba">
+      <wsdl:input message="s0:DajVysledokOvereniaZnizenaSadzbaSoapIn" />
+      <wsdl:output message="s0:DajVysledokOvereniaZnizenaSadzbaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajZoznamZamestnancov">
+      <wsdl:input message="s0:DajZoznamZamestnancovSoapIn" />
+      <wsdl:output message="s0:DajZoznamZamestnancovSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OverNarokNaZnizenuSadzbu">
+      <wsdl:input message="s0:OverNarokNaZnizenuSadzbuSoapIn" />
+      <wsdl:output message="s0:OverNarokNaZnizenuSadzbuSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OverOOP">
+      <wsdl:input message="s0:OverOOPSoapIn" />
+      <wsdl:output message="s0:OverOOPSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OverPlatitela">
+      <wsdl:input message="s0:OverPlatitelaSoapIn" />
+      <wsdl:output message="s0:OverPlatitelaSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PlatitelSoapServiceSoap" type="s0:PlatitelSoapServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="AktualizujUdajeZamestnavatela">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.Platitel.AktualizujUdajeZamestnavatela" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajStavUctu">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.Platitel.DajStavUctu" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajUdajeZamestnavatela">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.Platitel.DajUdajeZamestnavatela" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajVysledokOvereniaZnizenaSadzba">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.Platitel.DajVysledokOvereniaZnizenaSadzba" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajZoznamZamestnancov">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.Platitel.DajZoznamZamestnancov" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OverNarokNaZnizenuSadzbu">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.Platitel.OverNarokNaZnizenuSadzbu" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OverOOP">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.Platitel.OverOOP" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OverPlatitela">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.Platitel.OverPlatitela" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PlatitelSoapService">
+    <wsdl:port name="PlatitelSoapServiceSoap" binding="s0:PlatitelSoapServiceSoap">
+      <soap:address location="https://teasc.dovera.sk:443/csp/esb/ESB.Service.WS.B2B.V02.HPP.Platitel.cls" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

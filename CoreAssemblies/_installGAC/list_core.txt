@@ -1,0 +1,9 @@
+..\Cora.Convert\Cora.Convert.dll
+..\Cora.CoraCoreObj\Cora.CoraCoreObj.dll
+..\Cora.Crypt\Cora.Crypt.dll
+..\Cora.Data\Cora.Data.dll
+..\Cora.Global\Cora.Global.dll
+..\Cora.Utils\Cora.Utils.dll
+
+..\ICSharpCode.SharpZipLib\ICSharpCode.SharpZipLib.dll
+..\Oracle.ManagedDataAccess\Oracle.ManagedDataAccess.dll

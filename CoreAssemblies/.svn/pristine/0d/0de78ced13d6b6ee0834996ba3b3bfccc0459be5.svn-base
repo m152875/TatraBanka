@@ -1,0 +1,1030 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Desktop</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Desktop.ContentPage">
+            <summary>
+            Controller stránky obsahu portálu.
+            </summary>
+            <remarks>
+            Controller implementuje <see cref="T:System.ComponentModel.INotifyPropertyChanged"/>, ale informuje iba o zmene property
+            <see cref="P:Cora.Desktop.ContentPage.TitleAlt"/> (view binduje túto property, a ak by bola iba obyčajná property, pri prekliku na inú
+            stránku by došlo k memory leaku, viď Microsoft KB 938416). 
+            Do budúcnosti by bolo možno fajn implementovať tento interface vo všetkých abstraktných
+            triedach controllerov v namespace <see cref="N:Cora.Portal.Base"/>?
+            </remarks>
+        </member>
+        <member name="M:Cora.Desktop.ContentPage.#ctor(Cora.Desktop.Portal)">
+            <summary>
+            Vytvorenie controller-a stránky portálu.
+            </summary>
+            <param name="portal">Portál, do ktorého člen patrí.</param> 
+            <remarks>Portálové členy (väčšinou) číslujeme od 0.</remarks>
+        </member>
+        <member name="E:Cora.Desktop.ContentPage.PropertyChanged">
+            <summary>
+            Informuje o zmene hodnoty vlastnej property. V súčasnosti implementovaná iba zmena <see cref="P:Cora.Desktop.ContentPage.TitleAlt"/>.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.ContentPage.Portal">
+            <summary>
+            Portál, do ktorého člen patrí.
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:Cora.Desktop.ContentPage.TitleAlt">
+            <summary>
+            Alternatívny popisok stránky.
+            </summary>
+            <remarks>V prípade <see cref="F:Cora.Portal.Base.Model.PortalMode.Part"/> je to titulok požadovaného umiestnenia prvku.</remarks>
+        </member>
+        <member name="P:Cora.Desktop.ContentPage.View">
+            <summary>
+            View riadený týmto controller-om.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.ContentPage.CreatePanel(System.Int32)">
+            <summary>
+            Vytvorenie controllera panelu stránky. (Typ podľa dediča.)
+            </summary>
+            <param name="index">Index v zozname panelov stránky.</param>
+            <returns>Controller panelu stránky.</returns>
+        </member>
+        <member name="M:Cora.Desktop.ContentPage.CreateView">
+            <summary>
+            Vytvorenie príslušného controlu (<see cref="P:Cora.Desktop.ContentPage.View"/>).
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Converters.PossibleNullImageSource">
+            <summary>
+            Konverzia hodnoty (typicky: reťazec) použitej pri bindingu na <see cref="!:System.Windows.Media.Image.Source"/> 
+            tak, aby hodnota <c>null</c> nespôsoboval pri bindingu výnimku.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Converters.PossibleNullImageSource.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Konvertuje hodnotu.
+            </summary>
+            <param name="value">Dátum.</param>
+            <param name="targetType">Cieľový typ.</param>
+            <param name="parameter">Parameter konverzie (nepoužíva sa).</param>
+            <param name="culture">Kultúra (nepoužíva sa).</param>
+            <returns>Formátovaný reťazec</returns>
+        </member>
+        <member name="M:Cora.Desktop.Converters.PossibleNullImageSource.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Metóda nie je v tomto konvertori podporovaná.
+            </summary>
+            <param name="value"></param>
+            <param name="targetType"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+            <exception cref="T:System.NotSupportedException">Vždy.</exception>
+        </member>
+        <member name="T:Cora.Desktop.Footer">
+            <summary>Controller default-nej päty portálu.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Footer.#ctor(Cora.Portal.Base.IPortal,System.Int32)">
+            <summary>
+            Vytvorenie päty.
+            </summary>
+            <param name="portal">Portál, kam patrí.</param>
+            <param name="memberId">ID člena portálu.</param>
+        </member>
+        <member name="P:Cora.Desktop.Footer.View">
+            <summary>View default-nej päty riadený týmto controller-om.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Footer.CreateView">
+            <summary>
+            Vytvorenie view-u riadeného týmto controller-om (property <see cref="P:Cora.Desktop.Footer.View"/>), ak ešte nie je vytvorený.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Footer.CreateAndPlaceChildViews">
+            <summary>
+            Nerobí nič (táto trieda nemá podradené controllery).
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Header">
+            <summary>Controller default-nej hlavičky portálu.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Header.#ctor(Cora.Portal.Base.IPortal,System.Int32)">
+            <summary>
+            Vytvorenie hlavičky.
+            </summary>
+            <param name="portal">Portál, kam patrí.</param>
+            <param name="memberId">ID člena portálu.</param>
+        </member>
+        <member name="P:Cora.Desktop.Header.View">
+            <summary>View default-nej hlavičky riadený týmto controller-om.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Header.CreateView">
+            <summary>
+            Vytvorenie view-u riadeného týmto controller-om (property <see cref="P:Cora.Desktop.Header.View"/>), ak ešte nie je vytvorený.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Header.CreateAndPlaceChildViews">
+            <summary>
+            Nerobí nič (táto trieda nemá podradené controllery).
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.IPart">
+            <summary>
+            Rozhranie pre controller umiestnenia desktopového portálového prvku (dedí <see cref="T:Cora.Desktop.IPortalController"/>).
+            </summary>
+            <remarks>
+            Desktopové party podporujú indikovanie stavu zaneprázdnenosti (vo všeobecnosti túto indikáciu delegujú na portál).
+            </remarks>
+        </member>
+        <member name="T:Cora.Desktop.IPortalController">
+            <summary>Rozhranie pre controller žijúci v portáli.</summary>
+        </member>
+        <member name="P:Cora.Desktop.IPortalController.Portal">
+            <summary>Controller portálu, do ktorého controller patrí.</summary>
+        </member>
+        <member name="T:Cora.Desktop.Navigation">
+            <summary>Controller navigácie portálu.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Navigation.#ctor(Cora.Desktop.Portal,System.Int32)">
+            <summary>
+            Vytvorenie controlleru navigácie.
+            </summary>
+            <param name="portal">Portál, kam navigácia patrí.</param>
+            <param name="id">ID člena portálu.</param>
+        </member>
+        <member name="P:Cora.Desktop.Navigation.View">
+            <summary>Control navigácie riadený týmto controller-om.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Navigation.SelectedItem">
+            <summary>Aktuálne vybratá položka navigácie.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Navigation.NavigateCommand">
+            <summary>DelegateCommand (CAL) pre navigáciu na zvolenú položku</summary>
+        </member>
+        <member name="M:Cora.Desktop.Navigation.AddNavigationItem(Cora.Natec.SP.CdoSP_PORTAL_PAGE)">
+            <summary>
+            Pridanie prvku navigácie.
+            </summary>
+            <param name="cdoPage">Data objekt prvku navigácie.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Desktop.Navigation.AddNavigationSubItem(Cora.Portal.Base.View.INavigationItem,Cora.Natec.SP.CdoSP_PORTAL_PAGE)">
+            <summary>
+            Pridanie podradeného prvku navigácie.
+            </summary>
+            <param name="parentNavigationItem">Nadradený prvok navigácie.</param>
+            <param name="cdoPage">Data objekt prvku navigácie.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Desktop.Navigation.CreateViewInner">
+            <summary>
+            Vytvorenie príslušného controlu (view) - priradenie do premennej, ak ešte nie je vytvorený.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Navigation.CreateViewInstance">
+            <summary>
+            Vytvorenie príslušného controlu (view) - vytvorenie inštancie.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Navigation.CanNavigate(Cora.Portal.Base.NavigationState)">
+            <summary>
+            Párová metóda pre odnavigovanie na zvolenú položku, vyhodnocujúca či je možné zavolať Navigate.
+            Viac info viď. koncept DelegateCommands (CAL) - Execute, CanExecute
+            </summary>
+            <param name="navState">Argument - navigačný stav.</param>
+            <returns>
+            	<c>true</c> defaultne, <c>false</c> nemá v našom scenári význam, je to len na ilustráciu konceptu MVVM.
+            </returns>
+        </member>
+        <member name="M:Cora.Desktop.Navigation.Navigate(Cora.Portal.Base.NavigationState)">
+            <summary>
+            Metóda pre odnavigovanie na zvolenú položku.
+            </summary>
+            <param name="navState">Navigačný stav.</param>
+        </member>
+        <member name="M:Cora.Desktop.Navigation.CreateAndPlaceChildViews">
+            <summary>
+            Vytvorenie položiek navigácie.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Navigation.GetOldExpandedStatus(System.Int32)">
+            <summary>
+            Získanie predošlého nastavenia hodnoty IsExpanded pre položku navigácie.
+            </summary>
+            <param name="pageId">Identifikátor stránky.</param>
+            <returns>Predošlá hodnota IsExpanded položky pre danú stránku. Alebo false ak ešte nebola nastavená.</returns>
+        </member>
+        <member name="T:Cora.Desktop.NavigationFree">
+            <summary>
+            Controller voľnej navigácie portálu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.NavigationFree.#ctor(Cora.Desktop.Portal,System.Int32)">
+            <summary>
+            Vytvorenie controlleru voľnej navigácie.
+            </summary>
+            <param name="portal">Portál, kam navigácia patrí.</param>
+            <param name="id">ID člena portálu.</param>
+        </member>
+        <member name="P:Cora.Desktop.NavigationFree.View">
+            <summary>Control navigácie riadený týmto controller-om.</summary>
+        </member>
+        <member name="M:Cora.Desktop.NavigationFree.CreateViewInner">
+            <summary>
+            Vytvorenie príslušného controlu (view) - priradenie do premennej.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.NavigationFree.CreateViewInstance">
+            <summary>
+            Vytvorenie príslušného controlu (view) - vytvorenie inštancie.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Desktop.PortalPanel">
+            <summary>
+            Controller panelu stránky.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.PortalPanel.Portal">
+            <summary>
+            Portál, do ktorého člen patrí.
+            </summary>
+            <value></value>
+        </member>
+        <member name="P:Cora.Desktop.PortalPanel.View">
+            <summary>
+            View riadený týmto controller-om. 
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:Cora.Desktop.PortalPanel.#ctor(Cora.Desktop.ContentPage,System.Int32)">
+            <summary>
+            Vytvorenie controller-a panelu stránky.
+            </summary>
+            <param name="contentPage">Portálová stránka obsahu, ktorá panel obsahuje.</param>
+            <param name="panelId">ID panelu.</param>
+        </member>
+        <member name="M:Cora.Desktop.PortalPanel.CreateView">
+            <summary>
+            Vytvorenie príslušného controlu (property <see cref="P:Cora.Desktop.PortalPanel.View"/>).
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Part`1">
+            <summary>
+            Základný (abstraktný) controller prvku desktopového portálu.
+            </summary>
+            <typeparam name="TPartControl">Typ controlu partu.</typeparam>
+        </member>
+        <member name="P:Cora.Desktop.Part`1.Portal">
+            <summary>
+            Portál, do ktorého člen patrí.
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:Cora.Desktop.Part`1.BusyIndication">
+            <summary>
+            Vstúpi do cyklu indikácie zaneprázdnenosti. Táto implementácia indikuje zaneprázdnenosť pomocou portálu, ktorého 
+            je part členom (<see cref="P:Cora.Desktop.Part`1.Portal"/>), toto správanie je však možné preťažiť.
+            </summary>
+            <returns>
+            Objekt, ktorý v svojej metóde <see cref="M:System.IDisposable.Dispose"/> zariadi koniec indikácie zaneprázdnenosti.
+            </returns>
+        </member>
+        <member name="P:Cora.Desktop.Part`1.View">
+            <summary>
+            View riadený týmto controller-om. 
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:Cora.Desktop.Part`1.#ctor(Cora.Desktop.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+            <summary>
+            Vytvorenie Controlleru prvku (control ako div).
+            </summary>
+            <param name="portalPanel">Panel, kde bude prvok umiestnený.</param>
+            <param name="cdoPlac">Data objekt umiestnenia.</param>
+        </member>
+        <member name="F:Cora.Desktop.Part`1._View">
+            <summary>View riadený týmto controller-om.</summary>
+        </member>
+        <member name="T:Cora.Desktop.Parts.MessageBaseControl">
+            <summary>
+            Základný control prvku pre zobrazenie hlášky.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Parts.MessageBaseControl.MessageBase">
+            <summary>
+            Základný controller prvku pre zobrazenie hlášky. Po kliku na tlačidlo OK ide späť (<see cref="M:Cora.Portal.Base.IPortal.NavigateBack"/>).
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Parts.MessageBaseControl.MessageBase.KEY_USER_MESSAGE">
+            <summary>Kľúč pre dopĺňajúcu hlášku.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Parts.MessageBaseControl.MessageBase.SETTING_ID_MESSAGE">
+            <summary>ID nastavenia hlášky.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Parts.MessageBaseControl.MessageBase.#ctor(Cora.Desktop.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+            <summary>
+            Vytvorenie controller-a prvku pre zobrazenie hlášky.
+            </summary>
+            <param name="portalPanel">Panel, kam patrí.</param>
+            <param name="cdoPlac">Data objekt pre umiestnenie prvku.</param>
+        </member>
+        <member name="M:Cora.Desktop.Parts.MessageBaseControl.MessageBase.LoadPropertiesAndSettings">
+            <summary>
+            Nahratie nastavení prvku pre dané umiestnenie (<see cref="P:Cora.Portal.Base.IPart.PlacementId"/>).
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Parts.MessageBaseControl.MessageBase.Message">
+            <summary>
+            Chybová hláška.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Parts.MessageBaseControl.MessageBase.MessageDefault">
+            <summary>
+            Default hláška, môže sa preťažovať. Použije sa, ak je hláška prázdna.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Parts.MessageBaseControl.MessageBase.CreateView">
+            <summary>
+            Samotné vytvorenie view-u riadeného týmto controller-om (property <see cref="N:Cora.Desktop.View"/>).
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Parts.MessageBaseControl.MessageBase.CreateAndPlaceChildViews">
+            <summary>
+            Nerobí nič (táto trieda nemá podradené controllery).
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Parts.MessageBaseControl.MessageBase._View_OkButtonClick(System.Object,System.EventArgs)">
+            <summary>
+            Metóda volaná pri kliku na tlačidlo OK. Môže sa preťažovať, default akcia
+            je presmerovanie na default stránku portálu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Parts.MessageBaseControl.#ctor(Cora.Desktop.Parts.MessageBaseControl.MessageBase)">
+            <summary>
+            Vytvorenie controlu prvku pre zobrazenie hlášky.
+            </summary>
+            <param name="controller">Controller, riadiaci tento control.</param>
+        </member>
+        <member name="E:Cora.Desktop.Parts.MessageBaseControl.OkButtonClick">
+            <summary>
+            Udalosť kliknutia na tlačidlo OK.
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Parts.MessageBaseControl._MessageLabel">
+            <summary> Text hlasky.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Parts.MessageBaseControl._UserMessageLabel">
+            <summary> Text dopĺňajúcej hlášky.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Parts.MessageBaseControl._OkButton">
+            <summary> Tlačidlo OK.</summary>
+        </member>
+        <member name="T:Cora.Desktop.Parts.SimplePartControl">
+            <summary>
+            Vizuálny prvok desktopového portálu umožňujúci zaradiť jeden control "výkonnej" komponenty prvku.
+            </summary>
+            <remarks>
+             Táto trieda je doporučenou východziou voľbou pre view pri programovaní vlastných prvkov desktopového portálu.
+            </remarks>
+        </member>
+        <member name="M:Cora.Desktop.Parts.SimplePartControl.#ctor(Cora.Desktop.IPart)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Parts.SimplePartControl"/>.
+            </summary>
+            <param name="controller">Controller riadiaci tento control.</param>
+        </member>
+        <member name="M:Cora.Desktop.Parts.SimplePartControl.PlaceWidgetControl(System.Windows.UIElement)">
+            <summary>
+            Umiestni control "výkonnej" komponenty prvku webového portálu do seba.
+            </summary>
+            <param name="widgetControl">Control "výkonnej" komponenty prvku webového portálu.</param>
+        </member>
+        <member name="T:Cora.Desktop.Portal">
+            <summary>
+            Controller portálu. Zahŕňa (voliteľne) hlavičku, pätu, navigáciu a (vždy) obsah.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Portal.#cctor">
+            <summary>Statický konštruktor.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Portal.ProcessError(System.Object,System.EventArgs)">
+            <summary>
+            Globálne spracovanie chýb.
+            </summary>
+            <param name="sender">Zdroj chyby.</param>
+            <param name="e">Argumenty chyby.</param>
+        </member>
+        <member name="M:Cora.Desktop.Portal.GetImageUrl(System.String)">
+            <summary>
+            Získanie url pre obrázok.
+            </summary>
+            <param name="imageName">Názov obrázka.</param>
+            <returns>Url pre obrázok.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Portal.GetImageResourceUrl(System.String)">
+            <summary>
+            Získanie url pre obrázok uložený ako resource v portálovej dll-ke. Ak je v zozname vlastných obrázkov
+            (<see cref="M:Cora.Portal.Base.Model.ImageNames.IsCustomImage(System.String)"/>), použije sa url z <see cref="M:Cora.Desktop.Portal.GetImageUrl(System.String)"/>.
+            </summary>
+            <param name="imageName">Názov obrázka.</param>
+            <returns>Url pre obrázok.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Portal.GetImageResourceUrl(System.String,System.Reflection.Assembly)">
+            <summary>
+            Získanie url pre obrázok uložený ako resource v zadanej dll-ke v namespace-i (adresári) Images. Ak je v zozname
+            vlastných obrázkov (<see cref="M:Cora.Portal.Base.Model.ImageNames.IsCustomImage(System.String)"/>), použije sa url z <see cref="M:Cora.Desktop.Portal.GetImageUrl(System.String)"/>.
+            </summary>
+            <param name="imageName">Názov obrázka.</param>
+            <param name="assembly">Knižnica, kde je obrázok uložený. Nesmie byť <c>null</c>.</param>
+            <returns>Url pre obrázok.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="assembly"/> <c>null</c>.</exception>
+        </member>
+        <member name="F:Cora.Desktop.Portal.COCOS_URL">
+            <summary>
+            Názov kľúča config-u pre nastavenie url pre CoraCoreService.
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.LOGGING_PATH">
+            <summary>Názov kľúča config-u pre nastavenie cesty pre zápis log-ov.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.LOGGING_PATH_DEFAULT">
+            <summary>Default hodnota config-u pre nastavenie cesty pre zápis log-ov.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.REQUEST_PORTAL_ID">
+            <summary>Názov parametra pre nastavenie PortalId z requestu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.REQUEST_PAGE_ID">
+            <summary>Názov parametra pre nastavenie PageId z requestu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.REQUEST_PART_ID">
+            <summary>Názov parametra pre nastavenie PartId z requestu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.REQUEST_PORTAL_MODE">
+            <summary>Názov parametra pre nastavenie PortalMode z requestu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.REQUEST_ACT_SESSION">
+            <summary>Názov parametra pre nastavenie ActSession z requestu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.LANGUAGE_DEFAULT">
+            <summary>Default jazyk portálu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.PORTAL_ID_DEFAULT">
+            <summary>Default hodnota PortalId.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.PORTAL_ID_NONE">
+            <summary>Hodnota PortalId nezadaná.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.PAGE_ID_NONE">
+            <summary>Neurčené ID stránky.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.PAGE_ID_PART_MODE">
+            <summary>
+            ID stránky pre portálový mód s jedným portálovým prvkom namiesto stránky obsahu portálu.
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.REQUEST_BACK_URL">
+            <summary>Kľúč pre pole BackUrl.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Portal.SUBMIT_SCRIPT">
+            <summary>Názov submit-ovacieho skriptu.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Portal.#ctor">
+            <summary>
+            Vytvorenie controller-a portálu.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Portal.View">
+            <summary>View portálu riadený týmto controller-om.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Portal.CreateView">
+            <summary>
+            Samotné vytvorenie control-u portálu riadeného týmto controller-om (property <see cref="P:Cora.Desktop.Portal.View"/>).
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Portal.BusyIndication">
+            <summary>
+            Vstúpi do cyklu indikácie zaneprázdnenosti.
+            </summary>
+            <remarks>
+             <para>
+              Typické použitie je volať túto metódu v klauzule <c>using</c>, pričom zaneprázdnenosť bude indikovaná
+              až do skončenia bloku. Výhodou je vstavaný <c>try</c>..<c>finally</c> blok, ktorý zabezpečí koniec indikácie
+              zaneprázdnenosti aj keď vznikne vo vnútri using bloku výnimka.
+             </para><para>
+              Tiež je možná asynchrónne použitie - zapnúť indikáciu a odložiť si výsledok volania tejto metódy, 
+              dlhotrvajúcu operáciu pustiť v inom vlákne a po jej ukončení na vrátenom objekte explicitne volať 
+              <see cref="M:System.IDisposable.Dispose"/>.
+             </para>
+            </remarks>
+            <example>
+             <code>
+              using ( Portal.BusyIndication() ) 
+              {
+            	// nejaka dlhsie trvajuca operacia
+              }
+             </code>
+            </example>
+            <returns>
+            Objekt, ktorý v svojej metóde <see cref="M:System.IDisposable.Dispose"/> zariadi koniec indikácie zaneprázdnenosti.
+            </returns>
+        </member>
+        <member name="M:Cora.Desktop.Portal.Initialize">
+            <summary>
+            Inicializácia portálu. Spustí thread na obnovenie spojenia.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Portal.AdoptPortalControl(Cora.Portal.Base.View.IPortal)">
+            <summary>
+            "Adoptovanie" zadaného objektu za portálový control.
+            </summary>
+            <param name="portalControl">Objekt adoptovaný za portálový control.</param>
+            <returns>Bol zadaný portálový control úspešne "adoptovaný"?</returns>
+        </member>
+        <member name="M:Cora.Desktop.Portal.GetAccessDeniedNavigationState">
+            <summary>
+            Získanie navigačného stavu pre navigovanie na stránku "Prístup zakázaný".
+            </summary>
+            <returns>Metóda zatiaľ nie je implementovaná.</returns>
+        </member>
+        <member name="P:Cora.Desktop.Portal.ErrorMessagePartId">
+            <summary>ID partu s chybovou hláškou.</summary>
+            <value>Property zatiaľ nie je implementovaná.</value>
+        </member>
+        <member name="P:Cora.Desktop.Portal.SignInPartId">
+            <summary>ID partu prihlásenia.</summary>
+            <value>Property zatiaľ nie je implementovaná.</value>
+        </member>
+        <member name="M:Cora.Desktop.Portal.CreateContentPage">
+            <summary>
+            Vytvorenie controller-a stránky obsahu webového portálu.
+            </summary>
+            <returns>Vytvorený controller stránky obsahu portálu.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Portal.GetValuesForNavigationStateInner(System.String@)">
+            <summary>
+            Zistenie hodnôt pre navigačný stav a jeho históriu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Portal.GetUserHostAddress">
+            <summary>
+            Zistenie IP adresy klienta.
+            </summary>
+            <returns>IP adresa klienta.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Portal.SaveAppSession">
+            <summary>
+            Uloženie aktuálnej aplikačnej session (<see cref="T:Cora.Global.Session.AppSession"/>).
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Portal.GetActWindowsIdentity">
+            <summary>
+            Zistenie aktuálnej Windows identity zo systému.
+            </summary>
+            <returns>Aktuálna login identita.</returns>
+        </member>
+        <member name="M:Cora.Desktop.PortalModule.AddViewToRegion(System.String,System.Object)">
+            <summary>
+            Umožňuje pomocou RegionManager-a neskôr zobraziť View v existujúcom regióne (CAL).
+            </summary>
+            <param name="regionName">Názov regiónu.</param>
+            <param name="regionView">View.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Desktop.PortalModule.RemoveAllViewsFromRegion(System.String)">
+            <summary>
+            Umožňuje pomocou RegionManager-a neskôr odstrániť všetky View v existujúcom regióne (CAL).
+            </summary>
+            <param name="regionName">Názov regiónu.</param>
+        </member>
+        <member name="T:Cora.Desktop.RegionNames">
+            <summary>
+            Názvy regiónov, do ktorých umiestňujeme časti portálu.
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.RegionNames.PORTAL_REGION">
+            <summary>Meno regiónu, do ktorého sa vloží portál.</summary>
+        </member>
+        <member name="F:Cora.Desktop.RegionNames.HEADER_REGION">
+            <summary>Meno regiónu, do ktorého sa vloží hlavička portálu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.RegionNames.NAVIGATION_REGION">
+            <summary>Meno regiónu, do ktorého sa vloží navigácia portálu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.RegionNames.CONTENT_REGION">
+            <summary>Meno regiónu, do ktorého sa vloží stránka obsahu portálu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.RegionNames.FOOTER_REGION">
+            <summary>Meno regiónu, do ktorého sa vloží päta portálu.</summary>
+        </member>
+        <member name="T:Cora.Desktop.TestNavigationAction">
+            <summary>
+            Demo navigačná akcia.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.ContentPageControl">
+            <summary>Control stránky obsahu portálu.</summary>
+            <summary>
+            ContentPageControl
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.View.ContentPageControl.Panels">
+            <summary>
+            Zoznam umiestnených control-ov panelov na tejto stránke.
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:Cora.Desktop.View.ContentPageControl.PlacePanel(Cora.Portal.Base.View.IPanel)">
+            <summary>
+            Pridanie (umiestnenie) control-u panelu do stránky obsahu.
+            </summary>
+            <param name="panelControl">Umiestňovaný control panelu.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="panelControl"/> je <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Desktop.View.ContentPageControl.Controller">
+            <summary>
+            Controller riadiaci tento control.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.ContentPageControl.#ctor(Cora.Desktop.ContentPage)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.View.ContentPageControl"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.ContentPageControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.Footer">
+            <summary>Control default-nej päty portálu.</summary>
+            <summary>
+            Footer
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.Footer.#ctor(Cora.Desktop.Footer)">
+            <summary>
+            Vytvorenie control-u default-nej päty portálu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.Footer.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.Header">
+            <summary>Control default-nej hlavičky portálu.</summary>
+            <summary>
+            Header
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.Header.#ctor(Cora.Desktop.Header)">
+            <summary>
+            Vytvorenie control-u default-nej hlavičky portálu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.Header.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.IPortal">
+            <summary>Rozhranie pre desktopový control portálu. Jeho riadiaci controller musí implementovať <see cref="T:Cora.Portal.Base.IPortal"/>.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.IPortal.ContentPageControl">
+            <summary>Webový control stránky obsahu.</summary>
+        </member>
+        <member name="T:Cora.Desktop.View.NavigationControl">
+            <summary>Control navigácie portálu.</summary>
+            <summary>
+            NavigationControl
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.NavigationControl.VerticalNavigation">
+            <summary>
+            Vertikálna navigácia portálu, okrem módu <see cref="F:Cora.Portal.Base.Model.PortalMode.Full"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.NavigationControl.VerticalNavigation.#ctor(Cora.Desktop.Navigation)">
+            <summary>
+            Vytvorenie vertikálnej navigácie (len v prípade <see cref="F:Cora.Portal.Base.Model.PortalMode.Full"/>).
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="T:Cora.Desktop.View.NavigationControl.Vertical2Navigation">
+            <summary>
+            Vertikálna navigácia portálu pre vlastné umiestnenie.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.NavigationControl.Vertical2Navigation.#ctor(Cora.Desktop.Navigation)">
+            <summary>
+            Vytvorenie vertikálnej navigácie.
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="T:Cora.Desktop.View.NavigationControl.FreeNavigation">
+            <summary>
+            Voľná navigácia portálu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.NavigationControl.FreeNavigation.#ctor(Cora.Desktop.NavigationFree)">
+            <summary>
+            Vytvorenie voľnej navigácie.
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="F:Cora.Desktop.View.NavigationControl.CSS_CLASS_PREFIX">
+            <summary> Predpona css štýlov navigácie.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.NavigationControl.Controller">
+            <summary>
+            Controller riadiaci tento control.
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:Cora.Desktop.View.NavigationControl.#ctor(Cora.Desktop.Navigation)">
+            <summary>
+            Vytvorenie navigácie.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.NavigationControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.PanelControl">
+            <summary>
+            Control panelu stránky.
+            </summary>
+            <summary>
+            PanelControl
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PanelControl.#ctor(Cora.Desktop.PortalPanel)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.View.PanelControl"/>.
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="P:Cora.Desktop.View.PanelControl.Placements">
+            <summary>Zoznam umiestnených control-ov partov na tomto paneli.</summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PanelControl.PlacePart(Cora.Portal.Base.View.IPart)">
+            <summary>
+            Pridanie (umiestnenie) control-u partu na panel.
+            </summary>
+            <param name="partControl">Umiestňovaný control partu.</param>
+            <remarks>Ak je potrebné, je predradený pred umiestňovaný control partu separátor.</remarks>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="partControl"/> je <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Desktop.View.PanelControl.Cora#Portal#Base#View#IPortalControl{Cora#Portal#Base#IPanel}#Controller">
+            <summary>Controller riadiaci tento control.</summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PanelControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.PanelVisibilityConverter">
+            <summary>
+            Converter hodnôt Visibility jednotlivých panelov v stránke obsahu podľa počtu partov v ňom. 
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PanelVisibilityConverter.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Konvertuje hodnotu.
+            </summary>
+            <param name="value">Pole panelov controlu stránky obsahu.</param>
+            <param name="targetType">Výsledný typ. ( <see cref="T:System.Windows.Visibility"/>)</param>
+            <param name="parameter">Index panelu. Je možné zadať viac indexov oddelených medzerou.</param>
+            <param name="culture">Kultúra sa v tomto konvertore nepoužíva.</param>
+            <returns>
+            Výsledná hodnota. 
+            Defaultne <see cref="F:System.Windows.Visibility.Collapsed"/>, tiež v prípade, že panel s požadovaným indexom je null.
+            <see cref="F:System.Windows.Visibility.Visible"/> ak panel obsahuje umiestnenia prvkov. Pri viacerých indexoch, ak aspoň jeden panel nie je null.
+            </returns>
+        </member>
+        <member name="M:Cora.Desktop.View.PanelVisibilityConverter.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Spätná konverzia sa v tomto konvertore nepoužíva, pretože sa jedná o Binding Mode=OneWay.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.PartControl`1">
+            <summary>
+            Základný (abstraktný) control prvku portálu.
+            </summary>
+            <typeparam name="TController">Typ controller-a riadiaceho tento control.</typeparam>
+        </member>
+        <member name="P:Cora.Desktop.View.PartControl`1.Cora#Portal#Base#View#IPortalControl{Cora#Portal#Base#IPart}#Controller">
+            <summary>Controller riadiaci tento control.</summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PartControl`1.#ctor(`0)">
+            <summary>
+            Vytvorenie prvku portálu.
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="T:Cora.Desktop.View.PopupMessageDisplayer">
+            <summary>
+            Objekt zobrazujúci hlášku pomocou vyskakujúceho messagebox-u.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PopupMessageDisplayer.ShowMessage(Cora.Portal.Base.MessageType,System.String)">
+            <summary>
+            Zobrazí hlášku pre užívateľa pomocou messagebox-u.
+            </summary>
+            <param name="type">Typ hlášky.</param>
+            <param name="message">Text hlášky.</param>
+        </member>
+        <member name="T:Cora.Desktop.View.Portal">
+            <summary>
+            Portálový <see cref="T:System.Windows.Controls.UserControl"/>. Zahŕňa (voliteľne) hlavičku, pätu, navigáciu a (vždy) obsah.
+            </summary>
+            <summary>
+            Portal
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.Portal.#ctor">
+            <summary>
+            Vytvorenie control-u <see cref="T:Cora.Desktop.View.Portal"/> bez nastavenia controller-a. 
+            Ten je potrebné nastaviť hneď, ako sa dá, pomocou <see cref="M:Cora.Desktop.View.Portal.SetController(Cora.Desktop.Portal)"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.Portal.#ctor(Cora.Desktop.Portal)">
+            <summary>
+            Vytvorenie control-u <see cref="T:Cora.Desktop.View.Portal"/>.
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="M:Cora.Desktop.View.Portal.SetController(Cora.Desktop.Portal)">
+            <summary>
+            Nastavenie controller-a. Používa sa v prípade vyrobenia portálového <see cref="T:System.Windows.Controls.UserControl"/>-u
+            mimo štruktúry MVC (napr. zo šablóny). Je potrebné nastaviť hneď, ako sa dá.
+            </summary>
+            <param name="controller">Controller.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="controller"/> je <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.HeaderControlId">
+            <summary>ID control-u, kde bude umiestnená hlavička.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.FooterControlId">
+            <summary>ID control-u, kde bude umiestnená päta.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.NavigationControlId">
+            <summary>ID control-u, kde bude umiestnená navigácia.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.ContentControlId">
+            <summary>ID control-u, kde bude umiestnená stránka obsahu portálu.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.HeaderControl">
+            <summary>Control hlavičky.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.FooterControl">
+            <summary>Control päty.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.NavigationControl">
+            <summary>Control navigácie.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.Cora#Portal#Base#View#IPortal#ContentPageControl">
+            <summary>Control stránky obsahu.</summary>
+        </member>
+        <member name="M:Cora.Desktop.View.Portal.PlaceHeader(Cora.Portal.Base.View.IPortalControl)">
+            <summary>
+            Pridanie (umiestnenie) control-u hlavičky do portálu.
+            </summary>
+            <param name="headerControl">Umiestňovaný control hlavičky.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="headerControl"/> je <c>null</c> alebo nie je <see cref="T:System.Windows.Controls.Control"/>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.View.Portal.PlaceFooter(Cora.Portal.Base.View.IPortalControl)">
+            <summary>
+            Pridanie (umiestnenie) control-u päty do portálu.
+            </summary>
+            <param name="footerControl">Umiestňovaný control päty.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="footerControl"/> je <c>null</c> alebo nie je <see cref="T:System.Windows.Controls.Control"/>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.View.Portal.PlaceNavigation(Cora.Portal.Base.View.INavigationControl)">
+            <summary>
+            Pridanie (umiestnenie) control-u navigácie do portálu.
+            </summary>
+            <param name="navigationControl">Umiestňovaný control navigácie.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="navigationControl"/> je <c>null</c> alebo nie je <see cref="T:System.Windows.Controls.Control"/>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.View.Portal.PlaceContentPage(Cora.Portal.Base.View.IContentPage)">
+            <summary>
+            Pridanie (umiestnenie) control-u stránky obsahu do portálu.
+            </summary>
+            <param name="contentPageControl"></param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="contentPageControl"/> je <c>null</c> alebo nie je <see cref="T:System.Windows.Controls.Control"/>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.View.Portal.ShowMessage(Cora.Portal.Base.MessageType,System.String)">
+            <summary>
+            Zobrazí hlášku pre užívateľa pomocou messagebox-u.
+            </summary>
+            <param name="type">Typ hlášky.</param>
+            <param name="message">Text hlášky.</param>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.ContentPageControl">
+            <summary>Webový control stránky obsahu.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.Cora#Portal#Base#View#IPortalControl{Cora#Portal#Base#IPortal}#Controller">
+            <summary>Controller riadiaci tento control.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.Portal.Cora#Portal#Base#View#IPortalControl#Controller">
+            <summary>Controller riadiaci tento control.</summary>
+        </member>
+        <member name="M:Cora.Desktop.View.Portal.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.PortalControl`1">
+            <summary>
+            Základná trieda pre vizuálne controly portálu. Dedí od <see cref="T:Cora.Desktop.View.PortalControlBase"/>-u a implementuje
+            <see cref="T:Cora.Portal.Base.View.IPortalControl"/> a <see cref="T:Cora.Portal.Base.View.IPortalControl`1"/>.
+            </summary>
+            <typeparam name="TController">Typ controller-a, ktorý riadi tento control.</typeparam>
+        </member>
+        <member name="P:Cora.Desktop.View.PortalControl`1.Controller">
+            <summary>Controller riadiaci tento control.</summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PortalControl`1.#ctor(`0)">
+            <summary>
+            Vytvorenie vizuálneho člena portálu.
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="T:Cora.Desktop.View.PortalControlBase">
+            <summary>
+            Základná trieda pre vizuálne controly portálu. Dedí od <see cref="T:System.Windows.Controls.UserControl"/>-u a implementuje <see cref="T:Cora.Portal.Base.View.IPortalControl"/>.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.View.PortalControlBase.Controller">
+            <summary>Controller riadiaci tento control.</summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PortalControlBase.#ctor(Cora.Portal.Base.IPortalController)">
+            <summary>
+            Vytvorenie vizuálneho člena portálu.
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="T:Cora.Desktop.View.PortalHost">
+            <summary>
+            <see cref="T:System.Windows.Controls.UserControl"/>, kde je možné hosťovať control portálu.
+            </summary>
+            <summary>
+            PortalHost
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PortalHost.#ctor">
+            <summary>
+            Vytvorenie <see cref="T:System.Windows.Controls.UserControl"/>-u, v ktorom je možné hosťovať control portálu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PortalHost.AddPortal(Cora.Portal.Base.View.IPortal)">
+            <summary>
+            Pridanie control-u portálu do hosťujúceho objektu.
+            </summary>
+            <param name="portal">Pridávaný control portálu.</param>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="control"/> nie je platný <see cref="T:System.Windows.Controls.Control"/>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.View.PortalHost.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.View.PortalUserControl`1">
+            <summary>
+            Základná trieda (tabuľka) pre vizuálnych členov portálu. Dedí z <see cref="T:System.Windows.Controls.UserControl"/>-u
+            a implementuje <see cref="T:Cora.Portal.Base.View.IPortalControl`1"/>.
+            </summary>
+            <typeparam name="TController">Typ controller-a, ktorý riadi tento control.</typeparam>
+        </member>
+        <member name="P:Cora.Desktop.View.PortalUserControl`1.Controller">
+            <summary>Controller riadiaci tento control.</summary>
+        </member>
+        <member name="P:Cora.Desktop.View.PortalUserControl`1.Cora#Portal#Base#View#IPortalControl#Controller">
+            <summary>Controller riadiaci tento control.</summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PortalUserControl`1.#ctor">
+            <summary>
+            Vytvorenie vizuálneho člena portálu bez určenia controller-a. Ten je potrebné nastaviť hneď, ako sa dá, pomocou <see cref="M:Cora.Desktop.View.PortalUserControl`1.SetController(`0)"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.View.PortalUserControl`1.#ctor(`0)">
+            <summary>
+            Vytvorenie vizuálneho člena portálu.
+            </summary>
+            <param name="controller">Controller.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="controller"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.View.PortalUserControl`1.SetController(`0)">
+            <summary>
+            Nastavenie controller-a.
+            </summary>
+            <param name="controller">Controller.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="controller"/> je <c>null</c>.</exception>
+        </member>
+    </members>
+</doc>

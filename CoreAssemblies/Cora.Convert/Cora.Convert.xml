@@ -1,0 +1,2598 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Convert</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Convert.XmlSerializer">
+            <summary>
+            Pomocná trieda pre XML serializáciu/deserializáciu objektov.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.XmlSerializer.Serialize``1(``0,System.Xml.Serialization.XmlSerializerNamespaces)">
+            <summary>
+            Serializuje objekt do XML uzla.
+            </summary>
+            <typeparam name="T">Zdrojový typ objektu.</typeparam>
+            <param name="obj">Zdrojový objekt.</param>
+            <param name="namespaces">Namespaces referencované objektom. Default je <c>null</c>."/></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Convert.XmlSerializer.Deserialize``1(System.Xml.XmlElement)">
+            <summary>
+            Deserializuje objekt z XML uzla.
+            </summary>
+            <typeparam name="T">Cieľový typ objektu.</typeparam>
+            <param name="node">Zdrojový XML uzol.</param>
+            <exception cref="T:System.ArgumentNullException">node</exception>
+            <exception cref="T:System.InvalidOperationException">Ak dôjde k chybe pri deserializácii. Originálna 
+               výnimka je prístupná ako <see cref="P:System.Exception.InnerException"/>.</exception>
+        </member>
+        <member name="M:Cora.Convert.XmlSerializer.Deserialize``1(System.Byte[])">
+            <summary>
+            Deserializuje objekt z binárneho obsahu.
+            </summary>
+            <typeparam name="T">Cieľový typ objektu.</typeparam>
+            <param name="binaryContent">Zdrojový binárny obsah.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Convert.XmlSerializer.Deserialize``1(System.String)">
+            <summary>
+            Deserializuje objekt zo súboru.
+            </summary>
+            <typeparam name="T">Cieľový typ objektu.</typeparam>
+            <param name="filePath">Zdrojový súbor.</param>
+            <returns></returns>
+            <exception cref="T:System.IO.FileNotFoundException"></exception>
+        </member>
+        <member name="M:Cora.Convert.XmlSerializer.Transform``2(``0)">
+            <summary>
+            Prevod z objektu <paramref name="sourceObject"/> jedného typu (<typeparamref name="SourceT"/>) na druhý typ
+            (<typeparamref name="DestT"/>) pomocou XML transformácií. Používa sa v prípadoch, že máme 2 ekvivaletné typy
+            (napr. generované nejakým nástrojom) a potrebujeme si medzi nimi odovzdávať údaje.
+            </summary>
+            <typeparam name="SourceT">Zdrojový typ.</typeparam>
+            <typeparam name="DestT">Cieľový typ.</typeparam>
+            <param name="sourceObject">Prevádzaný objekt.</param>
+            <returns>Prevedený objekt.</returns>
+        </member>
+        <member name="M:Cora.Convert.XmlSerializer.InfuseXmlFromObject``1(``0,System.Xml.XmlDocument)">
+            <summary>
+            Naplní hodnoty členských premenných alebo vlastností objektu <paramref name="obj"/> do štruktúry XML dokumentu podľa mapovaní,
+            určených <see cref="T:Cora.Convert.XmlSerializer.XmlMapperAttribute"/>-mi, zadanými členským premenným alebo vlastnostiam tohto objektu.
+            </summary>
+            <typeparam name="T">Typ serializovaného objektu.</typeparam>
+            <param name="obj">Serializovaný objekt, nesmie byť <c>null</c>.</param>
+            <param name="xmlDocument">XML document v štruktúre, ktorá bude naplnená hodnotami z členských premenných
+            alebo vlastností objektu <paramref name="obj"/>. Nesmie byť <c>null</c>.</param>
+            <returns>Boli naplnené všetky hodnoty členských premenných alebo vlastností objektu <paramref name="obj"/> do XML dokumentu?</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="obj"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="xmlDocument"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.XmlSerializer.InfuseXmlFromObject(System.Type,System.Object,System.Xml.XmlDocument)">
+            <summary>
+            Naplní hodnoty členských premenných alebo vlastností objektu <paramref name="obj" /> do štruktúry XML dokumentu podľa mapovaní,
+            určených <see cref="T:Cora.Convert.XmlSerializer.XmlMapperAttribute" />-mi, zadanými členským premenným alebo vlastnostiam tohto objektu.
+            </summary>
+            <param name="type">Typ serializovaného objektu.</param>
+            <param name="obj">Serializovaný objekt, nesmie byť <c>null</c>.</param>
+            <param name="xmlDocument">XML document v štruktúre, ktorá bude naplnená hodnotami z členských premenných
+            alebo vlastností objektu <paramref name="obj" />. Nesmie byť <c>null</c>.</param>
+            <returns>
+            Boli naplnené všetky hodnoty členských premenných alebo vlastností objektu <paramref name="obj" /> do XML dokumentu?
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="type" /> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="obj"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="xmlDocument"/> je <c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Convert.XmlSerializer.XmlMapperAttribute">
+            <summary>
+            Atribút pre určenie XML mapovania členskej premennej alebo vlastnosti objektu. Dovoľuje sa max. jeden.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.XmlSerializer.XmlMapperAttribute.#ctor(System.String)">
+            <summary>
+            Vytvorenie inčtancie <see cref="T:Cora.Convert.XmlSerializer.XmlMapperAttribute" />-u.
+            </summary>
+            <param name="xPath">XPath pre určenie XML mapovania členskej premennej alebo vlastnosti objektu.</param>
+            <exception cref="T:System.ArgumentNullException">xPath</exception>
+        </member>
+        <member name="M:Cora.Convert.XmlSerializer.XmlMapperAttribute.#ctor(System.String,System.String)">
+            <summary>
+            Vytvorenie inčtancie <see cref="T:Cora.Convert.XmlSerializer.XmlMapperAttribute" />-u.
+            </summary>
+            <param name="xPath">XPath pre určenie XML mapovania členskej premennej alebo vlastnosti objektu.</param>
+            <param name="prefixesNamespaceUris">Zoznam XML prefixov a namespace-ov pre XPath mapovania
+            členskej premennej alebo vlastnosti objektu. Zoznam oddelený medzerami.</param>
+            <exception cref="T:System.ArgumentNullException">xPath</exception>
+        </member>
+        <member name="P:Cora.Convert.XmlSerializer.XmlMapperAttribute.XPath">
+            <summary>XPath pre určenie XML mapovania členskej premennej alebo vlastnosti objektu.</summary>
+        </member>
+        <member name="P:Cora.Convert.XmlSerializer.XmlMapperAttribute.PrefixesNamespaceUris">
+            <summary>Zoznam XML prefixov a namespace-ov pre XPath mapovania členskej premennej
+            alebo vlastnosti objektu. Zoznam oddelený medzerami.</summary>
+        </member>
+        <member name="T:Cora.Convert.Ascii85">
+            <summary>Trieda pre kódovanie ASCII85 (http://en.wikipedia.org/wiki/Ascii85).</summary>
+        </member>
+        <member name="F:Cora.Convert.Ascii85.PREFIX_MARK">
+            <summary>Prefix, ktorý identifikuje ASCII85 reťazec (hodnota "&lt;~").</summary>
+        </member>
+        <member name="F:Cora.Convert.Ascii85.SUFFIX_MARK">
+            <summary>Suffix, ktorý identifikuje ASCII85 reťazec (hodnota "~&gt;").</summary>
+        </member>
+        <member name="M:Cora.Convert.Ascii85.Decode(System.String,System.Boolean)">
+            <summary>
+            Odkódovanie reťazca kódovaného pomocou ASCII85.
+            </summary>
+            <param name="encodedAscii85">Reťazec kódovaný pomocou ASCII85.</param>
+            <param name="enforceMarks">Je zadaný zakódovaný reťazec ASCII85 obalený prefixom a suffixom
+            (<see cref="F:Cora.Convert.Ascii85.PREFIX_MARK"/> a <see cref="F:Cora.Convert.Ascii85.SUFFIX_MARK"/>)?</param>
+            <returns>Odkódované pole (binárne dáta).</returns>
+            <exception cref="T:System.FormatException">V prípadoch, že:
+            <para>- je zadané, že reťazec ASCII85 obalený prefixom a suffixom (<paramref name="enforceMarks"/> je <c>true</c>,
+            ale hodnota <paramref name="encodedAscii85"/> tomu nezodpovedá),</para>
+            <para>- alebo hodnota <paramref name="encodedAscii85"/> obsahuje nepovolený znak (povolené sú '!' - 'u'),</para>
+            <para>- alebo iné chyby v hodnote <paramref name="encodedAscii85"/>.</para></exception>
+        </member>
+        <member name="M:Cora.Convert.Ascii85.Encode(System.Byte[],System.Boolean)">
+            <summary>
+            Zakódovanie poľa binárnych dát pomocou ASCII85.
+            </summary>
+            <param name="bytes">Vstupné pole binárnych dát.</param>
+            <param name="enforceMarks">Obaliť zakódovaný reťazec ASCII85 prefixom a suffixom (<see cref="F:Cora.Convert.Ascii85.PREFIX_MARK"/> a <see cref="F:Cora.Convert.Ascii85.SUFFIX_MARK"/>)?</param>
+            <returns>ASCII85 encoded string</returns>
+        </member>
+        <member name="M:Cora.Convert.Ascii85.#cctor">
+            <summary>
+            Statický konštruktor <see cref="T:Cora.Convert.Ascii85"/> - inicializácia polí konštánt.
+            </summary>
+        </member>
+        <member name="T:Cora.Convert.BitConverterExtensions">
+            <summary>
+            Metódy chýbajúce v triede <see cref="T:System.BitConverter"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.BitConverterExtensions.ToDecimal(System.Byte[],System.Int32)">
+            <summary>
+            Vráti desatinné číslo konvertované z poľa bajtov od zadanej pozície.
+            </summary>
+            <param name="value">Pole bajtov.</param>
+            <param name="startIndex">Počiatočná pozícia v poli bajtov.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="value"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="value"/> má nesprávnu dĺžku.</exception>
+        </member>
+        <member name="M:Cora.Convert.BitConverterExtensions.GetBytes(System.Decimal)">
+            <summary>
+            Vráti decimálnu hodnotu ako pole bajtov.
+            </summary>
+            <param name="value">Hodnota.</param>
+        </member>
+        <member name="T:Cora.Convert.JScript">
+            <summary>
+            Helper trieda pre prácu s javascript-om <see cref="N:Microsoft.JScript"/>. Použité je volanie eval s obmedzeným bezpečnostným kontextom,
+            viď http://msdn.microsoft.com/en-us/library/b51a45x6(v=vs.90).aspx
+            Napriek tomu je potrebné používať túto triedu s maximálnou rozvahou a len keď je skutočne potrebná. NIKDY NEVER POUŽÍVATEĽSKÝM VSTUPOM!
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.JScript.Evaluate(System.String)">
+            <summary>
+            Spustenie a vyhodnotenie výrazu.
+            </summary>
+            <param name="expression">Spustený a vyhodnotený výraz.</param>
+            <returns>Výsledok výrazu.</returns>
+        </member>
+        <member name="T:Cora.Convert.Base32">
+            <summary>Trieda pre prácu s kódovaním Base32 (podľa RFC 4648).</summary>
+        </member>
+        <member name="F:Cora.Convert.Base32.BASE32_CHARS">
+            <summary>Pole znakov pre Base32 kódovanie.</summary>
+        </member>
+        <member name="M:Cora.Convert.Base32.ToString(System.Byte[])">
+            <summary>
+            Zakódovanie poľa bajtov do reťazca Base32.
+            </summary>
+            <param name="inArray">Vstupné pole dát.</param>
+            <returns>Výsledný reťazec Base32.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="inArray"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Base32.FromString(System.String)">
+            <summary>
+            Rozkódovanie reťazca Base32 do poľa bajtov.
+            </summary>
+            <param name="s">Vstupný reťazec Base32.</param>
+            <returns>Výsledné pole dát.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="s"/> <c>null</c>.</exception>
+            <exception cref="T:System.FormatException">Ak dĺžka vstupného reťazca nie je násobkom 8, alebo je reťazec chybne
+            zarovnaný znakmi =, alebo reťazec osahuje chybné znaky (<see cref="F:Cora.Convert.Base32.BASE32_CHARS"/>).</exception>
+        </member>
+        <member name="T:Cora.Convert.BigInt">
+            <summary>Trieda pre aritmetiku s veľkými celými nezápornými číslami (16 bajt apod.). Veľké celé nezáporné číslo je pole byte-ov.</summary>
+        </member>
+        <member name="F:Cora.Convert.BigInt.MAX_SCALE">
+            <summary>Maximálny rozsah, ktorý trieda spracováva (10000 byte-ov). Predstavuje rozumné obmedzenie.</summary>
+        </member>
+        <member name="F:Cora.Convert.BigInt.GIGA">
+            <summary>Číslo miliarda (10^9, 1000000000).</summary>
+        </member>
+        <member name="M:Cora.Convert.BigInt.GrowToEqualLengths(System.Byte[]@,System.Byte[]@)">
+            <summary>
+            Doplnenie polí (veľkých čísel) na rovnakú dĺžku.
+            </summary>
+            <param name="op1">Prvé pole (veľké číslo) .</param>
+            <param name="op2">Druhé pole (veľké číslo).</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="op1"/> alebo <paramref name="op2"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.BigInt.TrimUpperBytes(System.Byte[]@)">
+            <summary>
+            Zmenšenie dĺžky poľa (veľkého čísla) tak, že obsahuje len signifikantné bajty, t.j. odrezanie horných byte-ov s hodnotou 0.
+            </summary>
+            <param name="op">Zmenšované pole (veľké číslo).</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="op"/> <c>null</c>, alebo má dĺžku 0.</exception>
+            <remarks>Minimálna výsledná dĺžka je 1.</remarks>
+        </member>
+        <member name="M:Cora.Convert.BigInt.Add(System.Byte[],System.Byte[])">
+            <summary>
+            Súčet operandov s rovnakou dĺžkou.
+            </summary>
+            <param name="op1">Prvý operand.</param>
+            <param name="op2">Druhý operand.</param>
+            <returns>Súčet operandov. Pole s dĺžkou o 1 väčšou ako operandy.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="op1"/> alebo <paramref name="op2"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.BigInt.Multiply(System.Byte[],System.Byte[])">
+            <summary>
+            Súčet operandov s rovnakou dĺžkou.
+            </summary>
+            <param name="op1">Prvý operand.</param>
+            <param name="op2">Druhý operand.</param>
+            <returns>Súčet operandov. Pole s dvojnásobnou dĺžkou ako operandy.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="op1"/> alebo <paramref name="op2"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.BigInt.Parse(System.String)">
+            <summary>
+            Parsovanie reťazca na veľké číslo.
+            </summary>
+            <param name="value">Zdrojový reťazec s decimálnymi číslami.</param>
+            <returns>Výsledná hodnota.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="value"/> <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="value"/> začína znakom mínus.</exception>
+            <exception cref="T:System.FormatException">Ak je <paramref name="value"/> v nesprávnom formáte.</exception>
+        </member>
+        <member name="M:Cora.Convert.BigInt.Format(System.Byte[])">
+            <summary>
+            Získani veľkého čísla ako reťazca.
+            </summary>
+            <param name="bigInt">Veľké číslo.</param>
+            <returns>Výsledná hodnota.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="bigInt"/> <c>null</c>.</exception>
+        </member>
+        <member name="F:Cora.Convert.BigInt.GIGA_BYTES">
+            <summary>Číslo miliarda ako pole byte-ov.</summary>
+        </member>
+        <member name="F:Cora.Convert.BigInt._Gigas">
+            <summary>Zoznam pre odkladanie násobkov <see cref="F:Cora.Convert.BigInt.GIGA"/> pre účely parsovania.</summary>
+        </member>
+        <member name="T:Cora.Convert.Bits">
+            <summary>Trieda pre prácu s bitmi.</summary>
+        </member>
+        <member name="M:Cora.Convert.Bits.IsUniqueBit(System.Byte)">
+            <summary>
+            Zistenie, či zadané číslo obsahuje len jeden bit 1 (napr. 1, 16, 32, 1024 apod.).
+            </summary>
+            <param name="value">Zisťované číslo.</param>
+            <returns>Obsahuje zadané číslo len jeden bit 1?</returns>
+        </member>
+        <member name="M:Cora.Convert.Bits.IsUniqueBit(System.UInt32)">
+            <summary>
+            Zistenie, či zadané číslo obsahuje len jeden bit 1 (napr. 1, 16, 32, 1024 apod.).
+            </summary>
+            <param name="value">Zisťované číslo.</param>
+            <returns>Obsahuje zadané číslo len jeden bit 1?</returns>
+        </member>
+        <member name="M:Cora.Convert.Bits.IsUniqueBit(System.UInt64)">
+            <summary>
+            Zistenie, či zadané číslo obsahuje len jeden bit 1 (napr. 1, 16, 32, 1024 apod.).
+            </summary>
+            <param name="value">Zisťované číslo.</param>
+            <returns>Obsahuje zadané číslo len jeden bit 1?</returns>
+        </member>
+        <member name="T:Cora.Convert.BytesFormat">
+            <summary>
+            Trieda pre formátovanie číselných hodnôt v bajtoch, kilobajtoch, megabajtoch atd..
+            </summary>
+        </member>
+        <member name="T:Cora.Convert.BytesFormat.Prefixes">
+            <summary>
+            Prefixy násobkov čísel.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.BytesFormat.Prefixes.None">
+            <summary>Žiaden prefix.</summary>
+        </member>
+        <member name="F:Cora.Convert.BytesFormat.Prefixes.k">
+            <summary>Kilo (k).</summary>
+        </member>
+        <member name="F:Cora.Convert.BytesFormat.Prefixes.M">
+            <summary>Mega (M).</summary>
+        </member>
+        <member name="F:Cora.Convert.BytesFormat.Prefixes.G">
+            <summary>Giga (G).</summary>
+        </member>
+        <member name="F:Cora.Convert.BytesFormat.Prefixes.T">
+            <summary>Tera (T).</summary>
+        </member>
+        <member name="F:Cora.Convert.BytesFormat.Prefixes.P">
+            <summary>Peta (P).</summary>
+        </member>
+        <member name="F:Cora.Convert.BytesFormat.Prefixes.E">
+            <summary>Exa (E).</summary>
+        </member>
+        <member name="F:Cora.Convert.BytesFormat.Prefixes.Z">
+            <summary>Zeta (Z).</summary>
+        </member>
+        <member name="F:Cora.Convert.BytesFormat.Prefixes.Y">
+            <summary>Yota (Y).</summary>
+        </member>
+        <member name="P:Cora.Convert.BytesFormat.UseIECFormat">
+            <summary>
+            Má sa pri formátovaní použiť IEC štandard? Pozri http://en.wikipedia.org/wiki/Binary_prefix
+            </summary>
+        </member>
+        <member name="P:Cora.Convert.BytesFormat.DefaultThreshold">
+            <summary>Default-ná prahová hodnota, za ktorou sa už hodnota berie s nasledujúcim prefixom. Povolený rozsah je 100 - 10000.</summary>
+        </member>
+        <member name="P:Cora.Convert.BytesFormat.DefaultDecimalPlaces">
+            <summary>Default-ný počet desatinných miest, na ktoré sa hodnota zaokrúhľuje. Povolený rozsah je 0 - 10.</summary>
+        </member>
+        <member name="M:Cora.Convert.BytesFormat.Format(System.Int64)">
+            <summary>
+            Naformátovanie hodnoty s default-nou prahovou hodnotou <see cref="P:Cora.Convert.BytesFormat.DefaultThreshold"/>
+            a defalt-ným počtom desatín <see cref="P:Cora.Convert.BytesFormat.DefaultDecimalPlaces"/>.
+            </summary>
+            <param name="value">Formátovaná hodnota.</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="M:Cora.Convert.BytesFormat.Format(System.Int64,System.Int32,System.Int32)">
+            <summary>
+            Naformátovanie hodnoty.
+            </summary>
+            <param name="value">Formátovaná hodnota.</param>
+            <param name="threshold">Prahová hodnota, za ktorou sa už hodnota berie s nasledujúcim prefixom.</param>
+            <param name="decimalPlaces">Počet desatinných miest, na ktoré sa hodnota zaokrúhľuje.</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="T:Cora.Convert.Comparer">
+            <summary>
+            Trieda na porovnávanie polí a iných hromadných štruktúr.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.Comparer.ByteArraysCompare(System.Byte[],System.Byte[])">
+            <summary>
+            Porovnanie polí bajtov.
+            </summary>
+            <param name="pole1">Prvé pole.</param>
+            <param name="pole2">Druhé pole.</param>
+            <returns>Sú rovnaké?</returns>
+            <remarks>Zatiaľ spoľahlivo porovnáva len jednorozmerné polia.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Comparer.ListsCompare(System.Collections.IList,System.Collections.IList)">
+            <summary>
+            Porovnanie dvoch zoznamov.
+            </summary>
+            <param name="zoznam1">Prvý zoznam.</param>
+            <param name="zoznam2">Druhý zoznam.</param>
+            <returns>Sú rovnaké?</returns>
+        </member>
+        <member name="M:Cora.Convert.Comparer.HashTablesCompare(System.Collections.Hashtable,System.Collections.Hashtable)">
+            <summary>
+            Porovnanie hashtabuliek.
+            </summary>
+            <param name="hashtable1">Prvá hashtable.</param>
+            <param name="hashtable2">Druhá hashtable.</param>
+            <returns>Sú rovnaké?</returns>
+            <remarks>Pri hashtabuľkách nerozhoduje poradie prvkov.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Comparer.DictionariesCompare(System.Collections.IDictionary,System.Collections.IDictionary)">
+            <summary>
+            Porovnanie slovníkov (<see cref="T:System.Collections.IDictionary"/>).
+            </summary>
+            <param name="dictionary1">Prvý slovník.</param>
+            <param name="dictionary2">Druhý slovník.</param>
+            <returns>Sú rovnaké?</returns>
+            <remarks>Pri slovníkoch nerozhoduje poradie prvkov.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Comparer.EnumerablesCompare(System.Collections.IEnumerable,System.Collections.IEnumerable)">
+            <summary>
+            Porovnanie dvoch zoznamov.
+            </summary>
+            <param name="enumerable1">Prvý zoznam.</param>
+            <param name="enumerable2">Druhý zoznam.</param>
+            <returns>Sú rovnaké?</returns>
+        </member>
+        <member name="M:Cora.Convert.Comparer.IsOneOf``1(``0,``0[])">
+            <summary>
+            Je hodnota medzi uvedenými hodnotami? (používa sa na enum-y).
+            </summary>
+            <typeparam name="TEnum">Použitý typ.</typeparam>
+            <param name="self">this.</param>
+            <param name="values">Množina hodnôt, na ktoré sa pýtame.</param>
+            <returns><c>true</c> ak sa hodnota nachádza v množine <paramref name="values"/>, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Comparer.IsNoneOf``1(``0,``0[])">
+            <summary>
+            Je hodnota neprítomná medzi uvedenými hodnotami? (používa sa na enum-y).
+            </summary>
+            <typeparam name="TEnum">Použitý typ.</typeparam>
+            <param name="self">this.</param>
+            <param name="values">Množina hodnôt, na ktoré sa pýtame.</param>
+            <returns><c>true</c> ak sa hodnota NEnachádza v množine <paramref name="values"/>, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Comparer.IndexOfFirstDifference(System.String,System.String)">
+            <summary>
+            Zistenie indexu prvého znaku, v ktorom sa zadané reťazce líšia.
+            </summary>
+            <param name="first">Prvý porovnávaný reťazec.</param>
+            <param name="second">Druhý porovnávaný reťazec.</param>
+            <returns>Index prvého znaku, v ktorom sa zadané reťazce líšia,alebo -1, ak sú reťazce zhodné.</returns>
+        </member>
+        <member name="T:Cora.Convert.DynamicParser">
+            <summary>
+            Trieda pre parsovanie hodnôt na typy známe až za behu.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.DynamicParser.GetBoxedValue(System.Type,System.Object)">
+            <summary>
+            Vráti hodnotu konvertovanú/parsovanú na požadovaný typ. 
+            Na konverziu využíva triedy <see cref="T:Cora.Convert.Parser"/> resp. <see cref="T:Cora.Convert.NullableParser"/>.
+            </summary>
+            <param name="type">Cieľový typ.</param>
+            <param name="value">Hodnota.</param>
+            <returns>Hodnota konvertovaná na cieľový typ; alebo pôvodná hodnota v prípade neznámeho typu.</returns>
+        </member>
+        <member name="M:Cora.Convert.DynamicParser.SetPropertyValue(System.Object,System.Reflection.PropertyInfo,System.Object)">
+            <summary>
+            Nastaví hodnotu property danému objektu, pričom hodnotu konvertuje na správny typ.
+            Na konverziu využíva triedy <see cref="T:Cora.Convert.Parser"/> resp. <see cref="T:Cora.Convert.NullableParser"/>.
+            </summary>
+            <param name="obj">Cieľový objekt.</param>
+            <param name="propInfo">Metadáta nastavovanej property na cieľovom objekte.</param>
+            <param name="value">Nastavovaná hodnota.</param>
+        </member>
+        <member name="M:Cora.Convert.DynamicParser.TryGetBoxedValue(System.Type,System.Object,System.Object@)">
+            <summary>
+            Vráti hodnotu konvertovanú/parsovanú na požadovaný typ. 
+            Na konverziu využíva triedy <see cref="T:Cora.Convert.Parser"/> resp. <see cref="T:Cora.Convert.NullableParser"/>.
+            </summary>
+            <param name="type">Cieľový typ.</param>
+            <param name="value">Hodnota.</param>
+            <param name="outValue">Hodnota konvertovaná na cieľový typ; alebo pôvodná hodnota v prípade neznámeho typu. 
+            V prípade neúspešnosti parsovania alebo neznámeho typu parameter nadobúda hodnotu <c>null</c>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="T:Cora.Convert.TypeEnum">
+            <summary>
+            Vymenovaný typ známych typov, s ktorými vie pracovať trieda <see cref="T:Cora.Convert.DynamicParser"/>.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.Bool">
+            <summary>Typ bool.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.BoolNullable">
+            <summary>Typ bool?.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.Int">
+            <summary>Typ int.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.IntNullable">
+            <summary>Typ int?.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.Long">
+            <summary>Typ long.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.LongNullable">
+            <summary>Typ long?.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.String">
+            <summary>Typ string.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.DateTime">
+            <summary>Typ DateTime.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.DateTimeNullable">
+            <summary>Typ DateTime?.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.Decimal">
+            <summary>Typ decimal.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.DecimalNullable">
+            <summary>Typ decimal?.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.Float">
+            <summary>Typ float.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.FloatNullable">
+            <summary>Typ float?.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.Double">
+            <summary>Typ double.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.DoubleNullable">
+            <summary>Typ double?.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.Guid">
+            <summary>Typ Guid.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.GuidNullable">
+            <summary>Typ Guid?.</summary>
+        </member>
+        <member name="F:Cora.Convert.TypeEnum.Object">
+            <summary>Typ object.</summary>
+        </member>
+        <member name="T:Cora.Convert.CsvBuilder">
+            <summary>
+            Trieda na naformátovanie reťazcových hodnôt do formátu CSV (comma-separated values). 
+            </summary>
+            <remarks>
+             <para>
+              CSV výstup, ktorý trieda zapisuje do streamu, sa tvorí postupne vytváraním záznamov (<see cref="M:Cora.Convert.CsvBuilder.StartNewRecord"/>)
+              a jednotlivých polí (<see cref="M:Cora.Convert.CsvBuilder.AddField(System.String)"/>) z ktorých záznamy pozostávajú.
+              Pri tabuľkových dátach záznam korešponduje s riadkom a pole s bunkou tabuľky.
+              Pritom platí, že záznamy musia obsahovať rovnaký, nenulový počet polí.
+             </para>
+             <para>
+              Formát je implementovaný podľa RFC 4180 (http://www.rfc-editor.org/rfc/rfc4180.txt)
+              s nasledovnými rozšíreniami:
+              <list type="bullet">
+               <item>do dvojitých zátvoriek sa uzatvárajú aj hodnoty, ktoré začínajú alebo končia medzerou</item>
+               <item>možno použiť aj iný oddeľovač polí ako čiarka (viď <see cref="M:Cora.Convert.CsvBuilder.#ctor(System.IO.Stream,System.Char)"/>)
+            		 - v tom prípade platí, že sa do dvojitých zátvoriek uzatvárajú hodnoty, ktoré obsahujú tento oddeľovač
+            		 a nie čiarku</item>
+              </list>
+             </para>
+            </remarks>
+        </member>
+        <member name="F:Cora.Convert.CsvBuilder.DEFAULT_FIELD_SEPARATOR">
+            <summary>Defaultný oddeľovač polí (čiarka).</summary>
+        </member>
+        <member name="M:Cora.Convert.CsvBuilder.#ctor(System.IO.Stream,System.Char,System.Text.Encoding)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Convert.CsvBuilder"/> s definovaním nie-defaultného oddeľovača polí a kódovania.
+            </summary>
+            <param name="outStream">Výstupný stream.</param>
+            <param name="fieldSeparator">Znak oddeľovača polí.</param>
+            <param name="encoding">Kódovanie znakov.</param>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="outStream"/> nie je zapisovateľný.</exception>
+        </member>
+        <member name="M:Cora.Convert.CsvBuilder.#ctor(System.IO.Stream,System.Char)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Convert.CsvBuilder"/> s definovaním nie-defaultného oddeľovača polí
+            a kódovaním <see cref="P:System.Text.Encoding.UTF8"/>
+            </summary>
+            <param name="outStream">Výstupný stream.</param>
+            <param name="fieldSeparator">Znak oddeľovača polí.</param>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="outStream"/> nie je zapisovateľný.</exception>
+        </member>
+        <member name="M:Cora.Convert.CsvBuilder.#ctor(System.IO.Stream)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Convert.CsvBuilder"/> s defaultným oddeľovačom polí (čiarka)
+            a kódovaním <see cref="P:System.Text.Encoding.UTF8"/>
+            </summary>
+            <param name="outStream">Výstupný stream.</param>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="outStream"/> nie je zapisovateľný.</exception>
+        </member>
+        <member name="F:Cora.Convert.CsvBuilder.FieldSeparator">
+            <summary>
+            Oddeľovač polí.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.CsvBuilder.StartNewRecord">
+            <summary>
+            Založí nový záznam.
+            Pri prvom zázname je volanie tejto metódy nepovinné.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Pri nerovnakom počte polí v záznamoch.</exception>
+        </member>
+        <member name="M:Cora.Convert.CsvBuilder.AddField(System.String)">
+            <summary>
+            Pridá nové pole záznamu.
+            </summary>
+            <param name="field">Reťazec (hodnota poľa).</param>
+            <exception cref="T:System.InvalidOperationException">Pri prekročení počtu polí v zázname.</exception>
+        </member>
+        <member name="T:Cora.Convert.DateTimeConv">
+            <summary>
+            Prevody medzi rôznymi dátumami.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.DateTimeConv.SECONDS_PER_DAY">
+            <summary>Počet sekúnd za 1 deň.</summary>
+        </member>
+        <member name="F:Cora.Convert.DateTimeConv.UnixEpoch">
+            <summary>Dátum a čas začiatku unixovskej epochy (1.1.1970).</summary>
+        </member>
+        <member name="M:Cora.Convert.DateTimeConv.FromUnixTime(System.Int32)">
+            <summary>
+            Prevod unix-ovskej časovej značky do <see cref="T:System.DateTime"/>.
+            </summary>
+            <param name="unixTimestamp">Unix-ovská časová značka (počet nepriestupných sekúnd od <see cref="F:Cora.Convert.DateTimeConv.UnixEpoch"/>).</param>
+            <returns>Odpovedajúci <see cref="T:System.DateTime"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.DateTimeConv.ToUnixTime(System.DateTime)">
+            <summary>
+            Prevod <see cref="T:System.DateTime"/>-u na unix-ovskú časovú značku.
+            </summary>
+            <param name="dateTime"><see cref="T:System.DateTime"/>.</param>
+            <returns>Odpovedajúca unix-ovská časová značka (počet nepriestupných sekúnd od <see cref="F:Cora.Convert.DateTimeConv.UnixEpoch"/>).</returns>
+        </member>
+        <member name="M:Cora.Convert.DateTimeConv.FromExcelTime(System.Double)">
+            <summary>
+            Prevod excelovskej časovej značky do <see cref="T:System.DateTime"/>.
+            </summary>
+            <remarks>
+            Výpočet je korektný iba pre 1.3.1900 a vyššie (dôvody viď Microsoft KB 214326). 
+            </remarks>
+            <param name="excelTimestamp">Excelová časová značka.</param>
+            <returns>Odpovedajúci <see cref="T:System.DateTime"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.DateTimeConv.ToExcelTime(System.DateTime)">
+            <summary>
+            Prevod <see cref="T:System.DateTime"/> na časovú značku v MS Excel.
+            </summary>
+            <remarks>
+            Výpočet je korektný iba pre 1.3.1900 a vyššie (dôvody viď Microsoft KB 214326). 
+            </remarks>
+            <param name="dateTime">Dátum a čas.</param>
+            <returns>Desatinné číslo reprezentujúce dátum a čas v MS Excel.</returns>
+        </member>
+        <member name="M:Cora.Convert.DateTimeConv.ZeroMilliseconds(System.DateTime)">
+            <summary>
+            Získanie rovnakého času s vynulovanými milisekundami (a menšími).
+            </summary>
+            <param name="dateTime">Čas.</param>
+            <returns>Času s vynulovanými milisekundami.</returns>
+        </member>
+        <member name="T:Cora.Convert.DateTimeExtensions">
+            <summary>
+            Extension metódy pre <see cref="T:System.DateTime"/> 
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.DateTimeExtensions.ToUnixTime(System.DateTime)">
+            <summary>
+            Prevod <see cref="T:System.DateTime"/>-u na unix-ovskú časovú značku.
+            </summary>
+            <param name="dateTime"><see cref="T:System.DateTime"/>.</param>
+            <returns>Odpovedajúca unix-ovská časová značka (počet nepriestupných sekúnd od <see cref="F:Cora.Convert.DateTimeConv.UnixEpoch"/>).</returns>
+        </member>
+        <member name="M:Cora.Convert.DateTimeExtensions.ToExcelTime(System.DateTime)">
+            <summary>
+            Prevod <see cref="T:System.DateTime"/> na časovú značku v MS Excel.
+            </summary>
+            <param name="dateTime">Dátum a čas.</param>
+            <returns>Desatinné číslo reprezentujúce dátum a čas v MS Excel.</returns>
+        </member>
+        <member name="T:Cora.Convert.Encoder">
+            <summary>
+            Trieda na kódovanie reťazcov.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.Encoder.HTML_CHARS">
+            <summary>Znaky, ktoré sú špeciálne pre HTML a sú nahradzované v metóde <see cref="M:Cora.Convert.Encoder.HtmlEncode(System.String)"/>.
+            Sú to &lt;, &quot; a &amp;.</summary>
+        </member>
+        <member name="F:Cora.Convert.Encoder.SIMPLE_HTML_FORMAT_CHARS">
+            <summary>Znaky, ktoré sú špeciálne pre HTML a sú nahradzované v metóde <see cref="M:Cora.Convert.Encoder.SimpleHtmlFormat(System.String)"/>.
+            Sú to &lt;, &quot;, &amp;, entery a tabelátor.</summary>
+        </member>
+        <member name="F:Cora.Convert.Encoder.C0_XML_CHARS">
+            <summary>Platné znaky z množiny C0 control charactes (0x00-0x1F)</summary>
+        </member>
+        <member name="M:Cora.Convert.Encoder.JsEncode(System.String)">
+            <summary>
+            Zakódovanie reťazca pre použitie v javascript-ovej hodnote. Kódované znaky sú \ " \r \n \t.
+            </summary>
+            <param name="vstup">Vstupný reťazec.</param>
+            <returns>Zakódovaný reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.EncodeIeWindowName(System.String)">
+            <summary>
+            Zakódovanie reťazca pre použitie v názve okna, alebo targetu v IE. Dovoľuje len [a-zA-Z_].
+            </summary>
+            <param name="ieWindowName">Pôvodný názov okna.</param>
+            <returns>Zakódovaný reťazec pre použitie v názve okna, alebo targetu v IE.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.GetSafeFileName(System.String)">
+            <summary>
+            Zakódovanie reťazca pre bezpečné použitie v názve súboru. Dovoľuje len čísla, písmená bez diakritiky, medzery a znaky !$'()+,-.;=@[]^_`.
+            </summary>
+            <param name="fileName">Pôvodný názov súboru.</param>
+            <returns>Zakódovaný reťazec pre bezpečné použitie v názve súboru.</returns>
+            <remarks>Zoznam povolených znakov zohľadňuje aj dovolené znaky pre súbory v Sharepoint-e.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Encoder.ShortenFileName(System.String,System.Int32)">
+            <summary>
+            Skrátenie názvu súboru na požadovanú dĺžku. Časť názvu súboru, presahujúca max. povolenú dĺžku, sa odreže.
+            Prípona sa nemení a musí byť súčasťou vstupu <paramref name="fileName" />.
+            </summary>
+            <param name="fileName">Názov súboru.</param>
+            <param name="maxLength">Maximálna povolená dĺžka súboru. Aspoň 3 (napr. a.b).</param>
+            <returns>
+            Skrátený názov súboru, ak presahoval max. povolenú dĺžku, alebo pôvodná hodnota, ak nepresahoval max. povolenú dĺžku.
+            </returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="maxLength"/> menej ako 3.</exception>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="fileName" /> je <c>null</c>.</exception>
+            <remarks>Maximálna dĺžka win,
+            down IE</remarks>
+        </member>
+        <member name="M:Cora.Convert.Encoder.EncodeCommandLineArgument(System.String)">
+            <summary>
+            Zakódovanie hodnoty pre použitie v argumente spustenia z príkazového riadku.
+            </summary>
+            <remarks>Kódujú sa sekvencie \\, \", " a \ na konci reťazca. Celá hodnota je ešte obalená do úvodzoviek (kvôli medzerám apod.).</remarks>
+            <param name="commandLineArgument">Hodnota argumentu pre spustenie z príkazového riadku.</param>
+            <returns>Zakódovaná hodnota argumentu pre spustenie z príkazového riadku.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.RemoveDiacritics(System.String)">
+            <summary>
+            Odstránenie slovenskej (a inej) diakritiky zo zadaného reťazca.
+            </summary>
+            <param name="text">Pôvodný názov súboru.</param>
+            <returns>Reťazec bez slovenskej (a inej) diakritiky.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.SimpleHtmlFormat(System.String)">
+            <summary>
+            Formátovanie reťazca pre jeho zobrazenie ako html. Kódujú sa znaky <see cref="F:Cora.Convert.Encoder.SIMPLE_HTML_FORMAT_CHARS"/>.
+            Dopracovať ešte možno (treba ?) prevod ostatných escape sekvencí na html escape sekvencie.
+            </summary>
+            <param name="vstup">Vstupný reťazec.</param>
+            <returns>Zakódovaný reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.HtmlEncode(System.String)">
+            <summary>
+            Zakódovanie <paramref name="text"/>u pre použitie v HTML. Kódujú sa znaky <see cref="F:Cora.Convert.Encoder.HTML_CHARS"/>.
+            </summary>
+            <param name="text">Kódovaný text.</param>
+            <returns>Výstupné HTML.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.SqlEncode(System.String)">
+            <summary>
+            Zakódovanie <paramref name="text"/>u pre použitie v SQL. Kóduje sa znak '.
+            </summary>
+            <param name="text">Kódovaný text.</param>
+            <returns>Výstupný text.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.GetSafeControlID(System.String)">
+            <summary>
+            Oprava zadaného ID-éčka control-u tak, aby obsahovalo len písmená, číslice, príp. podčiarníky
+            a začínalo na písmeno alebo podčiarník. Znaky mimo rozsahu sú nahradené _&lt;hexa číslo znaku&gt;.
+            </summary>
+            <param name="controlID">ID-éčko control-u.</param>
+            <returns>Opravené ID-éčko control-u.</returns>
+            <remarks>Pozri poznámku v http://msdn.microsoft.com/en-us/library/system.web.ui.control.id.aspx.
+            Okrem toho nesmie začínať číslom, pretože <c>System.Web.UI.ClientScriptManager.RenderExpandoAttribute</c>
+            generuje názov javascript-ovej premennej podľa ID (a ten je dosť citlivý na špeciálne znaky).</remarks>
+        </member>
+        <member name="M:Cora.Convert.Encoder.EscapeToFileUri(System.String)">
+            <summary>
+            Vytvorenie súborového Uri (v tvare file://cesta/k/suboru) z absolútnej lokálnej cesty k súboru/adresáru. Opak metódy <see cref="M:Cora.Convert.Encoder.TryUnescapeFromFileUri(System.String,System.String@)"/>.
+            </summary>
+            <param name="absoluteFileName">Názov súboru/adresára (absolútna lokálna cesta).</param>
+            <returns>Súborové Uri z názvu súboru/adresára.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.TryUnescapeFromFileUri(System.String,System.String@)">
+            <summary>
+            Vytvorenie absolútnej lokálnej cesty k súboru/adresáru zo súborového Uri (v tvare file://cesta/k/suboru). Opak metódy <see cref="M:Cora.Convert.Encoder.EscapeToFileUri(System.String)"/>.
+            </summary>
+            <param name="fileUri">Súborové Uri z názvu súboru/adresára.</param>
+            <param name="absoluteFileName">Výsledný názov súboru/adresára (absolútna lokálna cesta).</param>
+            <returns>Bolo možné vytvoriť názov súboru/adresára (absolútnu lokálnu cestu)?</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.UnindentText(System.String)">
+            <summary>
+            Zrušenie odsadenia textu. Podľa netlačiteľných znakov na začiatku prvého riadku sa orežú začiatky všetkých riadkov.
+            </summary>
+            <param name="indentedText">Odsadený text.</param>
+            <returns>Text bez odsadenia.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.IsGSM7(System.String)">
+            <summary>
+            Obsahuje reťazec iba znaky z GSM-7 abecedy (GSM 03.38)?
+            </summary>
+            <remarks>
+            Viď https://en.wikipedia.org/wiki/GSM_03.38. Toto kódovanie sa defaultne využíva pri odosielaní SMS.
+            </remarks>
+            <param name="text">Reťazec.</param>
+            <returns><c>true</c> ak sú všetky znaky kódovateľné ako GSM-7 alebo ak je reťazec prázdny; inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.GetGSM7CharCount(System.String)">
+            <summary>
+            Vráti počet 7-bitových znakov po zakódovaní textu v abecede GSM-7 (GSM 03.38)
+            </summary>
+            <remarks>
+            Metóda zohľadní, že znaky z Basic Character Set Extension figurujú za escape znakom, čiže rátajú sa za dva.
+            </remarks>
+            <param name="text">Reťazec.</param>
+            <returns>Počet znakov po zakódovaní, alebo -1 ak reťazec obsahuje aj iné znaky.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.IsValidXmlChar(System.Char)">
+            <summary>
+            Je znak platným XML znakom?
+            </summary>
+            <remarks>
+            Viď http://www.w3.org/TR/2006/REC-xml-20060816, Section 2.2
+            </remarks>
+            <param name="ch">Znak ktorý sa má validovať.</param>
+            <returns>
+            <c>true</c> ak je znak platný XML znak; inak <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.RemoveInvalidXmlChars(System.String)">
+            <summary>
+            Vráti reťazec bez neplatných XML znakov.
+            </summary>
+            <param name="s">Reťazec (povolený je aj <c>null</c> alebo prázdny reťazec).</param>
+            <returns>Reťazec obsahujúci iba tie znaky z pôvodného reťazca, ktoré sú platnými XML znakmi.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.EncodeAspValue(System.String)">
+            <summary>
+            Zakódovanie <paramref name="value"/> pre použitie vo VB skripte, napr. ASP stránke. Kódujú sa znaky ", entery, &lt;% a %&gt;.
+            </summary>
+            <param name="value"></param>
+            <returns>Zakódovaná hodnota pre použitie vo VB skripte, napr. ASP stránke.</returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.Utf8HasBOM(System.Byte[])">
+            <summary>
+            Zistí, či <paramref name="input"/> obsahuje na začiatku BOM UTF-8, t.j. byteovú značku označujúcu kódovanie UTF-8.
+            </summary>
+            <param name="input">Pole, v ktorom sa má zistiť prítomnosť BOM UTF-8.</param>
+            <returns>
+            <c>true</c>, ak <paramref name="input"/> obsahuje BOM značku UTF-8, inak <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.Convert.Encoder.Utf8RemoveBOM(System.Byte[])">
+            <summary>
+            Vráti <paramref name="input"/> po odstránení prvých 3 bajtov z poľa predstavujúcich BOM značku v kódovaní UTF-8.
+            </summary>
+            <param name="input">Pole, z ktorého sa má odstrániť BOM UTF-8.</param>
+            <returns><paramref name="input"/> bez BOM UTF-8 (odstránené prvé tri bajty).</returns>
+        </member>
+        <member name="T:Cora.Convert.Formatter">
+            <summary>
+            Trieda pre špeciálne formátovania.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.Formatter.BOOL_ANO">
+            <summary>Reťazec pre logickú hodnotu "Áno".</summary>
+        </member>
+        <member name="F:Cora.Convert.Formatter.BOOL_NIE">
+            <summary>Reťazec pre logickú hodnotu "Nie".</summary>
+        </member>
+        <member name="M:Cora.Convert.Formatter.Truncate(System.String,System.Int32)">
+            <summary>
+            Skráti reťazec na maximálnu dĺžku.
+            </summary>
+            <param name="str">Pôvodný reťazec.</param>
+            <param name="maxLength">Maximálna dĺžka nového reťazca.</param>
+            <returns>Podreťazec, ktorého dĺžka neprekročí <paramref name="maxLength"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="maxLength"/> záporný.</exception>
+        </member>
+        <member name="M:Cora.Convert.Formatter.ToString(System.Boolean)">
+            <summary>
+            Formátovanie logickej hodnoty.
+            </summary>
+            <param name="b">Vstup.</param>
+            <returns><see cref="F:Cora.Convert.Formatter.BOOL_ANO"/>, alebo <see cref="F:Cora.Convert.Formatter.BOOL_NIE"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.ToString(System.Int32)">
+            <summary>
+            Formátovanie hodnoty <see cref="T:System.Int32"/>.
+            </summary>
+            <param name="iValue">Celočíselná hodnota.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.ToString(System.Int64)">
+            <summary>
+            Formátovanie hodnoty <see cref="T:System.Int64"/>.
+            </summary>
+            <param name="lValue">Celočíselná hodnota.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.ToString(System.Decimal)">
+            <summary>
+            Formátovanie hodnoty <see cref="T:System.Decimal"/>.
+            </summary>
+            <param name="dValue">Hodnota <see cref="T:System.Decimal"/>.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.ToString(System.Single)">
+            <summary>
+            Formátovanie desatinnej hodnoty.
+            </summary>
+            <param name="fValue">Desatinná hodnota.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.ToString(System.Double)">
+            <summary>
+            Formátovanie desatinnej hodnoty.
+            </summary>
+            <param name="dValue">Desatinná hodnota.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.ToString(System.DateTime,System.String)">
+            <summary>
+            Formátovanie dátumu podľa zadaného formátu.
+            </summary>
+            <param name="oDateTime">Dátum.</param>
+            <param name="format">Formát dátumu.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.ToString(System.Nullable{System.DateTime},System.String)">
+            <summary>
+            Formátovanie dátumu podľa zadaného formátu.
+            </summary>
+            <param name="oDateTime">Dátum alebo <c>null</c>.</param>
+            <param name="format">Formát dátumu.</param>
+            <returns>Reťazec dátumu formátovaný podľa zadaného formátu alebo <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.FromDate(System.DateTime)">
+            <summary>
+            Formátovanie dátumu podľa formátu <see cref="F:Cora.Convert.Parser.DateFormat"/>.
+            </summary>
+            <param name="oDateTime">Dátum.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.FromDatePadded(System.DateTime)">
+            <summary>
+            Formátovanie dátumu podľa zarovnaného formátu <see cref="F:Cora.Convert.Parser.DatePaddedFormat"/>.
+            </summary>
+            <param name="oDateTime">Dátum.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.FromDateTime(System.DateTime)">
+            <summary>
+            Formátovanie dátumu podľa formátu <see cref="F:Cora.Convert.Parser.DateTimeFormat"/>.
+            </summary>
+            <param name="oDateTime">Dátum.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.FromDateTimePadded(System.DateTime)">
+            <summary>
+            Formátovanie dátumu podľa zarovnaného formátu <see cref="F:Cora.Convert.Parser.DateTimePaddedFormat"/>.
+            </summary>
+            <param name="oDateTime">Dátum.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.FromCoraDateTime(System.DateTime)">
+            <summary>
+            Formátovanie dátumu podľa "Cora-ckeho" formátu <see cref="F:Cora.Convert.Parser.CoraDateTimeFormat"/>.
+            </summary>
+            <param name="oDateTime">Dátum.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.FromIsoDate(System.Nullable{System.DateTime})">
+            <summary>
+            Formátovanie dátumu podľa formátu <see cref="F:Cora.Convert.Parser.DateFormat"/>.
+            </summary>
+            <param name="oDateTime">Dátum.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.FromIsoDateTime(System.Nullable{System.DateTime})">
+            <summary>
+            Formátovanie dátumu podľa formátu <see cref="F:Cora.Convert.Parser.DateTimeFormat"/>.
+            </summary>
+            <param name="oDateTime">Dátum.</param>
+            <returns>Reťazec.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.ToNormalString(System.Object)">
+            <summary>
+            Získanie reťazca v normálnom tvare (desatinná bodka, bez medzier).
+            </summary>
+            <param name="oValue">Vstupná hodnota.</param>
+            <returns>Normálny reťazec, alebo <c>null</c> pre vstupy <c>null</c> a <see cref="F:System.DBNull.Value"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.Format(System.Object)">
+            <summary>
+            Formátovanie bez určenia typu a formátu.
+            </summary>
+            <param name="value">Vstupná hodnota.</param>
+            <returns>Formátovaný reťazec, alebo <c>null</c> pre vstupy <c>null</c> a <see cref="F:System.DBNull.Value"/>.</returns>
+            <remarks>Z <see cref="T:System.Boolean"/> je <see cref="F:Cora.Convert.Formatter.BOOL_ANO"/>/<see cref="F:Cora.Convert.Formatter.BOOL_NIE"/>, dátum má formát 
+            <see cref="F:Cora.Convert.Parser.DateTimeFormat"/>, čísla majú formát <see cref="P:System.Globalization.NumberFormatInfo.InvariantInfo"/>
+            a ostatné <see cref="M:System.Object.ToString"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Formatter.Format(System.Object,System.String)">
+            <summary>
+            Formátovanie podľa formátu bez určenia typu.
+            </summary>
+            <param name="value">Vstupná hodnota.</param>
+            <param name="format">Požadovaný formát.</param>
+            <returns>Formátovaný reťazec, alebo <c>null</c> pre vstupy <c>null</c> a <see cref="F:System.DBNull.Value"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.Format(System.Object,System.String,System.IFormatProvider)">
+            <summary>
+            Formátovanie podľa formátu a <see cref="T:System.IFormatProvider"/>-a bez určenia typu.
+            </summary>
+            <param name="value">Vstupná hodnota.</param>
+            <param name="format">Požadovaný formát.</param>
+            <param name="formatProvider">Poskytovateľ formátu. Môže byť <c>null</c>. Nepoužije sa pre neformátovateľné 
+            typy (ak neimplementuje <see cref="T:System.IFormattable"/>).</param>
+            <returns>Formátovaný reťazec, alebo <c>null</c> pre vstupy <c>null</c> a <see cref="F:System.DBNull.Value"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.FromCollection(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            Získanie textového výpisu z <see cref="T:System.Collections.Specialized.NameValueCollection"/>.
+            </summary>
+            <param name="nameValueCollection"><see cref="T:System.Collections.Specialized.NameValueCollection"/>.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">nameValueCollection</exception>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="nameValueCollection" /> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Formatter.GetLetterIndex(System.Int32)">
+            <summary>
+            Získanie číselnej hodnoty v písmenovom tvare <c>A, B, C, ... Z, a, b, c, ... z, AA, AB, AC, ...</c>.
+            Jedna "sada" má 52 hodnôt, <c>A</c> zodpovedá hodnote 0. Len nezáporné čísla.
+            </summary>
+            <param name="value">Číselná hodnota.</param>
+            <returns>Hodnota písmenovom tvare.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.GetLetterIndex(System.UInt64)">
+            <summary>
+            Získanie číselnej hodnoty v písmenovom tvare <c>A, B, C, ... Z, a, b, c, ... z, AA, AB, AC, ...</c>.
+            Jedna "sada" má 52 hodnôt, <c>A</c> zodpovedá hodnote 0. Len nezáporné čísla.
+            </summary>
+            <param name="value">Číselná hodnota.</param>
+            <returns>Hodnota písmenovom tvare.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.GetLetterIndexUpper(System.Int32)">
+            <summary>
+            Získanie číselnej hodnoty v písmenovom tvare veľkých písmen <c>A, B, C,  ... Z, AA, AB, AC, ...</c>.
+            Jedna "sada" má 26 hodnôt, <c>A</c> zodpovedá hodnote 0. Len nezáporné čísla.
+            </summary>
+            <param name="value">Číselná hodnota.</param>
+            <returns>Hodnota písmenovom tvare veľkých písmen.</returns>
+        </member>
+        <member name="M:Cora.Convert.Formatter.GetLetterIndexUpper(System.UInt64)">
+            <summary>
+            Získanie číselnej hodnoty v písmenovom tvare veľkých písmen <c>A, B, C,  ... Z, AA, AB, AC, ...</c>.
+            Jedna "sada" má 26 hodnôt, <c>A</c> zodpovedá hodnote 0. Len nezáporné čísla.
+            </summary>
+            <param name="value">Číselná hodnota.</param>
+            <returns>Hodnota písmenovom tvare veľkých písmen.</returns>
+        </member>
+        <member name="T:Cora.Convert.OperatorPrecedenceParser">
+            <summary>
+            Trieda pre prácu s gramatikami s priorizovanými operátormi (operator-precedence grammar). 
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.OperatorPrecedenceParser.OPEN_PARENTHESIS">
+            <summary>Symbol ľavej (otváracej) zátvorky.</summary>
+        </member>
+        <member name="F:Cora.Convert.OperatorPrecedenceParser.CLOSE_PARENTHESIS">
+            <summary>Symbol pravej (zatváracej) zátvorky.</summary>
+        </member>
+        <member name="M:Cora.Convert.OperatorPrecedenceParser.InfixToPostfix(System.Collections.IEnumerable,System.Func{System.Object,System.Boolean},System.Func{System.Object,System.Boolean},System.Func{System.Object,System.Int32})">
+            <summary>
+            Vytvorí z postupnosti v infix notácii postupnosť v postfix notácii (Reverse Polish Notation).
+            </summary>
+            <param name="tokens">Postupnosť tokenov. Jednotlivými tokenmi môžu byť operandy, operátory alebo zátvorky (<see cref="F:Cora.Convert.OperatorPrecedenceParser.OPEN_PARENTHESIS"/>, <see cref="F:Cora.Convert.OperatorPrecedenceParser.CLOSE_PARENTHESIS"/>).</param>
+            <param name="isOperator">Metóda vracajúca <c>true</c> vtedy a len vtedy, ak je token operátorom.</param>
+            <param name="isOperatorLeftAssociative">Metóda vracajúca <c>true</c> vtedy a len vtedy, ak je operátor zľava asociatívny.</param>
+            <param name="getOperatorPrecedence">Metóda vracajúca prioritu operátora, pričom platí: vyššie číslo = vyššia priorita.</param>
+            <returns>Postfix postupnosť. Táto už neobsahuje zátvorky.</returns>
+            <remarks>
+            Metóda implementuje Dijkstrov Shunting-Yard algoritmus s obmedzením, že všetky operátory musia byť binárne, t.j.
+            berú dva argumenty (všeobecná verzia algoritmu vie pracovať s n-árnymi operátormi).
+            </remarks>
+            <exception cref="T:System.ArgumentException">Ak je </exception>
+        </member>
+        <member name="T:Cora.Convert.Joiner">
+            <summary>
+            Trieda na spájanie zoznamov hodnôt do reťazcov.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.Joiner.Join(System.Collections.Generic.IEnumerable{System.Boolean},System.String)">
+            <summary>
+            Vytvorí spojenie hodnôt <paramref name="enumerable"/> oddelených <paramref name="separator"/>.
+            </summary>
+            <param name="enumerable">Zoznam hodnôt.</param>
+            <param name="separator">Oddeľovač.</param>
+            <returns>Reťazec hodnôt, oddelených oddeľovačom</returns>
+        </member>
+        <member name="M:Cora.Convert.Joiner.Join(System.Collections.Generic.IEnumerable{System.Int32},System.String)">
+            <summary>
+            Vytvorí spojenie hodnôt <paramref name="enumerable"/> oddelených <paramref name="separator"/>.
+            </summary>
+            <param name="enumerable">Zoznam hodnôt.</param>
+            <param name="separator">Oddeľovač.</param>
+            <returns>Reťazec hodnôt, oddelených oddeľovačom</returns>
+        </member>
+        <member name="M:Cora.Convert.Joiner.Join(System.Collections.Generic.IEnumerable{System.Int64},System.String)">
+            <summary>
+            Vytvorí spojenie hodnôt <paramref name="enumerable"/> oddelených <paramref name="separator"/>.
+            </summary>
+            <param name="enumerable">Zoznam hodnôt.</param>
+            <param name="separator">Oddeľovač.</param>
+            <returns>Reťazec hodnôt, oddelených oddeľovačom</returns>
+        </member>
+        <member name="M:Cora.Convert.Joiner.Join(System.Collections.Generic.IEnumerable{System.Decimal},System.String)">
+            <summary>
+            Vytvorí spojenie hodnôt <paramref name="enumerable"/> oddelených <paramref name="separator"/>.
+            </summary>
+            <param name="enumerable">Zoznam hodnôt.</param>
+            <param name="separator">Oddeľovač.</param>
+            <returns>Reťazec hodnôt, oddelených oddeľovačom</returns>
+        </member>
+        <member name="M:Cora.Convert.Joiner.Join(System.Collections.Generic.IEnumerable{System.Single},System.String)">
+            <summary>
+            Vytvorí spojenie hodnôt <paramref name="enumerable"/> oddelených <paramref name="separator"/>.
+            </summary>
+            <param name="enumerable">Zoznam hodnôt.</param>
+            <param name="separator">Oddeľovač.</param>
+            <returns>Reťazec hodnôt, oddelených oddeľovačom</returns>
+        </member>
+        <member name="M:Cora.Convert.Joiner.Join(System.Collections.Generic.IEnumerable{System.Double},System.String)">
+            <summary>
+            Vytvorí spojenie hodnôt <paramref name="enumerable"/> oddelených <paramref name="separator"/>.
+            </summary>
+            <param name="enumerable">Zoznam hodnôt.</param>
+            <param name="separator">Oddeľovač.</param>
+            <returns>Reťazec hodnôt, oddelených oddeľovačom</returns>
+        </member>
+        <member name="M:Cora.Convert.Joiner.Join(System.Collections.Generic.IEnumerable{System.DateTime},System.String,System.String)">
+            <summary>
+            Vytvorí spojenie hodnôt <paramref name="enumerable"/> oddelených <paramref name="separator"/>.
+            </summary>
+            <param name="enumerable">Zoznam hodnôt.</param>
+            <param name="separator">Oddeľovač.</param>
+            <param name="format">The format.</param>
+            <returns>Reťazec hodnôt, oddelených oddeľovačom</returns>
+        </member>
+        <member name="M:Cora.Convert.Joiner.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Convert.Joiner"/>.
+            </summary>
+        </member>
+        <member name="T:Cora.Convert.Metric">
+            <summary>
+            Trieda pre konverzie medzi metrickými systémami.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.Metric.MM_IN_INCH">
+            <summary>Počet milimetrov v jednom palci.</summary>
+        </member>
+        <member name="F:Cora.Convert.Metric.POINTS_IN_INCH">
+            <summary>Počet typografických pointov v jednom palci.</summary>
+        </member>
+        <member name="F:Cora.Convert.Metric.POINTS_IN_MM">
+            <summary>Počet typografických pointov v jednom milimetri.</summary>
+        </member>
+        <member name="M:Cora.Convert.Metric.InchToMm(System.Double)">
+            <summary>
+            Prepočet palcov na milimetre.
+            </summary>
+            <param name="inches">Hodnota v palcoch.</param>
+            <returns>Hodnota v milimetroch.</returns>
+        </member>
+        <member name="M:Cora.Convert.Metric.InchToMm(System.Single)">
+            <summary>
+            Prepočet palcov na milimetre.
+            </summary>
+            <param name="inches">Hodnota v palcoch.</param>
+            <returns>Hodnota v milimetroch.</returns>
+        </member>
+        <member name="M:Cora.Convert.Metric.MmToInch(System.Double)">
+            <summary>
+            Prepočet milimetrov na palce.
+            </summary>
+            <param name="mms">Hodnota v milimetroch.</param>
+            <returns>Hodnota v palcoch.</returns>
+        </member>
+        <member name="M:Cora.Convert.Metric.MmToInch(System.Single)">
+            <summary>
+            Prepočet milimetrov na palce.
+            </summary>
+            <param name="mms">Hodnota v milimetroch.</param>
+            <returns>Hodnota v palcoch.</returns>
+        </member>
+        <member name="M:Cora.Convert.Metric.PointToMm(System.Double)">
+            <summary>
+            Prepočet pointov na milimetre.
+            </summary>
+            <param name="points">Hodnota v pointoch (typografických bodoch).</param>
+            <returns>Hodnota v milimetroch.</returns>
+        </member>
+        <member name="M:Cora.Convert.Metric.MmToPoint(System.Double)">
+            <summary>
+            Prepočet milimetrov na pointy.
+            </summary>
+            <param name="mms">Hodnota v milimetroch.</param>
+            <returns>Hodnota v pointoch (typografických bodoch).</returns>
+        </member>
+        <member name="T:Cora.Convert.NullableParser">
+            <summary>
+            Trieda pre parsovania s možnosťou <c>null</c> hodnôt. Okrem toho majú <see cref="F:System.String.Empty"/>
+            a <see cref="F:System.DBNull.Value"/> na vstupe výsledok <c>null</c>.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.IsNull(System.Object)">
+            <summary>
+            Zistenie, či hodnota je <c>null</c>, <see cref="F:System.String.Empty"/>, alebo <see cref="F:System.DBNull.Value"/>.
+            </summary>
+            <param name="o">Skúmaná hodnota.</param>
+            <returns>Je hodnota <c>null</c>, <see cref="F:System.String.Empty"/>, alebo <see cref="F:System.DBNull.Value"/>?</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.AcceptsNull(System.Type)">
+            <summary>
+            Zistenie, či zadaný typ prijíma <c>null</c> hodnoty. Tzn. je to objektový typ (nie hodnotový), alebo <see cref="T:System.Nullable`1"/>.
+            </summary>
+            <param name="type">Skúmaný typ.</param>
+            <returns>Prijíma zadaný typ <c>null</c> hodnoty?</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetBool(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{bool}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetBool(System.Object)"/>.
+            </summary>
+            <param name="oBool">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{bool}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetBool(System.Object,System.Nullable{System.Boolean}@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:Nullable{bool}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> nastaví <paramref name="bBool"/>
+            na <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetBool(System.Object)"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="bBool"/> je <c>false</c>.
+            </summary>
+            <param name="oBool">Zdrojová hodnota.</param>
+            <param name="bBool">Výsledný <see cref="T:Nullable{bool}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetInt(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{int}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetInt(System.Object)"/>.
+            </summary>
+            <param name="oInt">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{int}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetInt(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{int}"/>.
+            </summary>
+            <param name="sInt">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{int}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetLong(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{long}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetLong(System.Object)"/>.
+            </summary>
+            <param name="oLong">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{long}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetLong(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{long}"/>.
+            </summary>
+            <param name="sLong">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{long}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetDecimal(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{decimal}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetDecimal(System.Object)"/>.
+            </summary>
+            <param name="oDecimal">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{decimal}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetDecimal(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{decimal}"/>.
+            </summary>
+            <param name="sDecimal">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{decimal}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetDouble(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{double}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetDouble(System.Object)"/>.
+            </summary>
+            <param name="oDouble">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{double}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetDouble(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{double}"/>.
+            </summary>
+            <param name="sDouble">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{double}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetFloat(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{float}"/> (<see cref="T:Nullable{single}"/>).
+            Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetFloat(System.Object)"/>.
+            </summary>
+            <param name="oFloat">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{float}"/> (<see cref="T:Nullable{single}"/>).</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetFloat(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{float}"/> (<see cref="T:Nullable{single}"/>).
+            </summary>
+            <param name="sFloat">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{float}"/> (<see cref="T:Nullable{single}"/>).</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetInt(System.Object,System.Nullable{System.Int32}@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:Nullable{int}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> nastaví <paramref name="iInt"/>
+            na <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetInt(System.Object)"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="iInt"/> je <c>0</c>.
+            </summary>
+            <param name="oInt">Zdrojová hodnota.</param>
+            <param name="iInt">Výsledný <see cref="T:Nullable{int}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetInt(System.String,System.Nullable{System.Int32}@)">
+            <summary>
+            Bezpečné parsovanie reťazca na <see cref="T:Nullable{int}"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="iInt"/> je <c>0</c>.
+            </summary>
+            <param name="sInt">Zdrojová hodnota.</param>
+            <param name="iInt">Výsledný <see cref="T:Nullable{int}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetLong(System.Object,System.Nullable{System.Int64}@)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{long}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> nastaví <paramref name="lLong"/>
+            na <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetLong(System.Object)"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="lLong"/> je <c>0L</c>.
+            </summary>
+            <param name="oLong">Zdrojová hodnota.</param>
+            <param name="lLong">Výsledný <see cref="T:Nullable{long}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetLong(System.String,System.Nullable{System.Int64}@)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{long}"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="lLong"/> je <c>0L</c>.
+            </summary>
+            <param name="sLong">Zdrojová hodnota.</param>
+            <param name="lLong">Výsledný <see cref="T:Nullable{long}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetDecimal(System.Object,System.Nullable{System.Decimal}@)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{decimal}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> nastaví
+            <paramref name="dDecimal"/> na <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetDecimal(System.Object)"/>. V prípade neúspechu
+            vráti <c>false</c> a <paramref name="dDecimal"/> je <see cref="F:System.Decimal.Zero"/>.
+            </summary>
+            <param name="oDecimal">Zdrojová hodnota.</param>
+            <param name="dDecimal">Výsledný <see cref="T:Nullable{decimal}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetDecimal(System.String,System.Nullable{System.Decimal}@)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{decimal}"/>.V prípade neúspechu
+            vráti <c>false</c> a <paramref name="dDecimal"/> je <see cref="F:System.Decimal.Zero"/>.
+            </summary>
+            <param name="sDecimal">Zdrojová hodnota.</param>
+            <param name="dDecimal">Výsledný <see cref="T:Nullable{decimal}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetDouble(System.Object,System.Nullable{System.Double}@)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{double}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> nastaví <paramref name="dDouble"/> na <c>null</c>,
+            alebo <see cref="M:Cora.Convert.Parser.GetDouble(System.Object)"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="dDouble"/> je <c>0d</c>.
+            </summary>
+            <param name="oDouble">Zdrojová hodnota.</param>
+            <param name="dDouble">Výsledný <see cref="T:Nullable{double}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetDouble(System.String,System.Nullable{System.Double}@)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{double}"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="dDouble"/> je <c>0d</c>.
+            </summary>
+            <param name="sDouble">Zdrojová hodnota.</param>
+            <param name="dDouble">Výsledný <see cref="T:Nullable{double}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetFloat(System.Object,System.Nullable{System.Single}@)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{float}"/> (<see cref="T:Nullable{single}"/>). Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/>
+            nastaví <paramref name="fFloat"/> na <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetFloat(System.Object)"/>. V prípade neúspechu
+            vráti <c>false</c> a <paramref name="fFloat"/> je <c>0f</c>.
+            </summary>
+            <param name="oFloat">Zdrojová hodnota.</param>
+            <param name="fFloat">Výsledný <see cref="T:Nullable{float}"/> (<see cref="T:Nullable{single}"/>).</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetFloat(System.String,System.Nullable{System.Single}@)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{float}"/> (<see cref="T:Nullable{single}"/>).
+            V prípade neúspechu vráti <c>false</c> a <paramref name="fFloat"/> je <c>0f</c>.
+            </summary>
+            <param name="sFloat">Zdrojová hodnota.</param>
+            <param name="fFloat">Výsledný <see cref="T:Nullable{float}"/> (<see cref="T:Nullable{single}"/>).</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetGuid(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:Nullable{Guid}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetGuid(System.Object)"/>.
+            </summary>
+            <param name="oGuid">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{Guid}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetGuid(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:Nullable{Guid}"/>.
+            </summary>
+            <param name="sGuid">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:Nullable{Guid}"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetGuid(System.Object,System.Nullable{System.Guid}@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:Nullable{Guid}"/>. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> nastaví
+            <paramref name="gGuid"/> na <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetGuid(System.Object)"/>. V prípade neúspechu
+            vráti <c>false</c> a <paramref name="gGuid"/> je <see cref="F:System.Guid.Empty"/>.
+            </summary>
+            <param name="oGuid">Zdrojová hodnota.</param>
+            <param name="gGuid">Výsledný <see cref="T:Nullable{Guid}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetGuid(System.String,System.Nullable{System.Guid}@)">
+            <summary>
+            Bezpečné parsovanie reťazca na <see cref="T:Nullable{Guid}"/>. V prípade neúspechu
+            vráti <c>false</c> a <paramref name="gGuid"/> je <see cref="F:System.Guid.Empty"/>.
+            </summary>
+            <param name="sGuid">Zdrojová hodnota.</param>
+            <param name="gGuid">Výsledný <see cref="T:Nullable{Guid}"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetDate(System.Object)">
+            <summary>
+            Parsovanie objektu na dátum podľa formátu <see cref="F:Cora.Convert.Parser.DateFormat"/>.
+            Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object)"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <returns>Výsledný dátum.</returns>
+            <remarks>Pozri poznámky ku <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object,System.String)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetDateTime(System.Object)">
+            <summary>
+            Parsovanie objektu na dátum a čas podľa formátu <see cref="F:Cora.Convert.Parser.DateTimeFormat"/>.
+            Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object)"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <returns>Výsledný dátum.</returns>
+            <remarks>Pozri poznámky ku <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object,System.String)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetDateTime(System.Object,System.String)">
+            <summary>
+            Parsovanie objektu na dátum (prípadne čas) podľa zadaného formátu.
+            Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object)"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <param name="format">Požadovaný formát. Pre detaily pozri <see cref="M:System.DateTime.Parse(System.String,System.IFormatProvider)"/>.</param>
+            <returns>Výsledný dátum a čas.</returns>
+            <remarks>Hodnota typu <see cref="T:System.DateTime"/> sa len prepošle.</remarks>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.GetCoraDateTime(System.Object)">
+            <summary>
+            Parsovanie objektu na dátum a čas podľa "Cora-ckeho" formátu <see cref="F:Cora.Convert.Parser.CoraDateTimeFormat"/>.
+            Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object)"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <returns>Výsledný dátum a čas.</returns>
+            <remarks>Pozri poznámky ku <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object,System.String)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetDateTime(System.Object,System.Nullable{System.DateTime}@)">
+            <summary>
+            Bezpečné parsovanie objektu na dátum a čas podľa formátu <see cref="F:Cora.Convert.Parser.DateTimeFormat"/>. 
+            Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/> vracia <c>null</c>, alebo sa pokúsi o <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object)"/>. 
+            V prípade neúspechu vráti <c>false</c> a <paramref name="oDateTime"/> je <c>DateTime.MinValue</c>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <param name="dt">Výsledný dátum a čas.</param>
+            <returns>Úpešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.NullableParser.TryGetDateTime(System.Object,System.String,System.Nullable{System.DateTime}@)">
+            <summary>
+            Parsovanie objektu na dátum (prípadne čas) podľa zadaného formátu. Podľa <see cref="M:Cora.Convert.NullableParser.IsNull(System.Object)"/>
+            vracia <c>null</c>, alebo sa pokúsi o <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object)"/>. V prípade neúspechu
+            vráti <c>false</c> a <paramref name="dateTime"/> je <c>DateTime.MinValue</c>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <param name="format">Požadovaný formát. Pre detaily pozri <see cref="M:System.DateTime.Parse(System.String,System.IFormatProvider)"/>.</param>
+            <param name="dateTime">Výsledný dátum a čas.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="T:Cora.Convert.Parser">
+            <summary>
+            Trieda pre špeciálne parsovania.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.DatePaddedFormat">
+            <summary>Formát používaný pre dátum, zľava doplnený nulami (dd.MM.yyyy).</summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.DateFormat">
+            <summary>Formát používaný pre dátum (d.M.yyyy).</summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.DateTimePaddedFormat">
+            <summary>Formát používaný pre dátum a čas, zľava doplnený nulami (dd.MM.yyyy HH:mm:ss).</summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.DateTimeFormat">
+            <summary>Formát používaný pre dátum a čas (d.M.yyyy H:m:s).</summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.CoraDateTimeFormat">
+            <summary>Formát pre "Cora-cky" dátum a čas (yyyyMMddHHmmss).</summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.FOXPRO_DATE_TIME_FORMAT">
+            <summary>Formát dátumu, ktorý nám chodí z FoxPro.</summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.IsoDateFormat">
+            <summary>ISO 8601 formát používaný pre dátum (yyyy-MM-dd).</summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.IsoDateTimeFormat">
+            <summary>ISO 8601 formát používaný pre dátum (yyyy-MM-ddTHH:mm:sszzz).</summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.TimeSecFormat">
+            <summary>Formát používaný pre čas so sekundami(H:m:s).</summary>
+        </member>
+        <member name="F:Cora.Convert.Parser.TimeNoSecFormat">
+            <summary>Formát používaný pre čas bez sekúnd (H:m).</summary>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetBool(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:System.Boolean"/>. <c>true</c> vracia aj pre reťazce "1", varianty "true",
+            pokúsi sa o <see cref="M:System.Convert.ToBoolean(System.Object,System.IFormatProvider)"/> a nakoniec ešte prevod cez reťazec.
+            </summary>
+            <param name="oBool">Zdrojová hodnota.</param>
+            <returns>Výsledný bool.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetBool(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:System.Boolean"/>. <c>true</c> vracia pre reťazce "1" a varianty "true".
+            </summary>
+            <param name="sBool">Zdrojová hodnota.</param>
+            <returns>Výsledný bool.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetBool(System.String,System.Boolean)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:System.Boolean"/>. <c>true</c> vracia pre reťazce "1" a varianty "true".
+            </summary>
+            <param name="sBool">Zdrojová hodnota.</param>
+            <param name="emptyOrNullValue">Hodnota, ktorá sa použije ako výsledok, aj je <paramref name="sBool"/> <see cref="F:System.String.Empty"/> alebo <c>null</c>.</param>
+            <returns>Výsledný bool.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetBool(System.Object,System.Boolean@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:System.Boolean"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="bBool"/> je <c>false</c>.
+            </summary>
+            <param name="oBool">Zdrojová hodnota.</param>
+            <param name="bBool">Výsledný <see cref="T:System.Boolean"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetInt(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:System.Int32"/>.
+            </summary>
+            <param name="oInt">Zdrojová hodnota.</param>
+            <returns>Výsledný int.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetInt(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:System.Int32"/>.
+            </summary>
+            <param name="sInt">Zdrojová hodnota.</param>
+            <returns>Výsledný int.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetLong(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:System.Int64"/>.
+            </summary>
+            <param name="oLong">Zdrojová hodnota.</param>
+            <returns>Výsledný long.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetLong(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:System.Int64"/>.
+            </summary>
+            <param name="sLong">Zdrojová hodnota.</param>
+            <returns>Výsledný long.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetDecimal(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:System.Decimal"/>.
+            </summary>
+            <param name="oDecimal">Zdrojová hodnota.</param>
+            <returns>Výsledný decimal.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetDecimal(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:System.Decimal"/>.
+            </summary>
+            <param name="sDecimal">Zdrojová hodnota.</param>
+            <returns>Výsledný decimal.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetDouble(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:System.Double"/>.
+            </summary>
+            <param name="oDouble">Zdrojová hodnota.</param>
+            <returns>Výsledný double.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetDouble(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:System.Double"/>.
+            </summary>
+            <param name="sDouble">Zdrojová hodnota.</param>
+            <returns>Výsledný double.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetFloat(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:System.Single"/> (<see cref="T:System.Single"/>).
+            </summary>
+            <param name="oFloat">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:System.Single"/> (<see cref="T:System.Single"/>).</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetFloat(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:System.Single"/> (<see cref="T:System.Single"/>).
+            </summary>
+            <param name="sFloat">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:System.Single"/> (<see cref="T:System.Single"/>).</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetInt(System.Object,System.Int32@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:System.Int32"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="iInt"/> je <c>0</c>.
+            </summary>
+            <param name="oInt">Zdrojová hodnota.</param>
+            <param name="iInt">Výsledný <see cref="T:System.Int32"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetInt(System.String,System.Int32@)">
+            <summary>
+            Bezpečné parsovanie reťazca na <see cref="T:System.Int32"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="iInt"/> je <c>0</c>.
+            </summary>
+            <param name="sInt">Zdrojová hodnota.</param>
+            <param name="iInt">Výsledný <see cref="T:System.Int32"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetLong(System.Object,System.Int64@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:System.Int64"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="lLong"/> je <c>0L</c>.
+            </summary>
+            <param name="oLong">Zdrojová hodnota.</param>
+            <param name="lLong">Výsledný <see cref="T:System.Int64"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetLong(System.String,System.Int64@)">
+            <summary>
+            Bezpečné parsovanie reťazca na <see cref="T:System.Int64"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="lLong"/> je <c>0L</c>.
+            </summary>
+            <param name="sLong">Zdrojová hodnota.</param>
+            <param name="lLong">Výsledný <see cref="T:System.Int64"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetDecimal(System.Object,System.Decimal@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:System.Decimal"/>. V prípade neúspechu vráti <c>false</c>
+            a <paramref name="dDecimal"/> je <see cref="F:System.Decimal.Zero"/>.
+            </summary>
+            <param name="oDecimal">Zdrojová hodnota.</param>
+            <param name="dDecimal">Výsledný <see cref="T:System.Decimal"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetDecimal(System.String,System.Decimal@)">
+            <summary>
+            Bezpečné parsovanie reťazca na <see cref="T:System.Decimal"/>. V prípade neúspechu vráti <c>false</c>
+            a <paramref name="dDecimal"/> je <see cref="F:System.Decimal.Zero"/>.
+            </summary>
+            <param name="sDecimal">Zdrojová hodnota.</param>
+            <param name="dDecimal">Výsledný <see cref="T:System.Decimal"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetDouble(System.Object,System.Double@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:System.Double"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="dDouble"/> je <c>0d</c>.
+            </summary>
+            <param name="oDouble">Zdrojová hodnota.</param>
+            <param name="dDouble">Výsledný <see cref="T:System.Double"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetDouble(System.String,System.Double@)">
+            <summary>
+            Bezpečné parsovanie reťazca na <see cref="T:System.Double"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="dDouble"/> je <c>0d</c>.
+            </summary>
+            <param name="sDouble">Zdrojová hodnota.</param>
+            <param name="dDouble">Výsledný <see cref="T:System.Double"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetFloat(System.Object,System.Single@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:System.Single"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="fFloat"/> je <c>0f</c>.
+            </summary>
+            <param name="oFloat">Zdrojová hodnota.</param>
+            <param name="fFloat">Výsledný <see cref="T:System.Double"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetFloat(System.String,System.Double@)">
+            <summary>
+            Bezpečné parsovanie reťazca na <see cref="T:System.Double"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="fFloat"/> je <c>0f</c>.
+            </summary>
+            <param name="sFloat">Zdrojová hodnota.</param>
+            <param name="fFloat">Výsledný <see cref="T:System.Double"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetGuid(System.Object)">
+            <summary>
+            Parsovanie objektu na <see cref="T:System.Guid"/>.
+            </summary>
+            <param name="oGuid">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:System.Guid"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetGuid(System.String)">
+            <summary>
+            Parsovanie reťazca na <see cref="T:System.Guid"/>.
+            </summary>
+            <param name="sGuid">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:System.Guid"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetGuidDecimal(System.String)">
+            <summary>
+            Parsovanie reťazca s decimálnymi nezápornými číslami na <see cref="T:System.Guid"/>.
+            </summary>
+            <param name="sGuidDecimal">Zdrojová hodnota.</param>
+            <returns>Výsledný <see cref="T:System.Guid"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="sGuidDecimal"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetGuid(System.Object,System.Guid@)">
+            <summary>
+            Bezpečné parsovanie objektu na <see cref="T:System.Guid"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="gGuid"/> je <see cref="F:System.Guid.Empty"/>.
+            </summary>
+            <param name="oGuid">Zdrojová hodnota.</param>
+            <param name="gGuid">Výsledný <see cref="T:System.Guid"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetGuid(System.String,System.Guid@)">
+            <summary>
+            Bezpečné parsovanie reťazca na <see cref="T:System.Guid"/>. V prípade neúspechu vráti <c>false</c> a <paramref name="gGuid"/> je <see cref="F:System.Guid.Empty"/>.
+            </summary>
+            <param name="sGuid">Zdrojová hodnota.</param>
+            <param name="gGuid">Výsledný <see cref="T:System.Guid"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetGuidDecimal(System.String,System.Guid@)">
+            <summary>
+            Bezpečné parsovanie reťazca s decimálnymi nezápornými číslami na <see cref="T:System.Guid"/>.
+            V prípade neúspechu vráti <c>false</c> a <paramref name="gGuid"/> je <see cref="F:System.Guid.Empty"/>.
+            </summary>
+            <param name="sGuid">Zdrojová hodnota.</param>
+            <param name="gGuid">Výsledný <see cref="T:System.Guid"/>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetDate(System.Object)">
+            <summary>
+            Parsovanie objektu na dátum podľa formátu <see cref="F:Cora.Convert.Parser.DateFormat"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <returns>Výsledný dátum.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetDateTime(System.Object)">
+            <summary>
+            Parsovanie objektu na dátum a čas podľa formátu <see cref="F:Cora.Convert.Parser.DateTimeFormat"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <returns>Výsledný dátum.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetDateTime(System.Object,System.String)">
+            <summary>
+            Parsovanie objektu na dátum (prípadne čas) podľa zadaného formátu.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <param name="format">Požadovaný formát. Pre detaily pozri <see cref="M:System.DateTime.Parse(System.String,System.IFormatProvider)"/>.</param>
+            <returns>Výsledný dátum a čas.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetDateTime(System.String,System.String)">
+            <summary>
+            Parsovanie reťazca na dátum (prípadne čas) podľa zadaného formátu.
+            </summary>
+            <param name="sDateTime">Zdrojová hodnota.</param>
+            <param name="format">Požadovaný formát. Pre detaily pozri <see cref="M:System.DateTime.Parse(System.String,System.IFormatProvider)"/>.</param>
+            <returns>Výsledný dátum a čas.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetCoraDateTime(System.Object)">
+            <summary>
+            Parsovanie objektu na dátum a čas podľa "Cora-ckeho" formátu <see cref="F:Cora.Convert.Parser.CoraDateTimeFormat"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <returns>Výsledný dátum a čas.</returns>
+            <remarks>Pozri poznámky ku <see cref="M:Cora.Convert.Parser.GetDateTime(System.Object,System.String)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetDate(System.Object,System.DateTime@)">
+            <summary>
+            Bezpečné parsovanie objektu na dátum podľa formátu <see cref="F:Cora.Convert.Parser.DateFormat"/>. V prípade neúspechu vráti <c>false</c>
+            a <paramref name="dt"/> je <see cref="F:System.DateTime.MinValue"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <param name="dt">Výsledný dátum.</param>
+            <returns>Úpešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetDateTime(System.Object,System.DateTime@)">
+            <summary>
+            Bezpečné parsovanie objektu na dátum a čas podľa formátu <see cref="F:Cora.Convert.Parser.DateTimeFormat"/>. V prípade neúspechu vráti <c>false</c>
+            a <paramref name="dt"/> je <see cref="F:System.DateTime.MinValue"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <param name="dt">Výsledný dátum.</param>
+            <returns>Úpešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetDateTime(System.Object,System.String,System.DateTime@)">
+            <summary>
+            Bezpečné parsovanie objektu na dátum (prípadne čas) podľa zadaného formátu. V prípade neúspechu vráti <c>false</c>
+            a <paramref name="dt"/> je <see cref="F:System.DateTime.MinValue"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <param name="format">Požadovaný formát. Pre detaily pozri <see cref="M:System.DateTime.Parse(System.String,System.IFormatProvider)"/>.</param>
+            <param name="dt">Výsledný dátum a čas.</param>
+            <returns>Úpešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetDateTime(System.String,System.String,System.DateTime@)">
+            <summary>
+            Bezpečné parsovanie reťazca na dátum (prípadne čas) podľa zadaného formátu. V prípade neúspechu vráti <c>false</c>
+            a <paramref name="dt"/> je <see cref="F:System.DateTime.MinValue"/>.
+            </summary>
+            <param name="sDateTime">Zdrojová hodnota.</param>
+            <param name="format">Požadovaný formát. Pre detaily pozri <see cref="M:System.DateTime.Parse(System.String,System.IFormatProvider)"/>.</param>
+            <param name="dt">Výsledný dátum a čas.</param>
+            <returns>Úpešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetCoraDateTime(System.Object,System.DateTime@)">
+            <summary>
+            Bezpečné parsovanie objektu na dátum a čas podľa "Cora-ckeho" formátu <see cref="F:Cora.Convert.Parser.CoraDateTimeFormat"/>.
+            V prípade neúspechu vráti <c>false</c> a <paramref name="dt"/> je <see cref="F:System.DateTime.MinValue"/>.
+            </summary>
+            <param name="oDateTime">Zdrojová hodnota.</param>
+            <param name="dt">Výsledný dátum a čas.</param>
+            <returns>Úpešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumTryParse(System.String,System.Enum@)">
+            <summary>
+            Pokus o parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>). Je case-sensitive.
+            </summary>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="enumValue">Výstupná hodnota vymenovaného typu. Pri neúspechu je nezmenená. Je <c>ref</c> aj kvôli určeniu typu.</param>
+            <remarks>Pre detaily parsovania pozri <see cref="M:System.Enum.Parse(System.Type,System.String,System.Boolean)"/>.</remarks>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumTryParse(System.String,System.Enum@,System.Boolean)">
+            <summary>
+            Pokus o parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>c>).
+            </summary>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="enumValue">Výstupná hodnota vymenovaného typu. Pri neúspechu je nezmenená. Je <c>ref</c> aj kvôli určeniu typu.</param>
+            <param name="ignoreCase">Ignorovať veľké/malé písmená?</param>
+            <returns>Úspešnosť parsovania.</returns>
+            <remarks>Pre detaily parsovania pozri <see cref="M:System.Enum.Parse(System.Type,System.String,System.Boolean)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumParse(System.String,System.Enum)">
+            <summary>
+            Parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>). V prípade neúspechu 
+            je výsledok <paramref name="defaultValue"/>.
+            </summary>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="defaultValue">Výsledok v prípade neúspechu.</param>
+            <returns>Výsledná hodnota vymenovaného typu.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumParse(System.String,System.Enum,System.Boolean)">
+            <summary>
+            Parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>). V prípade neúspechu 
+            je výsledok <paramref name="defaultValue"/>.
+            </summary>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="defaultValue">Výsledok v prípade neúspechu.</param>
+            <param name="ignoreCase">Ignorovať veľké/malé písmená?</param>
+            <returns>Výsledná hodnota vymenovaného typu.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumTryParse``1(System.String,``0@)">
+            <summary>
+            Pokus o parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>). Je case-sensitive.
+            </summary>
+            <typeparam name="EnumType">Typ parsovaného vymenovaného typu.</typeparam>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="enumValue">Výstupná hodnota vymenovaného typu. Pri neúspechu je nezmenená.</param>
+            <returns>Úspešnosť parsovania.</returns>
+            <remarks>Pre detaily parsovania pozri <see cref="M:System.Enum.Parse(System.Type,System.String,System.Boolean)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumTryParse``1(System.String,``0@,System.Boolean)">
+            <summary>
+            Pokus o parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>).
+            </summary>
+            <typeparam name="EnumType">Typ parsovaného vymenovaného typu.</typeparam>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="enumValue">Výstupná hodnota vymenovaného typu. Pri neúspechu je nezmenená.</param>
+            <param name="ignoreCase">Ignorovať veľké/malé písmená?</param>
+            <returns>Úspešnosť parsovania.</returns>
+            <remarks>Pre detaily parsovania pozri <see cref="M:System.Enum.Parse(System.Type,System.String,System.Boolean)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumParse``1(System.String)">
+            <summary>
+            Parsovanie reťazca na hodnoty vymenovaného typu <typeparamref name="EnumType"/> (case sensitive).
+            V prípade neúspechu vyhadzuje výnimku.
+            </summary>
+            <typeparam name="EnumType">Typ parsovaného vymenovaného typu.</typeparam>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <returns>Výsledná hodnota vymenovaného typu.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <typeparamref name="EnumType"/> alebo <paramref name="sValue"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <typeparamref name="EnumType"/> nie je <see cref="T:System.Enum"/> alebo
+            	pri chybe parsovania <paramref name="sValue"/>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumParse``1(System.String,``0)">
+            <summary>
+            Parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>). V prípade neúspechu
+            je výsledok <paramref name="defaultValue"/>.
+            </summary>
+            <typeparam name="EnumType">Typ parsovaného vymenovaného typu.</typeparam>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="defaultValue">Výsledok v prípade neúspechu.</param>
+            <returns>Výsledná hodnota vymenovaného typu.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumParse``1(System.String,``0,System.Boolean)">
+            <summary>
+            Parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>). V prípade neúspechu
+            je výsledok <paramref name="defaultValue"/>.
+            </summary>
+            <typeparam name="EnumType">Typ parsovaného vymenovaného typu.</typeparam>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="defaultValue">Výsledok v prípade neúspechu.</param>
+            <param name="ignoreCase">Ignorovať veľké/malé písmená?</param>
+            <returns>Výsledná hodnota vymenovaného typu.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumTryParseStrict``1(System.String,``0@,System.Boolean)">
+            <summary>
+            Pokus o parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>) s kontrolou,
+            či sa hodnota vyskytuje v zozname parsovaného vymenovaného typu (jednotlivá, nie kombinovaná).
+            </summary>
+            <typeparam name="EnumType">Typ parsovaného vymenovaného typu.</typeparam>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="enumValue">Výstupná hodnota vymenovaného typu. Pri neúspechu je nezmenená.</param>
+            <param name="ignoreCase">Ignorovať veľké/malé písmená?</param>
+            <returns>Úspešnosť parsovania a kontroly, či sa hodnota vyskytuje v zozname parsovaného vymenovaného typu.</returns>
+            <remarks>Pre detaily parsovania pozri <see cref="M:System.Enum.Parse(System.Type,System.String,System.Boolean)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumTryParseStrict``1(System.String,``0@)">
+            <summary>
+            Pokus o parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>) s kontrolou, či sa hodnota vyskytuje
+            v zozname parsovaného vymenovaného typu (jednotlivá, nie kombinovaná). Je case-sensitive.
+            </summary>
+            <typeparam name="EnumType">Typ parsovaného vymenovaného typu.</typeparam>
+            <param name="sValue">Vstupná reťazcová hodnota.</param>
+            <param name="enumValue">Výstupná hodnota vymenovaného typu. Pri neúspechu je nezmenená.</param>
+            <returns>Úspešnosť parsovania a kontroly, či sa hodnota vyskytuje v zozname parsovaného vymenovaného typu.</returns>
+            <remarks>Pre detaily parsovania pozri <see cref="M:System.Enum.Parse(System.Type,System.String,System.Boolean)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumParseStrict``1(System.String,``0,System.Boolean)">
+            <summary>
+            Pokus o parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>) s kontrolou,
+            či sa hodnota vyskytuje v zozname parsovaného vymenovaného typu (jednotlivá, nie kombinovaná).
+            </summary>
+            <typeparam name="EnumType">Typ parsovaného vymenovaného typu.</typeparam>
+            <param name="sValue">Vstupná reťazcová hodnota. Musí byť v zozname parsovaného vymenovaného typu.</param>
+            <param name="defaultValue">Výsledok v prípade neúspechu.</param>
+            <param name="ignoreCase">Ignorovať veľké/malé písmená?</param>
+            <returns>Výsledná hodnota vymenovaného typu.</returns>
+            <remarks>Pre detaily parsovania pozri <see cref="M:System.Enum.Parse(System.Type,System.String,System.Boolean)"/>.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak <paramref name="defaultValue"/> nie je v zozname parsovaného vymenovaného typu.</exception>
+        </member>
+        <member name="M:Cora.Convert.Parser.EnumParseStrict``1(System.String,``0)">
+            <summary>
+            Pokus o parsovanie reťazca na hodnoty vymenovaného typu (<c>enum</c>) s kontrolou,
+            či sa hodnota vyskytuje v zozname parsovaného vymenovaného typu (jednotlivá, nie kombinovaná).
+            </summary>
+            <typeparam name="EnumType">Typ parsovaného vymenovaného typu.</typeparam>
+            <param name="sValue">Vstupná reťazcová hodnota. Musí byť v zozname parsovaného vymenovaného typu.</param>
+            <param name="defaultValue">Výsledok v prípade neúspechu.</param>
+            <returns>Výsledná hodnota vymenovaného typu.</returns>
+            <remarks>Pre detaily parsovania pozri <see cref="M:System.Enum.Parse(System.Type,System.String,System.Boolean)"/>.</remarks>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak <paramref name="defaultValue"/> nie je v zozname parsovaného vymenovaného typu.</exception>
+        </member>
+        <member name="M:Cora.Convert.Parser.GetEncoding(System.String)">
+            <summary>
+            Parsovanie reťazca na kódovanie (<see cref="T:System.Text.Encoding"/>).
+            </summary>
+            <param name="codeOrName">Kódová stránka, alebo názov kódovania (tvar windows-1250), alebo <c>null</c>.</param>
+            <returns>Kódovanie, alebo <c>null</c>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Chybná kódová stránka.</exception>
+            <exception cref="T:System.ArgumentException">Nepodporované kódovanie.</exception>
+            <exception cref="T:System.NotSupportedException">Nepodporované kódovanie.</exception>
+        </member>
+        <member name="M:Cora.Convert.Parser.TryGetEncoding(System.String,System.Text.Encoding@)">
+            <summary>
+            Bezpečné parsovanie reťazca na kódovanie (<see cref="T:System.Text.Encoding"/>).
+            </summary>
+            <param name="codeOrName">Kódová stránka, alebo názov kódovania (tvar windows-1250), alebo <c>null</c>.</param>
+            <param name="encoding">Výsledné kódovanie, alebo <c>null</c>.</param>
+            <returns>Úspešnosť parsovania.</returns>
+        </member>
+        <member name="M:Cora.Convert.Parser.ColorParse(System.String)">
+            <summary>
+            Parsovanie farby z reťazca (#RRGGBB, #AARRGGBB alebo pomenovaný názov). Pomenované názvy spracuje
+            <see cref="M:System.Drawing.Color.FromName(System.String)"/>.
+            </summary>
+            <param name="colorValue">Reťazec farby (#RRGGBB, #AARRGGBB alebo pomenovaný názov).</param>
+            <returns>Výsledná farba.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="colorValue"/> <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">V prípade chybného formátu #RRGGBB alebo #AARRGGBB.</exception>
+        </member>
+        <member name="T:Cora.Convert.PasswordGenerator">
+            <summary>
+            Trieda na generovanie hesiel.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.PasswordGenerator.GeneratePassword(System.String,System.Int32)">
+            <summary>
+            Zgenerovanie náhodného hesla so zadanou dĺžkou vyhovujúceho zadanej úrovni bezpečnosti.
+            </summary>
+            <param name="maska">Regulárny výraz pre validáciu hesla. Nesmie byť <c>null</c>.</param>
+            <param name="dlzka">Požadovaná dĺžka hesla.</param>
+            <returns>Náhodné heslo, spĺňajúce zadanú úroveň bezpečnosti, alebo <c>null</c>,
+            ak sa také heslo nepodarilo ani opakovane zgenerovať (s väčšou dĺžkou).</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="maska"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="dlzka"/> nekladná.</exception>
+        </member>
+        <member name="M:Cora.Convert.PasswordGenerator.GeneratePassword(System.String,System.Int32,System.Int32)">
+            <summary>
+            Zgenerovanie náhodného hesla so zadanou dĺžkou vyhovujúceho zadanej úrovni bezpečnosti.
+            </summary>
+            <param name="maska">Regulárny výraz pre validáciu hesla. Nesmie byť <c>null</c>.</param>
+            <param name="dlzkaMin">Požadovaná minimálna dĺžka hesla.</param>
+            <param name="dlzkaMax">Požadovaná maximálna dĺžka hesla.</param>
+            <returns>Náhodné heslo, spĺňajúce zadanú úroveň bezpečnosti, alebo <c>null</c>,
+            ak sa také heslo nepodarilo ani opakovane zgenerovať (s väčšou dĺžkou).</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="maska"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je výsledná dĺžka nekladná.</exception>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="dlzkaMax"/> je menšia ako <paramref name="dlzkaMin"/>.</exception>
+        </member>
+        <member name="M:Cora.Convert.PasswordGenerator.GenerateLetterNumberPassword(System.Int32)">
+            <summary>
+            Zgenerovanie náhodneho hesla obsahujúceho písmená a čísla so zadanou dĺžkou.
+            </summary>
+            <param name="length">Požadovaná dĺžka hesla.</param>
+            <returns>Náhodne generované heslo.</returns>
+        </member>
+        <member name="T:Cora.Convert.Serializer">
+            <summary>
+            Trieda na pomoc pri serializácii a deserializácii objektov.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.Serializer.SerializeToBase64(System.Object)">
+            <summary>
+            Prevod serializovateľného objektu (alebo grafu objektov) do reťazca Base64.
+            </summary>
+            <param name="serializableObject">Serializovateľný objekt. Musí byť označený <see cref="T:System.SerializableAttribute"/>,
+            alebo implementovať <see cref="T:System.Runtime.Serialization.ISerializable"/>.</param>
+            <returns>Base64 reťazec.</returns>
+            <remarks>Serializáciu realizuje <see cref="M:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter.Serialize(System.IO.Stream,System.Object)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Serializer.SerializeToCompressedBase64(System.Object)">
+            <summary>
+            Prevod serializovateľného objektu (alebo grafu objektov) do kompresovaného reťazca Base64.
+            </summary>
+            <param name="serializableObject">Serializovateľný objekt. Musí byť označený <see cref="T:System.SerializableAttribute"/>,
+            alebo implementovať <see cref="T:System.Runtime.Serialization.ISerializable"/>.</param>
+            <returns>Kompresovaný Base64 reťazec.</returns>
+            <remarks>Serializáciu realizuje <see cref="M:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter.Serialize(System.IO.Stream,System.Object)"/> a kompresiu
+            <see cref="T:System.IO.Compression.DeflateStream"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Serializer.SerializeToCompressedBytes(System.Object)">
+            <summary>
+            Prevod serializovateľného objektu (alebo grafu objektov) do kompresovaného poľa bajtov.
+            </summary>
+            <param name="serializableObject">Serializovateľný objekt. Musí byť označený <see cref="T:System.SerializableAttribute"/>,
+            alebo implementovať <see cref="T:System.Runtime.Serialization.ISerializable"/>.</param>
+            <returns>Kompresované pole bajtov.</returns>
+            <remarks>Serializáciu realizuje <see cref="M:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter.Serialize(System.IO.Stream,System.Object)"/> a kompresiu
+            <see cref="T:System.IO.Compression.DeflateStream"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Serializer.DeserializeFromBase64(System.String)">
+            <summary>
+            Prevod reťazca Base64 do objektu, alebo grafu objektov (jeho/ich deserializácia).
+            </summary>
+            <param name="serializedObjectData">Serializačné dáta objektu (alebo grafu objektov).</param>
+            <returns>Deserializovaný objekt.</returns>
+            <remarks>Deserializáciu realizuje <see cref="M:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter.Deserialize(System.IO.Stream)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Serializer.DeserializeFromCompressedBase64(System.String)">
+            <summary>
+            Prevod kompresovaného reťazca Base64 do objektu, alebo grafu objektov (jeho/ich deserializácia).
+            </summary>
+            <param name="serializedCompressedObjectData">Kompresované serializačné dáta objektu (alebo grafu objektov).</param>
+            <returns>Deserializovaný objekt.</returns>
+            <remarks>Deserializáciu realizuje <see cref="M:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter.Deserialize(System.IO.Stream)"/> a dekompresiu
+            <see cref="T:System.IO.Compression.DeflateStream"/>.</remarks>
+        </member>
+        <member name="M:Cora.Convert.Serializer.DeserializeFromCompressedBytes(System.Byte[])">
+            <summary>
+            Prevod kompresovaného reťazca Base64 do objektu, alebo grafu objektov (jeho/ich deserializácia).
+            </summary>
+            <param name="serializedCompressedObjectData">Kompresované serializačné dáta objektu (alebo grafu objektov).</param>
+            <returns>Deserializovaný objekt.</returns>
+            <remarks>Deserializáciu realizuje <see cref="M:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter.Deserialize(System.IO.Stream)"/> a dekompresiu
+            <see cref="T:System.IO.Compression.DeflateStream"/>.</remarks>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="serializedCompressedObjectData"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Serializer.FromJson``1(System.String)">
+            <summary>
+            Vytvorenie objektu typu <typeparamref name="T"/> podľa JSON reprezentácie.
+            </summary>
+            <typeparam name="T">Typ výsledného objektu. Musí byť dekorovaný atribútmi  <see cref="T:System.Runtime.Serialization.DataContractAttribute"/>
+            alebo <see cref="T:System.Runtime.Serialization.CollectionDataContractAttribute"/> a vlastnosti musia byť dekorované atribútmi <see cref="T:System.Runtime.Serialization.DataMemberAttribute"/>.</typeparam>
+            <param name="jsonText">Zdrojový JSON text.</param>
+            <returns>Výsledný objekt typu <typeparamref name="T"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Serializer.FromJson``1(System.String,System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Vytvorenie objektu typu <typeparamref name="T"/> podľa JSON reprezentácie.
+            </summary>
+            <typeparam name="T">Typ výsledného objektu. Musí byť dekorovaný atribútmi <see cref="T:System.Runtime.Serialization.DataContractAttribute"/>
+            alebo <see cref="T:System.Runtime.Serialization.CollectionDataContractAttribute"/> a vlastnosti musia byť dekorované atribútmi <see cref="T:System.Runtime.Serialization.DataMemberAttribute"/>.</typeparam>
+            <param name="jsonText">Zdrojový JSON text.</param>
+            <param name="knownTypes">Zoznam typov, ktoré môžu byť vo výslednom grafe deserializovaných objektov.</param>
+            <returns>
+            Výsledný objekt typu <typeparamref name="T"/>.
+            </returns>
+        </member>
+        <member name="M:Cora.Convert.Serializer.FromJson(System.Type,System.String,System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Vytvorenie objektu typu <paramref name="type"/> podľa JSON reprezentácie.
+            </summary>
+            <param name="type">Typ výsledného objektu. Musí byť dekorovaný atribútmi <see cref="T:System.Runtime.Serialization.DataContractAttribute"/>
+            alebo <see cref="T:System.Runtime.Serialization.CollectionDataContractAttribute"/> a vlastnosti musia byť dekorované atribútmi <see cref="T:System.Runtime.Serialization.DataMemberAttribute"/>.</param>
+            <param name="jsonText">Zdrojový JSON text.</param>
+            <param name="knownTypes">Zoznam typov, ktoré môžu byť vo výslednom grafe deserializovaných objektov, alebo <c>null</c>.</param>
+            <returns>
+            Výsledný objekt typu <paramref name="type"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="type"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Serializer.ToJson``1(``0)">
+            <summary>
+            Získanie JSON reprezentácie z <paramref name="@object"/>-u.
+            </summary>
+            <typeparam name="T">Typ vstupného objektu. Musí byť dekorovaný atribútmi <see cref="T:System.Runtime.Serialization.DataContractAttribute"/>
+            alebo <see cref="T:System.Runtime.Serialization.CollectionDataContractAttribute"/> a vlastnosti musia byť dekorované atribútmi <see cref="T:System.Runtime.Serialization.DataMemberAttribute"/>.</typeparam>
+            <param name="object">Vstupný objekt typu <typeparamref name="T"/>.</param>
+            <returns>JSON reprezentácia vstupného objektu.</returns>
+        </member>
+        <member name="M:Cora.Convert.Serializer.ToJson``1(``0,System.Collections.Generic.IEnumerable{System.Type})">
+            <summary>
+            Získanie JSON reprezentácie z <paramref name="@object"/>-u.
+            </summary>
+            <typeparam name="T">Typ vstupného objektu. Musí byť dekorovaný atribútmi <see cref="T:System.Runtime.Serialization.DataContractAttribute"/>
+            alebo <see cref="T:System.Runtime.Serialization.CollectionDataContractAttribute"/> a vlastnosti musia byť dekorované atribútmi <see cref="T:System.Runtime.Serialization.DataMemberAttribute"/>.</typeparam>
+            <param name="object">Vstupný objekt typu <typeparamref name="T"/>.</param>
+            <param name="knownTypes">Zoznam typov, ktoré môžu byť vo vstupnom grafe serializovaných objektov.</param>
+            <returns>JSON reprezentácia vstupného objektu.</returns>
+        </member>
+        <member name="M:Cora.Convert.Serializer.IsSerializable(System.Object)">
+            <summary>
+            Zistenie, či je zadaný objekt (príp. graf objektov) serializovateľný. Pokúsi sa o skutočnú serializáciu,
+            takže to môže chvíľu trvať. Slúži najmä na debug-ovacie účely.
+            </summary>
+            <param name="testedObject">Objekt testovaný na serializovateľnosť.</param>
+            <returns>Je zadaný objekt serializovateľný?</returns>
+        </member>
+        <member name="T:Cora.Convert.Splitter">
+            <summary>
+            Trieda na rozdeľovanie reťazcov podľa reťazcov.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.Splitter.Split(System.String,System.String)">
+            <summary>
+            Rozdelenie reťazca podľa oddeľovača.
+            </summary>
+            <param name="source">Rozdeľovaný reťazec.</param>
+            <param name="separator">Oddeľovač, podľa ktorého sa delí reťazec. Pre detaily pozri <see cref="M:System.String.Split(System.Char[])"/>.</param>
+            <returns>Pole rozdelených častí reťazca.</returns>
+        </member>
+        <member name="M:Cora.Convert.Splitter.Split(System.String,System.String,System.Int32)">
+            <summary>
+            Rozdelenie reťazca podľa oddeľovača na maximálne určený počet častí.
+            </summary>
+            <param name="source">Rozdeľovaný reťazec.</param>
+            <param name="separator">Oddeľovač, podľa ktorého sa delí reťazec. Pre detaily pozri <see cref="M:System.String.Split(System.Char[])"/>.</param>
+            <param name="count">Maximálny počet rozdelených častí.</param>
+            <returns>Pole rozdelených častí reťazca.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Maximálny počet častí je záporný.</exception>
+        </member>
+        <member name="M:Cora.Convert.Splitter.SplitRegex(System.String,System.String)">
+            <summary>
+            Rozdelenie reťazca podľa oddeľovača pomocou regulárnych výrazov.
+            </summary>
+            <param name="source">Rozdeľovaný reťazec.</param>
+            <param name="separator">Oddeľovač, podľa ktorého sa delí reťazec. Pre detaily pozri <see cref="M:System.String.Split(System.Char[])"/>.</param>
+            <returns>Pole rozdelených častí reťazca.</returns>
+        </member>
+        <member name="M:Cora.Convert.Splitter.CountOf(System.String,System.String)">
+            <summary>
+            Zistenie počtu výskytov hľadaného reťazca v druhom reťazci. Je "greedy", tzn. <c>ss</c> sa v <c>sss</c> vyskytuje len raz.
+            </summary>
+            <param name="source">Prehľadávaný reťazec.</param>
+            <param name="item">Hľadaný reťazec.</param>
+            <returns>Počet výskytov hľadaného reťazca v druhom reťazci.</returns>
+        </member>
+        <member name="M:Cora.Convert.Splitter.CountOfNonGreedy(System.String,System.String)">
+            <summary>
+            Zistenie počtu výskytov hľadaného reťazca v druhom reťazci. Je nie-"greedy", tzn. <c>ss</c> sa v <c>sss</c>
+            vyskytuje 2-krát, v <c>ssss</c> 3-krát.
+            </summary>
+            <param name="source">Prehľadávaný reťazec.</param>
+            <param name="item">Hľadaný reťazec.</param>
+            <returns>Počet výskytov hľadaného reťazca v druhom reťazci.</returns>
+        </member>
+        <member name="M:Cora.Convert.Splitter.IndexOf(System.String,System.String,System.Int32)">
+            <summary>
+            Nájdenie indexu n-tého výskytu reťazca <paramref name="value"/> v inom reťazci <paramref name="source"/>.
+            Je nie-"greedy", tzn. druhý výskyt <c>ss</c> v <c>ssss</c> je na indexe 1 (druhý znak).
+            </summary>
+            <param name="source">Prehľadávaný reťazec. Nesmie byť <c>null</c>.</param>
+            <param name="value">Hľadaný reťazec. Nesmie byť <c>null</c>.</param>
+            <param name="order">Určenie, ktorý výskyt reťazca sa hľadá (prvý, druhý, prvý od konca a pod.). Nenulové číslo, počíta sa od 1.</param>
+            <returns>Index n-tého výskytu reťazca <paramref name="value"/> v inom reťazci <paramref name="source"/>,
+            alebo -1, ak nebol nájdený.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je prehľadávaný reťazec <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je určenie, ktorý výskyt reťazca sa hľadá (<paramref name="order"/>), nula.</exception>
+        </member>
+        <member name="M:Cora.Convert.Splitter.IndexOf(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Nájdenie indexu n-tého výskytu reťazca <paramref name="value"/> v inom reťazci <paramref name="source"/>. Hľadanie začína 
+            na indexe <paramref name="startIndex"/>. Je nie-"greedy", tzn. druhý výskyt <c>ss</c> v <c>ssss</c> je na indexe 1 (druhý znak).
+            </summary>
+            <param name="source">Prehľadávaný reťazec. Nesmie byť <c>null</c>.</param>
+            <param name="value">Hľadaný reťazec. Nesmie byť <c>null</c>.</param>
+            <param name="order">Určenie, ktorý výskyt reťazca sa hľadá (prvý, druhý, prvý od konca a pod.). 
+            Záporné číslo znamená hľadanie smerom od konca reťazca. Nenulové číslo, počíta sa od 1.</param>
+            <param name="startIndex">Index, od ktorého začína hľadanie. Záporné číslo znamená počítanie od konca reťazca.
+            Nula je začiatok pri hľadaní od predu, koniec reťazca pri hľadaní od konca.</param>
+            <returns>Index n-tého výskytu reťazca <paramref name="value"/> v inom reťazci <paramref name="source"/>,
+            alebo -1, ak nebol nájdený.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je prehľadávaný reťazec <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je určenie, ktorý výskyt reťazca sa hľadá (<paramref name="order"/>), nula.</exception>
+        </member>
+        <member name="T:Cora.Convert.TimeSpanFormat">
+            <summary>
+            Trieda pre formátovanie časových hodnôt v sekumdách, minútach, hodinách atď..
+            </summary>
+        </member>
+        <member name="T:Cora.Convert.TimeSpanFormat.TimeSpanUnits">
+            <summary>
+            Prípony časových hodnôt.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.TimeSpanFormat.TimeSpanUnits.None">
+            <summary>Žiaden prefix.</summary>
+        </member>
+        <member name="F:Cora.Convert.TimeSpanFormat.TimeSpanUnits.ms">
+            <summary>Milisekundy (ms).</summary>
+        </member>
+        <member name="F:Cora.Convert.TimeSpanFormat.TimeSpanUnits.sek">
+            <summary>Sekundy (sek.).</summary>
+        </member>
+        <member name="F:Cora.Convert.TimeSpanFormat.TimeSpanUnits.min">
+            <summary>Minúty (min.).</summary>
+        </member>
+        <member name="F:Cora.Convert.TimeSpanFormat.TimeSpanUnits.hod">
+            <summary>Hodiny (hod.).</summary>
+        </member>
+        <member name="F:Cora.Convert.TimeSpanFormat.TimeSpanUnits.d">
+            <summary>Dni (d.).</summary>
+        </member>
+        <member name="M:Cora.Convert.TimeSpanFormat.Format(System.TimeSpan)">
+            <summary>
+            Naformátovanie časovej hodnoty.
+            </summary>
+            <param name="timeSpan">Formátovaná hodnota.</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="T:Cora.Convert.Unique">
+            <summary>Trieda pre prácu s unikátnymi identifikátormi <see cref="T:System.Guid"/>.</summary>
+        </member>
+        <member name="M:Cora.Convert.Unique.GetHex">
+            <summary>
+            Získanie unikátneho reťazca v hexadecimálnom tvare na základe <see cref="T:System.Guid"/> s dĺžkou 32 písmen.
+            Slovo obsahuje len hexa znaky: čísla a A, B, C, D, E, F.
+            </summary>
+            <returns><see cref="T:System.Guid"/> v hexadecimálnom tvare.</returns>
+        </member>
+        <member name="M:Cora.Convert.Unique.GetWordHex">
+            <summary>
+            Získanie unikátneho slova v hexadecimálnom tvare na základe <see cref="T:System.Guid"/> s dĺžkou 32 písmen.
+            Slovo začína písmenom A-P a ďalej obsahuje len hexa znaky: čísla a A, B, C, D, E, F.
+            </summary>
+            <returns>Unikátne slovo v hexadecimálnom tvare.</returns>
+        </member>
+        <member name="M:Cora.Convert.Unique.GetWord">
+            <summary>
+            Získanie unikátneho slova na základe <see cref="T:System.Guid"/> s dĺžkou 23 písmen. Slovo obsahuje veľké a malé písmená.
+            </summary>
+            <returns>Unikátne slovo.</returns>
+        </member>
+        <member name="M:Cora.Convert.Unique.GetWordUpper">
+            <summary>
+            Získanie unikátneho slova s vylúčením malých písmen na základe <see cref="T:System.Guid"/> s dĺžkou 26 písmen.
+            Slovo začína písmenom a obsahuje len veľké písmená a čísla.
+            </summary>
+            <returns>Unikátne slovo s vylúčením malých písmen.</returns>
+        </member>
+        <member name="F:Cora.Convert.Unique.ULONG_62_BITS">
+            <summary><see cref="T:System.UInt64"/> s hodnotou 2^62 - 1 (rozsah 62 bitov). Je možné ho vyjadriť 11-miestnym
+            "písmenovým" číslom (viď <see cref="M:Cora.Convert.Formatter.GetLetterIndex(System.UInt64)"/>).</summary>
+        </member>
+        <member name="T:Cora.Convert.WGS84">
+            <summary>
+            Trieda na prácu so súradnicami v súradnicovom systéme WGS84. Formátovanie, parsovanie, prepočty a prevody.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.WGS84.EPS">
+            <summary>
+            Konštata pre hranicu, pod ktorou sa číslo považuje sa nulu (1e-4).
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.WGS84.FERRO">
+            <summary>
+            Úhel, který se za Křováka připočítával k východní délce tak, aby délková
+            souřadnice pro Evropu, Afriku a Asii byly v kladném kvadrantu (-17°40').
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.WGS84.Hypot(System.Double,System.Double)">
+            <summary>
+            Získanie dĺžky prepony pravohlého trojuholníka <c>c</c>.
+            </summary>
+            <param name="a">Dĺžka strany <c>a</c>.</param>
+            <param name="b">Dĺžka strany <c>b</c>.</param>
+            <returns>Dĺžka prepony (strany <c>c</c>).</returns>
+        </member>
+        <member name="M:Cora.Convert.WGS84.DistPoints(Cora.Convert.WGS84.MapCoord,Cora.Convert.WGS84.MapCoord)">
+            <summary>
+            Získanie vzdialenosti dvoch bodov.
+            </summary>
+            <param name="p1">Prvý bod.</param>
+            <param name="p2">Druhý bod.</param>
+            <returns>Vzdialenosť bodov <paramref name="p1"/> a <paramref name="p2"/>.</returns>
+        </member>
+        <member name="M:Cora.Convert.WGS84.WGS84toJTSK(System.Double,System.Double,Cora.Convert.WGS84.MapCoord@)">
+            <summary>
+            Získanie JTSK súradníc pre zadanú severnú šírku a východnú dĺžku elipsoidu WGS84 (zmeranú pomocou GPS).
+            </summary>
+            <param name="latitude">Severná šírka (WGS84).</param>
+            <param name="longitude">Východná dĺžka (WGS84).</param>
+            <param name="jtskCoord">Výsledné súradnice v JTSK.</param>
+            <returns>Úspešnosť prevodu z WGS84 do JTSK.</returns>
+            <remarks>
+            R_WGS84 - rutiny pro převody JTSK - WGS-84
+            --------------------------------------------------------------------------
+            Datum vytvoření   : 17.6.2001
+            Správce           : Jakub Kerhat
+            Součást projektu  : &lt;CommRtn&gt;
+            --------------------------------------------------------------------------
+            Copyright (c) 2001  CDSw - City Data Software spol. s r.o.
+            **************************************************************************
+            $Id: R_WGS84.pas,v 1.16 2004/11/29 14:28:56 jakub Exp $
+            MapServer-compliant
+            </remarks>
+        </member>
+        <member name="M:Cora.Convert.WGS84.JTSKtoWGS84(Cora.Convert.WGS84.MapCoord,System.Double@,System.Double@)">
+            <summary>
+            Získanie severnej šírky a východnej dĺžky elipsoidu WGS84 pre zadané JTSK súradnice.
+            </summary>
+            <param name="jtskCoord">Súradnice v JTSK.</param>
+            <param name="Latitude">Výsledná severná šírka (WGS84). </param>
+            <param name="Longitude">Výsledná východná dĺžka (WGS84).</param>
+            <returns>Úspešnosť prevodu z JTSK do WGS84.</returns>
+        </member>
+        <member name="M:Cora.Convert.WGS84.WGS84ToStr(System.Double,System.Double,Cora.Convert.WGS84.Wgs84Format)">
+            <summary>
+            Prevod súradníc WGS84 (severná šírka a východná dĺžka) do textovej reprezentácie.
+            </summary>
+            <param name="latitude">Severná šírka (WGS84).</param>
+            <param name="longitude">Východná dĺžka (WGS84).</param>
+            <param name="angleFormat">Formát prevodu súradníc WGS84 do textu.</param>
+            <returns>Textová reprezentácia súradníc WGS84.</returns>
+        </member>
+        <member name="M:Cora.Convert.WGS84.WGS84ToStr(System.Double,System.Double)">
+            <summary>
+            Prevod súradníc WGS84 (severná šírka a východná dĺžka) do textovej reprezentácie v tvare [NXX° XX' XX.X''  EXX° XX' XX.X''].
+            </summary>
+            <param name="latitude">Severná šírka (WGS84).</param>
+            <param name="longitude">Východná dĺžka (WGS84).</param>
+            <returns>Textová reprezentácia súradníc WGS84.</returns>
+        </member>
+        <member name="M:Cora.Convert.WGS84.WGS84ToStr(System.Double,Cora.Convert.WGS84.Wgs84Format)">
+            <summary>
+            Prevod uhlovej súradníce WGS84 (šírka alebo dĺžka) do textovej reprezentácie.
+            </summary>
+            <param name="angle">Šírka alebo dĺžka.</param>
+            <param name="angleFormat">Formát prevodu súradnice do textu.</param>
+            <returns>Textová reprezentácia súradníc WGS84.</returns>
+        </member>
+        <member name="M:Cora.Convert.WGS84.WGS84ToStr(System.Double)">
+            <summary>
+            Prevod uhlovej súradníce WGS84 (šírka alebo dĺžka) do textovej reprezentácie v tvare XX° XX' XX.X''.
+            </summary>
+            <param name="angle">Šírka alebo dĺžka.</param>
+            <returns>Textová reprezentácia súradníc WGS84.</returns>
+        </member>
+        <member name="M:Cora.Convert.WGS84.StrToWGS84(System.String)">
+            <summary>
+            Prevod textovej reprezentácie súradnice WGS84 (šírka alebo dĺžka) do desatinného čísla.
+            </summary>
+            <param name="str">Textová reprezentácia súradnice WGS84 (šírka alebo dĺžka).</param>
+            <returns>Súradnica WGS84 (šírka alebo dĺžka).</returns>
+        </member>
+        <member name="T:Cora.Convert.WGS84.MapCoord">
+            <summary>
+            Súradnice mapy.
+            </summary>
+            <remarks>
+            T_Coord - Definice souřadnicových typů mapy
+            --------------------------------------------------------------------------
+            Datum vytvoření   : 16.7.2001
+            Správce           : Michal Bursa
+            Součást projektu  : Mapa2000
+            --------------------------------------------------------------------------
+            Copyright (c) 2001  CDSw - City Data Software spol. s r.o.
+            **************************************************************************
+            $Id: T_Coord.pas,v 1.23 2005/03/09 16:33:04 jakub Exp $
+            </remarks>
+        </member>
+        <member name="F:Cora.Convert.WGS84.MapCoord.NullCoord">
+            <summary>Súradnice začiatku (0; 0).</summary>
+        </member>
+        <member name="P:Cora.Convert.WGS84.MapCoord.Y">
+            <summary>Súradnica Y.</summary>
+        </member>
+        <member name="P:Cora.Convert.WGS84.MapCoord.X">
+            <summary>Súradnica X.</summary>
+        </member>
+        <member name="M:Cora.Convert.WGS84.MapCoord.#ctor(System.Double,System.Double)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Convert.WGS84.MapCoord"/>.
+            </summary>
+            <param name="x">Súradnica X.</param>
+            <param name="y">Súradnica Y.</param>
+        </member>
+        <member name="T:Cora.Convert.WGS84.Wgs84Format">
+            <summary>
+            Možné formáty prevodu súradníc WGS84 do textu.
+            </summary>
+        </member>
+        <member name="F:Cora.Convert.WGS84.Wgs84Format.Stupne">
+            <summary>Textová reprezentácia obsahuje len stupne.</summary>
+        </member>
+        <member name="F:Cora.Convert.WGS84.Wgs84Format.Minutes">
+            <summary>Textová reprezentácia obsahuje stupne a minúty.</summary>
+        </member>
+        <member name="F:Cora.Convert.WGS84.Wgs84Format.Seconds">
+            <summary>Textová reprezentácia obsahuje stupne, minúty a sekundy.</summary>
+        </member>
+        <member name="T:Cora.Convert.Xml">
+            <summary>
+            Trieda na konvertovanie medzi xml a xml linq objektami.
+            </summary>
+        </member>
+        <member name="M:Cora.Convert.Xml.ToXmlElement(System.Xml.Linq.XElement)">
+            <summary>
+            Prevod <see cref="T:System.Xml.Linq.XElement"/>-u na <see cref="T:System.Xml.XmlElement"/>. Výsledný element je potrebné importovať
+            do cieľového <see cref="T:System.Xml.XmlDocument"/>-u pomocou <see cref="M:System.Xml.XmlDocument.ImportNode(System.Xml.XmlNode,System.Boolean)"/>.
+            </summary>
+            <param name="xElement">Zdrojový <see cref="T:System.Xml.Linq.XElement"/>.</param>
+            <returns>Výsledný <see cref="T:System.Xml.XmlElement"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="xElement"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Xml.ToXmlElement(System.Xml.Linq.XElement,System.Xml.XmlDocument)">
+            <summary>
+            Prevod <see cref="T:System.Xml.Linq.XElement"/>-u na <see cref="T:System.Xml.XmlElement"/>.
+            </summary>
+            <param name="xElement">Zdrojový <see cref="T:System.Xml.Linq.XElement"/>.</param>
+            <param name="xmlDocument">Xml document, v ktorom nový xml element vznikne.</param>
+            <returns>Výsledný <see cref="T:System.Xml.XmlElement"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="xElement"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="xmlDocument"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Xml.ToXmlDocument(System.Xml.Linq.XDocument)">
+            <summary>
+            Prevod <see cref="T:System.Xml.Linq.XDocument"/>-u na <see cref="T:System.Xml.XmlDocument"/>.
+            </summary>
+            <param name="xDocument">Zdrojový <see cref="T:System.Xml.Linq.XDocument"/>.</param>
+            <returns>Výsledný <see cref="T:System.Xml.XmlDocument"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="xDocument"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Xml.ToXElement(System.Xml.XmlElement)">
+            <summary>
+            Prevod <see cref="T:System.Xml.XmlElement"/>-u na <see cref="T:System.Xml.Linq.XElement"/>.
+            </summary>
+            <param name="xmlElement">Zdrojový <see cref="T:System.Xml.XmlElement"/>.</param>
+            <returns>Výsledný <see cref="T:System.Xml.Linq.XElement"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="xmlElement"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Xml.ToXDocument(System.Xml.XmlDocument)">
+            <summary>
+            Prevod <see cref="T:System.Xml.XmlDocument"/>-u na <see cref="T:System.Xml.Linq.XDocument"/>.
+            </summary>
+            <param name="xmlDocument">Zdrojový <see cref="T:System.Xml.XmlDocument"/>.</param>
+            <returns>Výsledný <see cref="T:System.Xml.Linq.XDocument"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="xmlDocument"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Xml.CreateXmlDocument(System.Byte[])">
+            <summary>
+            Načítanie <see cref="T:System.Xml.XmlDocument"/>-u z binárnej reprezentácie.
+            </summary>
+            <param name="content">Binárna forma XML dokumentu, nesmie byť <c>null</c>.</param>
+            <returns>XML dokument.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="content"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Xml.GetValueSafe(System.Xml.XmlNode)">
+            <summary>
+            Získanie hodnoty uzla <paramref name="xmlNode"/>, ktorý môže byť aj <c>null</c> (vtedy je výsledok tiež <c>null</c>).
+            </summary>
+            <param name="xmlNode">Uzol, ktorého hodnotu získavame.</param>
+            <returns>Hodnota uzla <paramref name="xmlNode"/>, alebo <c>null</c>, ak bol uzol <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Xml.GetInnerTextSafe(System.Xml.XmlNode)">
+            <summary>
+            Získanie vnútorného textu uzla <paramref name="xmlNode"/>, ktorý môže byť aj <c>null</c> (vtedy je výsledok tiež <c>null</c>).
+            </summary>
+            <param name="xmlNode">Uzol, ktorého vnútorný text získavame.</param>
+            <returns>Vnútorný text uzla <paramref name="xmlNode"/>, alebo <c>null</c>, ak bol uzol <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.Convert.Xml.GetDefultNamespaceManager(System.Xml.XmlNode,System.String)">
+            <summary>
+            Získanie namespace manažéra podľa namespace-u uzla <paramref name="xmlNode"/> s prefixom <paramref name="namespacePrefix"/>.
+            </summary>
+            <param name="xmlNode">XML uzol, podľa ktorého.</param>
+            <param name="namespacePrefix">Prefix namespace-u.</param>
+            <returns>Namespace manažér podľa namespace-u uzla <paramref name="xmlNode"/> s prefixom <paramref name="namespacePrefix"/>.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="xmlNode" /> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Convert.Xml.WriteToFile(System.Xml.XmlNode,System.String,System.Xml.XmlWriterSettings)">
+            <summary>
+            Zápis uzla do súboru.
+            </summary>
+            <param name="oXmlNode">Uzol.</param>
+            <param name="filename">Názov súboru aj cestou.</param>
+            <param name="oXmlWriterSettings">Vlastné nastavenie <see cref="T:System.Xml.XmlWriterSettings"/>.</param>
+        </member>
+        <member name="M:Cora.Convert.Xml.WriteToFile(System.Xml.XmlNode,System.String,System.Boolean)">
+            <summary>
+            Zápis uzla do súboru.
+            </summary>
+            <param name="oXmlNode">Uzol.</param>
+            <param name="filename">Názov súboru aj cestou.</param>
+            <param name="settingDefault">Ak <c>true</c> použije sa štandardne nastavenie <see cref="T:System.Xml.XmlWriterSettings"/>, tzn. každý uzol na novom riadku + odsadenie + kódovanie UTF-8.
+            Ak <c>false</c>, ako argument <see cref="T:System.Xml.XmlWriterSettings"/> sa použije null.</param>
+        </member>
+        <member name="M:Cora.Convert.Xml.GetString(System.Xml.XmlNode,System.Xml.XmlWriterSettings)">
+            <summary>
+            Uzol ako string v požadovanom tvare.
+            </summary>
+            <param name="oXmlNode">Uzol.</param>
+            <param name="oXmlWriterSettings">Vlastné nastavenie <see cref="T:System.Xml.XmlWriterSettings"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Convert.Xml.GetString(System.Xml.XmlNode,System.Boolean)">
+            <summary>
+            Uzol ako string v požadovanom tvare.
+            </summary>
+            <param name="oXmlNode">Uzol.</param>
+            <param name="settingDefault">Ak <c>true</c> použije sa štandardne nastavenie <see cref="T:System.Xml.XmlWriterSettings"/>, tzn. každý uzol na novom riadku + odsadenie + kódovanie UTF-8 + XmlDeclaration.
+            Ak <c>false</c>, ako argument <see cref="T:System.Xml.XmlWriterSettings"/> sa použije null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Convert.Xml.GetBytes(System.Xml.XmlNode,System.Xml.XmlWriterSettings)">
+            <summary>
+            Uzol v binárnom tvare.
+            </summary>
+            <param name="oXmlNode">Uzol.</param>
+            <param name="oXmlWriterSettings">Vlastné nastavenie <see cref="T:System.Xml.XmlWriterSettings"/>.</param>
+        </member>
+        <member name="M:Cora.Convert.Xml.GetBytes(System.Xml.XmlNode,System.Boolean)">
+            <summary>
+            Uzol v binárnom tvare.
+            </summary>
+            <param name="oXmlNode">Uzol.</param>
+            <param name="oXmlWriterSettings">Vlastné nastavenie <see cref="T:System.Xml.XmlWriterSettings"/>.</param>
+            <param name="settingDefault">Ak <c>true</c> použije sa štandardne nastavenie <see cref="T:System.Xml.XmlWriterSettings"/>, tzn. neriadkovať + neodsadené + kódovanie UTF-8.
+            Ak <c>false</c>, ako argument <see cref="T:System.Xml.XmlWriterSettings"/> sa použije null.</param>
+        </member>
+    </members>
+</doc>

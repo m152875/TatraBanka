@@ -1,0 +1,12 @@
+﻿<?xml version="1.0"?>
+<instructions description="Úvodné nastavenie parametrov">
+	<parameter_declare name="Version"><Version/></parameter_declare>
+	
+	<parameter_declare name="InstallNatecWebPackage">
+		<xml_preprocess><parameter_get_value name="PackageDirectory"/>\InstallNatecWeb.clz</xml_preprocess>
+	</parameter_declare>
+	
+	<parameter_declare name="InstallNatecDesktopPackage">
+		<xml_preprocess><parameter_get_value name="PackageDirectory"/>\InstallNatecDesktop.clz</xml_preprocess>
+	</parameter_declare>
+</instructions>

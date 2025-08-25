@@ -1,0 +1,541 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Cora.Natec.Geo.Ingr
+</name>
+</assembly>
+<members>
+<member name="T:Cora.Natec.Geo.Ingr.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="T:Cora.Natec.Geo.Ingr.GwmClient">
+ <summary>
+ Mapový klient pre Intergraph GeoMedia WebMap.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmClient.#ctor(System.Int64,Cora.Global.Session.IIdentity,System.Collections.Generic.Dictionary{System.String,System.Object})">
+ <summary>
+ Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.Ingr.GwmClient"/>.
+ </summary>
+ <param name="placementId">ID umiestnenia, na ktoré je mapový klient naviazaný.</param>
+ <param name="identity">Identita volajúceho.</param>
+ <param name="externalSettings">Zoznam externých nastavení. Musí obsahovať nastavenia zo <see cref="T:Cora.Natec.Geo.SettingNames"/> s prefixom SELECSET.</param>
+ <remarks></remarks>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmClient.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+ <summary>
+ Deserializačný konštruktor.
+ </summary>
+ <param name="info">Serializačné info.</param>
+ <param name="context">Serializačný kontext.</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmClient.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+ <summary>
+ Naplnenie <see cref="T:System.Runtime.Serialization.SerializationInfo"/> serializačnými dátami.
+ </summary>
+ <param name="info">Serializačné info.</param>
+ <param name="context">Serializačný kontext.</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmClient.GetMapByRange(Cora.Natec.Geo.IMapComplexBus)">
+ <summary>
+  Vráti mapu ohraničenú súradnícami <see cref="P:Cora.Natec.Geo.IMapComplexBus.MapCoords"/>. Vstupné parametre, najmä zoznam vybraných tém,
+	 číta z <paramref name="mapComplexBus"/>, výstupné parametre vráti v novej inštancii <see cref="T:Cora.Natec.Geo.MapComplexBus"/>.
+ </summary>
+ <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+ <returns>
+ Nová inštancia <see cref="T:Cora.Natec.Geo.MapComplexBus"/> s naplnenými výstupnými parametrami (najmä mapová URL a zobrazené témy),
+ alebo <c>null</c>, ak na zbernici nie sú potrebné vstupné parametre (najmä zoznam vybraných tém, súradnice a veľkosť).
+ </returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmClient.GetMapByFeatures(Cora.Natec.Geo.IMapComplexBus)">
+ <summary>
+	 Vráti mapu zoomovanú podľa zobrazených objektov (featurov) aktívnej témy.
+	 Vstupné parametre, najmä zoznam vybraných tém, číta z <paramref name="mapComplexBus"/>, výstupné parametre vráti v novej inštancii
+ </summary>
+ <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+ <returns>
+ Nová inštancia <see cref="T:Cora.Natec.Geo.MapComplexBus"/> s naplnenými výstupnými parametrami (najmä mapová URL a zobrazené témy),
+ alebo <c>null</c>, ak na zbernici nie sú potrebné vstupné parametre (najmä zoznam vybraných tém, aktívna téma + zoznam ID featurov a veľkosť).
+ </returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmClient.GetClientSpecificTheme(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+<summary>
+Factory-metóda na výrobu témy na základe dátového objektu <paramref name="cdoTheme"/> - vracia inštancie <see cref="T:Cora.Natec.Geo.Ingr.GwmTheme"/>.
+ </summary>
+<param name="cdoTheme">Dátový objekt témy.</param>
+<returns>Téma typu <see cref="T:Cora.Natec.Geo.Ingr.GwmTheme"/>.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmClient.GetFeatureCount(Cora.Natec.Geo.CdoSP_GEO_THEMES)">
+ <summary>
+ Vráti počet prvkov témy.
+ </summary>
+ <param name="spGeoThemes">Objekt témy.</param>
+ <returns>Počet prvkov v téme.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmClient.GetSelectThemeCount(System.String,System.String,System.String)">
+ <summary>
+ Vyskladnanie Sql dotazu pre zistenie počtu prvkov v téme.
+ </summary>
+ <param name="baseTable">Tabluľka popisujúca feature.</param>
+ <param name="geometry">Stĺpec geometrie.</param>
+ <param name="tParams">Xml string s popisom where podmienky. </param>
+ <returns> Sql dotaz pre zistenie počtu prvkov v téme.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmClient.Clone">
+ <summary>
+ Vytvorenie klonu GwmClienta.
+ </summary>
+ <returns>Klon GwmClienta.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmDxfHelper.#ctor(System.String,System.String,System.Int32,System.String)">
+ <summary>
+ Konstrukcia pomocnika pre DXF generator
+ </summary>
+ <param name="col_N_SOURCE">Názov konekcie.</param>
+ <param name="col_SOURCE_PlainText">Konekcia.</param>
+ <param name="col_I_C_SOURCE_TYP">Typ konekcie.</param>
+ <param name="pathCoordinateSystem">Cesta k suboru s SJTSK.csf.</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmDxfHelper.GetGeometryFromRange(System.Double,System.Double,System.Double,System.Double,System.String,System.String,System.String,System.String,System.String)">
+ <summary>
+ Vráti zoznam id nad vybraným územím.
+ </summary>
+ <param name="rangeX1">Súradnica územia X1.</param>
+ <param name="rangeY1">Súradnica územia Y1.</param>
+ <param name="rangeX2">Súradnica územia X2.</param>
+ <param name="rangeY2">Súradnica územia Y2.</param>
+ <param name="baseTable">Meno tabuľky.</param>
+ <param name="keyColName">Pk tabuľky.</param>
+ <param name="whereClause">Where podmienka.</param>
+ <param name="geoColumn">Meno stĺpca geometrie.</param>
+ <returns>Zoznam id feature pariacich vybranému územiu.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmDxfHelper.GetGeometryIntersection(System.String,System.String,System.String,System.String,System.String,System.String)">
+ <summary>
+ Varáti geometrie objektov ,ktorá je prienikom geometrii objetov v pravej a ľavej tab.
+ </summary>
+ <param name="baseTableLeft">Názov ľavej tab.</param>
+ <param name="whereCondLeft">Where podmienka ľavej tab.Format napr.: Where i_pk in (1,2,23....).</param>
+ <param name="baseTableRight">Názov pravej tab.</param>
+ <param name="whereCondRight">Where podmienka pravej tab.Format napr.: Where i_pk in (1,2,23....).</param>
+ <returns>Zoznam geometrií.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapOperation.CreateQuery(System.String,System.String,System.String,System.String,System.Boolean)">
+ <summary>
+ Vytvorenie dotazu nad jednou témou 
+ </summary>
+ <param name="name">Názov dotazu</param>
+ <param name="connectionName">Názov konekcie</param>
+ <param name="tableName">Názov tabuľky</param>
+ <param name="whereClause">Where podmienka. Ak podmienka nieje NullOrEmpty nastavuje sa nový range</param>
+ <returns>objQuery</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapOperation.CreateSymbology(Cora.Natec.Geo.Ingr.GwmT_Styles,System.String,System.String,System.String)">
+ <summary>
+ Vytvorenie symbológie nad jednou témou. Podľa ZoomByFeatures rozhodne zvýraznenie Map objektu. 
+ </summary>
+ <param name="GwmT_Styles">Trieda obsahujúca nastavenie symbológie Map objektu</param>
+ <param name="Gtype">Typ zobrazovaného objektu (iba pri lokalizácii)</param>
+ <param name="SelColor">Farba selektovaného objeku (iba pri lokalizácii)</param>
+ <param name="SelWidth">Width selektovaného objeku (iba pri lokalizácii)</param>
+ <returns>objSymb</returns>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmMapOperation.ZoomByFeatures">
+ <summary>
+ ZoomByFeatures > true ak sa vykonáva ZoomByFeatures. Nastavuje sa z vonku
+ </summary>
+ <value>Boolean</value>
+ <returns>ZoomByFeatures</returns>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmMapOperation.Range">
+ <summary>
+ Vráti Range mapy
+ </summary>
+ <value>Object</value>
+ <returns>Range</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapPart.#ctor(Cora.Portal.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+ <summary>
+ Vytvorenie prvku
+ </summary>
+ <param name="panel">Panel, kam prvok patrí.</param>
+ <param name="cdoPlac">Data objekt pre umiestnenie prvku.</param>
+ <remarks></remarks>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmMapPart.MapClient">
+ <summary>
+ Vráti mapového klienta.
+ </summary>
+ <value></value>
+ <returns>Me._mapClient</returns>
+ <remarks></remarks>
+</member>
+<member name="F:Cora.Natec.Geo.Ingr.GwmMapPart._mapClient">
+ <summary>
+ ID portálového prvku v metadátach.
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.CreateConnect(Cora.Natec.Geo.Theme)">
+ <summary>
+ Vytvorenie konekcie  
+ </summary>
+ <param name="theme">Téma z GEO_TREE_UZ potrebná pre nastavenie konekcie</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.CreateConnect(System.String,System.String,System.String)">
+ <summary>
+ Vytvorenie konekcie  
+ </summary>
+ <param name="col_N_SOURCE">Nazov pripojenia.</param>
+ <param name="col_SOURCE_PlainText">Konekcia.</param>
+ <param name="col_I_C_SOURCE_TYP">Typ konekcie.</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.Connect(System.String,System.String,System.String,System.String)">
+ <summary>
+ Vytvorenie konekcie Mapsrv s data serverom
+ </summary>
+ <param name="GdoServer">GDO data server napr. "Access.GDatabase"</param>
+ <param name="DbName">Cesta alebo názov súboru k otvoreniu databázy napr. "Oracle"</param>
+ <param name="Source"></param>
+ <param name="ConnName">Názov konekcie</param>
+ <remarks></remarks>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.ParseParameterValue(System.String)">
+ <summary>
+ Odstráni hodnotu od názvu parametra 
+ </summary>
+ <param name="Parameter">Parameter s hodnotou napr. sss=123</param>
+ <returns>Hodnota parametra napr. 123</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.CoordinateSystem">
+ <summary>
+ Nastavenie Coordinate MapSrv
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.Autoscale">
+ <summary>
+ Nastavenie objAutoScale MapSrv
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.OutputType">
+ <summary>
+ Nastavuje typ img.png ako výstup MapSrv 
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.CreateComObj">
+ <summary>
+ Inicializácia MapSrv
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.ReleaseComObject">
+ <summary>
+ Uvoľnenie Mapsrv - com objetku 
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.Inicialize(Cora.Natec.Geo.Theme)">
+ <summary>
+ Postupne inicializuje všetky com objekty potrebné pre prácu s MapSrv
+ </summary>
+ <param name="theme">Téma z GEO_TREE_UZ použitie iba pri lokalizácii nad SQL srv pre nastvenie konekcie (SpatialFilterPipe)</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.Inicialize(System.String,System.String,System.String,System.String)">
+ <summary>
+ Postupne inicializuje všetky com objekty potrebné pre prácu s MapSrv
+ </summary>
+ <param name="col_N_SOURCE">Nazov pripojenia.</param>
+ <param name="col_SOURCE_PlainText"></param>
+ <param name="col_I_C_SOURCE_TYP">Typ konekcie.</param>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmMapServer.ConnectionName">
+ <summary>
+ Vráti názov konekcie Mapsrv na data server
+ </summary>
+ <value>Object</value>
+ <returns>sConnectionName</returns>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmMapServer.ImageMapUrl">
+ <summary>
+ Vráti Url na image predstavujúci mapu
+ </summary>
+ <value>String</value>
+ <returns>ImageUrl</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.GetWhereClause(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+ <summary>
+ Vráti vyskladaný string pre Where podmienku
+ </summary>
+ <param name="GEO_TREE_UZ">GEO_TREE_UZ ako jeden "riadok" z pohľadu GEO_TREE_UZ</param>
+ <returns>Where podmienka v tvare GEO_COLUMN is not null and WhereCond </returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmMapServer.CreateFeatureKeys(Cora.Natec.Geo.MapRange,Cora.Natec.Geo.CdoGEO_TREE_UZ,System.String)">
+ <summary>
+ Vytvorí zoznam FeatureKeys z vyselektovaného územia nad BASE_TABLE pomocou "GeoMedia.SpatialFilterPipe" 
+ </summary>
+ <param name="range">Súradnice selectovaného územia</param>
+ <param name="GEO_TREE_UZ">Z CdoGEO_TREE_UZ sú potrebné hodnoty col_BASE_TABLE a col_GEO_COLUMN </param>
+ <param name="keyColName">Meno stĺpca tabuľky</param>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmMapServer.GetCmdfUrl(System.String)">
+ <summary>
+ Zistí podľa ImageMapUrl názov a cestu k *.cmdf súboru pre načítanie,alebo uloženie  
+ </summary>
+ <param name="ImageMapUrl"> Url image mapy , ak nothing vráti cestu pre uložnie nového cmdf</param>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmMapServer.GetFeatureKeys">
+ <summary>
+ Vráti zoznam FeatureKeys vytvorených pomocou CreateFeatureKeys(....)
+ </summary>
+ <value>HashSet(Of Long)</value>
+ <returns>Zoznam FeatureKeys</returns>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmMapServer.SourceTyp">
+ <summary>
+ Vráti typ konekcie mapového servra.
+ </summary>
+ <value>Integer.</value>
+ <returns>Typ konekcie (1 - 10).</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmOptimalizer.#ctor(Cora.Natec.Geo.Ingr.GwmMapServer,Cora.Natec.Geo.IMapComplexBus)">
+ <summary>
+ Pomocná trieda určená pre optimalizáciu GWM
+ </summary>
+ <param name="_mapServer"> Mapsrv COM objekt </param>
+ <param name="_mapComplexBus"> MapComplexBus </param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmOptimalizer.IsSelThemeIDsIdentical">
+ <summary>
+ Zistí či v predchádzajúcom behu boli vybraté rovnaké vrstvy mapy 
+ </summary>
+ <returns>True ak v predchádzajúcom behu boli vybraté rovnaké vrstvy mapy </returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmOptimalizer.IsStateReadCMDF">
+ <summary>
+ Vráti true ak nieje zapnutý PermanentTool = DataInfo a je zapnutý rovnaký výber tém ako v predchádzajúcom behu
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmOptimalizer.ReadCMDF(System.Collections.ArrayList,System.Boolean)">
+ <summary>
+ Ak sú splnené všetky podmienky načíta CMDF súbor 
+ </summary>
+ <param name="ageoTreeUz">Zoznam jednotlivých vrstiev. Zistuje sa ScaleMin, Max a porovnáva predchádzajúci beh</param>
+ <param name="zoomByFeatures">Ak je True *.cmdf sa nenačíta</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmOptimalizer.SaveCMDF">
+ <summary>
+ Uloží *.cmdf súbor do Gwm_cahe. Cestu k súboru generuje MapServer
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmOptimalizer.Featureset">
+ <summary>
+ Nastavý Queries a Markers COM oMapSrv
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmOptimalizer.CountDisplayedTheme(System.Collections.ArrayList)">
+ <summary>
+ Zistí a vráti počet zobrazitelných tém
+ </summary>
+ <param name="aGeoTreeUz">Zoznam jednotlivých tém GeoTreeUZ</param>
+ <returns>počet zobrazitelných tém</returns>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmOptimalizer.DisplayedThemeID">
+ <summary>
+ Zoznam zobrazených tém
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.#ctor(Cora.Global.Session.IIdentity,Cora.Natec.Geo.IMapComplexBus,Cora.Natec.Geo.Theme,System.Boolean,System.Collections.Generic.Dictionary{System.String,System.Object})">
+ <summary>
+ Vytvorenie inštanice 
+ </summary>
+ <param name="_identity">Identity</param>
+ <param name="_mapComplexBus">MapComplexBus</param>
+ <param name="_theme">Téma z GEO_TREE_UZ prvá v poradí</param>
+ <param name="_zoomByFeatures">ZoomByFeatures</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.DoMapa">
+ <summary>
+ Inicializuje com Obj. a spracuje dotazy portebne na vykreslenie mapy 
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.InicializeMapObj">
+ <summary>
+ Inicializacia MapObj pred vytvorenim requestu
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.CreateRequest">
+ <summary>
+ Vytvorenie requestu
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.GetTStyle(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+ <summary>
+ Vráti objekt GwmT_Styles obsahujúci definíciu stylu témy.
+ </summary>
+ <param name="geoTreeUz">Dátova trieda definujúca strom máp a tém.</param>
+ <returns>Objekt GwmT_Styles obsahujúci definíciu stylu témy.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.GetNameQuery(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+ <summary>
+ Vráti názov dotazu pre získanie mapy.
+ </summary>
+ <param name="geoTreeUz">Dátova trieda definujúca strom máp a tém.</param>
+ <returns>Názov dotazu pre získanie mapy.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.GetGType(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+ <summary>
+ Vráti hodnotu G_Type z definicie témy.
+ </summary>
+ <param name="geoTreeUz">Dátova trieda definujúca strom máp a tém.</param>
+ <returns>Hodnota G_Type z definicie témy.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.WiewTheme(Cora.Natec.Geo.Theme,Cora.Natec.Geo.IMapComplexBus)">
+ <summary>
+ Vráti true pre zobrazenie témy ak jej interval mierky zodpovedá aktuánej mierke zobrazenej mapy.
+ </summary>
+ <param name="aktualTheme">Aktuálna téma.</param>
+ <param name="mapComplexBus">Mapcomplex bus s načítanou aktuálnou mierkou. </param>
+ <returns>true ak interval mierky zodpovedá aktuánej mierke zobrazenej mapy.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.SetPriority(System.Object,System.String,System.Int32)">
+ <summary>
+ Nastavuje prioritu zobrazovania vrstiev. 
+ </summary>
+ <param name="displayRule">Com obj. pomocou ktorého sa nastvuje priorita.</param>
+ <param name="name">Meno requestu = meno SheetName.</param>
+ <param name="priority">Hodnota priority.</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.CreateAnnotationRule(Cora.Natec.Geo.Ingr.GwmT_Styles)">
+ <summary>
+ Pridá k vybranému T_Style Annotation Rule.
+ </summary>
+ <param name="gwmT_Styles">Gwm T style vybranej témy.</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.SetRangeByFeatures">
+ <summary>
+ Nastavuje súradnice pre zobrazenie Features v mape mapy .
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.ReleaseComObject">
+ <summary>
+ Uvoľnenie objDisplayRule - com objetku .
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmServerManager.ProcessResponse">
+ <summary>
+ Odovzdá oMapSrv na spracovanie parametre o požadovanej mape, nastavý cestu k img. mapy a vráti jej range .
+ </summary>
+ <returns>MapRange(x1, y1, x2, y2).</returns>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmServerManager.DisplayedThemeID">
+ <summary>
+ Zoznam vybratých tém oddelených čiarkou.
+ </summary>
+ <value>String</value>
+</member>
+<member name="P:Cora.Natec.Geo.Ingr.GwmServerManager.OptimalizerDisplayedThemeID">
+ <summary>
+ Vráti zoznam vybratých tém z GwmOptimalizer
+ </summary>
+ <value>System.Collections.Generic.ICollection(Of Long)</value>
+</member>
+<member name="T:Cora.Natec.Geo.Ingr.GwmTheme">
+ <summary>
+ Téma (mapová vrstva) obohatená o atribúty a metódy špecifické pre GMW Map Server .
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmTheme.#ctor(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+ <summary>
+ Vytvorenie inštancie
+ </summary>
+ <param name="cdoTheme">Dátový objekt témy.</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmTheme.GetFeatureKeys(System.String,Cora.Natec.Geo.MapRange,System.Boolean)">
+ <summary>
+ Podľa datového zdroja (SQL, ORACLE) vráti zoznam hodnôt zadaného stĺpca pre objekty (feature) témy, ktoré priestorovo interagujú (anyinteract) s daným rozsahom mapy a rozlíši .
+ </summary>
+ <param name="keyColName">Meno stĺpca tabuľky <see cref="P:CdoGEO_TREE_UZ.col_BASE_TABLE"/>. Musí obsahovať numerické hodnoty.</param>
+ <param name="range">Rozsah mapy (v jednotkách súradnicového systému S-JTSK).</param>
+ <param name="isNeighborFeatureKeys">True ak sa jedná sa o susedné feature.</param>
+ <returns>(Nenulový) zoznam kľúčov.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmTheme.HasFeaturesInRange(Cora.Natec.Geo.MapRange)">
+ <summary>
+ Podľa datového zdroja (SQL, ORACLE) zistí či téma obsahuje aspoň jeden objekt (feature) nachádzajúci sa v danom rozsahu mapy?
+ </summary>
+ <param name="range">Rozsah mapy (v jednotkách súradnicového systému S-JTSK).</param>
+ <returns><c>true</c> ak existuje aspoň jeden objekt(feature) témy interagujúci s daným výrezom; inak <c>false</c>.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmT_Styles.#ctor(System.String)">
+ <summary>
+ Vytvorenie inštancie. Trieda slúži na vytvorenie symbológie z XML
+ </summary>
+ <param name="GeoTreeUz_T_Styles">XML string ktorý sa načíta z wiew GEO_TREE_UZ alebo tab SP_GEO_THEMES stĺpec STYLES</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.GwmT_Styles.GetRGB(System.String)">
+ <summary>
+ Vráti Color string po spracovaní metódou RGB(x,x,x) 
+ </summary>
+ <param name="Color">Parametre farieb RGB oddelené čiarkou</param>
+ <returns>Color string po sparcovaní metodou RGB(x,x,x)</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.IconGenerator.#ctor(System.String)">
+ <summary>
+ Konštruktor pre GWM (generuje lokalne).
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.IconGenerator.CreateArgsAndSave(System.String,System.String,System.Int32,System.Int32)">
+ <summary>
+ Spracuje vstupné argumenty a uloží ikonu.
+ </summary>
+ <param name="pathImgIn">Cesta k šablóne ikony</param>
+ <param name="prefixImgOut">Predpona ikony.</param>
+ <param name="color">Farba výplne (-hexa).</param>
+ <param name="filColor">Farba pozadia (-hexa).</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.IconGenerator.CreateIcon(System.String[])">
+ <summary>
+  Nastavý farby vyplne a pozadia šablóny ikony podľa sybológie a uloží ikonu.
+ </summary>
+ <param name="args">XML string stylu témy.</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.IconGenerator.GetColorName(System.Int32)">
+ <summary>
+  Vráti názov farby v hexa tvare.
+ </summary>
+ <param name="color">ARGB hodnota farby.</param>
+ <returns>Názov farby.</returns>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.IconGenerator.SaveIcon(System.Drawing.Bitmap,System.String)">
+ <summary>
+ Uloži vygenerovanú ikonu.
+ </summary>
+ <param name="image">Image ikona.</param>
+ <param name="fileName">Miesto kam sa má uložiť.</param>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.IconGenerator.GenerateIcon">
+ <summary>
+ Generovanie ikony. Nastavý sa farba výplne a pozadia šablóny ikony podľa typu sybológie a uloží ikonu.
+ </summary>
+</member>
+<member name="M:Cora.Natec.Geo.Ingr.IconGenerator.IconPath">
+ <summary>
+ Vygenerovaná Url ikony.
+ </summary>
+ <returns>Url ikony.</returns>
+</member>
+</members>
+</doc>

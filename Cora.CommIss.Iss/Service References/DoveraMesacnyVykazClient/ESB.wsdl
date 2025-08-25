@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.dovera.sk/b2b/types" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:s0="http://b2b.dovera.sk" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://b2b.dovera.sk" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://b2b.dovera.sk">
+      <s:import namespace="http://schemas.dovera.sk/b2b/types" />
+      <s:element name="DajStavOdoslaniaMesacnehoVykazu">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajStavOdoslaniaMesacnehoVykazuVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavOdoslaniaMesacnehoVykazuVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavOdoslaniaMesacnehoVykazuResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajStavOdoslaniaMesacnehoVykazuVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavOdoslaniaMesacnehoVykazuVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="VysledokOdoslania" type="ns2:APIVysledokOdoslania" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavOtestovaniaMesacnehoVykazu">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajStavOtestovaniaMesacnehoVykazuVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavOtestovaniaMesacnehoVykazuVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavOtestovaniaMesacnehoVykazuResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajStavOtestovaniaMesacnehoVykazuVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavOtestovaniaMesacnehoVykazuVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="VysledokOtestovania" type="ns2:APIVysledokOtestovania" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OdosliMesacnyVykaz">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:OdosliMesacnyVykazVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OdosliMesacnyVykazVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="SumaPreddavkov" type="s:decimal" />
+          <s:element name="Typ" type="s:string" />
+          <s:element name="Obdobie" type="s:int" />
+          <s:element name="PocetViet" type="s:int" />
+          <s:element name="MesacnyVykaz" type="ns2:APIDavka" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OdosliMesacnyVykazResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:OdosliMesacnyVykazVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OdosliMesacnyVykazVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="VysledokOdoslania" type="ns2:APIVysledokOdoslania" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OtestujMesacnyVykaz">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:OtestujMesacnyVykazVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OtestujMesacnyVykazVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="SumaPreddavkov" type="s:decimal" />
+          <s:element name="Typ" type="s:string" />
+          <s:element name="Obdobie" type="s:int" />
+          <s:element name="PocetViet" type="s:int" />
+          <s:element name="MesacnyVykaz" type="ns2:APIDavka" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OtestujMesacnyVykazResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:OtestujMesacnyVykazVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OtestujMesacnyVykazVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="VysledokOtestovania" type="ns2:APIVysledokOtestovania" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.dovera.sk/b2b/types">
+      <s:complexType name="APITokenPouzivatela">
+        <s:sequence>
+          <s:element name="Login" type="s:string" />
+          <s:element name="DodavatelSW" type="s:string" />
+          <s:element minOccurs="0" name="KodNZ" type="s:string" />
+          <s:element minOccurs="0" name="KodVZ" type="s:string" />
+          <s:element minOccurs="0" name="VS" type="s:string" />
+          <s:element minOccurs="0" name="UnikatnyKodPLA" type="s:string" />
+          <s:element minOccurs="0" name="CasovyLimitVolania" type="s:int" />
+          <s:element minOccurs="0" name="ICO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIVysledokOdoslania">
+        <s:sequence>
+          <s:element name="Kod" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PopisVysledku" nillable="true" type="s:string" />
+          <s:element minOccurs="0" name="Protokol" type="ns2:APIDokument" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPopisVysledkuItemString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PopisVysledkuItem" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIDokument">
+        <s:sequence>
+          <s:element minOccurs="0" name="NazovDokumentu" type="s:string" />
+          <s:element minOccurs="0" name="Typ" type="s:string" />
+          <s:element minOccurs="0" name="Obsah" type="s:base64Binary" />
+          <s:element minOccurs="0" name="Komprimovany" type="s:boolean" />
+          <s:element minOccurs="0" name="Poznamka" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIVysledokOtestovania">
+        <s:sequence>
+          <s:element minOccurs="0" name="IdExterne" type="s:long" />
+          <s:element name="Stav" type="s:string" />
+          <s:element name="DatumPrijatia" type="s:dateTime" />
+          <s:element name="Typ" type="s:string" />
+          <s:element name="Nazov" type="s:string" />
+          <s:element name="Obdobie" type="s:int" />
+          <s:element minOccurs="0" name="Chyby" type="ns2:ArrayOfChybaAPIChyba" />
+          <s:element minOccurs="0" name="Protokol" type="ns2:APIDokument" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfChybaAPIChyba">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Chyba" nillable="true" type="ns2:APIChyba" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIChyba">
+        <s:sequence>
+          <s:element minOccurs="0" name="RC" type="s:string" />
+          <s:element minOccurs="0" name="Riadok" type="s:int" />
+          <s:element name="Chyba" type="s:string" />
+          <s:element name="Zavaznost" type="s:string" />
+          <s:element name="Popis" type="s:string" />
+          <s:element minOccurs="0" name="RiesenieChyby" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIDavka">
+        <s:sequence>
+          <s:element minOccurs="0" name="IdExterne" type="s:long" />
+          <s:element name="Nazov" type="s:string" />
+          <s:element name="Obsah" type="s:base64Binary" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DajStavOdoslaniaMesacnehoVykazuSoapIn">
+    <wsdl:part name="parameters" element="s0:DajStavOdoslaniaMesacnehoVykazu" />
+  </wsdl:message>
+  <wsdl:message name="DajStavOdoslaniaMesacnehoVykazuSoapOut">
+    <wsdl:part name="parameters" element="s0:DajStavOdoslaniaMesacnehoVykazuResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajStavOtestovaniaMesacnehoVykazuSoapIn">
+    <wsdl:part name="parameters" element="s0:DajStavOtestovaniaMesacnehoVykazu" />
+  </wsdl:message>
+  <wsdl:message name="DajStavOtestovaniaMesacnehoVykazuSoapOut">
+    <wsdl:part name="parameters" element="s0:DajStavOtestovaniaMesacnehoVykazuResponse" />
+  </wsdl:message>
+  <wsdl:message name="OdosliMesacnyVykazSoapIn">
+    <wsdl:part name="parameters" element="s0:OdosliMesacnyVykaz" />
+  </wsdl:message>
+  <wsdl:message name="OdosliMesacnyVykazSoapOut">
+    <wsdl:part name="parameters" element="s0:OdosliMesacnyVykazResponse" />
+  </wsdl:message>
+  <wsdl:message name="OtestujMesacnyVykazSoapIn">
+    <wsdl:part name="parameters" element="s0:OtestujMesacnyVykaz" />
+  </wsdl:message>
+  <wsdl:message name="OtestujMesacnyVykazSoapOut">
+    <wsdl:part name="parameters" element="s0:OtestujMesacnyVykazResponse" />
+  </wsdl:message>
+  <wsdl:portType name="MesacnyVykazSoapServiceSoap">
+    <wsdl:operation name="DajStavOdoslaniaMesacnehoVykazu">
+      <wsdl:input message="s0:DajStavOdoslaniaMesacnehoVykazuSoapIn" />
+      <wsdl:output message="s0:DajStavOdoslaniaMesacnehoVykazuSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajStavOtestovaniaMesacnehoVykazu">
+      <wsdl:input message="s0:DajStavOtestovaniaMesacnehoVykazuSoapIn" />
+      <wsdl:output message="s0:DajStavOtestovaniaMesacnehoVykazuSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OdosliMesacnyVykaz">
+      <wsdl:input message="s0:OdosliMesacnyVykazSoapIn" />
+      <wsdl:output message="s0:OdosliMesacnyVykazSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OtestujMesacnyVykaz">
+      <wsdl:input message="s0:OtestujMesacnyVykazSoapIn" />
+      <wsdl:output message="s0:OtestujMesacnyVykazSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MesacnyVykazSoapServiceSoap" type="s0:MesacnyVykazSoapServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DajStavOdoslaniaMesacnehoVykazu">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.MesacnyVykaz.DajStavOdoslaniaMesacnehoVykazu" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajStavOtestovaniaMesacnehoVykazu">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.MesacnyVykaz.DajStavOtestovaniaMesacnehoVykazu" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OdosliMesacnyVykaz">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.MesacnyVykaz.OdosliMesacnyVykaz" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OtestujMesacnyVykaz">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.MesacnyVykaz.OtestujMesacnyVykaz" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MesacnyVykazSoapService">
+    <wsdl:port name="MesacnyVykazSoapServiceSoap" binding="s0:MesacnyVykazSoapServiceSoap">
+      <soap:address location="https://teasc.dovera.sk:443/csp/esb/ESB.Service.WS.B2B.V02.HPP.MesacnyVykaz.cls" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

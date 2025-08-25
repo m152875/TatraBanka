@@ -1,0 +1,1259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:tns="http://schemas.zelenaposta.sk/sent" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://schemas.zelenaposta.sk/sent" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.zelenaposta.sk/sent" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="cancelBundlesRequest" type="tns:cancelBundlesRequest" />
+      <xs:element name="cancelBundlesResponse" type="tns:cancelBundlesResponse" />
+      <xs:element name="cancelMailingsRequest" type="tns:cancelMailingsRequest" />
+      <xs:element name="cancelMailingsResponse" type="tns:cancelMailingsResponse" />
+      <xs:element name="deleteBundlesRequest" type="tns:deleteBundlesRequest" />
+      <xs:element name="deleteBundlesResponse" type="tns:deleteBundlesResponse" />
+      <xs:element name="deleteMailingsRequest" type="tns:deleteMailingsRequest" />
+      <xs:element name="deleteMailingsResponse" type="tns:deleteMailingsResponse" />
+      <xs:element name="exportMailingsRequest" type="tns:exportMailingsRequest" />
+      <xs:element name="getBundleExportsForMailingsRequest" type="tns:getBundleExportsForMailingsRequest" />
+      <xs:element name="getBundleExportsForMailingsResponse" type="tns:getBundleExportsForMailingsResponse" />
+      <xs:element name="getBundlesRequest" type="tns:getBundlesRequest" />
+      <xs:element name="getBundlesResponse" type="tns:getBundlesResponse" />
+      <xs:element name="getBundlesStatsRequest" type="tns:getBundlesStatsRequest" />
+      <xs:element name="getBundlesStatsResponse" type="tns:getBundlesStatsResponse" />
+      <xs:element name="getDeliveryReceiptRawRequest" type="tns:getDeliveryReceiptRawRequest" />
+      <xs:element name="getMailingImageRequest" type="tns:getMailingImageRequest" />
+      <xs:element name="getMailingPostStatusesRequest" type="tns:getMailingPostStatusesRequest" />
+      <xs:element name="getMailingPostStatusesResponse" type="tns:getMailingPostStatusesResponse" />
+      <xs:element name="getMailingRawRequest" type="tns:getMailingRawRequest" />
+      <xs:element name="getMailingRequest" type="tns:getMailingRequest" />
+      <xs:element name="getMailingResponse" type="tns:getMailingResponse" />
+      <xs:element name="getMailingsRequest" type="tns:getMailingsRequest" />
+      <xs:element name="getMailingsResponse" type="tns:getMailingsResponse" />
+      <xs:element name="getStatisticsRequest" type="tns:getStatisticsRequest" />
+      <xs:element name="getStatisticsResponse" type="tns:getStatisticsResponse" />
+      <xs:element name="prepareRequest" type="tns:prepareRequest" />
+      <xs:element name="prepareResponse" type="tns:prepareResponse" />
+      <xs:element name="processAnonymousBundleRequest" type="tns:processAnonymousBundleRequest" />
+      <xs:element name="sendMailingsRequest" type="tns:sendMailingsRequest" />
+      <xs:element name="sendMailingsResponse" type="tns:sendMailingsResponse" />
+      <xs:element name="sendPostcardsRequest" type="tns:sendPostcardsRequest" />
+      <xs:element name="sendPostcardsResponse" type="tns:sendPostcardsResponse" />
+      <xs:complexType name="getMailingRequest">
+        <xs:sequence>
+          <xs:element name="mailingId" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getMailingResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="mailing" type="tns:sentMailing" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="sentMailing">
+        <xs:complexContent mixed="false">
+          <xs:extension base="tns:simpleSentMailing">
+            <xs:all>
+              <xs:element minOccurs="0" name="productName" type="xs:string" />
+              <xs:element minOccurs="0" name="productTitle" type="xs:string" />
+              <xs:element name="productDuplex" type="xs:boolean" />
+              <xs:element minOccurs="0" name="productEnvelope" type="xs:string" />
+              <xs:element minOccurs="0" name="productCorrespondence" type="xs:string" />
+              <xs:element minOccurs="0" name="productPrinting" type="xs:string" />
+              <xs:element minOccurs="0" name="template" type="xs:string" />
+              <xs:element name="pageCount" type="xs:int" />
+              <xs:element minOccurs="0" name="username" type="xs:string" />
+              <xs:element minOccurs="0" name="originatorUsername" type="xs:string" />
+              <xs:element minOccurs="0" name="ephNumber" type="xs:string" />
+              <xs:element minOccurs="0" name="deliveryReceiptFilename" type="xs:string" />
+              <xs:element minOccurs="0" maxOccurs="1" name="inserts" nillable="true" type="xs:string" />
+            </xs:all>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="simpleSentMailing">
+        <xs:all>
+          <xs:element name="id" type="xs:int" />
+          <xs:element name="bundleId" type="xs:int" />
+          <xs:element minOccurs="0" name="bundleTitle" type="xs:string" />
+          <xs:element minOccurs="0" name="createdBy" type="xs:string" />
+          <xs:element minOccurs="0" name="createdOn" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="distributedOn" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="processedOn" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="postStatusCode" type="xs:string" />
+          <xs:element name="electronic" type="xs:boolean" />
+          <xs:element minOccurs="0" name="senderName" type="xs:string" />
+          <xs:element minOccurs="0" name="senderStreet" type="xs:string" />
+          <xs:element minOccurs="0" name="senderCity" type="xs:string" />
+          <xs:element minOccurs="0" name="senderZip" type="xs:string" />
+          <xs:element minOccurs="0" name="senderCountry" type="xs:string" />
+          <xs:element minOccurs="0" name="recipientName" type="xs:string" />
+          <xs:element minOccurs="0" name="recipientStreet" type="xs:string" />
+          <xs:element minOccurs="0" name="recipientCity" type="xs:string" />
+          <xs:element minOccurs="0" name="recipientZip" type="xs:string" />
+          <xs:element minOccurs="0" name="recipientCountry" type="xs:string" />
+          <xs:element minOccurs="0" name="productionPrice" type="xs:decimal" />
+          <xs:element minOccurs="0" name="productionPriceWithVat" type="xs:decimal" />
+          <xs:element minOccurs="0" name="postagePrice" type="xs:decimal" />
+          <xs:element minOccurs="0" name="postagePriceWithVat" type="xs:decimal" />
+          <xs:element minOccurs="0" name="price" type="xs:decimal" />
+          <xs:element minOccurs="0" name="priceWithVat" type="xs:decimal" />
+          <xs:element name="status" type="xs:int" />
+          <xs:element minOccurs="0" name="statusDate" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="statusText" type="xs:string" />
+          <xs:element minOccurs="0" name="postStatusText" type="xs:string" />
+          <xs:element minOccurs="0" name="undeliveredPostStatusText" type="xs:string" />
+          <xs:element minOccurs="0" name="postStatusUpdatedOn" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="alternativeDeliveryType" type="xs:string" />
+          <xs:element minOccurs="0" name="uiz1" type="xs:string" />
+          <xs:element minOccurs="0" name="uiz2" type="xs:string" />
+          <xs:element minOccurs="0" name="registeredPostId" type="xs:string" />
+          <xs:element minOccurs="0" name="extProviderId" type="xs:string" />
+          <xs:element minOccurs="0" name="customId" type="xs:string" />
+          <xs:element minOccurs="0" name="customIds" type="xs:string" />
+          <xs:element minOccurs="0" name="deliveryConfirmationText" type="xs:string" />
+          <xs:element minOccurs="0" name="czechId" type="xs:string" />
+          <xs:element name="additionalProviderInfo">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="entry">
+                  <xs:complexType>
+                    <xs:sequence>
+                      <xs:element minOccurs="0" name="key" type="xs:string" />
+                      <xs:element minOccurs="0" name="value" type="xs:anyType" />
+                    </xs:sequence>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="cancelMailingsRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="mailingIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="cancelMailingsResponse">
+        <xs:all />
+      </xs:complexType>
+      <xs:complexType name="getMailingsRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="mailings">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="bundles">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="bundleNames">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="bundleName" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="recipientName" type="xs:string" />
+          <xs:element minOccurs="0" name="uiz1" type="xs:string" />
+          <xs:element minOccurs="0" name="registeredPostId" type="xs:string" />
+          <xs:element minOccurs="0" name="statusId" type="xs:int" />
+          <xs:element minOccurs="0" name="processedSince" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="processedUntil" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="distributedSince" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="distributedUntil" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="orderBy" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Possible values are id, price, status, recipientName, uiz1, createdOn, processedOn, distributedOn, registeredPostId. Use minus sign as prefix for descendant order.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="limit" type="xs:int" />
+          <xs:element name="offset" type="xs:int" />
+          <xs:element minOccurs="0" name="bundlesCreatedBy" type="xs:string" />
+          <xs:element minOccurs="0" name="bundleName" type="xs:string" />
+          <xs:element minOccurs="0" name="bundlesCreatedSince" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="bundlesCreatedUntil" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="friends">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="friend" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="customIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="customId" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="customIdLike" type="xs:string" />
+          <xs:element minOccurs="0" name="deliveryConfirmationText" type="xs:string" />
+          <xs:element minOccurs="0" default="false" name="includeFriends" type="xs:boolean" />
+          <xs:element minOccurs="0" default="true" name="needCount" type="xs:boolean" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getMailingsResponse">
+        <xs:all>
+          <xs:element name="totalCount" type="xs:int" />
+          <xs:element minOccurs="0" name="mailings">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="mailing" type="tns:simpleSentMailing" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="friends">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="friend" type="tns:friendInfo" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="friendInfo">
+        <xs:all>
+          <xs:element minOccurs="0" name="username" type="xs:string" />
+          <xs:element minOccurs="0" name="accountNumber" type="xs:string" />
+          <xs:element minOccurs="0" name="text" type="xs:string" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getBundlesRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="slots">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="bundles">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="customIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element minOccurs="0" name="computerName" type="xs:string" />
+          <xs:element minOccurs="0" name="orderBy" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Possible values are id, title, createdOn, username, computerName, price, priceWithVat. Use minus sign as prefix for descendant order.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="limit" type="xs:int" />
+          <xs:element name="offset" type="xs:int" />
+          <xs:element minOccurs="0" name="createdSince" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="createdUntil" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="distributedSince" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="distributedUntil" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="friends">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="friend" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" default="true" name="withStats" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>If set to false, stats for pending,canceled and processed won't be fetched</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="includeFriends" type="xs:boolean" />
+          <xs:element minOccurs="0" default="true" name="needCount" type="xs:boolean" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getBundlesResponse">
+        <xs:all>
+          <xs:element name="totalCount" type="xs:int" />
+          <xs:element minOccurs="0" name="bundles">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="bundle" type="tns:sentBundle" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="friends">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="friend" type="tns:friendInfo" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="sentBundle">
+        <xs:all>
+          <xs:element name="id" type="xs:int" />
+          <xs:element minOccurs="0" name="name" type="xs:string" />
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element minOccurs="0" name="createdOn" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="createdBy" type="xs:string" />
+          <xs:element minOccurs="0" name="slotId" type="xs:string" />
+          <xs:element minOccurs="0" name="customId" type="xs:string" />
+          <xs:element minOccurs="0" name="price" type="xs:decimal" />
+          <xs:element minOccurs="0" name="priceWithVat" type="xs:decimal" />
+          <xs:element minOccurs="0" name="pending" type="xs:int" />
+          <xs:element minOccurs="0" name="processed" type="xs:int" />
+          <xs:element minOccurs="0" name="canceled" type="xs:int" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getStatisticsRequest">
+        <xs:all />
+      </xs:complexType>
+      <xs:complexType name="getStatisticsResponse">
+        <xs:sequence>
+          <xs:element name="sentCount" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getMailingRawRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="mailingId" type="xs:int" />
+          <xs:element minOccurs="0" name="publicLinkToken" type="xs:string" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getBundleExportsForMailingsRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="mailingIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getBundleExportsForMailingsResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="bundleExportsWithMailings">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="bundleExportWithMailing" type="tns:bundleExportWithMailings" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="bundleExportWithMailings">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="bundleExportName" type="xs:string" />
+          <xs:element name="bundleExportStatus" type="xs:int" />
+          <xs:element minOccurs="0" name="exportedOn" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="distributedOn" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="mailingIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="cancelBundlesRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="bundleIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="cancelBundlesResponse">
+        <xs:all />
+      </xs:complexType>
+      <xs:complexType name="deleteBundlesRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="bundleIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="deleteBundlesResponse">
+        <xs:all />
+      </xs:complexType>
+      <xs:complexType name="deleteMailingsRequest">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="mailingIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="deleteMailingsResponse">
+        <xs:all />
+      </xs:complexType>
+      <xs:complexType name="getMailingPostStatusesRequest">
+        <xs:sequence>
+          <xs:element name="mailingId" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getMailingPostStatusesResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="postStatuses">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="postStatus" type="tns:mailingPostStatus" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="mailingPostStatus">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="mailingId" type="xs:int" />
+          <xs:element minOccurs="0" name="status" type="xs:string" />
+          <xs:element minOccurs="0" name="description" type="xs:string" />
+          <xs:element minOccurs="0" name="createdOn" type="xs:dateTime" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="getDeliveryReceiptRawRequest">
+        <xs:sequence>
+          <xs:element name="mailingId" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="processAnonymousBundleRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="variableSymbol" type="xs:string" />
+          <xs:element minOccurs="0" name="slotId" type="xs:string" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="sendPostcardsRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element minOccurs="0" name="product" type="xs:string" />
+          <xs:element minOccurs="0" name="postcards">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="postcard" type="tns:postcardToSend" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="testRun" type="xs:boolean" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="postcardToSend">
+        <xs:all>
+          <xs:element minOccurs="0" name="frontPage" type="xs:base64Binary" />
+          <xs:element minOccurs="0" name="backPage" type="xs:base64Binary" />
+          <xs:element minOccurs="0" name="text" type="xs:string" />
+          <xs:element minOccurs="0" name="recipient" type="tns:address" />
+          <xs:element minOccurs="0" name="color" type="xs:string" />
+          <xs:element minOccurs="0" name="fontFamily" type="xs:string" />
+          <xs:element name="fontSize" type="xs:int" />
+          <xs:element minOccurs="0" name="template" type="xs:string" />
+          <xs:element minOccurs="0" name="filingDate" type="xs:dateTime" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="address">
+        <xs:all>
+          <xs:element minOccurs="0" name="name" type="xs:string" />
+          <xs:element minOccurs="0" name="street" type="xs:string" />
+          <xs:element minOccurs="0" name="city" type="xs:string" />
+          <xs:element minOccurs="0" name="zip" type="xs:string" />
+          <xs:element minOccurs="0" name="country" type="xs:string" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="sendPostcardsResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="slotId" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="exportMailingsRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="mailings">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="bundles">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="bundleNames">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="bundleName" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="recipientName" type="xs:string" />
+          <xs:element minOccurs="0" name="uiz1" type="xs:string" />
+          <xs:element minOccurs="0" name="registeredPostId" type="xs:string" />
+          <xs:element minOccurs="0" name="statusId" type="xs:int" />
+          <xs:element minOccurs="0" name="processedSince" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="processedUntil" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="distributedSince" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="distributedUntil" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="orderBy" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Possible values are id, price, status, recipientName, uiz1, createdOn, processedOn, distributedOn, registeredPostId. Use minus sign as prefix for descendant order.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="limit" type="xs:int" />
+          <xs:element name="offset" type="xs:int" />
+          <xs:element minOccurs="0" name="bundlesCreatedBy" type="xs:string" />
+          <xs:element minOccurs="0" name="bundleName" type="xs:string" />
+          <xs:element minOccurs="0" name="bundlesCreatedSince" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="bundlesCreatedUntil" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="friends">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="friend" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="customIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="customId" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="customIdLike" type="xs:string" />
+          <xs:element minOccurs="0" name="deliveryConfirmationText" type="xs:string" />
+          <xs:element minOccurs="0" default="false" name="exportByOrganization" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Default false, exports mailings by whole organization.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="slspExport" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Default false, export for SLSP contains additional columns.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="exportByDepartment" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Default false, exports mailings by whole organization.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getMailingImageRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="mailingId" type="xs:int" />
+          <xs:element minOccurs="0" name="page" type="xs:int" />
+          <xs:element minOccurs="0" name="publicLinkToken" type="xs:string" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getBundlesStatsRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="bundleIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="friends">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="friend" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getBundlesStatsResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="bundlesStats">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="bundle" type="tns:bundleStats" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="bundleStats">
+        <xs:sequence>
+          <xs:element name="bundleId" type="xs:int" />
+          <xs:element name="pending" type="xs:int" />
+          <xs:element name="processed" type="xs:int" />
+          <xs:element name="canceled" type="xs:int" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="sendMailingsRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element minOccurs="0" name="customId" type="xs:string" />
+          <xs:element minOccurs="0" name="mailings">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="mailing" type="tns:mailingToSend" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="onBehalfOf" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Account number of user.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="groupByRecipient" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Group mailings by recipient</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="groupByCustomId" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Group mailings by customId</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="groupToHighestCorrespondence" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>If true and groupByRecipient is also true mailings will be grouped to highest correspondence type. If one mailing is registered and other is registered with advice, final mailing will be registered with advice and so on. If false mailings with different correspondences will not be grouped.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="testRun" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>If true no mailings will be send, only test call for validation, default false</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="checkUniqueCustomId" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>If true error will be thrown if mailing with same customId already exists, default false</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="skipDuplicateMailings" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>If true and checkUniqueCustomId is also true, duplicate mailings will be skipped but other will be send, default false, cannot be set if checkUniqueCustomId is not true - exception will be throwed</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="checkValidUizs" type="xs:boolean">
+            <xs:annotation>
+              <xs:documentation>Checks if provided mailings UIZ numbers are corresponding to correct registrations, if not error is thrown.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="mailingToSend">
+        <xs:all>
+          <xs:element minOccurs="0" name="product" type="xs:string" />
+          <xs:element minOccurs="0" name="duplex" type="xs:boolean" />
+          <xs:element minOccurs="0" name="backpage" type="xs:boolean" />
+          <xs:element minOccurs="0" name="correspondence" type="xs:string" />
+          <xs:element minOccurs="0" name="envelope" type="xs:string" />
+          <xs:element minOccurs="0" name="envelopeCode" type="xs:string" />
+          <xs:element minOccurs="0" name="printing" type="xs:string" />
+          <xs:element minOccurs="0" name="paper" type="xs:string" />
+          <xs:element minOccurs="0" name="allowedProducts">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="product" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="uid" type="xs:string" />
+          <xs:element minOccurs="0" name="pin" type="xs:string" />
+          <xs:element minOccurs="0" name="uiz1" type="xs:string" />
+          <xs:element minOccurs="0" name="uiz2" type="xs:string" />
+          <xs:element minOccurs="0" name="deliveryConfirmationText" type="xs:string" />
+          <xs:element minOccurs="0" name="customId" type="xs:string" />
+          <xs:element minOccurs="0" name="cashOnDelivery" type="tns:cashOnDelivery" />
+          <xs:element minOccurs="0" name="documents">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="document" type="tns:documentToSend" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="recipient" type="tns:address" />
+          <xs:element minOccurs="0" name="sender" type="tns:address" />
+          <xs:element minOccurs="0" name="address" type="tns:address" />
+          <xs:element minOccurs="0" name="filingDate" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="inserts">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="insert" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="registeredPostId" type="xs:string" />
+          <xs:element minOccurs="0" name="customIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="customId" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="cashOnDelivery">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="amount" type="xs:decimal">
+            <xs:annotation>
+              <xs:documentation>Maximum allowed amount is 500 EUR.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="bankAccount" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Bank account in the IBAN format.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="variableSymbol" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Variable symbol, up to 10 digits.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="documentToSend">
+        <xs:all>
+          <xs:element minOccurs="0" name="file" type="xs:base64Binary" />
+          <xs:element minOccurs="0" name="startPage" type="xs:int" />
+          <xs:element minOccurs="0" name="pageCount" type="xs:int" />
+          <xs:element minOccurs="0" name="payment" type="tns:payment" />
+          <xs:element minOccurs="0" name="paper" type="xs:string" />
+          <xs:element minOccurs="0" name="paperClip" type="xs:boolean" />
+          <xs:element minOccurs="0" name="fieldValues">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="fieldValue" type="tns:fieldValue" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="templateCode" type="xs:string" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="payment">
+        <xs:all>
+          <xs:element minOccurs="0" name="count" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Number of cheques attached to the mailing.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="amount" type="xs:decimal">
+            <xs:annotation>
+              <xs:documentation>The amount. Maximum allowed amount is 15,000 EUR.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="variableSymbol" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The variable symbol; up to 10 digits.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="specificSymbol" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The specific symbol; up to 10 digits.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="constantSymbol" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The constant symbol; up to 4 digits.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="bankAccount" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The bank account in the IBAN format.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="productCode" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>The cheque product code; any of 36, 37, 38 or 39.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="processingCode" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>The cheque processing code; from 0 to 3.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="serviceCode" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>The cheque service code; any of 0, 1, 2, 3, 4, 80, 81, 82, 83, 84 or 90.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="referenceNumber" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The reference number; up to 9 digits.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="messageForRecipient" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The message for recipient; up to 24 characters.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="fieldValue">
+        <xs:all>
+          <xs:element minOccurs="0" name="name" type="xs:string" />
+          <xs:element minOccurs="0" name="value" type="xs:string" />
+          <xs:element minOccurs="0" name="page" type="xs:int" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="sendMailingsResponse">
+        <xs:all>
+          <xs:element minOccurs="0" name="bundleId" type="tns:bundle" />
+          <xs:element minOccurs="0" name="slotId" type="xs:string" />
+          <xs:element minOccurs="0" name="totalPrice" type="xs:decimal" />
+          <xs:element minOccurs="0" name="mailings">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="mailing" type="tns:computePriceMailing" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="bundle">
+        <xs:sequence>
+          <xs:element name="id" type="xs:int" />
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element minOccurs="0" name="customId" type="xs:string" />
+          <xs:element minOccurs="0" name="name" type="xs:string" />
+          <xs:element minOccurs="0" name="slotId" type="xs:string" />
+          <xs:element name="createdBy" type="xs:int" />
+          <xs:element minOccurs="0" name="createdOn" type="xs:dateTime" />
+          <xs:element minOccurs="0" name="originator" type="xs:int" />
+          <xs:element minOccurs="0" name="price" type="xs:decimal" />
+          <xs:element minOccurs="0" name="priceWithVat" type="xs:decimal" />
+          <xs:element minOccurs="0" name="calculatedPrice" type="xs:decimal" />
+          <xs:element name="test" type="xs:boolean" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="computePriceMailing">
+        <xs:all>
+          <xs:element minOccurs="0" name="productName" type="xs:string" />
+          <xs:element name="pageCount" type="xs:int" />
+          <xs:element minOccurs="0" name="price" type="xs:decimal" />
+          <xs:element minOccurs="0" name="priceWithVat" type="xs:decimal" />
+          <xs:element minOccurs="0" name="customId" type="xs:string" />
+          <xs:element minOccurs="0" name="customIds">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="customId" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="registeredPostId" type="xs:string" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="prepareRequest">
+        <xs:all>
+          <xs:element minOccurs="0" name="onBehalfOf" type="xs:string" />
+          <xs:element minOccurs="0" name="uizs">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="uiz" type="tns:uiz" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" default="false" name="generatePin" type="xs:boolean" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="uiz">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="uiz1" type="xs:string" />
+          <xs:element minOccurs="0" name="uiz2" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="prepareResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="items">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:uizInfoResponseListItem" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="uizInfoResponseListItem">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="uid" type="xs:string" />
+          <xs:element minOccurs="0" name="pin" type="xs:string" />
+          <xs:element name="acceptsEmails" type="xs:boolean" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+  <message name="getMailingRequest">
+    <part name="getMailingRequest" element="tns:getMailingRequest" />
+  </message>
+  <message name="getMailingResponse">
+    <part name="getMailingResponse" element="tns:getMailingResponse" />
+  </message>
+  <message name="cancelMailingsRequest">
+    <part name="cancelMailingsRequest" element="tns:cancelMailingsRequest" />
+  </message>
+  <message name="cancelMailingsResponse">
+    <part name="cancelMailingsResponse" element="tns:cancelMailingsResponse" />
+  </message>
+  <message name="getMailingsRequest">
+    <part name="getMailingsRequest" element="tns:getMailingsRequest" />
+  </message>
+  <message name="getMailingsResponse">
+    <part name="getMailingsResponse" element="tns:getMailingsResponse" />
+  </message>
+  <message name="getBundlesRequest">
+    <part name="getBundlesRequest" element="tns:getBundlesRequest" />
+  </message>
+  <message name="getBundlesResponse">
+    <part name="getBundlesResponse" element="tns:getBundlesResponse" />
+  </message>
+  <message name="getStatisticsRequest">
+    <part name="getStatisticsRequest" element="tns:getStatisticsRequest" />
+  </message>
+  <message name="getStatisticsResponse">
+    <part name="getStatisticsResponse" element="tns:getStatisticsResponse" />
+  </message>
+  <message name="getMailingRawRequest">
+    <part name="getMailingRawRequest" element="tns:getMailingRawRequest" />
+  </message>
+  <message name="getMailingRawResponse" />
+  <message name="getBundleExportsForMailingsRequest">
+    <part name="getBundleExportsForMailingsRequest" element="tns:getBundleExportsForMailingsRequest" />
+  </message>
+  <message name="getBundleExportsForMailingsResponse">
+    <part name="getBundleExportsForMailingsResponse" element="tns:getBundleExportsForMailingsResponse" />
+  </message>
+  <message name="cancelBundlesRequest">
+    <part name="cancelBundlesRequest" element="tns:cancelBundlesRequest" />
+  </message>
+  <message name="cancelBundlesResponse">
+    <part name="cancelBundlesResponse" element="tns:cancelBundlesResponse" />
+  </message>
+  <message name="deleteBundlesRequest">
+    <part name="deleteBundlesRequest" element="tns:deleteBundlesRequest" />
+  </message>
+  <message name="deleteBundlesResponse">
+    <part name="deleteBundlesResponse" element="tns:deleteBundlesResponse" />
+  </message>
+  <message name="deleteMailingsRequest">
+    <part name="deleteMailingsRequest" element="tns:deleteMailingsRequest" />
+  </message>
+  <message name="deleteMailingsResponse">
+    <part name="deleteMailingsResponse" element="tns:deleteMailingsResponse" />
+  </message>
+  <message name="getMailingPostStatusesRequest">
+    <part name="getMailingPostStatusesRequest" element="tns:getMailingPostStatusesRequest" />
+  </message>
+  <message name="getMailingPostStatusesResponse">
+    <part name="getMailingPostStatusesResponse" element="tns:getMailingPostStatusesResponse" />
+  </message>
+  <message name="getDeliveryReceiptRawRequest">
+    <part name="getDeliveryReceiptRawRequest" element="tns:getDeliveryReceiptRawRequest" />
+  </message>
+  <message name="getDeliveryReceiptRawResponse" />
+  <message name="processAnonymousBundleRequest">
+    <part name="processAnonymousBundleRequest" element="tns:processAnonymousBundleRequest" />
+  </message>
+  <message name="processAnonymousBundleResponse" />
+  <message name="sendPostcardsRequest">
+    <part name="sendPostcardsRequest" element="tns:sendPostcardsRequest" />
+  </message>
+  <message name="sendPostcardsResponse">
+    <part name="sendPostcardsResponse" element="tns:sendPostcardsResponse" />
+  </message>
+  <message name="exportMailingsRequest">
+    <part name="exportMailingsRequest" element="tns:exportMailingsRequest" />
+  </message>
+  <message name="exportMailingsResponse" />
+  <message name="getMailingImageRequest">
+    <part name="getMailingImageRequest" element="tns:getMailingImageRequest" />
+  </message>
+  <message name="getMailingImageResponse" />
+  <message name="getBundlesStatsRequest">
+    <part name="getBundlesStatsRequest" element="tns:getBundlesStatsRequest" />
+  </message>
+  <message name="getBundlesStatsResponse">
+    <part name="getBundlesStatsResponse" element="tns:getBundlesStatsResponse" />
+  </message>
+  <message name="sendMailingsRequest">
+    <part name="sendMailingsRequest" element="tns:sendMailingsRequest" />
+  </message>
+  <message name="sendMailingsResponse">
+    <part name="sendMailingsResponse" element="tns:sendMailingsResponse" />
+  </message>
+  <message name="prepareRequest">
+    <part name="prepareRequest" element="tns:prepareRequest" />
+  </message>
+  <message name="prepareResponse">
+    <part name="prepareResponse" element="tns:prepareResponse" />
+  </message>
+  <portType name="SentService">
+    <operation name="getMailing">
+      <input name="getMailingRequest" message="tns:getMailingRequest" />
+      <output name="getMailingResponse" message="tns:getMailingResponse" />
+    </operation>
+    <operation name="cancelMailings">
+      <input name="cancelMailingsRequest" message="tns:cancelMailingsRequest" />
+      <output name="cancelMailingsResponse" message="tns:cancelMailingsResponse" />
+    </operation>
+    <operation name="getMailings">
+      <input name="getMailingsRequest" message="tns:getMailingsRequest" />
+      <output name="getMailingsResponse" message="tns:getMailingsResponse" />
+    </operation>
+    <operation name="getBundles">
+      <input name="getBundlesRequest" message="tns:getBundlesRequest" />
+      <output name="getBundlesResponse" message="tns:getBundlesResponse" />
+    </operation>
+    <operation name="getStatistics">
+      <input name="getStatisticsRequest" message="tns:getStatisticsRequest" />
+      <output name="getStatisticsResponse" message="tns:getStatisticsResponse" />
+    </operation>
+    <operation name="getMailingRaw">
+      <input name="getMailingRawRequest" message="tns:getMailingRawRequest" />
+      <output name="getMailingRawResponse" message="tns:getMailingRawResponse" />
+    </operation>
+    <operation name="getBundleExportsForMailings">
+      <input name="getBundleExportsForMailingsRequest" message="tns:getBundleExportsForMailingsRequest" />
+      <output name="getBundleExportsForMailingsResponse" message="tns:getBundleExportsForMailingsResponse" />
+    </operation>
+    <operation name="cancelBundles">
+      <input name="cancelBundlesRequest" message="tns:cancelBundlesRequest" />
+      <output name="cancelBundlesResponse" message="tns:cancelBundlesResponse" />
+    </operation>
+    <operation name="deleteBundles">
+      <input name="deleteBundlesRequest" message="tns:deleteBundlesRequest" />
+      <output name="deleteBundlesResponse" message="tns:deleteBundlesResponse" />
+    </operation>
+    <operation name="deleteMailings">
+      <input name="deleteMailingsRequest" message="tns:deleteMailingsRequest" />
+      <output name="deleteMailingsResponse" message="tns:deleteMailingsResponse" />
+    </operation>
+    <operation name="getMailingPostStatuses">
+      <input name="getMailingPostStatusesRequest" message="tns:getMailingPostStatusesRequest" />
+      <output name="getMailingPostStatusesResponse" message="tns:getMailingPostStatusesResponse" />
+    </operation>
+    <operation name="getDeliveryReceiptRaw">
+      <input name="getDeliveryReceiptRawRequest" message="tns:getDeliveryReceiptRawRequest" />
+      <output name="getDeliveryReceiptRawResponse" message="tns:getDeliveryReceiptRawResponse" />
+    </operation>
+    <operation name="processAnonymousBundle">
+      <input name="processAnonymousBundleRequest" message="tns:processAnonymousBundleRequest" />
+      <output name="processAnonymousBundleResponse" message="tns:processAnonymousBundleResponse" />
+    </operation>
+    <operation name="sendPostcards">
+      <input name="sendPostcardsRequest" message="tns:sendPostcardsRequest" />
+      <output name="sendPostcardsResponse" message="tns:sendPostcardsResponse" />
+    </operation>
+    <operation name="exportMailings">
+      <input name="exportMailingsRequest" message="tns:exportMailingsRequest" />
+      <output name="exportMailingsResponse" message="tns:exportMailingsResponse" />
+    </operation>
+    <operation name="getMailingImage">
+      <input name="getMailingImageRequest" message="tns:getMailingImageRequest" />
+      <output name="getMailingImageResponse" message="tns:getMailingImageResponse" />
+    </operation>
+    <operation name="getBundlesStats">
+      <input name="getBundlesStatsRequest" message="tns:getBundlesStatsRequest" />
+      <output name="getBundlesStatsResponse" message="tns:getBundlesStatsResponse" />
+    </operation>
+    <operation name="sendMailings">
+      <input name="sendMailingsRequest" message="tns:sendMailingsRequest" />
+      <output name="sendMailingsResponse" message="tns:sendMailingsResponse" />
+    </operation>
+    <operation name="prepare">
+      <input name="prepareRequest" message="tns:prepareRequest" />
+      <output name="prepareResponse" message="tns:prepareResponse" />
+    </operation>
+  </portType>
+  <binding name="SentServiceSoap11" type="tns:SentService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="getMailing">
+      <soap:operation soapAction="" />
+      <input name="getMailingRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getMailingResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="cancelMailings">
+      <soap:operation soapAction="" />
+      <input name="cancelMailingsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="cancelMailingsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getMailings">
+      <soap:operation soapAction="" />
+      <input name="getMailingsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getMailingsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getBundles">
+      <soap:operation soapAction="" />
+      <input name="getBundlesRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getBundlesResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getStatistics">
+      <soap:operation soapAction="" />
+      <input name="getStatisticsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getStatisticsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getMailingRaw">
+      <soap:operation soapAction="" />
+      <input name="getMailingRawRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getMailingRawResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getBundleExportsForMailings">
+      <soap:operation soapAction="" />
+      <input name="getBundleExportsForMailingsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getBundleExportsForMailingsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="cancelBundles">
+      <soap:operation soapAction="" />
+      <input name="cancelBundlesRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="cancelBundlesResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="deleteBundles">
+      <soap:operation soapAction="" />
+      <input name="deleteBundlesRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="deleteBundlesResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="deleteMailings">
+      <soap:operation soapAction="" />
+      <input name="deleteMailingsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="deleteMailingsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getMailingPostStatuses">
+      <soap:operation soapAction="" />
+      <input name="getMailingPostStatusesRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getMailingPostStatusesResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getDeliveryReceiptRaw">
+      <soap:operation soapAction="" />
+      <input name="getDeliveryReceiptRawRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getDeliveryReceiptRawResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="processAnonymousBundle">
+      <soap:operation soapAction="" />
+      <input name="processAnonymousBundleRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="processAnonymousBundleResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="sendPostcards">
+      <soap:operation soapAction="" />
+      <input name="sendPostcardsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="sendPostcardsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="exportMailings">
+      <soap:operation soapAction="" />
+      <input name="exportMailingsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="exportMailingsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getMailingImage">
+      <soap:operation soapAction="" />
+      <input name="getMailingImageRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getMailingImageResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getBundlesStats">
+      <soap:operation soapAction="" />
+      <input name="getBundlesStatsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getBundlesStatsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="sendMailings">
+      <soap:operation soapAction="" />
+      <input name="sendMailingsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="sendMailingsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="prepare">
+      <soap:operation soapAction="" />
+      <input name="prepareRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="prepareResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="SentService">
+    <port name="SentServiceSoap11" binding="tns:SentServiceSoap11">
+      <soap:address location="https://gateway.zelenaposta.sk/api/2/sent" />
+    </port>
+  </service>
+</definitions>

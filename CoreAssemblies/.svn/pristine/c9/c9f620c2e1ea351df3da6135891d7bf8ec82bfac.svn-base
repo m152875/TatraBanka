@@ -1,0 +1,3440 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.FormFiller</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.FormFiller.EFormGenerator.Controls.NodeInfoDS">
+             <summary>
+            Represents a strongly typed in-memory cache of data.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.Controls.NodeInfoDS.NodeInfoDTDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.Controls.NodeInfoDS.NodeInfoDTRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.Controls.NodeInfoDS.NodeInfoDTRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.EFormDataHelper">
+            <summary>
+            Helper pre prácu s objektom <see cref="T:System.Xml.XmlDocument"/>, obsahujúcim dáta eForm-u.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormDataHelper.#ctor(System.Xml.XmlDocument)">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.EFormGenerator.EFormDataHelper"/> na základe zadaného objektu <see cref="T:System.Xml.XmlDocument"/>.
+            </summary>
+            <param name="oXmlDocument">Objekt <see cref="T:System.Xml.XmlDocument" />.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormDataHelper.#ctor(System.Byte[])">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.EFormGenerator.EFormDataHelper"/> na základe zadaného binárneho obsahu dokumentu.
+            </summary>
+            <param name="data">Binárny obsah dokumentu.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormDataHelper.#ctor(System.Xml.XPath.XPathNavigator)">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.EFormGenerator.EFormDataHelper"/> na základe zadaného objektu <see cref="T:System.Xml.XPath.XPathNavigator"/>.
+            </summary>
+            <param name="navigator">Objekt <see cref="T:System.Xml.XPath.XPathNavigator" />.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormDataHelper.GetEmptySubtree">
+            <summary>
+            Vracia fragment s odstránenými hodnotami elementov.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormGenerator.EFormDataHelper.IsHidden">
+            <summary>
+            Indikátor skrytej sekcie (ak neobsahuje podradený element, ktorého názov nezačína prefixom 'DoNotValidate_').
+            </summary>
+            <value>
+              <c>true</c> ak je sekcia skrytá inak <c>false</c>.
+            </value>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormEditHtmlBuilder.Create_EditHtmlDocument(Cora.FormFiller.EFormMetadata.EFormHandler,System.Xml.XmlDocument,System.Boolean)">
+            <summary>Creates the edit HTML document.</summary>
+            <param name="oFormWaybill">The o form waybill.</param>
+            <param name="xmlData">The XML data.</param>
+            <param name="shift">if set to <c>true</c> [shift].</param>
+            <returns></returns>
+            <exception cref="T:Cora.FormFiller.EFormMetadata.FEFormException">NoHtml</exception>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.EFormFactory">
+            <summary>Factory EFormFiller-a.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormFactory.FindByFormTemplateID(Cora.FormFiller.EFormMetadata.FormTemplateID)">
+            <summary>
+            Nájdenie metadát eFormu podľa objektu <see cref="!:LEForm.FormTemplateID" />.
+            </summary>
+            <param name="oFormTemplateID">Zdrojový objekt <see cref="!:LEForm.FormTemplateID" />.</param>
+            <returns>
+            Získané metadáta eFormu.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">FormTemplateID</exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormFactory.FindByData(System.Xml.XmlElement)">
+            <summary>
+            Nájdenie metadát eFormulára podľa dát vo forme <see cref="T:System.Xml.XmlElement" />.
+            </summary>
+            <param name="xmlElem">Zdrojové dáta vo forme <see cref="T:System.Xml.XmlElement" />.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">xmlElem</exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormFactory.TryCreate(Cora.FormFiller.EFormGenerator.EFormFactory@)">
+            <summary>
+            Pokus o vytvorenie objektu <see cref="T:Cora.FormFiller.EFormGenerator.EFormFactory"/>.
+            </summary>
+            <param name="oFormFactory">Výstupný objektu <see cref="T:Cora.FormFiller.EFormGenerator.EFormFactory"/>.</param>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormGenerator.EFormFactory.SourceFactory">
+            <summary>Používateľská factory EFormFiller-a pre dané prostredie.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormGenerator.EFormFactory.AppDirectory">
+            <summary>Adresár eFormFiller-a.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormGenerator.EFormFactory.AppDataDirectory">
+            <summary>Adresár dát eFormFiller-a.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormGenerator.EFormFactory.TempDirectory">
+            <summary>Nadradený adresár dočasných pracovných adresárov eForm.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormFactory.#ctor">
+            <summary>
+            Vytvorenie triedy <see cref="T:Cora.FormFiller.EFormGenerator.EFormFactory"/>.
+            </summary>
+            <exception cref="T:System.Configuration.SettingsPropertyNotFoundException">Chýba konfiguračná sekcia.</exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormFactory.GetPdfContent(System.Byte[],Cora.FormFiller.EFormMetadata.FormTemplateID)">
+            <summary>
+            Získanie PDF prezentácie eFormu-u.
+            </summary>
+            <param name="oTemplateData">Dáta eForm-u v binárnom tvare.</param>
+            <param name="oFormTemplate">Identifikácia eForm-u <see cref="!:LEForm.FormTemplateID"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormFactory.TryGetFilledXmlContent(Cora.FormFiller.EFormMetadata.FormTemplateID,System.String,System.String,System.Byte[]@)">
+            <summary>
+            Pokus o predplnenie eForm-u.
+            </summary>
+            <param name="oFormTemplate">Identifikácia eForm-u <see cref="!:LEForm.FormTemplateID"/>.</param>
+            <param name="actorID">Objekt ActorID.</param>
+            <param name="subjectID">Objekt SubjectID.</param>
+            <param name="contentXml">Dáta eForm-u.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormManager.#cctor">
+            <summary>
+            Initializes the <see cref="T:Cora.FormFiller.EFormGenerator.EFormManager"/> class.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormGenerator.EFormManager._HttpRepository">
+            <summary>Zoznam HTTP identifikátorov.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormGenerator.EFormManager._SyncObject">
+            <summary>Lock-ovaci objekt.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.EFormRessEditHtmlBuilder">
+            <summary>
+            Trieda pre obsluhu RESS eForm-ov.
+            </summary>
+            <seealso cref="!:Cora.CommIss.Front.EFormEditHtmlBuilder" />
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormRessEditHtmlBuilder.#ctor(Cora.FormFiller.EFormMetadata.EFormHandler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cora.FormFiller.EFormGenerator.EFormRessEditHtmlBuilder"/> class.
+            </summary>
+            <param name="oFormWaybill">Objekt <see cref="T:Cora.FormFiller.EFormMetadata.EFormWaybill" />.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormRessEditHtmlBuilder.Get_ComboBox_Source(System.String)">
+            <summary>
+            Zistí názov súboru zdroja dát pre kombo.
+            </summary>
+            <param name="ident">Identifikátor komba.</param>
+            <returns>Názov súboru zdroja dát pre kombo.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormRessEditHtmlBuilder.Get_RessDS">
+            <summary>
+            Získa metadáta pre eForm z vygenerovaného HTML.
+            </summary>
+            <returns>Metadáta pre eForm z vygenerovaného HTML.</returns>
+        </member>
+        <member name="F:Cora.FormFiller.EFormGenerator.EFormRessEditHtmlBuilder._RessDS">
+            <summary>Metadáta pre eForm z vygenerovaného HTML.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.EFormSchemaHelper">
+            <summary>
+            Helper pre prácu s objektom <see cref="T:System.Xml.XmlDocument"/>, obsahujúcim XSD dát eForm-u.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormSchemaHelper.#ctor(System.Func{System.Xml.XmlDocument})">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.EFormGenerator.EFormSchemaHelper"/> na základe zadanej funkcie.
+            </summary>
+            <param name="oFunc">Funkcia vracajúca objekt <see cref="T:System.Xml.XmlDocument" />.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormSchemaHelper.#ctor(System.Xml.XmlDocument)">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.EFormGenerator.EFormSchemaHelper"/> na základe zadaného objektu <see cref="T:System.Xml.XmlDocument"/>.
+            </summary>
+            <param name="oXmlDocument">Objekt <see cref="T:System.Xml.XmlDocument" />.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormSchemaHelper.#ctor(System.Byte[])">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.EFormGenerator.EFormSchemaHelper"/> na základe zadaného binárneho obsahu dokumentu.
+            </summary>
+            <param name="data">Binárny obsah dokumentu.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormSchemaHelper.#ctor(System.Xml.XmlReader)">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.EFormGenerator.EFormSchemaHelper"/> na základe zadaného objektu <see cref="T:System.Xml.XmlReader"/>.
+            </summary>
+            <param name="oXmlReader">Objekt <see cref="T:System.Xml.XmlReader" />.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormSchemaHelper.#ctor(System.Xml.XPath.XPathNavigator)">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.EFormGenerator.EFormSchemaHelper"/> na základe zadaného objektu <see cref="T:System.Xml.XPath.XPathNavigator"/>.
+            </summary>
+            <param name="navigator">Objekt <see cref="T:System.Xml.XPath.XPathNavigator" />.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormSchemaHelper.Get_XPathNavigator(System.String)">
+            <summary>
+            Získanie definície zvoleného elementu.
+            </summary>
+            <param name="elementName">Názov elementu.</param>
+            <returns></returns>
+            <exception cref="T:System.Xml.XPath.XPathException"></exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormShapeConverter.RemoveHiddenSection(Cora.FormFiller.EFormGenerator.EFormDataHelper,Cora.FormFiller.EFormGenerator.EFormDataHelper)">
+            <summary>
+            Odstránenie skrytých sekcií.
+            </summary>
+            <param name="oFormDefinitions">Definícia eFormu.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormViewHtmlBuilder.Create_ViewHtmlDocument(System.Xml.XmlDocument,System.Byte[],System.Boolean,System.Boolean)">
+            <summary>
+            Vygenerovanie HTML kódu pre zobrazenie eForm-u.
+            </summary>
+            <param name="xmlData">XML dáta.</param>
+            <param name="xslTemplate">Šablóna.</param>
+            <param name="setButtons">Doplniť tlačidlá.</param>
+            <param name="shift">Doplniť do cesty ku skriptom a CSS aj podadresár EFormFiller.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormViewHtmlBuilder.Generate_HtmlDocument(Cora.FormFiller.EFormGenerator.HtmlDocumentGenerator.GeneratedData,System.Boolean,System.Boolean)">
+            <summary>Vygenerovanie HTML kódu pre zobrazenie eForm-u.</summary>
+            <param name="generatedData"></param>
+            <param name="setButtons">Doplniť tlačidlá.</param>
+            <param name="shift">Doplniť do cesty ku skriptom a CSS aj podadresár EFormFiller.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.EFormViewHtmlBuilder.AddButton(HtmlAgilityPack.HtmlNode,System.String,System.String,System.String)">
+            <summary>
+            Pridanie jedného tlačidla do eForm.
+            </summary>
+            <param name="oParentNode">Rodičovský objekt <see cref="T:HtmlAgilityPack.HtmlNode"/>.</param>
+            <param name="sID">ID tlačidla.</param>
+            <param name="sValue">Titulok tlačidla.</param>
+            <param name="sTitle">Tooltip tlačidla.</param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.FrontEFormFactory">
+            <summary>
+            i_class = 172000000
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.FrontEFormFactory.IamAuthentication_SignIn(System.String)">
+            <summary>
+            Federované prihlásenie na ÚPVS.
+            </summary>
+            <param name="url">Url, na ktorú sa po prihlásení vrátime (eFormFiller).</param>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.FrontEFormFactory.IamAuthentication_SignOut(System.String)">
+            <summary>
+            Federované odhlásenie z ÚPVS.
+            </summary>
+            <param name="url">Url, na ktorú sa po odhlásení vrátime (eFormFiller).</param>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.FrontEFormFactory.IamAuthentication_TryGetIDs(System.String@,System.String@)">
+            <summary>
+            Pokus o získanie údajov ActorID a SubjectID z úspešného federovaného prihlásenia na ÚPVS.
+            </summary>
+            <param name="actorID">Url ActorID.</param>
+            <param name="subjectID">Url SubjectID.</param>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.FrontEFormFactory.GetEDocFromXML(Cora.FormFiller.EFormMetadata.GetEDocFromXMLReq)">
+            <summary>
+            Získanie vizualizácie elektronického dokumentu vo formáte PDF na základe vstupných dát.
+            </summary>
+            <param name="serviceParameter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.FrontEFormFactory.GetFilledEForm(Cora.FormFiller.EFormMetadata.GetFilledEFormReq)">
+            <summary>
+            Získanie predvyplneného vzoru eformulára.
+            </summary>
+            <param name="serviceParameter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.FrontEFormFactory.Get_FormTemplateRes(System.Int32)">
+            <summary>
+            Získanie definičnej šablóny eForm (objekt <see cref="!:Cora.CommIss.LEForm.GetFormTemplateRes"/>).
+            </summary>
+            <param name="frmID">ID definície eForm v DB (I_FE_FORM).</param>
+            <returns>Definičná Šablóna eForm.</returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.HtmlHelper">
+            <summary>
+            Pomocné metódy pre získanie a úpravu HTML dokumentu eForm pre editáciu.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.HtmlHelper.GetHtmlDocument(System.Byte[],System.Xml.XmlDocument)">
+            <summary>
+            Získa HTML document <see cref="T:HtmlAgilityPack.HtmlDocument"/> ako výsledok XSLT transformácie.
+            </summary>
+            <param name="xsltContent">Šablóna XSLT transformácie v binárnej forme.</param>
+            <param name="xmlData">XML dáta pre XSLT transformáciu.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS">
+             <summary>
+            Represents a strongly typed in-memory cache of data.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.RessDS.Create(Cora.FormFiller.EFormMetadata.EFormTemplateHelper)">
+            <summary>
+            Vygenerovanie metadát pre eForm z vygenerovaného HTML.
+            </summary>
+            <param name="oFormTemplateHelper">Objekt <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.RessDS.Get_Metadata_From_Html(Cora.FormFiller.EFormMetadata.EFormTemplateHelper)">
+            <summary>
+            Vyťaženie metadát z HTML.
+            </summary>
+            <param name="oFormTemplateHelper">Objekt <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.RessDS.RepeatingXPath(Cora.FormFiller.EFormGenerator.RessDS,HtmlAgilityPack.HtmlNode,System.Int32)">
+            <summary>
+            Špecialita - získanie sekcie pre objekt CheckBoxList.
+            </summary>
+            <param name="ds">Objekt <see cref="T:Cora.FormFiller.EFormGenerator.RessDS"/>.</param>
+            <param name="oHtmlNode">Zdrojový objekt <see cref="T:HtmlAgilityPack.HtmlNode"/>.</param>
+            <param name="startIndex">Index pre odrezanie Root elementu.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.RessDS.Get_SectionID(Cora.FormFiller.EFormGenerator.RessDS,HtmlAgilityPack.HtmlNode)">
+            <summary>
+            Získanie ID nadradenej sekcie.
+            </summary>
+            <param name="ds">Objekt <see cref="T:Cora.FormFiller.EFormGenerator.RessDS"/>.</param>
+            <param name="oHtmlNode">Zdrojový objekt <see cref="T:HtmlAgilityPack.HtmlNode"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.RessDS.SummaryDS(Cora.FormFiller.EFormGenerator.RessDS)">
+            <summary>
+            Rozčlenenie metadát.
+            </summary>
+            <param name="sourDS">Zdrojový objekt <see cref="T:Cora.FormFiller.EFormGenerator.RessDS"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.RessDS.ReplaceConstantLookup(System.String)">
+            <summary>
+            Náhrada funkcie ConstantLookup z XPath.
+            </summary>
+            <param name="xPath">Zdrojový XPath reťazec.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.RessDS.Get_ComboBox_Ident(System.String)">
+            <summary>
+            Získanie identifikátora číselníka pre ComboBox z XPath reťazca.
+            </summary>
+            <param name="xPath">Zdrojový XPath reťazec.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS.SectionsDTDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS.DataDTDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS.FieldsDTDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS.SectionsDTRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS.DataDTRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS.FieldsDTRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS.SectionsDTRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS.DataDTRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormGenerator.RessDS.FieldsDTRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormGenerator.SessionHandlerCls.#ctor">
+            <summary>Initializes a new instance of the <see cref="T:Cora.FormFiller.EFormGenerator.SessionHandlerCls" /> class.</summary>
+            <remarks>Fake - nerobí nič.</remarks>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.CacheDS">
+             <summary>
+            Represents a strongly typed in-memory cache of data.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.CacheDS.InjectItemDTRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.CacheDS.FeHtmlDTRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.CacheDS.InjectItemDTDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.CacheDS.FeHtmlDTDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.CacheDS.InjectItemDTRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.CacheDS.FeHtmlDTRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormEddDS">
+             <summary>
+            Represents a strongly typed in-memory cache of data.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormEddDS.MetadataDTDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormEddDS.MetadataDTDataTable.SetNodeValues(Cora.FormFiller.XmlDocumentHelper,System.String,System.String)">
+            <summary>
+            Sets the node values.
+            </summary>
+            <param name="oEddMetadata">The o edd metadata.</param>
+            <param name="eddName">Name of the edd.</param>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormEddDS.MetadataDTRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormEddDS.MetadataDTRow.NAME_EDD">
+            <summary>Názov elementu.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormEddDS.MetadataDTRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType">
+            <summary>
+            Typy súčastí definície eForm.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.EXT">
+            <summary>None.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XSD_NAT">
+            <summary>XSD natívneho XML.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XSD_EDOC">
+            <summary>XSD výsledného eDoc (elektronický dokument) XML.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_NAT">
+            <summary>Natívne prázdne XML, ktoré reprezentuje natívne XML, ktoré vypadne z vyplneného formulára.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_EDOC">
+            <summary>eDoc (elektronický dokument) prázdne XML.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XSLT_DEFAULT">
+            <summary>XSLT HTML transformácia na zobrazenie formulára.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XSLT_RO">
+            <summary>XSLT HTML transformácia na zobrazenie formulára v režime ReadOnly.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XSLT_HTML">
+            <summary>XSLT transformácia z eDoc XML do HTML.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XSLT_TXT_SGN">
+            <summary>XSLT transformácia do TXT pre zobrazenie pre podpisovač.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XSL_FO">
+            <summary>XSL FO transformácia. Slúži na použitie pri zobrazení do PDF.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_MTD">
+            <summary>XML súbor s metadátami formulára.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_DEF">
+            <summary>XML metadáta na predvyplnenie formulára.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_MAP">
+            <summary>Mapovacie XML medzi natívnym XML a eDoc XML.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_DCT">
+            <summary>XML súbor slovnika (dictionary). Slúži na preklad medzi natívnym XML a eDoc XML a naopak.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_HTML_FORM">
+            <summary>Prázdny HTML formulár.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.POSP">
+            <summary>posp.xml.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormNames">
+            <summary>
+            Názvy používané v súvislosti s elektronickými formulármi
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormNames.APP_DIRNAME">
+            <summary>
+            Názov adresára aplikácie eFormFiller.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormNames.APP_DATA_DIRNAME">
+            <summary>
+            Názov adresára pre aplikačné dáta.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormNames.EXT_REG_FILE_NAME">
+            <summary>
+            Názov súboru pre uloženie dát získaných z externého registra.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormNames.EDD_MAP_FILENAME">
+            <summary>
+            Názov súboru - metadáta predplňania eFormu.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EnvironmentTypeEnum">
+            <summary>
+            Typ prostredia.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EnvironmentTypeEnum.PRO">
+            <summary>Produkčné prostredie</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EnvironmentTypeEnum.TST">
+            <summary>Testovacie prostredie</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EnvironmentTypeEnum.CG">
+            <summary>CoraGeo prostredie</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormModeEnum.None">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormModeEnum.View">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormModeEnum.Edit">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormModeEnum.Pdf">
+            <remarks/>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormSourceFactory">
+            <summary></summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormSourceFactory.GetFrmID_ByFormID_FromRepository_Delegate">
+            <summary>
+            Delegát pre pokus o získanie I_FE_FORM na základe zadanej hodnoty FormID z pamäte.
+            </summary>
+            <param name="formID">Zadaná hodnota FormID.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSourceFactory.Delegate_GetFrmID_ByFormID_FromRepository">
+            <summary>
+            Hodnota delegáta pre pokus o získanie I_FE_FORM na základe zadanej hodnoty FormID z pamäte.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.GetEDocFromXML(Cora.FormFiller.EFormMetadata.GetEDocFromXMLReq)">
+            <summary>
+            Získanie vizualizácie elektronického dokumentu vo formáte PDF na základe vstupných dát.
+            </summary>
+            <param name="serviceParameter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.GetFilledEForm(Cora.FormFiller.EFormMetadata.GetFilledEFormReq)">
+            <summary>
+            Získanie predvyplneného vzoru eformulára.
+            </summary>
+            <param name="serviceParameter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.Get_FormTemplateRes(System.Int32)">
+            <summary>
+            Získanie definičnej šablóny eForm (objekt <see cref="!:LEForm.GetFormTemplateRes"/>).
+            </summary>
+            <param name="frmID">ID definície eForm v DB (I_FE_FORM).</param>
+            <returns>Definičná Šablóna eForm.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.Save_EFormToDis(Cora.FormFiller.EFormMetadata.EFormWaybill,System.Byte[])">
+            <summary>
+            Zápis eForm-u do DIS-u.
+            </summary>
+            <param name="oFormWaybill">Sprievodka eForm-u.</param>
+            <param name="content">Obsah eForm-u.</param>
+            <returns>
+            ID záznamu v DISe (C_FILE_DIS.I_FILE).
+            </returns>
+            <exception cref="T:System.NotImplementedException">Dedič musí pre použitie preťažiť.</exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.IamAuthentication_SignIn(System.String)">
+            <summary>
+            Federované prihlásenie na ÚPVS.
+            </summary>
+            <param name="url">Url, na ktorú sa po prihlásení vrátime (eFormFiller).</param>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.IamAuthentication_SignOut(System.String)">
+            <summary>
+            Federované odhlásenie na ÚPVS.
+            </summary>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.IamAuthentication_SlidingSession(System.String)">
+            <summary>
+            Obnova prihlásenia na ÚPVS.
+            </summary>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.IamAuthentication_TryGetIDs(System.String@,System.String@)">
+            <summary>
+            Pokus o získanie údajov ActorID a SubjectID z úspešného federovaného prihlásenia na ÚPVS.
+            </summary>
+            <param name="actorID">Url ActorID.</param>
+            <param name="subjectID">Url SubjectID.</param>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.GetFrmID_ByFormID_FromDB(System.String)">
+            <summary>
+            Získanie I_FE_FORM na základe zadaného argumentu FormID.
+            </summary>
+            <param name="ident">Argument FormID.</param>
+            <returns>Získané I_FE_FORM alebo null.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.SetupExternalDmsCommunicationIfNeeded" -->
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.GenerateTooltip_ForParsing(System.Int32,System.String)">
+            <summary>
+            Generovanie tooltipu pre pole v testovacom móde <see cref="F:Cora.FormFiller.EFormMetadata.EFormSpecModeEnum.Parsing"/>.
+            </summary>
+            <param name="iFrmID">ID eForm-u (I_FE_FORM).</param>
+            <param name="xpath">XPath poľa.</param>
+            <returns>Vygenerovaný tooltip.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.GenerateTooltip_ForPreseting(System.Int32,System.String)">
+            <summary>
+            Generovanie tooltipu pre pole v testovacom móde <see cref="F:Cora.FormFiller.EFormMetadata.EFormSpecModeEnum.Preset"/>.
+            </summary>
+            <param name="iFrmID">ID eForm-u (I_FE_FORM).</param>
+            <param name="xpath">XPath poľa.</param>
+            <returns>Vygenerovaný tooltip.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.TryGetViewModeMeta(Cora.FormFiller.EFormMetadata.EFormWaybill,System.Int32,Cora.FormFiller.EFormMetadata.EFormSourceFactory.ViewModeMeta@)">
+            <summary>
+            Pokus o získanie metadát pre generovanie obalu vo ViewMode.
+            </summary>
+            <param name="oFormWaybill">Metadátová sprievodka.</param>
+            <param name="iHeadFoot">Požadované nastavenie obalu (header 1 a 3 | footer 2 a 3).</param>
+            <param name="meta">Výsledné metadáta.</param>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormSourceFactory.ViewModeMeta">
+            <summary>
+            Metadata pre generovanie obalu vo ViewMode
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormSourceFactory.ViewModeMeta.HeaderTitle">
+            <summary>Titulok hlavičky.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormSourceFactory.ViewModeMeta.FooterTitle">
+            <summary>Titulok päty.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormSourceFactory.ViewModeMeta.HasHeader">
+            <summary>Má titulok hlavičky.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormSourceFactory.ViewModeMeta.HasFooter">
+            <summary>Má titulok päty.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormSourceFactory.TryGetScript_AddDataToSessionStorage(Cora.FormFiller.EFormMetadata.EFormWaybill,System.String@)">
+            <summary>
+            Vygenerovanie skriptu pre vloženie požadovaných dát do sessionStorage.
+            </summary>
+            <param name="waybill">Parametre.</param>
+            <param name="script">Výsledný skript.</param>
+            <returns><c>true</c>, ak sa podarilo vygenerovať skript.</returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper">
+            <summary>
+            Dátový helper definície eForm.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.Create(System.Byte[])">
+            <summary>
+            Inicializácia triedy <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper" /> na základe binárnej formy (napr. z databázy).
+            Zistí sa typ binárneho vstupu: výstup eGO designera alebo obsah UPVS databazy.
+            </summary>
+            <param name="binaryContent">Binárny obsah.</param>
+            <returns>Objekt <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper" /> alebo null, ak binárny vstup nie je XML v požadovanom tvare.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.CreateAndValidate(System.Byte[])">
+            <summary>
+            Inicializácia a validácia triedy <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper" /> na základe binárnej formy (napr. z databázy).
+            </summary>
+            <param name="eFormContent">Binárny obsah.</param>
+            <returns>Objekt <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper" /> alebo null, ak binárny vstup nie je XML v požadovanom tvare.</returns>
+            <exception cref="T:System.ArgumentNullException">eFormHelper</exception>
+            <exception cref="T:System.MissingMemberException">
+            Cora.CommIss.EFormTemplateHelper;SourceData
+            or
+            Cora.CommIss.LEForm.GetFormTemplateRes;EFormTemplate
+            or
+            Cora.CommIss.LEForm.FormTemplate;MetaData
+            </exception>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.SourceData">
+            <summary>Dátový zdroj definície eForm.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.CreatedByPackage">
+            <summary>Objekt <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper"/> bol vytvorený z dátového zdroja eGO-definície eForm.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.#ctor(Cora.FormFiller.EFormMetadata.GetFormTemplateRes,System.Boolean)">
+            <summary>
+            Inicializácia triedy <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper"/> zo vstupného argumentu typu <see cref="T:Cora.FormFiller.EFormMetadata.GetFormTemplateRes"/>.
+            </summary>
+            <param name="oFormTemplate">Vstupný argument typu <see cref="T:Cora.FormFiller.EFormMetadata.GetFormTemplateRes"/>.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.#ctor(Cora.FormFiller.EFormMetadata.EFormTemplatePackage)">
+            <summary>
+            Inicializácia triedy <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper"/> zo vstupného argumentu typu <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplatePackage"/> - výstup z eGO designera.
+            </summary>
+            <param name="oPackage">Vstupný argument typu <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplatePackage"/> - výstup z eGO designera.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.GetRelatedDocument(System.String)">
+            <summary>
+            Získanie súčasti definície eForm na základe typu súčasti.
+            </summary>
+            <param name="sDocumentType">Identifikátor typu súčasti.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.GetRelatedDocument(Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType)">
+            <summary>
+            Získanie súčasti definície eForm na základe typu súčasti <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType"/>.
+            </summary>
+            <param name="oRelatedDocumentType">Identifikátor typu súčasti.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.GetRelatedDocument_Data(System.String)">
+            <summary>
+            Získanie binárneho obsahu súčasti definície eForm na základe typu súčasti <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType"/>.
+            </summary>
+            <param name="sDocumentType">Identifikátor typu súčasti.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.GetRelatedDocument_Data(Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType)">
+            <summary>
+            Získanie binárneho obsahu súčasti definície eForm na základe typu súčasti <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType"/>.
+            </summary>
+            <param name="oRelatedDocumentType">Identifikátor typu súčasti.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.GetExist_RelatedDocument(System.String,System.Boolean)">
+            <summary>
+            Pokus o získanie požadovanej súčasti definície eForm na základe typu súčasti <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType" />.
+            </summary>
+            <param name="sDocumentType">Identifikátor typu súčasti.</param>
+            <param name="throwIfNotFound">Vyvolať výnimku ak neexistuje ?</param>
+            <returns></returns>
+            <exception cref="T:Cora.FormFiller.EFormMetadata.FEFormException">NoExist</exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.GetExist_RelatedDocument(Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType,System.Boolean)">
+            <summary>
+            Pokus o získanie požadovanej súčasti definície eForm na základe typu súčasti <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType" />.
+            </summary>
+            <param name="oRelatedDocumentType">Identifikátor typu súčasti.</param>
+            <param name="throwIfNotFound">Vyvolať výnimku ak neexistuje ?</param>
+            <returns></returns>
+            <exception cref="T:Cora.FormFiller.EFormMetadata.FEFormException">NoExist</exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.GetSafeFileName(System.Boolean)">
+            <summary>
+            Vygenerovanie reťazca, zloženého z identifikátora eForm-u a verzie, pre použitie v názve súboru.
+            </summary>
+            <param name="withoutPoint">Indikátor náhrady bodky '.' znakom underscore '_'.</param>
+            <returns>Reťazec pre bezpečné použitie v názve súboru.</returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.FormTempID">
+            <summary>Objekt identifikácie eForm-u <see cref="!:LEForm.FormTemplateID"/>.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.PospString">
+            <summary>Identifikátor eForm-u + Verzia (oddelené Slash-om '/').</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.PospID">
+            <summary>Identifikátor eForm-u (N_FE_IDENT).</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.PospVersion">
+            <summary>Verzia eForm-u.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.Mtd">
+            <summary>Dátový helper metadátovej súčasti definície eForm (súčasť typu <see cref="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_MTD"/>).</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.Dct">
+            <summary>
+            Dátový helper súčasti definície eForm pre konverziu XML Nat na EDoc a naopak 
+            (súčasť typu <see cref="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_DCT"/>).
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.PackageSourceData">
+            <summary>Dátový zdroj eGO-definície eForm.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplateHelper.#ctor">
+            <summary>
+            Jednoduchý konštruktor triedy <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplateHelper"/> (vyžadovaný serializáciou).
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplateHelper._PackageSourceData">
+            <summary>Dátový zdroj eGO-definície eForm.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplateHelper._EForm_Mtd">
+            <summary>Dátový helper metadátovej súčasti definície eForm (súčasť typu <see cref="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_MTD"/>).</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplateHelper._Dct">
+            <summary>Dátový helper mapovacej súčasti definície eForm (súčasť typu <see cref="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_DCT"/>).</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplateHelper._FormRequirement">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper.SourceData">
+            <summary>Dátový helper eGO-definície eForm.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper.#ctor(Cora.FormFiller.EFormMetadata.EFormTemplatePackage)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper"/> class.
+            </summary>
+            <param name="oPackage">Vstupný argument typu <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplatePackage"/> - výstup z eGO designera.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper.#ctor(System.Byte[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper"/> class.
+            </summary>
+            <param name="binaryContent">Content of the binary.</param>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper.Mtd">
+            <summary>Dátový helper metadátovej súčasti definície eForm (súčasť typu <see cref="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_MTD"/>).</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper.GetPackageDocument(Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType)">
+            <summary>
+            Získanie súčasti definície eForm na základe typu súčasti <see cref="!:EFormRelatedDocumentType"/>.
+            </summary>
+            <param name="oRelatedDocumentType">Type of the o related document.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper.#ctor">
+            <summary>
+            Jednoduchý konštruktor triedy <see cref="T:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper"/> (vyžadovaný serializáciou).
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormTemplatePackageHelper._EForm_Mtd">
+            <summary>Dátový helper metadátovej súčasti definície eForm (súčasť typu <see cref="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_MTD"/>).</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormWaybill">
+            <summary>Údajová sprievodka pre prácu eFormFiller-a.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormWaybill.GetFormTemplateHelper_Delegate">
+            <summary>
+            
+            </summary>
+            <param name="iI_FE_FORM">The i i_ f e_ form.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormWaybill.Delegate_GetFormTemplateHelper">
+            <summary>
+            The delegate_ get form template helper
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormWaybill.TemplateData">
+            <summary>
+            Gets or sets the template data.
+            </summary>
+            <value>
+            The template data.
+            </value>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormWaybill.FormTemplateHelper">
+            <summary>
+            Gets the form template helper.
+            </summary>
+            <value>
+            The form template helper.
+            </value>
+            <exception cref="T:Cora.FormFiller.EFormMetadata.FEFormException">NoExist</exception>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormMode">
+            <summary></summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormAttachment">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormAttachment.TempFilename">
+            <summary>
+            Názov nepodpísaného dokumentu.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormAttachment.SignedFilename">
+            <summary>
+            Názov podpísaného dokumentu.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormAttachment.GetFileInfo(System.IO.DirectoryInfo)">
+            <summary>
+            Gets the file information.
+            </summary>
+            <param name="oDirectoryInfo">Session-adresár.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormAttachment.HasFile(System.IO.DirectoryInfo)">
+            <summary>
+            Zistí, či objekt <see cref="T:Cora.FormFiller.EFormMetadata.EFormAttachment"/> má uploadovaný súbor.
+            </summary>
+            <param name="oDirectoryInfo">Session-adresár.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormAttachment.GetSignedFileInfo(System.IO.DirectoryInfo)">
+            <summary>
+            Získa objekt <see cref="T:System.IO.FileInfo"/> podpísaného dokumentu.
+            </summary>
+            <param name="oDirectoryInfo">Session-adresár.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormAttachment.HasSignedFile(System.IO.DirectoryInfo)">
+            <summary>
+            Zistí, či súbor prílohy existuje a či je podpísaný.
+            </summary>
+            <param name="oDirectoryInfo">Session-adresár.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormAttachment.DeleteAttachFile(System.IO.DirectoryInfo)">
+            <summary>
+            Deletes the attach file.
+            </summary>
+            <param name="oDirectoryInfo">Session-adresár.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EFormSKTalkData.IamIdentity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormHttpHandlerEnum.None">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormHttpHandlerEnum.EFormFiller">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormHttpHandlerEnum.EFormDbFiller">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormHttpHandlerEnum.EFormCgFiller">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormPresetTypeEnum.NoPreset">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormPresetTypeEnum.Preset">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormViewSpecModeEnum.HTML">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormViewSpecModeEnum.RO">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormViewSpecModeEnum.TXT_SGN">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.BlobContentEnum.Unknown">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.BlobContentEnum.EForm">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.BlobContentEnum.XadesDEnv">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.BlobContentEnum.XadesDSign">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.BlobContentEnum.ASiC">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormHeadFootEnum.None">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormHeadFootEnum.OnlyHead">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormHeadFootEnum.OnlyFoot">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormHeadFootEnum.HeadFoot">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSpecModeEnum.None">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSpecModeEnum.NoSend">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSpecModeEnum.Preset">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSpecModeEnum.Parsing">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSendTypeEnum.None">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSendTypeEnum.PostToUrl">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSendTypeEnum.JsonPost">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSendTypeEnum.SaveToDB">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormSendTypeEnum.SKTalkToUrl">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStateEnum.Initial">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStateEnum.Master">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStateEnum.EditMode">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStateEnum.Sended">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStateEnum.Saved">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStateEnum.Canceled">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStepEnum.Initial">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStepEnum.Editing">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStepEnum.Attachments">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStepEnum.Signing">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormProcessStepEnum.Sending">
+            <remarks/>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.CompleteDictionary.Missing">
+            <summary>
+            <see cref="T:Cora.FormFiller.EFormMetadata.RelatedDocument"/> typu <see cref="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_DCT"/> chýba.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.EForm_Mtd.Missing">
+            <summary>
+            <see cref="T:Cora.FormFiller.EFormMetadata.RelatedDocument"/> typu <see cref="F:Cora.FormFiller.EFormMetadata.EFormTemplate_RelatedDocumentType.CLS_F_XML_MTD"/> chýba.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.SCRIPTS_RESOURCE_PATH">
+            <summary>The cora script resource path</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.STYLES_RESOURCE_PATH">
+            <summary>The cora script resource path</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.IMAGES_RESOURCE_PATH">
+            <summary>The cora script resource path</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.CORA_SCRIPT_RESOURCE_NAME">
+            <summary>The cora script resource path</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.CORA_STYLES_RESOURCE_NAME">
+            <summary>The cora script resource path</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.CORA_FIX_IMAGE_RESOURCE_NAME">
+            <summary>The cora script resource path</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.REST_CISEL_URL_CONFIG_KEY">
+            <summary>Kľúč pre URL adresu REST číselníkov pre eForm.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.Generator.#ctor(Cora.FormFiller.EFormMetadata.FeHtmlProcessHelper)">
+            <summary>Initializes a new instance of the <see cref="T:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.Generator"/> class.</summary>
+            <param name="processHelper">The session helper.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FeHtmlBackHelper.Generator.Get_TemplateData(Cora.FormFiller.EFormMetadata.FeHtmlRequest)">
+            <summary>Gets the e form XML data.</summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlDataCache._SyncObject">
+            <summary>Lock-ovaci objekt.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.FeHtmlGeneratorBase">
+            <summary>Nástroj na získanie originálneho editačného HtmlDocument-u eFormu.</summary>
+            <seealso cref="T:System.IDisposable" />
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FeHtmlGeneratorBase.#ctor(Cora.FormFiller.EFormMetadata.FeHtmlProcessHelper)">
+            <summary>Initializes a new instance of the <see cref="T:Cora.FormFiller.EFormMetadata.FeHtmlGeneratorBase"/> class.</summary>
+            <param name="processHelper">The session helper.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FeHtmlGeneratorBase.TryGenerateOriginalHtmlDocument(Cora.FormFiller.EFormMetadata.FeHtmlRequest,HtmlAgilityPack.HtmlDocument@)">
+            <summary>Získanie originálneho editačného <see cref="T:HtmlAgilityPack.HtmlDocument"/>-u.</summary>
+            <param name="formTemplateHelper">Definícia eFormu.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FeHtmlHelperBase`2.Generate_FeHtmlRequest(System.String,System.String,System.String)">
+            <summary>
+            Generovanie FeHtmlRequest.
+            </summary>
+            <param name="identifier">Identifikátor požadovaného eFormu.</param>
+            <param name="actorId">URI prihlásenej osoby (ActorId).</param>
+            <param name="subjectId">URI prihláseného subjektu (SubjectId).</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FeHtmlHelperBase`2.Generate_FeHtmlRequest(System.Int32,System.String,System.String)">
+            <summary>
+            Generovanie FeHtmlRequest.
+            </summary>
+            <param name="identifier">ID požadovaného eFormu.</param>
+            <param name="actorId">URI prihlásenej osoby (ActorId).</param>
+            <param name="subjectId">URI prihláseného subjektu (SubjectId).</param>
+            <returns></returns>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlHelperBase.CACHE_ENABLED_CONFIG_KEY">
+            <summary>Kľúč pre nastavenie cache-ovania vygenerovaných eFormov.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.FeHtmlInjectCache">
+            <summary>Nástroj na injektovanie obsahu skriptov a štýlov do hlavičky.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FeHtmlInjectCache.#ctor">
+            <summary>Inicializácia triedy <see cref="T:Cora.FormFiller.EFormMetadata.FeHtmlInjectCache"/>.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FeHtmlInjectCache.GetHeaderItem(System.String,System.Boolean,System.Byte[]@,Cora.Utils.Logger.ILogger,Cora.Utils.Logger.LogLevel)">
+            <summary>Získanie obsahu injektovaného objektu a metadát.</summary>
+            <param name="url">The URL.</param>
+            <param name="isScript"><c>true</c>/<c>false</c> odpovená script/style.</param>
+            <param name="contentData">Obsah script/style v binárnom tvare.</param>
+            <param name="logger">Logger.</param>
+            <param name="logLevel">Úroveň logovania.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlInjectCache._SyncObject">
+            <summary>Lock-ovaci objekt.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.FeHtmlManipulatorBase">
+            <summary>Nástroj pre získanie a konečnú úpravu HTML.</summary>
+            <seealso cref="T:System.IDisposable"/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlManipulatorBase.SCRIPT_BLANK_OUTER_HTML">
+            <summary>Literal HTML pre vytvorenie prázdneho tagu <c>script</c>.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlManipulatorBase.STYLE_BLANK_OUTER_HTML">
+            <summary>Literal HTML pre vytvorenie prázdneho tagu <c>style</c>.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlManipulatorBase._InjectCache">
+            <summary>Nástroj na injektovanie obsahu skriptov a štýlov do hlavičky.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlProcessHelper.ProcessTempRecorder">
+            <summary>Pracovný adresár.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlProcessHelper.ProcessLogger">
+            <summary>Logger.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FeHtmlProcessHelper.ProcessLogLevel">
+            <summary>Úroveň logovania.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.FeHtmlRequest">
+            <summary>Požiadavka na editačný HTML eFormu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlRequest.FormTempID">
+            <summary>Identifikátor eFormu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlRequest.ActorID">
+            <summary>URI prihláseného používateľa (ActorID).</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlRequest.SubjectID">
+            <summary>URI prihláseného subjektu (SubjectID).</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlRequest.FrmId">
+            <summary>ID eFormu v DB.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlRequest.Params">
+            <summary>Parametre.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.FeHtmlRequestParams">
+            <summary>Parametre.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlRequestParams.AsHtml5">
+            <summary>HTML typu Html5.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlRequestParams.InjectedHeader">
+            <summary>Indikátor injektovania obsahu tagov script a style do tagu Head.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlRequestParams.RemoveButtons">
+            <summary>Odstrániť tlačidlá.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.FeHtmlResponse">
+            <summary>Prepravka s editačným HTML eFormu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlResponse.FormTemplate">
+            <summary>Identifikačný objekt eFormu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlResponse.FrmID">
+            <summary>ID eFormu v DB (FE_FORM.I_FE_FORM).</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FeHtmlResponse.HtmlContent">
+            <summary>Editačný HTML eFormu.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.FFiConfigHandler">
+            <summary>
+            Handler konfiguračnej sekcie <see cref="F:Cora.FormFiller.EFormMetadata.FFiConfigHandler.SECTION_NAME"/>
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FFiConfigHandler.SECTION_NAME">
+            <summary>Názov konfiguračnej sekcie (FFiConfig).</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FFiConfigHandler.EXTERNAL_NODE_NAME">
+            <summary>Názov elementu ExternalFFi</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FFiConfigHandler.DISABLED_ATTR_NAME">
+            <summary>Názov atribútu property Disabled (disabled).</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FFiConfigHandler.Create(System.Object,System.Object,System.Xml.XmlNode)">
+            <summary>
+            Načítanie konfiguračnej sekcie FormFillera
+            </summary>
+            <param name="parent"></param>
+            <param name="configContext"></param>
+            <param name="section"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.FFiConfigHandler.FFiConfig">
+            <summary>Konfigurácia pre prihlasovanie</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.HtmlAgilityHelper.Generate_HtmlDocument(System.Byte[],System.Xml.XmlDocument)">
+            <summary>
+            Získa HTML document <see cref="T:HtmlAgilityPack.HtmlDocument"/> ako výsledok XSLT transformácie.
+            </summary>
+            <param name="xsltContent">Šablóna XSLT transformácie v binárnej forme.</param>
+            <param name="xmlData">XML dáta pre XSLT transformáciu.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.HtmlAgilityHelper.Create_SimpleHtmlNode(System.String,System.String)">
+            <summary>Vytvorenie jednoduchého <see cref="T:HtmlAgilityPack.HtmlNode"/>, ktorý obsahu iba text (zvyčajne tagy script alebo style).</summary>
+            <param name="innerText">InnerText.</param>
+            <param name="blankOuterHtml">The blank outer HTML.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.RelatedDocument.GetDataXmlElement">
+            <summary>
+            Získanie údajov dokumentu vo forme <see cref="T:System.Xml.XmlElement"/>-u.
+            </summary>
+            <returns>Údaje dokumentu vo forme <see cref="T:System.Xml.XmlElement"/>-u, alebo <c>null</c>, ak sa nedá získať.</returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.RelatedDocument.IsPosp">
+            <summary>Je to posp.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.RelatedDocument.TryRepairPosp">
+            <summary>
+            Oprava posp.xml.
+            - odstránenie uzla Sign, ak existuje
+            </summary>
+            <returns><c>true</c>, ak oprava prebehla.</returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory">
+            <summary>Helper pre konverziu ľubovoľného podpísaného dokumentu na typ ASiC XAdES.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.StartDate_19700101">
+            <summary></summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.TryCreate(System.Byte[],System.Byte[]@,System.Boolean)">
+            <summary>Pokus o konverziu ľubovoľného podpísaného dokumentu na typ ASiC XAdES.</summary>
+            <param name="sourContent">Ľubovoľný podpísaný dokument v binárnom tvare.</param>
+            <param name="destContent">Výsledok konverzie</param>
+            <param name="throwIfNot">
+            Správanie pri výskyte chyby:
+            - pri hodnote <c>true</c> je vyhodená výnimka,
+            - pri hodnote <c>false</c> sa výnimka nevyhodí, ale metóda vráti hodnotu <c>null</c>.
+            Default je <c>true</c>.
+            </param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.BaseFactory">
+            <summary>Základná abstraktná trieda pre prácu s podpísaným dokumentom.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.BaseFactory.Generate">
+            <summary>Vygenerovanie objektu ASiC typu XAdES.</summary>
+            <returns>Výsledný ASiC v binárnom tvare.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.BaseFactory.Generate(System.IO.Compression.ZipArchive)">
+            <summary>Generovanie objektu ASiC typu XAdES.</summary>
+            <param name="zipArchive">Objekt <see cref="T:System.IO.Compression.ZipArchive"/> na prácu so ZIPom.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.BaseFactory.Gener_Mimetype(System.IO.Compression.ZipArchive,Cora.FormFiller.EFormMetadata.Signing.OasisManifestType)">
+            <summary>Vygenerovanie súčasti ASiC typu <c>Mimetype</c>.</summary>
+            <param name="zipArchive">Objekt <see cref="T:System.IO.Compression.ZipArchive"/> na prácu so ZIPom.</param>
+            <param name="oManifest">The o manifest.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.BaseFactory.Gener_Manifest(System.IO.Compression.ZipArchive,Cora.FormFiller.EFormMetadata.Signing.OasisManifestType)">
+            <summary>Vygenerovanie súčasti ASiC typu <c>Manifest</c>.</summary>
+            <param name="zipArchive">Objekt <see cref="T:System.IO.Compression.ZipArchive"/> na prácu so ZIPom.</param>
+            <param name="oManifest">Generovaný objekt <c>Manifest</c>.</param>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.BaseFactory.META_INF_PREFIX">
+            <summary>Cesta k metadátam ASiC-u.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.XmlFactory">
+            <summary>Trieda pre prácu s podpísaným dokumentom staršieho XML-typu (ZEP,...).</summary>
+            <seealso cref="!:Cora.CommIss.Signing.ASiCFactory.BaseFactory" />
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.XmlFactory.TryCreate(System.Byte[],System.Byte[]@,System.Boolean)">
+            <summary>Zo zdrojového podpísaného dokumentu ľubovoľného XML-typu sa pokúsi vytvoriť ASiC typu XAdES.</summary>
+            <param name="sourContent">Zdroj v binárnom tvare.</param>
+            <param name="destContent">Výsledný ASiC v binárnom tvare.</param>
+            <param name="throwIfNot">Ak <c>true</c>, pri chybe sa vyhodí výnimka,
+            inak výsledok je <c>false</c> a výstupný parameter <paramref name="destContent"/> je <c>null</c>.</param>
+            <returns>Úspešnosť.</returns>
+            <exception cref="T:System.Exception">
+            XML Dokument nie je ani DEnv ani DSign.
+            or
+            ASiCFactory.XmlFactory.TryCreate
+            </exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.XmlFactory.#ctor(System.Xml.XmlElement)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.XmlFactory"/> class.
+            </summary>
+            <param name="sourceElement">The source element.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.XmlFactory.Generate(System.IO.Compression.ZipArchive)">
+            <summary>
+            Generovanie objektu ASiC typu XAdES.
+            </summary>
+            <param name="zipArchive">Objekt <see cref="T:System.IO.Compression.ZipArchive" /> na prácu so ZIPom.</param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.ZipFactory">
+            <summary>Trieda pre prácu s objektom ASiC.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.ZipFactory.TryCreate(System.Byte[],System.Byte[]@,System.Boolean)">
+            <summary>Zo zdrojového podpísaného dokumentu ľubovoľného typu sa pokúsi vytvoriť ASiC typu XAdES.</summary>
+            <param name="sourContent">Zdrojový ASiC v binárnom tvare.</param>
+            <param name="destContent">Výsledný ASiC v binárnom tvare.</param>
+            <param name="throwIfNot">Ak <c>true</c>, pri chybe sa vyhodí výnimka,
+            inak výsledok je <c>false</c> a výstupný parameter <paramref name="destContent"/> je <c>null</c>.</param>
+            <returns>Úspešnosť.</returns>
+            <exception cref="T:System.Exception">ASiCFactory.ZipFactory.TryCreate</exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.ZipFactory.#ctor(System.Collections.Generic.List{Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem})">
+            <summary>Initializes a new instance of the <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.ZipFactory" /> class.</summary>
+            <param name="aItems">Položky zdrojového podpísaného dokumentu.</param>
+            <exception cref="T:System.NullReferenceException"></exception>
+            <exception cref="T:System.MissingMemberException">Chýba zložka Manifest
+            or
+            Chýba zložka Manifest aj P7s
+            or
+            Chýbajú dátové zložky</exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCFactory.ZipFactory.Generate(System.IO.Compression.ZipArchive)">
+            <summary>
+            Generovanie objektu ASiC typu XAdES.
+            </summary>
+            <param name="zipArchive">Objekt <see cref="T:System.IO.Compression.ZipArchive" /> na prácu so ZIPom.</param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper">
+            <summary>
+            Helper pre ZIP typu application/vnd.etsi.asic-e+zip
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.ASIC_MIME_TYPE_PREFIX">
+            <summary>Prefix ASIC MimeType (application/vnd.etsi.asic).</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.ASIC_EXTENSION_PREFIX">
+            <summary>Prefix ASIC prípony (application/vnd.etsi.asic).</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.IsAsicMimeType(System.String)">
+            <summary>
+            Kontrola, či zadaný MimeType obsahuje prefix ASIC MimeType.
+            </summary>
+            <param name="mimeType">MimeType</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.IsAsicExtension(System.String)">
+            <summary>
+            Kontrola, či zadaná prípona obsahuje prefix ASIC.
+            </summary>
+            <param name="extension">Prípona</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.Create(System.Byte[],System.Boolean)">
+            <summary>Vytvorenie helpera <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper"/> z podpísaného dokumentu ľubovoľného typu.</summary>
+            <param name="sourContent">Ľubovoľný podpísaný dokument (ASiC XAdES, ASiC CAdES, jednoduchý aj zložený XAdES Zep, ZepF) v binárnom tvare.</param>
+            <param name="throwIfNot">
+            Správanie pri výskyte chyby:
+            - pri hodnote <c>true</c> je vyhodená výnimka,
+            - pri hodnote <c>false</c> sa výnimka nevyhodí, ale metóda vráti hodnotu <c>null</c>.
+            Default je <c>true</c>.
+            </param>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.SourceContent">
+            <summary>Binárny obsah podpísaného dokumentu.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItems">
+            <summary>Položky objektu ASiC.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.Manifest">
+            <summary>Zoznam súborov.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.Signatures">
+            <summary>Informácie o podpise.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.MimeType">
+            <summary>ASIC MimeType.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.AsicType">
+            <summary>ASiC MimeType.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.#ctor(System.IO.Stream)">
+            <summary>
+            Konštruktor triedy <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper"/>.
+            </summary>
+            <param name="inputStream">Zdrojový stream ZIPu.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.#ctor(System.Byte[])">
+            <summary></summary>
+            <param name="sourContent">Binárny obsah podpísaného dokumentu.</param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem">
+            <summary>
+            Všeobecný handler položky/súboru ZIPu.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem.FileName">
+            <summary>Názov súboru.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem.DirPath">
+            <summary>Cesta k súboru v rámci ZIPu.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem.Content">
+            <summary>Binárny obsah súboru.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem.IsEForm">
+            <summary>Je súbor eForm-om.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem.ItemType">
+            <summary>
+            Zistí alebo nastaví typ položky.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem.MimeType">
+            <summary>
+            Zistí alebo nastaví MIME typ obsahu položky.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem.FilePath">
+            <summary>
+            Plná cesta k súboru v rámci ZIPu.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem.#ctor(System.String,System.String,System.Byte[])">
+            <summary>
+            Konštruktor triedy <see cref="!:LEForm.AsiceHelper.DataItem" />.
+            </summary>
+            <param name="fileName">Názov súboru.</param>
+            <param name="dirPath">Cesta k súboru v rámci ZIPu.</param>
+            <param name="content">Obsah súboru.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem.#ctor(Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem)">
+            <summary>
+            Konštruktor triedy <see cref="!:LEForm.AsiceHelper.DataItem" />.
+            </summary>
+            <param name="oDataItem">Zdrojový handler položky/súboru.</param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.EFormDataItem">
+            <summary>
+            Handler položky/súboru ZIPu s obsahom eForm.
+            </summary>
+            <seealso cref="!:Cora.CommIss.Signing.ASiCHelper.DataItem" />
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.EFormDataItem.TryCreate(Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem,Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.EFormDataItem@)">
+            <summary>
+            Pokus o vytvorenie inštancie <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.EFormDataItem"/>.
+            </summary>
+            <param name="oDataItem">Zdrojový handler položky/súboru.</param>
+            <param name="oEFormDataItem">Vytvorená inštancia <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.EFormDataItem"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.EFormDataItem.EForm_XmlNode">
+            <summary>
+            Dáta eFormu ako <see cref="T:System.Xml.XmlElement"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.EFormDataItem.#ctor(Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem,System.Xml.XmlDocument)">
+            <summary>
+            Konštruktor triedy <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.EFormDataItem" />.
+            </summary>
+            <param name="oDataItem">Zdrojový handler položky/súboru.</param>
+            <param name="xmlDoc">Obsah eFormu ako XML.</param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem">
+            <summary>
+            Handler položky/súboru ZIPu s obsahom typu <see cref="!:Cora.CommIss.Signing.XMLDataContainerCType" />.
+            </summary>
+            <seealso cref="!:Cora.CommIss.Signing.ASiCHelper.EFormDataItem" />
+            <seealso cref="!:Cora.CommIss.Signing.ASiCHelper.DataItem" />
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem.TryCreate(Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem,Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem@)">
+            <summary>
+            Pokus o vytvorenie inštancie <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem"/>.
+            </summary>
+            <param name="oDataItem">Zdrojový handler položky/súboru.</param>
+            <param name="oXMLDataItem">Vytvorená inštancia <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem.XMLDataContainer">
+            <summary>
+            Deserializovaný objekt <see cref="!:Cora.CommIss.Signing.XMLDataContainerCType" />.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem.EForm_Data">
+            <summary>
+            Deserializovaný objekt <see cref="!:Cora.CommIss.Signing.XMLDataCType" /> - dáta eFormu aj s obalom.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem.EForm_XmlNode">
+            <summary>
+            Dáta eFormu ako <see cref="T:System.Xml.XmlElement"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem.#ctor(Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.DataItem,Cora.FormFiller.EFormMetadata.Signing.XMLDataContainerCType)">
+            <summary>
+            Konštruktor triedy <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCHelper.XMLDataItem" />.
+            </summary>
+            <param name="oDataItem">Zdrojový handler položky/súboru.</param>
+            <param name="oXMLDataContainer">Deserializovaný objekt <see cref="!:Cora.CommIss.Signing.XMLDataContainerCType" />.</param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType">
+            <summary>
+            Typ položky ZIPu objektu ASiC.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType.Unknown">
+            <summary>Nezistený.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType.MimeType">
+            <summary>Typ obsahu ZIPu.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType.Manifest">
+            <summary>Manifest typu <see cref="T:Cora.FormFiller.EFormMetadata.Signing.OasisManifestType"/>.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType.ASiCManifest">
+            <summary>Manifest typu <see cref="T:Cora.FormFiller.EFormMetadata.Signing.ASiCManifestType"/>.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType.EForm">
+            <summary>Obsahom je eForm vo forme XML.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType.XmlDataContainer">
+            <summary>Obsahom je eForm vo forme <see cref="T:Cora.FormFiller.EFormMetadata.Signing.XMLDataContainerCType"/>.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType.Signatures">
+            <summary>Obsahom je informácia o podpise vo forme <see cref="T:Cora.FormFiller.EFormMetadata.Signing.XAdESSignaturesType"/>.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType.P7sSignatures">
+            <summary>Obsahom je informácia o podpise vo forme <see cref="T:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo"/>.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ASiCItemType.Attachment">
+            <summary>Iný obsah, napr. Pdf, Png.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCManifestType.Serialize">
+            <summary>
+            Serializes current ASiCManifestType object into an XML document
+            </summary>
+            <returns>string XML value</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCManifestType.Deserialize(System.String,Cora.FormFiller.EFormMetadata.Signing.ASiCManifestType@,System.Exception@)">
+            <summary>
+            Deserializes workflow markup into an ASiCManifestType object
+            </summary>
+            <param name="xml">string workflow markup to deserialize</param>
+            <param name="obj">Output ASiCManifestType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCManifestType.SaveToFile(System.String,System.Exception@)">
+            <summary>
+            Serializes current ASiCManifestType object into file
+            </summary>
+            <param name="fileName">full path of outupt xml file</param>
+            <param name="exception">output Exception value if failed</param>
+            <returns>true if can serialize and save into file; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ASiCManifestType.LoadFromFile(System.String,Cora.FormFiller.EFormMetadata.Signing.ASiCManifestType@,System.Exception@)">
+            <summary>
+            Deserializes xml markup from file into an ASiCManifestType object
+            </summary>
+            <param name="fileName">string xml file to load and deserialize</param>
+            <param name="obj">Output ASiCManifestType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.XAdESSignaturesType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.XAdESSignaturesType.TimeStamp">
+            <summary>Časová pečiatka.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.XAdESSignaturesType.Serialize">
+            <summary>
+            Serializes current XAdESSignaturesType object into an XML document
+            </summary>
+            <returns>string XML value</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.XAdESSignaturesType.Deserialize(System.String,Cora.FormFiller.EFormMetadata.Signing.XAdESSignaturesType@,System.Exception@)">
+            <summary>
+            Deserializes workflow markup into an XAdESSignaturesType object
+            </summary>
+            <param name="xml">string workflow markup to deserialize</param>
+            <param name="obj">Output XAdESSignaturesType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.XAdESSignaturesType.SaveToFile(System.String,System.Exception@)">
+            <summary>
+            Serializes current XAdESSignaturesType object into file
+            </summary>
+            <param name="fileName">full path of outupt xml file</param>
+            <param name="exception">output Exception value if failed</param>
+            <returns>true if can serialize and save into file; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.XAdESSignaturesType.LoadFromFile(System.String,Cora.FormFiller.EFormMetadata.Signing.XAdESSignaturesType@,System.Exception@)">
+            <summary>
+            Deserializes xml markup from file into an XAdESSignaturesType object
+            </summary>
+            <param name="fileName">string xml file to load and deserialize</param>
+            <param name="obj">Output XAdESSignaturesType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.SigReferenceType.Serialize">
+            <summary>
+            Serializes current SigReferenceType object into an XML document
+            </summary>
+            <returns>string XML value</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.SigReferenceType.Deserialize(System.String,Cora.FormFiller.EFormMetadata.Signing.SigReferenceType@,System.Exception@)">
+            <summary>
+            Deserializes workflow markup into an SigReferenceType object
+            </summary>
+            <param name="xml">string workflow markup to deserialize</param>
+            <param name="obj">Output SigReferenceType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.SigReferenceType.SaveToFile(System.String,System.Exception@)">
+            <summary>
+            Serializes current SigReferenceType object into file
+            </summary>
+            <param name="fileName">full path of outupt xml file</param>
+            <param name="exception">output Exception value if failed</param>
+            <returns>true if can serialize and save into file; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.SigReferenceType.LoadFromFile(System.String,Cora.FormFiller.EFormMetadata.Signing.SigReferenceType@,System.Exception@)">
+            <summary>
+            Deserializes xml markup from file into an SigReferenceType object
+            </summary>
+            <param name="fileName">string xml file to load and deserialize</param>
+            <param name="obj">Output SigReferenceType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionType.Serialize">
+            <summary>
+            Serializes current ExtensionType object into an XML document
+            </summary>
+            <returns>string XML value</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionType.Deserialize(System.String,Cora.FormFiller.EFormMetadata.Signing.ExtensionType@,System.Exception@)">
+            <summary>
+            Deserializes workflow markup into an ExtensionType object
+            </summary>
+            <param name="xml">string workflow markup to deserialize</param>
+            <param name="obj">Output ExtensionType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionType.SaveToFile(System.String,System.Exception@)">
+            <summary>
+            Serializes current ExtensionType object into file
+            </summary>
+            <param name="fileName">full path of outupt xml file</param>
+            <param name="exception">output Exception value if failed</param>
+            <returns>true if can serialize and save into file; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionType.LoadFromFile(System.String,Cora.FormFiller.EFormMetadata.Signing.ExtensionType@,System.Exception@)">
+            <summary>
+            Deserializes xml markup from file into an ExtensionType object
+            </summary>
+            <param name="fileName">string xml file to load and deserialize</param>
+            <param name="obj">Output ExtensionType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.DataObjectReferenceType.Serialize">
+            <summary>
+            Serializes current DataObjectReferenceType object into an XML document
+            </summary>
+            <returns>string XML value</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.DataObjectReferenceType.Deserialize(System.String,Cora.FormFiller.EFormMetadata.Signing.DataObjectReferenceType@,System.Exception@)">
+            <summary>
+            Deserializes workflow markup into an DataObjectReferenceType object
+            </summary>
+            <param name="xml">string workflow markup to deserialize</param>
+            <param name="obj">Output DataObjectReferenceType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.DataObjectReferenceType.SaveToFile(System.String,System.Exception@)">
+            <summary>
+            Serializes current DataObjectReferenceType object into file
+            </summary>
+            <param name="fileName">full path of outupt xml file</param>
+            <param name="exception">output Exception value if failed</param>
+            <returns>true if can serialize and save into file; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.DataObjectReferenceType.LoadFromFile(System.String,Cora.FormFiller.EFormMetadata.Signing.DataObjectReferenceType@,System.Exception@)">
+            <summary>
+            Deserializes xml markup from file into an DataObjectReferenceType object
+            </summary>
+            <param name="fileName">string xml file to load and deserialize</param>
+            <param name="obj">Output DataObjectReferenceType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionsListType.Serialize">
+            <summary>
+            Serializes current ExtensionsListType object into an XML document
+            </summary>
+            <returns>string XML value</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionsListType.Deserialize(System.String,Cora.FormFiller.EFormMetadata.Signing.ExtensionsListType@,System.Exception@)">
+            <summary>
+            Deserializes workflow markup into an ExtensionsListType object
+            </summary>
+            <param name="xml">string workflow markup to deserialize</param>
+            <param name="obj">Output ExtensionsListType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionsListType.SaveToFile(System.String,System.Exception@)">
+            <summary>
+            Serializes current ExtensionsListType object into file
+            </summary>
+            <param name="fileName">full path of outupt xml file</param>
+            <param name="exception">output Exception value if failed</param>
+            <returns>true if can serialize and save into file; otherwise, false</returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionsListType.LoadFromFile(System.String,Cora.FormFiller.EFormMetadata.Signing.ExtensionsListType@,System.Exception@)">
+            <summary>
+            Deserializes xml markup from file into an ExtensionsListType object
+            </summary>
+            <param name="fileName">string xml file to load and deserialize</param>
+            <param name="obj">Output ExtensionsListType object</param>
+            <param name="exception">output Exception value if deserialize failed</param>
+            <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.Config">
+            <summary></summary>
+            <seealso cref="T:System.Configuration.IConfigurationSectionHandler" />
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.SECTION_NAME">
+            <summary>Názov konfiguračnej sekcie (DSignerConfig).</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.SIGNATURE_POLICY_IDENTIFIER_KEY_NAME">
+            <summary>Jednoznačný identifikátor podpisovej politiky použitej pre vytvorenie elektronického podpisu.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.CONF_FILENAME_ATTR_NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.TIME_STAMP_NODE_NAME">
+            <summary>Názov elementu na určenie spôsobu zápisu formulárov (Depositor).</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.TIME_STAMP_ITEM_NODE_NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.DEFAULT_REQ_POLICY_ATTR_NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.REQ_POLICY_ATTR_NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.URL_ATTR_NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.REMOVE_REQ_POLICY_ATTR_NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.CERTIFICATE_NODE_NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.CERT_FILENAME_ATTR_NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.PASSWORD_ATTR_NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.SignaturePolicyIdentifier">
+            <summary>Jednoznačný identifikátor podpisovej politiky použitej pre vytvorenie elektronického podpisu.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.Settings">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.Config.ClientConfig">
+            <summary></summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.Config.Create(System.Object,System.Object,System.Xml.XmlNode)">
+            <summary>
+            Creates a configuration section handler.
+            </summary>
+            <param name="parent">Parent object.</param>
+            <param name="configContext">Configuration context object.</param>
+            <param name="section">Section XML node.</param>
+            <returns>
+            The created section handler object.
+            </returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.ExtensionMethods">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionMethods.GetTSaResponse(Cora.Global.Signing.SettingsInfo.TimeStampInfo,System.String,System.Byte[])">
+            <summary>
+            Získanie časovej pečiatky.
+            </summary>
+            <param name="oTimeStamp">Nastavenia pre generovanie časovej pečiatky.</param>
+            <param name="reqPolicy">OID požadovanej TSA politiky.</param>
+            <param name="reqData">Vstupné dáta.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Pre zvolenú TSa politiku neexistujú konfiguračné nastavenie</exception>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionMethods.GetTSaResponse(Cora.Global.Signing.SettingsInfo.TimeStampItem,System.Byte[])">
+            <summary>
+            Získanie časovej pečiatky.
+            </summary>
+            <param name="oTimeStampItem">Nastavenia pre generovanie časovej pečiatky pre zadanú politiku.</param>
+            <param name="reqData">Vstupné dáta.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.ExtensionMethods.Configure(Cora.Web.WebServiceClientConfig,System.Net.HttpWebRequest)">
+            <summary>
+            Nastavenie zadaného klienta web service-y podľa načítanej konfigurácie.
+            </summary>
+            <param name="cfg">Trieda slúžiaca na konfiguráciu klientov webových služieb..</param>
+            <param name="httpReq">Nastavovaný klient web service-y. Nesmie byť <c>null</c>.</param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.HttpHandler">
+            <summary>Http handler.</summary>
+            <seealso cref="T:System.Web.IHttpHandler" />
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.HttpHandler.DEFAULT_HANDLER_NAME">
+            <summary>Default názov handlera. (SigningHttpHandler.ashx)</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.HttpHandler.GetHandlerUrl(System.Uri,System.String)">
+            <summary>Získanie url handlera so zadaným názvom.</summary>
+            <param name="baseUri">Základná Uri pre generovanie.</param>
+            <param name="sHandlerName">Názov handlera. Nepovinný údaj - default je <see cref="F:Cora.FormFiller.EFormMetadata.Signing.HttpHandler.DEFAULT_HANDLER_NAME"/>.</param>
+            <returns>Url handlera.</returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.HttpHandler.IsReusable">
+            <summary>
+            Výsledok je "bezstavový" (použiteľný aj pre ďalšie request-y).
+            </summary>
+            <remarks>Pouzivame premenne tak, ze objekt je po skončení
+            <see cref="M:Cora.FormFiller.EFormMetadata.Signing.HttpHandler.ProcessRequest(System.Web.HttpContext)"/> priamo znovu použiteľný.</remarks>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.HttpHandler.ProcessRequest(System.Web.HttpContext)">
+            <summary>
+            Spracovanie dotazu.
+            </summary>
+            <param name="context">Web kontext.</param>
+            <exception cref="T:System.Exception">
+            Chýbajú konfiguračné nastavenia pre podpisovač DSigner
+            or
+            Chýba konfiguračné nastavenie ConfZipFile pre podpisovač DSigner
+            or
+            Chýbajú konfiguračné nastavenie pre vytvorenie časovej pečiatky
+            </exception>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.HttpHandler.ReqData">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.HttpHandler.ReqData.reqPolicy">
+            <summary>
+            OID požadovanej TSA politiky.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.HttpHandler.ReqData.data">
+            <summary>
+            Data.
+            </summary>
+            <value></value>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo">
+            <summary>
+            Informácie o certifikáte podpisu.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo.NotBefore">
+            <summary>Platnosť certifikátu od.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo.NotAfter">
+            <summary>Platnosť certifikátu do.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo.Issuer">
+            <summary>Vydávateľ certifikátu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo.Subject">
+            <summary>Subjekt, pre ktorý je certifikát vydaný.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo.SerialNumber">
+            <summary>Sériové číslo certifikátu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo.Signature">
+            <summary>.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo.Data">
+            <summary>.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo.#ctor(Org.BouncyCastle.X509.X509Certificate)">
+            <summary>
+            Inicializácia novej inštancie triedy <see cref="T:Cora.FormFiller.EFormMetadata.Signing.P7sCertificateInfo" />.
+            </summary>
+            <param name="oX509Certificate">Zdroj.</param>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo">
+            <summary>
+            Informácie o podpise.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.Deserialize(System.Byte[])">
+            <summary>
+            Deserializes the specified source.
+            </summary>
+            <param name="source">The source.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Nepodarilo sa načítať P7sContentInfo.</exception>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.DigestAlgOid">
+            <summary>Verzia podpisu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.EncryptionAlgOid">
+            <summary>Verzia podpisu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.ContentTypeOid">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.SigningTime">
+            <summary>Dátum a čas podpisu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.SigPolicyId">
+            <summary>Identifikátor PP.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.SigPolicyHashAlgorithm">
+            <summary>Algoritmus odtlačku PP.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.SigVersion">
+            <summary>Verzia podpisu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.MessageDigest">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.SigPolicyHash">
+            <summary>Hodnota odtlačku PP.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.EncryptedDigest">
+            <summary>Hodnota podpisu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.SigCertificate">
+            <summary>Podpisový certifikát.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.Certificates">
+            <summary>Zoznam certifikátov podpisu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.TimeStamp">
+            <summary>Časová pečiatka.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.#ctor(System.Byte[])">
+            <summary>
+            Inicializácia novej inštancie triedy <see cref="T:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo" />.
+            </summary>
+            <param name="p7sContent">Zdroj súboru P7S.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.P7sContentInfo.GetCertificates(Org.BouncyCastle.Asn1.Cms.SignedData)">
+            <summary>
+            Získa zoznam certifikátov.
+            </summary>
+            <param name="oSignedData">Zdrojový objekt <see cref="T:Org.BouncyCastle.Asn1.Cms.SignedData"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.Title">
+            <summary>Subjekt, pre ktorý je certifikát vydaný.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.SerialNumber">
+            <summary>Subjekt - sériové číslo.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.TextO">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.TextOU">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.TextCN">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.SurName">
+            <summary>Subjekt - priezvisko.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.GivenName">
+            <summary>Subjekt - meno.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.Street">
+            <summary>Subjekt - ulica.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.Municipality">
+            <summary>Subjekt - ulica.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sNameInfo.Country">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sSerialNumberInfo.DecimalValue">
+            <summary>Sériové číslo certifikátu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.P7sSerialNumberInfo.HexadecimalValue">
+            <summary>Sériové číslo certifikátu v hexadecimálnom tvare.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.SignatureInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.SignatureInfo.TimeStamp">
+            <summary>Časová pečiatka.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.SignatureInfo.GetSignatures(System.Xml.XmlElement)">
+            <summary>
+            
+            </summary>
+            <param name="dataEnvelope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.SignatureInfo.Create(System.Xml.XmlElement)">
+            <summary>
+            
+            </summary>
+            <param name="elemSignature"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo">
+            <summary>
+            Informácie o časovej pečiatke.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.Create(Org.BouncyCastle.Asn1.Cms.SignerInfo,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="oSignerInfo"></param>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.ID">
+            <summary>ID časovej pečiatky.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.GenTime">
+            <summary>Dátum a čas vydania časovej pečiatky.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.TsaPolicy">
+            <summary>Politika TSA.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.MessageImprintAlgOid">
+            <summary>Algoritmus odtlačku dát v žiadosti.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.TimeStampCertificate">
+            <summary>Podpisový certifikát časovej pečiatky.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.SerialNumber">
+            <summary>Sériové číslo časovej pečiatky.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.MessageImprintDigest">
+            <summary>Hodnota odtlačku dát v žiadosti.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.#ctor(Org.BouncyCastle.Tsp.TimeStampToken,System.String)">
+            <summary>
+            Inicializácia novej inštancie triedy <see cref="T:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo"/>.
+            </summary>
+            <param name="oTimeStampToken">Zdrojový token časovej pečiatky.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.TimeStampInfo.GetCertificate(Org.BouncyCastle.Tsp.TimeStampToken)">
+            <summary>
+            Zistí podpisový certifikát časovej pečiatky.
+            </summary>
+            <param name="oTimeStampToken">Zdrojový token časovej pečiatky.</param>
+            <returns></returns>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.QualifierType.OIDAsURI">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.QualifierType.OIDAsURN">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.Item">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.ArchiveTimeStamp">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.AttrAuthoritiesCertValues">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.AttributeCertificateRefs">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.AttributeRevocationRefs">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.AttributeRevocationValues">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.CertificateValues">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.CompleteCertificateRefs">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.CompleteRevocationRefs">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.CounterSignature">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.RefsOnlyTimeStamp">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.RevocationValues">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.SigAndRefsTimeStamp">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType3.SignatureTimeStamp">
+            <remarks/>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.Signing.XMLDataContainerCType">
+            <summary>
+            Zložený dátový prvok pre prenos obsahu XML údajov vrátane elektronických formulárov.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.Signing.XMLDataContainerCType.TryCreate(System.Byte[],Cora.FormFiller.EFormMetadata.Signing.XMLDataContainerCType@)">
+            <summary>
+            Pokus o deserializáciu na typ <see cref="T:Cora.FormFiller.EFormMetadata.Signing.XMLDataContainerCType" />.
+            </summary>
+            <param name="content">The content.</param>
+            <param name="oXMLDataContainer">The o XML data container.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.XMLDataContainerCType.UsedSchemasEmbedded">
+            <summary>
+             Zloženy dátový prvok obsahujúci priamo vložené schémy.
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.EFormMetadata.Signing.XMLDataContainerCType.UsedSchemasReferenced">
+            <summary>
+            Zložený dátový prvok obsahujúci referencie použitých schém.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.XMLDataContentTypeType.applicationxmlcharsetUTF8">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.TransformAlgorithmType.httpwwww3orgTR2001RECxmlc14n20010315">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.TransformAlgorithmType.httpwwww3org200110xmlexcc14n">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.TransformAlgorithmType.httpwwww3org200612xmlc14n11">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.UsedPresentationSchemaContentTypeType.applicationxsltxml">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType1.Item">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType1.PGPKeyID">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType1.PGPKeyPacket">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType.Item">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType.X509CRL">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType.X509Certificate">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType.X509IssuerSerial">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType.X509SKI">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType.X509SubjectName">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType2.Item">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType2.KeyName">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType2.KeyValue">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType2.MgmtData">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType2.PGPData">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType2.RetrievalMethod">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType2.SPKIData">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.Signing.ItemsChoiceType2.X509Data">
+            <remarks/>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.FormTemplateID">
+            <summary>
+            Identifikačný objekt eFormu
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FormTemplateID.op_Equality(Cora.FormFiller.EFormMetadata.FormTemplateID,Cora.FormFiller.EFormMetadata.FormTemplateID)">
+            <summary>
+            Implements the operator ==.
+            </summary>
+            <param name="first">The first.</param>
+            <param name="second">The second.</param>
+            <returns>
+            The result of the operator.
+            </returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FormTemplateID.op_Inequality(Cora.FormFiller.EFormMetadata.FormTemplateID,Cora.FormFiller.EFormMetadata.FormTemplateID)">
+            <summary>
+            Implements the operator !=.
+            </summary>
+            <param name="first">The first.</param>
+            <param name="second">The second.</param>
+            <returns>
+            The result of the operator.
+            </returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FormTemplateID.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FormTemplateID.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/>, is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object" /> to compare with this instance.</param>
+            <returns>
+              <c>true</c> if the specified <see cref="T:System.Object"/> is equal to this instance; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FormTemplateID.ToString">
+            <summary>
+            Textová reprezentácia <see cref="T:Cora.FormFiller.EFormMetadata.FormTemplateID"/>.
+            </summary>
+            <returns>
+            Textová reprezentácia <see cref="T:Cora.FormFiller.EFormMetadata.FormTemplateID"/>.
+            </returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.FormTemplateID.GetAsString(System.Boolean)">
+            <summary>
+            Textová reprezentácia <see cref="T:Cora.FormFiller.EFormMetadata.FormTemplateID" />.
+            </summary>
+            <param name="asFilename">Ak je hodnota <c>true</c>, zamenia sa znaky <c>bodka (.)</c> a <c>slash (/)</c> znakom <c>underscore (_)</c> pre použitie v názve súboru.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.FormFiller.EFormMetadata.EFormVersion">
+            <summary>
+            Identifikačný objekt verzie eFormu
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormVersion.#ctor">
+            <summary>
+            Inicializuje novú inštanciu objektu <see cref="T:Cora.FormFiller.EFormMetadata.EFormVersion"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormVersion.#ctor(System.String)">
+            <summary>
+            Inicializuje novú inštanciu objektu <see cref="T:Cora.FormFiller.EFormMetadata.EFormVersion"/> podľa textovej reprezentácie verzie eFormu.
+            </summary>
+            <param name="eFormVersion">Textová reprezentácia verzie.</param>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormVersion.ToString">
+            <summary>
+            Získanie textovej reprezentácie verzie.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.EFormMetadata.EFormVersion.GetAsString">
+            <summary>
+            Textová reprezentácia <see cref="T:Cora.FormFiller.EFormMetadata.EFormVersion" />.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FormTemplateType.eForm">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FormTemplateType.teForm">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FormTemplateType.POSP">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FormTemplateType.NOTIFY">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.SearchFormTemplateStatus.All">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.SearchFormTemplateStatus.PUBLISHED">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.SearchFormTemplateStatus.INVALIDATED">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.SearchFormTemplateType.All">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.SearchFormTemplateType.eForm">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.SearchFormTemplateType.teForm">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.SearchFormTemplateType.POSP">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.SearchFormTemplateType.NOTIFY">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FormTemplateStatus.PUBLISHED">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.FormTemplateStatus.INVALIDATED">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormPackageType.ZIP">
+            <remarks/>
+        </member>
+        <member name="F:Cora.FormFiller.EFormMetadata.EFormPackageType.XML">
+            <remarks/>
+        </member>
+        <member name="T:Cora.FormFiller.HtmlGenerator.CacheDS">
+             <summary>
+            Represents a strongly typed in-memory cache of data.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.HtmlGenerator.CacheDS.InjectItemDTDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.HtmlGenerator.CacheDS.FeHtmlDTDataTable">
+             <summary>
+            Represents the strongly named DataTable class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.HtmlGenerator.CacheDS.InjectItemDTRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.HtmlGenerator.CacheDS.FeHtmlDTRow">
+             <summary>
+            Represents strongly named DataRow class.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.HtmlGenerator.CacheDS.InjectItemDTRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.HtmlGenerator.CacheDS.FeHtmlDTRowChangeEvent">
+             <summary>
+            Row event argument class
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.ExtensionMethods">
+            <summary>
+            Extension metódy pre Cora.CommIss.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.ExtensionMethods.DELIMITER">
+            <summary>
+            Oddelovac viacerych prvkov v ramci jedneho stringu - sluzi na vytvorenie nasledneho array z tohto stringu.
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.ParseArrayFromString(System.String)">
+            <summary>
+            Rozparsuje vstupny retazec pomocou separatora a vytvori array.
+            </summary>
+            <param name="sArray">Retazec, ktory moze obsahovat prvky oddelene separatorom.</param>
+            <returns>Pole prvkov zo vstupneho retazca.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.SafeTrim(System.String)">
+            <summary>
+            Volanie <see cref="M:System.String.Trim"/> aj pre <c>null</c> reťazce.
+            </summary>
+            <param name="value">Vstupná hodnota na orezanie, alebo <c>null</c>.</param>
+            <returns>Orezaná výstupná hodnota, alebo <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.GetProperSignedExtension(System.String)">
+            <summary>Určenie prípony na základe MimeType.</summary>
+            <param name="mimeType">Hodnota MimeType.</param>
+            <returns>Prípona.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.TryGetRC_FromURI(System.String,System.String@)">
+            <summary>
+            Získanie rodného čísla z URI identifikátora osoby.
+            </summary>
+            <param name="value">URI identifikátora osoby.</param>
+            <param name="result">Rodné číslo, alebo <c>null</c>.</param>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.GetRC_FromURI(System.String)">
+            <summary>
+            Získanie rodného čísla z URI identifikátora osoby.
+            </summary>
+            <param name="value">URI identifikátora osoby.</param>
+            <returns>Rodné číslo, alebo <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.TryGetICO_FromURI(System.String,System.String@)">
+            <summary>
+            Získanie hodnoty údaja IČO z URI identifikátora osoby.
+            </summary>
+            <param name="value">URI identifikátora osoby.</param>
+            <param name="result">IČO, alebo <c>null</c>.</param>
+            <returns>Úspešnosť.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.GetICO_FromURI(System.String)">
+            <summary>
+            Získanie hodnoty údaja IČO z URI identifikátora osoby.
+            </summary>
+            <param name="value">URI identifikátora osoby.</param>
+            <returns>IČO, alebo <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.GetNullableDateTime(System.DateTime)">
+            <summary>
+            Získanie objektu <see cref="T:System.Nullable`1"/> z objektu <see cref="T:System.DateTime"/>.
+            Hodnota <see cref="F:System.DateTime.MinValue"/> je nahradená hodnotou <c>null</c>.
+            </summary>
+            <param name="oDateTime">Zdrojový objekt <see cref="T:System.DateTime"/>.</param>
+            <returns></returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Cora.FormFiller.ExtensionMethods.GetType_ContentData(System.Byte[],System.Object@)" -->
+        <member name="M:Cora.FormFiller.ExtensionMethods.GetBytes_EmbeddedResource(System.Type,System.String)">
+            <summary>Získanie binárneho obsahu EmbeddedResource.</summary>
+            <param name="cls">Trieda knižnice, kde je uložený EmbeddedResource.</param>
+            <param name="filePath">Cesta k EmbeddedResource.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.TryGet_Base64String(System.String,System.Byte[]@)">
+            <summary>Je vstupný parameter Base64.</summary>
+            <param name="s">vstupný parameter.</param>
+            <returns><c>true</c> ak vstupný parameter je Base64, inak<c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.SoapService_AvailabilityCheck``2(Cora.Utils.Logger.ILogger,Cora.Utils.Logger.LogLevel)">
+            <summary>Kontrola dostupnosti SOAP služby.</summary>
+            <typeparam name="TClient">The type of the client.</typeparam>
+            <typeparam name="TChannel">The type of the channel.</typeparam>
+            <param name="logger">Logger (môže byť aj null).</param>
+            <param name="logLevel">Úroveň logovania.</param>
+            <returns>true/false</returns>
+            <exception cref="T:System.ArgumentNullException">Url - Nepodarilo sa získať Url</exception>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.GenerateBitHash(System.Byte[])">
+            <summary>
+            Výpočet hash-u pre typ Binary pomocou Cora.Crypt.Algoritmus.Hash_SHA256 a BitConverter.ToString().
+            </summary>
+            <param name="content">The content.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.GenerateBitHash(System.String)">
+            <summary>
+            Výpočet hash-u pre typ String pomocou Cora.Crypt.Algoritmus.Hash_SHA256 a BitConverter.ToString().
+            </summary>
+            <param name="value">The value.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.ExtensionMethods.GetFeFormByIdentifier(System.String)">
+            <summary>Tries the get fe form vm.</summary>
+            <param name="identifier">The identifier.</param>
+            <param name="feForm">The fe form vm.</param>
+        </member>
+        <member name="T:Cora.FormFiller.Services.FormFillerService">
+            <summary></summary>
+            <seealso cref="T:Cora.FormFiller.Services.IFormFillerService" />
+        </member>
+        <member name="F:Cora.FormFiller.Services.FormFillerService.EGOV_HTTP_HANDLER_NAME">
+            <summary>Názov handlera aplikácie CG eGOV na komunikáciu s aplikáciou Datamesta.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.Services.FormFillerService.FFiConfig">
+            <summary>
+            Získanie konfigurácie FormFillera
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.Services.FormFillerService.GetFFiWaybill(System.Int32,System.String,System.String)">
+            <summary>
+            Získanie dát eFormu pre FormFiller
+            </summary>
+            <param name="iFeForm">ID eFormu.</param>
+            <param name="actorId">URI prihlásenej osoby (ActorId).</param>
+            <param name="subjectId">URI prihláseného subjektu (SubjectId).</param>
+        </member>
+        <member name="M:Cora.FormFiller.Services.FormFillerService.SendFFiData(Cora.FormFiller.ViewModels.FFiSendedDataVm)">
+            <summary>
+            Zápis dát eFormu
+            </summary>
+            <param name="sendedData">Dáta eFormu.</param>
+            <returns>Úspešnosť operácie.</returns>
+        </member>
+        <member name="T:Cora.FormFiller.Services.IFormFillerService">
+            <summary>Interface služby pre získanie editačného HTML eFormFillera.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.Services.IFormFillerService.FFiConfig">
+            <summary>
+            Získanie konfigurácie FormFillera
+            </summary>
+        </member>
+        <member name="M:Cora.FormFiller.Services.IFormFillerService.GetFFiWaybill(System.Int32,System.String,System.String)">
+            <summary>
+            Získanie dát eFormu pre FormFiller
+            </summary>
+            <param name="iFeForm">ID eFormu.</param>
+            <param name="actorId">URI prihlásenej osoby (ActorId).</param>
+            <param name="subjectId">URI prihláseného subjektu (SubjectId).</param>
+        </member>
+        <member name="M:Cora.FormFiller.Services.IFormFillerService.SendFFiData(Cora.FormFiller.ViewModels.FFiSendedDataVm)">
+            <summary>
+            Zápis dát eFormu
+            </summary>
+            <param name="sendedData">Dáta eFormu.</param>
+            <returns>Úspešnosť operácie.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.Taximeter.#ctor(System.String,Cora.Utils.Logger.ILogger,Cora.Utils.Logger.LogLevel)">
+            <summary>Initializes a new instance of the <see cref="!:MyLogger"/> class.</summary>
+            <param name="title">Titulok do Logu.</param>
+            <param name="oLogger">Objekt <see cref="T:Cora.Utils.Logger.ILogger"/>.</param>
+        </member>
+        <member name="M:Cora.FormFiller.Taximeter.Dispose">
+            <summary>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.FeFormAttachVm">
+            <summary>
+            EGOV_DATA.VW_FE_FORM_ATTACH, Prílohy elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.IFeFormAttach">
+            <summary>
+            I_FE_FORM_ATTACH, Vygenerované ID prílohy elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.IFeForm">
+            <summary>
+            I_FE_FORM, ID elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.IFeAttach">
+            <summary>
+            I_FE_ATTACH, ID prílohy elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.IFeIdent">
+            <summary>
+            I_FE_IDENT, ID identifikátora elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.COrder">
+            <summary>
+            C_ORDER, Poradové číslo prílohy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.NFeAttach">
+            <summary>
+            N_FE_ATTACH, Titulok prílohy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.TtFeAttach">
+            <summary>
+            TT_FE_ATTACH, Bližší popis prílohy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.AllowedExt">
+            <summary>
+            ALLOWED_EXT, Povolené prípony prílohy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.LSigning">
+            <summary>
+            L_SIGNING, Príznak povinného podpisu prílohy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.LRequired">
+            <summary>
+            L_REQUIRED, Príznak povinnej prílohy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.SizeLimit">
+            <summary>
+            SIZE_LIMIT, Maximálna veľkosť prílohy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.Pozn">
+            <summary>
+            POZN, Poznámka
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.Zrus">
+            <summary>
+            ZRUS, Príznak zrušeného záznamu
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.ViewModels.FeFormAttachVm.PK">
+            <summary>
+            Konštanta vracajúca názov property s primárnym kľúčom. 
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachVm.AllowedTypes">
+            <summary>
+            Povolené typy prílohy
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.FeFormAttachTypeVm">
+             <summary>
+            Typ prílohy elektronického formulára
+             </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachTypeVm.Extension">
+            <summary>
+            File.Extension prílohy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachTypeVm.Mimetype">
+            <summary>
+            Mimetype prílohy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormAttachTypeVm.Title">
+            <summary>
+            Titulok typu prílohy
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.FeFormFullVm">
+            <summary>
+            EGOV_DATA.VW_FE_FORM, Báza elektronických formulárov
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IFeClient">
+            <summary>
+            I_FE_CLIENT, ID zákazníka OPIS
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.SkrFeClient">
+            <summary>
+            SKR_FE_CLIENT, Skratka zákazníka OPIS
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LForeign">
+            <summary>
+            L_FOREIGN, Indikátor cudzieho elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LUnknown">
+            <summary>
+            L_UNKNOWN, Indikátor elektronického formulára typu UNK
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LDisabled">
+            <summary>
+            L_DISABLED, Blokovaný
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LOutput">
+            <summary>
+            L_OUTPUT, Indikátor - výstupný eForm
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LIss">
+            <summary>
+            L_ISS, Príznak TZ pre použitie v CG ISS
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LDis">
+            <summary>
+            L_DIS, Príznak TZ pre použitie v CG DISS
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LLastVersion">
+            <summary>
+            L_LAST_VERSION, Indikátor - najvyššia verzia elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LLastAvailable">
+            <summary>
+            L_LAST_AVAILABLE, Indikátor - najvyššia prístupná verzia elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IFeFormState">
+            <summary>
+            I_FE_FORM_STATE, ID stavu elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LAvailable">
+            <summary>
+            L_AVAILABLE, eForm je k dispozícii pre eFormFiller
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.FormType">
+            <summary>
+            FORM_TYPE, Typ vzoru formulára (element Type z metadát): [možné hodnoty: eForm, teForm, POSP, NOTIFY]
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.NLanguage">
+            <summary>
+            N_LANGUAGE, Jazyk elektronického formulára (element Language z metadát)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.NGestor">
+            <summary>
+            N_GESTOR, Gestor elektronického formulára (element Publisher z metadát)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.NPublisher">
+            <summary>
+            N_PUBLISHER, Poskytovateľ elektronického formulára (element Publisher z metadát)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.DPublished">
+            <summary>
+            D_PUBLISHED, Dátum zverejnenia elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.EgoFormId">
+            <summary>
+            EGO_FORM_ID, ID eForm-u v eGO.Designer
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.EgoVersionId">
+            <summary>
+            EGO_VERSION_ID, ID verzie eForm-u v eGO.Designer
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.DValidOd">
+            <summary>
+            D_VALID_OD, Dátum začiatku platnosti formulára (element ValidDateFrom z metadát)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.DValidDo">
+            <summary>
+            D_VALID_DO, Dátum konca platnosti formulára (element ValidDateTo z metadát)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.DForceOd">
+            <summary>
+            D_FORCE_OD, Dátum začiatku účinnosti formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.DForceDo">
+            <summary>
+            D_FORCE_DO, Dátum konca účinnosti formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.CorrelationId">
+            <summary>
+            CORRELATION_ID, Vygenerovaný identifikátor
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.NFile">
+            <summary>
+            N_FILE, Preddefinovaný názov súboru (použije sa pri zápise na disk)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IFeIdent">
+            <summary>
+            I_FE_IDENT, ID identifikátora elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.Ico">
+            <summary>
+            ICO, IČO organizácie
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.Agenda">
+            <summary>
+            AGENDA, Agenda
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.ICgId">
+            <summary>
+            I_CG_ID, Jednoznačný identifikátor v rámci organizácie
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IFeType">
+            <summary>
+            I_FE_TYPE, ID typu elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.NFeType">
+            <summary>
+            N_FE_TYPE, Názov typu elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.TtFeType">
+            <summary>
+            TT_FE_TYPE, Popis typu elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.TtNotice">
+            <summary>
+            TT_NOTICE, Informácie pre klienta
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.NRoot">
+            <summary>
+            N_ROOT, Názov ROOT elementu
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LAnonym">
+            <summary>
+            L_ANONYM, Indikuje, či môže byť eForm anonymný
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LSigning">
+            <summary>
+            L_SIGNING, Príznak povinného podpisu eForm
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.FeFee">
+            <summary>
+            FE_FEE, Poplatok
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IMessageClass">
+            <summary>
+            I_MESSAGE_CLASS, ID triedy správy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.NMessageClass">
+            <summary>
+            N_MESSAGE_CLASS, Názov triedy správy
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IMetaIs">
+            <summary>
+            I_META_IS, ID typu koncových služieb zákazníkov
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.CodeMetaIs">
+            <summary>
+            CODE_META_IS, Kód typu koncových služieb zákazníkov
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IZazSpos">
+            <summary>
+            I_ZAZ_SPOS, ID spôsobu doručenia
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.NZazSpos">
+            <summary>
+            N_ZAZ_SPOS, Spôsob doručenia
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.Lehota">
+            <summary>
+            LEHOTA, Lehota
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LFront">
+            <summary>
+            L_FRONT, eForm je k dispozícii aj vo Front prostredí
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IHandler">
+            <summary>
+            I_HANDLER, ID spôsobu spracovania eFormu
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.LDcom">
+            <summary>
+            L_DCOM, eForm určený pre DCOM
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.DCreate">
+            <summary>
+            D_CREATE, Dátum a čas vytvorenia záznamu (registrácia v lokálnom úložisku)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.DModify">
+            <summary>
+            D_MODIFY, Dátum a čas poslednej modifikácie záznamu
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.Pozn">
+            <summary>
+            POZN, Poznámka
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.Zrus">
+            <summary>
+            ZRUS, Príznak zrušeného záznamu
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.Attachs">
+            <summary>
+            List of VW_FE_FORM_ATTACH, Zoznam príloh k elektronickému formuláru
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.Padded_I_CG_ID">
+            <summary>
+            Textové ID formulára v tvare 000123456 (podľa príslušného FE_IDENT.col_I_CG_ID).
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IsJump">
+            <summary>
+            Zístí, či odpovedajúci eForm je typu JumpSoft.
+            Jedná sa o eForm typu Jump ?
+            </summary>
+            <returns><c>true</c> ak je odpovedajúci eForm typu JumpSoft, inak <c>false</c>.</returns>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IsEgo">
+            <summary>
+            Zístí, či odpovedajúci eForm je typu eGO.Designer.
+            Jedná sa o eForm typu eGO.Designer ?
+            </summary>
+            <returns><c>true</c> ak je odpovedajúci eForm typu eGO.Designer, inak <c>false</c>.</returns>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.FormTempID">
+            <summary>Objekt identifikácie eForm-u <see cref="!:LEForm.FormTemplateID"/>.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormFullVm.IsRess">
+            <summary>
+            Zístí, či odpovedajúci eForm je typu RESS.
+            </summary>
+            <returns><c>true</c> ak je odpovedajúci eForm typu RESS, inak <c>false</c>.</returns>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.FeFormVm">
+            <summary>
+            E_DATA.VW_FE_FORM, Báza elektronických formulárov (iba základné informácie)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormVm.IFeForm">
+            <summary>
+            I_FE_FORM, ID elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormVm.NFeForm">
+            <summary>
+            N_FE_FORM, Názov elektronického formulára (element Title z metadát)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormVm.NFeIdent">
+            <summary>
+            N_FE_IDENT, Identifikátor elektronického formulára (element Identifier z meta.xml)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormVm.NVersion">
+            <summary>
+            N_VERSION, Verzia elektronického formulára
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormVm.VerMajor">
+            <summary>
+            VER_MAJOR, Verzia elektronického formulára (element Version.Major z metadát)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormVm.VerMinor">
+            <summary>
+            VER_MINOR, Verzia elektronického formulára (element Version.Minor z metadát)
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FeFormVm.TtFeForm">
+            <summary>
+            TT_FE_FORM, Popis účelu elektronického formulára (element Description z metadát)
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.ViewModels.FeFormVm.PK">
+            <summary>
+            Konštanta vracajúca názov property s primárnym kľúčom. 
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.FFiConfigVm">
+            <summary>Konfigurácia FormFillera</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiConfigVm.ExternalFFi">
+            <summary>Externý FormFiller</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiConfigVm.EgovBaseUrl">
+            <summary>Url adresa externého FormFillera</summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.ExternalFFiVm">
+            <summary>Externý FormFiller</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.ExternalFFiVm.Disabled">
+            <summary>Indikátor zablokovania</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.ExternalFFiVm.Url">
+            <summary>Url adresa externého FormFillera</summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.FFiSendedAttachVm">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedAttachVm.Id">
+            <summary>ID prílohy.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedAttachVm.AttName">
+            <summary>Názov súboru prílohy.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedAttachVm.Mimetype">
+            <summary>Typ prílohy.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedAttachVm.AttData">
+            <summary>Obsah prílohy (Base64).</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedAttachVm.SignedFile">
+            <summary>Podpísaný obsah prílohy (Base64).</summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.FFiSendedDataVm">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedDataVm.IFeForm">
+            <summary>ID eFormu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedDataVm.XmlData">
+            <summary>XmlData eFormu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedDataVm.SignedData">
+            <summary>Podpísané XmlData eFormu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedDataVm.Attachs">
+            <summary>
+            Zoznam príloh k elektronickému formuláru
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiSendedDataVm.IAMIdentity">
+            <summary>IAMIdentity.</summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.IAMIdentityVm">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.IAMIdentityVm.ActorID">
+            <summary>ID osoby.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.IAMIdentityVm.ActorName">
+            <summary>Meno osoby.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.IAMIdentityVm.SubjectID">
+            <summary>ID subjektu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.IAMIdentityVm.SubjectName">
+            <summary>Názov subjektu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.IAMIdentityVm.ValidFrom">
+            <summary>Dátum a čas vzniku tokenu (UTC).</summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.IAMIdentityVm.ValidTo">
+            <summary>Dátum a čas expirácie tokenu (UTC).</summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.FFiWaybillVm">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiWaybillVm.MetaData">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiWaybillVm.HtmlData">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiWaybillVm.XmlData">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiWaybillVm.XsdData">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiWaybillVm.XslData">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiWaybillVm.XmlNsUri">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiWaybillVm.AsHtml">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiWaybillVm.BpFormat">
+            <summary></summary>
+        </member>
+        <member name="T:Cora.FormFiller.ViewModels.FFiTransDataVm">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiTransDataVm.IFeForm">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiTransDataVm.XmlData">
+            <summary></summary>
+        </member>
+        <member name="P:Cora.FormFiller.ViewModels.FFiTransDataVm.ToNat">
+            <summary></summary>
+        </member>
+        <member name="M:Cora.FormFiller.WebClientDownloader.GetContent(System.String,System.Boolean)">
+            <summary>Gets the content.</summary>
+            <param name="url">URL adresa.</param>
+            <param name="crlf">Ak <c>true</c>, zabezpečí riadkovanie CR LF.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.WebClientDownloader.Configure">
+            <summary>
+            Nastavenie zadaného klienta web service-y podľa načítanej konfigurácie.
+            </summary>
+        </member>
+        <member name="T:Cora.FormFiller.XmlDocumentHelper">
+            <summary>
+            Helper pre prácu s objektom <see cref="T:System.Xml.XmlDocument"/>.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.XmlDocumentHelper.Document">
+            <summary>Spracovávaný objekt <see cref="T:System.Xml.XmlDocument"/>.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.XmlDocumentHelper.NS_Manager">
+            <summary>Objekt <see cref="T:System.Xml.XmlNamespaceManager"/> spracovávaného objektu <see cref="F:Cora.FormFiller.XmlDocumentHelper.Document"/>.</summary>
+        </member>
+        <member name="F:Cora.FormFiller.XmlDocumentHelper.MainPrefix">
+            <summary>Prefix ROOT-elementu.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.XmlDocumentHelper.DocumentNavigator">
+            <summary>ROOT-element ako <see cref="T:System.Xml.XPath.XPathNavigator"/>.</summary>
+        </member>
+        <member name="P:Cora.FormFiller.XmlDocumentHelper.MainNamespace">
+            <summary>Namespace ROOT-elementu.</summary>
+        </member>
+        <member name="M:Cora.FormFiller.XmlDocumentHelper.#ctor(System.Func{System.Xml.XmlDocument})">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.XmlDocumentHelper"/> na základe zadanej funkcie.
+            </summary>
+            <param name="oFunc">Funkcia vracajúca objekt <see cref="T:System.Xml.XmlDocument"/>.</param>
+        </member>
+        <member name="M:Cora.FormFiller.XmlDocumentHelper.#ctor(System.Xml.XmlDocument)">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.XmlDocumentHelper"/> na základe zadaného objektu <see cref="T:System.Xml.XmlDocument"/>.
+            </summary>
+            <param name="oXmlDocument">Objekt <see cref="T:System.Xml.XmlDocument"/>.</param>
+        </member>
+        <member name="M:Cora.FormFiller.XmlDocumentHelper.#ctor(System.Byte[])">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.XmlDocumentHelper"/> na základe zadaného binárneho obsahu dokumentu.
+            </summary>
+            <param name="data">Binárny obsah dokumentu.</param>
+        </member>
+        <member name="M:Cora.FormFiller.XmlDocumentHelper.#ctor(System.Xml.XmlReader)">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.XmlDocumentHelper"/> na základe zadaného objektu <see cref="T:System.Xml.XmlReader"/>.
+            </summary>
+            <param name="oXmlReader">Objekt <see cref="T:System.Xml.XmlReader"/>.</param>
+        </member>
+        <member name="M:Cora.FormFiller.XmlDocumentHelper.#ctor(System.Xml.XPath.XPathNavigator)">
+            <summary>
+            Vytvorenie inštancie triedy <see cref="T:Cora.FormFiller.XmlDocumentHelper"/> na základe zadaného objektu <see cref="T:System.Xml.XPath.XPathNavigator"/>.
+            </summary>
+            <param name="navigator">Objekt <see cref="T:System.Xml.XPath.XPathNavigator"/>.</param>
+        </member>
+        <member name="M:Cora.FormFiller.XmlDocumentHelper.TryGetNode(System.String,System.Xml.XPath.XPathNavigator@)">
+            <summary>
+            Pokus o nájdenie objektu <see cref="T:System.Xml.XPath.XPathNavigator"/> podľa XPath-cesty.
+            </summary>
+            <param name="sXPath">XPath-cesta.</param>
+            <param name="oNav">Objekt <see cref="T:System.Xml.XPath.XPathNavigator"/>, ak je nájdený, inak <c>null</c>.</param>
+            <returns><c>true</c>, ak je akcia úspešná, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlDocumentHelper.TryGetNodeValue(System.String,System.String@)">
+            <summary>
+            Pokus o získanie hodnoty objektu <see cref="T:System.Xml.XPath.XPathNavigator"/> podľa XPath-cesty.
+            </summary>
+            <param name="sXPath">XPath-cesta.</param>
+            <param name="nodeValue">Hodnota objektu <see cref="T:System.Xml.XPath.XPathNavigator"/>, ak je nájdený, inak <c>null</c>.</param>
+            <returns><c>true</c>, ak je akcia úspešná, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlDocumentHelper.TrySetNodeValue(System.String,System.String)">
+            <summary>
+            Pokus o naplnenie hodnoty objektu <see cref="T:System.Xml.XPath.XPathNavigator"/> podľa XPath-cesty.
+            </summary>
+            <param name="sXPath">XPath-cesta.</param>
+            <param name="nodeValue">Hodnota.</param>
+            <returns><c>true</c>, ak je akcia úspešná, inak <c>false</c>.</returns>
+        </member>
+        <member name="T:Cora.FormFiller.XmlHelper">
+            <summary>
+            Pomocné metódy pre XML serializáciu/deserializáciu objektov.
+            </summary>
+        </member>
+        <member name="F:Cora.FormFiller.XmlHelper.XPATH_SEPARATOR">
+            <summary>Oddeľovač elementov v XPath</summary>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.Create_XmlWriterSettings(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Vytvorenie objektu <see cref="T:System.Xml.XmlWriterSettings" /> pre zapis XML.
+            </summary>
+            <param name="encoderShouldEmitUTF8Identifier">Pri hodnote <c>true</c> sa na začiatok vloží UTF-8 BOM, pri hodnote <c>false</c> sa nekladá.</param>
+            <param name="indentXml">if set to <c>true</c> [indent XML].</param>
+            <param name="omitXmlDeclaration">Ak <c>true</c>, XML deklarácia bude vynechaná.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.GetBytes(System.Xml.XmlNode,System.Xml.XmlWriterSettings)">
+            <summary>
+            Získanie obsahu XML uzla v binárnom tvare.
+            </summary>
+            <param name="oXmlNode">XML uzol.</param>
+            <param name="oXmlWriterSettings">Vlastné nastavenie <see cref="T:System.Xml.XmlWriterSettings" />.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.GetBytes(System.Xml.XmlNode,System.Boolean)">
+            <summary>
+            Získanie obsahu XML uzla v binárnom tvare.
+            </summary>
+            <param name="oXmlNode">Xml uzol.</param>
+            <param name="settingDefault">
+            Ak <c>true</c> použije sa štandardne nastavenie <see cref="T:System.Xml.XmlWriterSettings"/>,
+            tzn. neriadkovať + neodsadené + kódovanie UTF-8 bez BOM.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.WriteToFile(System.Xml.XmlNode,System.String,System.Xml.XmlWriterSettings)">
+            <summary>
+            Zápis XML uzla do súboru.
+            </summary>
+            <param name="oXmlNode">XML uzol.</param>
+            <param name="filename">Názov súboru aj cestou.</param>
+            <param name="oXmlWriterSettings">Vlastné nastavenie <see cref="T:System.Xml.XmlWriterSettings" />.</param>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.WriteToFile(System.Xml.XmlNode,System.String,System.Boolean)">
+            <summary>
+            Zápis XML uzla do súboru.
+            </summary>
+            <param name="oXmlNode">XML uzol.</param>
+            <param name="filename">Názov súboru aj cestou.</param>
+            <param name="settingDefault">Ak <c>true</c> použije sa štandardne nastavenie <see cref="T:System.Xml.XmlWriterSettings" />,
+            tzn. každý uzol na novom riadku + odsadenie + kódovanie UTF-8 s BOM identifikátorom.
+            Ak <c>false</c>, ako argument <see cref="T:System.Xml.XmlWriterSettings" /> sa použije null.</param>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.GetString(System.Xml.XmlNode,System.Xml.XmlWriterSettings)">
+            <summary>
+            Získanie obsahu XML uzla v textovom tvare.
+            </summary>
+            <param name="oXmlNode">XML uzol.</param>
+            <param name="oXmlWriterSettings">Vlastné nastavenie <see cref="T:System.Xml.XmlWriterSettings" />.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.GetString(System.Xml.XmlNode,System.Boolean)">
+            <summary>
+            Získanie obsahu XML uzla v textovom tvare.
+            </summary>
+            <param name="oXmlNode">XML uzol.</param>
+            <param name="settingDefault">Ak <c>true</c> použije sa štandardne nastavenie <see cref="T:System.Xml.XmlWriterSettings" />,
+            tzn. každý uzol na novom riadku + odsadenie + kódovanie UTF-8 bez BOM identifikátora.
+            Ak <c>false</c>, ako argument <see cref="T:System.Xml.XmlWriterSettings" /> sa použije null.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.TryValidateXml(Cora.FormFiller.EFormMetadata.RelatedDocument,System.Xml.XmlElement,System.Exception[]@,Cora.Utils.Logger.ILogger)">
+            <summary>
+            Validovanie xml podľa xsd schémy.
+            </summary>
+            <param name="xsdRelatedDocument">Objekt <see cref="!:CommIss.LEForm.RelatedDocument" /> ako zdroj Xsd.</param>
+            <param name="dataElement">Validované dáta v tvare <see cref="T:System.Xml.XmlElement" />.</param>
+            <param name="validationExceptions">Výsledné výnimky validácie. Ak žiadne nie sú, je xml validný podľa xsd schémy a výsledok je true.</param>
+            <returns>
+            Výsledok validácie.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">
+            xsdRelatedDocument;Chýba XSD schéma
+            or
+            dataElement;Chýbajú XML dáta
+            </exception>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.TryValidateXml(Cora.FormFiller.EFormMetadata.RelatedDocument,System.Xml.XmlElement,Cora.Utils.Logger.ILogger)">
+            <summary>
+            Validovanie xml podľa xsd schémy so zalogovaním prípadných chýb.
+            </summary>
+            <param name="xsdRelatedDocument">Objekt <see cref="!:CommIss.LEForm.RelatedDocument" /> ako zdroj Xsd.</param>
+            <param name="dataElement">Validované dáta v tvare <see cref="T:System.Xml.XmlElement" />.</param>
+            <returns>
+            Výsledok validácie.
+            </returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.GetParentNodes(System.Xml.XPath.XPathNavigator,System.Boolean,System.Boolean)">
+            <summary>
+            Získanie zoznamu nadradených elementov.
+            </summary>
+            <param name="nav">Zdrojový element - objekt <see cref="T:System.Xml.XPath.XPathNavigator"/>.</param>
+            <param name="withoutRoot">Ak <c>true</c>, ROOT-element je zo zoznamu vynechaný.</param>
+            <param name="withoutSelf">Ak <c>true</c>, zdrojový element je zo zoznamu vynechaný.</param>
+            <returns>Zoznam nadradených elementov vo forme <see cref="T:System.Xml.XPath.XPathNavigator"/>.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.GetParentNodeNames(System.Xml.XPath.XPathNavigator,System.Boolean,System.Boolean)">
+            <summary>
+            Získanie zoznamu nadradených elementov.
+            </summary>
+            <param name="nav">Zdrojový element - objekt <see cref="T:System.Xml.XPath.XPathNavigator"/>.</param>
+            <param name="withoutRoot">Ak <c>true</c>, ROOT-element je zo zoznamu vynechaný.</param>
+            <param name="withoutSelf">Ak <c>true</c>, zdrojový element je zo zoznamu vynechaný.</param>
+            <returns>Zoznam názvov nadradených elementov.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.Combine(System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Vygenerovanie XPath-cesty zo zoznamu nadradených elementov, aj s prefixom, ak je zadaný.
+            </summary>
+            <param name="parentNodes">Zoznam názvov nadradených elementov.</param>
+            <param name="prefix">Prefix.</param>
+            <returns>XPath-cesta.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.Recreate_XmlDocument(System.Xml.XmlDocument)">
+            <summary>
+            Znovuvytvorenie objektu <see cref="T:System.Xml.XmlDocument"/>.
+            </summary>
+            <param name="sour">Zdrojový objekt <see cref="T:System.Xml.XmlDocument"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.Parse_FormTemplateID(System.Xml.XmlElement)">
+            <summary>
+            Získanie objektu <see cref="!:LEForm.FormTemplateID" /> z dát vo forme <see cref="T:System.Xml.XmlElement" />.
+            </summary>
+            <param name="xmlElem">Zdrojové dáta vo forme <see cref="T:System.Xml.XmlElement" />.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">xmlElem</exception>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.Parse_FormTemplateID(System.Xml.XmlDocument)">
+            <summary>
+            Získanie objektu <see cref="!:LEForm.FormTemplateID" /> z dát vo forme <see cref="T:System.Xml.XmlDocument" />.
+            </summary>
+            <param name="xmlDoc">Zdrojové dáta vo forme <see cref="T:System.Xml.XmlDocument" />.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">xmlDoc</exception>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.ForcePrefixToXml(System.Xml.XmlElement,System.String)">
+            <summary>
+            Vnúti prefix elementom s rovnakým NS ako root.
+            </summary>
+            <param name="sourText">Zdrojový XML text.</param>
+            <param name="prefix">Prefix (Default je e).</param>
+            <returns>Výsledný <see cref="T:System.Xml.XmlDocument"/>.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.ForcePrefixToXml(System.String,System.String)">
+            <summary>
+            Vnúti prefix elementom s rovnakým NS ako root.
+            </summary>
+            <param name="sourText">Zdrojový XML text.</param>
+            <param name="prefix">Prefix (Default je e).</param>
+            <returns>Výsledný <see cref="T:System.Xml.XmlDocument"/>.</returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.ChangeNamespace(System.Xml.XmlElement,System.String,System.String)">
+            <summary>
+            Zmena namespace.
+            </summary>
+            <param name="xmlElem">Zdroj ako <see cref="T:System.Xml.XmlElement"/>.</param>
+            <param name="nsReplaced">Pôvodný/menený NS.</param>
+            <param name="nsToReplace">Nový NS.</param>
+            <returns>Výsledok ako <see cref="T:System.Xml.XmlDocument"/></returns>
+        </member>
+        <member name="M:Cora.FormFiller.XmlHelper.ToXmlDocument(System.Xml.Linq.XDocument)">
+            <summary>
+            Konverzia objektu <see cref="T:System.Xml.Linq.XDocument"/> na objekt <see cref="T:System.Xml.XmlDocument"/> .
+            </summary>
+            <param name="doc">Zdrojový objekt <see cref="T:System.Xml.Linq.XDocument"/>.</param>
+            <returns>Výsledok ako <see cref="T:System.Xml.XmlDocument"/></returns>
+        </member>
+    </members>
+</doc>

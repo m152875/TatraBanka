@@ -1,0 +1,550 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Portal.Parts.Common</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Portal.Parts.Common.PortalPartsRightStep">
+            <summary>
+            Krok priradenia prav skupín na editaciu prvku.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.PortalPartsRightStep.#ctor(Cora.Portal.Parts.Common.UserGroupsWizard)">
+            <summary>
+            Vytvorenie kroku priradenia prav skupín na editaciu prvku.
+            </summary>
+            <param name="wizard"></param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.PortalPartsRightStep.AddRightStepHeader(System.Web.UI.WebControls.Table)">
+            <summary>
+            Pridanie hlavicky kroku.
+            </summary>
+            <param name="parentTable">Tabulka, kam pridavame hlavicku.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.PortalPartsRightStep.AddRightCheckBoxes(System.Web.UI.WebControls.Table)">
+            <summary>
+            Pridanie riadkov pre pravo editacie prvku.
+            </summary>
+            <param name="parentTable">Tabulka, kam pridavame checkbox-y.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.PortalPartsRightStep.LoadRights(Cora.Natec.SP.CdoSP_SKUP_UZ)">
+            <summary>
+            Nahranie práv z DB pre zadanú skupinu.
+            </summary>
+            <param name="cdoSkup">Dátový objekt skupiny používateľov.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.PortalPartsRightStep.GetCdoFactory">
+            <summary>
+            Získanie datovej factory pre uloženie práv.
+            </summary>
+            <returns>Datova factory pre uloženie práv.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.PortalPartsRightStep.SaveRightsTx(System.Data.IDbConnection,System.Data.IDbTransaction,System.Object[])">
+            <summary>
+            Samotne uloženie priradeni prav do DB.
+            </summary>
+            <param name="oConn">Konekcia.</param>
+            <param name="oTx">Transakcia.</param>
+            <param name="saveCallbackArgs">Argumenty uloženia.</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.UserGroups">
+            <summary>
+            Controller prvku pre správu skupín používateľov.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroups.#ctor(Cora.Portal.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+            <summary>
+            Vytvorenie prvku pre správu skupín používateľov.
+            </summary>
+            <param name="portalPanel">Panel, kam patrí.</param>
+            <param name="cdoPlac">Data objekt pre umiestnenie prvku.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroups.CreateView">
+            <summary>
+            Vytvorenie view-u riadeného týmto controller-om.
+            </summary>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.UserGroupsControl">
+            <summary>
+            Control prvku pre správu skupín používateľov.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsControl.#ctor(Cora.Portal.Parts.Common.UserGroups)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Portal.Parts.Common.UserGroupsControl"/>.
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsControl.CreateAddWizard">
+            <summary>
+            Vytvorenie a pridanie wizarda, ktorý implementuje funkcnosť prvku.
+            </summary>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.UserGroupsHierarchyStep">
+            <summary>
+            Krok nastavenia hierarchie skupín.
+            </summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.FIELD_HIERARCHIA">
+            <summary> Nazov pola prvku hierarchie skupín.</summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.#ctor(Cora.Portal.Parts.Common.UserGroupsWizard)">
+            <summary>
+            Vytvorenie kroku nastavenia hierarchie skupín.
+            </summary>
+            <param name="wizard">Wizard, do ktoreho krok patri.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.LoadRights">
+            <summary>
+            Nahranie hierarchie skupín.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.SaveRights">
+            <summary>
+            Uloženie hierarchie skupín do DB.
+            </summary>
+            <returns>Uspech?</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.TryValidate">
+            <summary>
+            Validácia uloženia hierarchie - môže používateľ spravovať vybratú skupinu?
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.SaveRightsTx(System.Data.IDbConnection,System.Data.IDbTransaction,System.Object[])">
+            <summary>
+            Samotne uloženie hierarchie skupín do DB.
+            </summary>
+            <param name="oConn">Konekcia.</param>
+            <param name="oTx">Transakcia.</param>
+            <param name="saveCallbackArgs">Argumenty uloženia (datova factory).</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.AddTlbItem(Cora.WebControls.UI.CoraTreeView.TreeListBox.TlbItem,Cora.Portal.Base.UserManagement.GroupAdmin)">
+            <summary>
+            Pridanie jedneho prvku <see cref="T:Cora.WebControls.UI.CoraTreeView.TreeListBox"/>-u.
+            </summary>
+            <param name="tlbItem">Prvok <see cref="T:Cora.WebControls.UI.CoraTreeView.TreeListBox"/>-u.</param>
+            <param name="groupAdmin">Objekt pre správcu skupín používateľov.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.IsSomeUserSelected">
+            <summary>
+            Zistenie, ci je nejaka skupina vybrata. Zapina o tom hlasku.
+            </summary>
+            <returns>Je nejaka skupina vybrata?</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.LoadViewState(System.Object)">
+            <summary>
+            Obnova viewstate-u, ktorá môže obsahovať o.i. predošlú hodnotu.
+            </summary>
+            <param name="savedState">Viewstate, ktorá môže obsahovať o.i. predošlú hodnotu.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.OnPreRender(System.EventArgs)">
+            <summary>
+            Raises the <see cref="E:System.Web.UI.Control.PreRender"/> event.
+            </summary>
+            <param name="e">An <see cref="T:System.EventArgs"/> object that contains the event data.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsHierarchyStep.SaveViewState">
+            <summary>
+            Uloženie viewstate-u s predošlou hodnotou.
+            </summary>
+            <returns>Viewstate s predošlou hodnotou.</returns>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.UserGroupsRightsStep">
+            <summary>
+            Spolocna trieda pre krok priradenia prav skupín.
+            </summary>
+        </member>
+        <member name="P:Cora.Portal.Parts.Common.UserGroupsRightsStep.UserGroupsWizard">
+            <summary> Wizard pre spravu skupín používateľov.</summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsRightsStep.LoadRights">
+            <summary>
+            Nahranie prav (priradeni) z DB pre aktuálnu skupinu.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsRightsStep.SaveRights">
+            <summary>
+            Uloženie priradeni do DB. Implementuje dedic.
+            </summary>
+            <returns>Uspech?</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsRightsStep.SaveRightsTx(System.Data.IDbConnection,System.Data.IDbTransaction,System.Object[])">
+            <summary>
+            Samotne uloženie práv do DB.
+            </summary>
+            <param name="oConn">Konekcia.</param>
+            <param name="oTx">Transakcia.</param>
+            <param name="saveCallbackArgs">Argumenty uloženia (datova factory).</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsRightsStep.#ctor(Cora.Portal.Parts.Common.UserGroupsWizard,System.String,System.String,Cora.Portal.Wizard.WizardButtons)">
+            <summary>
+            
+            </summary>
+            <param name="wizard">Nadradený wizard pre prácu s</param>
+            <param name="title">Nadpis kroku.</param>
+            <param name="description">Popis kroku.</param>
+            <param name="buttons">Tlačidla kroku.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsRightsStep.LoadRights(Cora.Natec.SP.CdoSP_SKUP_UZ)">
+            <summary>
+            Nahranie prav (priradeni) z DB pre zadanu skupinu.
+            </summary>
+            <param name="cdoSkup">Dátový objekt skupiny používateľov.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsRightsStep.GetCdoFactory">
+            <summary>
+            Získanie datovej factory pre uloženie práv.
+            </summary>
+            <returns>Datova factory pre uloženie práv.</returns>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UserGroupsRightsStep._PriradenieTableCell">
+            <summary> Bunka tabulky nad zoznamom prav.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UserGroupsRightsStep._PriradenieTable">
+            <summary> Tabulka (zoznam) prav.</summary>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.UserGroupsWizard">
+            <summary>
+            Wizard pre spravu skupín používateľov.
+            </summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UserGroupsWizard.FIELD_N_SKUP_UZ">
+            <summary>Pole názov skupiny.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UserGroupsWizard.DEFAULT_NEW_USERGROUP_NAME">
+            <summary>Default meno pre novú skupinu.</summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard.#ctor(Cora.Portal.Parts.UserGroups)">
+            <summary>
+            Vytvorenie wizarda pre základnú prácu so skupinami používateľov.
+            </summary>
+            <param name="userGroupsPart">Nadradený prvok spravy skupín používateľov.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard.CreateStep1">
+            <summary>
+            Vytvorenie krokov 1 - 4.
+            </summary>
+            <returns>Krok 1.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard.CreateLinks(System.Web.UI.WebControls.TableRow)">
+            <summary>
+            Vytvorenie linkov.
+            </summary>
+            <param name="tableRow">Riadok, kam zaradit linky.</param>
+            <returns>Nova tabulka, do ktorej sa linky pridavaju.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard.FillList">
+            <summary>
+            Naplenie zoznamu. Zohladnuje hierarchicke spravovanie skupín/používateľov.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard.ShowListItem">
+            <summary>
+            Spracovanie zmeny vyberu v zozname.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard.TryValidate">
+            <summary>
+            Volanie validácie stránky - ošetrenie dupliciy zadaného názvu skupiny.
+            </summary>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard.WizardSave">
+            <summary>
+            Uloženie zmien.
+            </summary>
+            <returns>Výsledok uloženia.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard._NewLinkButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            Spracovanie kliku na "Nova skupina".
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard._DeleteLinkButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            Spracovanie kliku "Zrusenie skupiny".
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard._EnableLinkButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            Spracovanie kliku na "Obnovit skupiny".
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard.OnPreRender(System.EventArgs)">
+            <summary>
+            Posledne upravy vzhladu.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserGroupsWizard._ZruseniCheckBox_CheckedChanged(System.Object,System.EventArgs)">
+            <summary>
+            Pri zmene check-u obnovim zoznam.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.UserInGroupsStep">
+            <summary>
+            Krok priradenia používateľa do skupín.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserInGroupsStep.#ctor(Cora.Portal.Parts.Common.UsersWizard)">
+            <summary>
+            Vytvorenie kroku pre priradenie používateľov do skupín.
+            </summary>
+            <param name="wizard">Nadradený wizard.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserInGroupsStep.LoadMembership">
+            <summary>
+            Nahranie priradeni z DB.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserInGroupsStep.LoadMembership(Cora.Natec.SP.CdoSP_UZ)">
+            <summary>
+            Nahranie priradeni z DB.
+            </summary>
+            <param name="cdoUz">Dátový objekt používateľa.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserInGroupsStep.SaveMembership">
+            <summary>
+            Uloženie priradeni do DB.
+            </summary>
+            <returns>Uspech?</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserInGroupsStep.SaveMembershipTx(System.Data.IDbConnection,System.Data.IDbTransaction,System.Object[])">
+            <summary>
+            Samotne uloženie priradeni do DB.
+            </summary>
+            <param name="oConn">Konekcia.</param>
+            <param name="oTx">Transakcia.</param>
+            <param name="saveCallbackArgs">Argumenty uloženia.</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UserInGroupsStep.AddRightStepHeader(System.Web.UI.WebControls.Table)">
+            <summary>
+            Pridanie hlavicky kroku.
+            </summary>
+            <param name="parentTable">Tabulka, kam pridavame hlavicku.</param>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.Users">
+            <summary>
+            Controller prvku správa používateľov.
+            </summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.Users.SETTING_ID_PWD_SECURITY_FAIL_MESSAGE">
+            <summary> ID nastavenia hlasky po zmene hesla, ktore nevyhovuje nastavenej urovni bezpecnosti.</summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.Users.#ctor(Cora.Portal.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+            <summary>
+            Vytvorenie prvku pre spravu používateľov.
+            </summary>
+            <param name="portalPanel">Panel, kam patri.</param>
+            <param name="cdoPlac">Data objekt pre umiestnenie prvku.</param>
+        </member>
+        <member name="P:Cora.Portal.Parts.Common.Users.PwdSecurityFailMessage">
+            <summary>
+            Hhlaska po zmene hesla, ktore nevyhovuje nastavenej urovni bezpecnosti.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.Users.CreateView">
+            <summary>
+            Vytvorenie view-u riadeného týmto controller-om.
+            </summary>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.UsersControl">
+            <summary>
+            Control prvku správa používateľov.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersControl.#ctor(Cora.Portal.Parts.Common.Users)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Portal.Parts.Common.UsersControl"/>.
+            </summary>
+            <param name="controller">Controller.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersControl.CreateAddWizard">
+            <summary>
+            Vytvorenie a pridanie wizarda, ktory implementuje funkcnost prvku.
+            </summary>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.UsersInGroupStep">
+            <summary>
+            Krok priradenia používateľov do skupiny.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersInGroupStep.#ctor(Cora.Portal.Parts.Common.UserGroupsWizard)">
+            <summary>
+            Vytvorenie kroku priradenia používateľov do skupiny.
+            </summary>
+            <param name="wizard">Nadradený wizard.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersInGroupStep.LoadRights(Cora.Natec.SP.CdoSP_SKUP_UZ)">
+            <summary>
+            Nahranie priradeni z DB.
+            </summary>
+            <param name="cdoSkup">Dátový objekt skupiny používateľov.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersInGroupStep.AddRightStepHeader(System.Web.UI.WebControls.Table)">
+            <summary>
+            Pridanie hlavicky kroku.
+            </summary>
+            <param name="parentTable">Tabulka, kam pridavame hlavicku.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersInGroupStep.AddRightCheckBoxes(System.Web.UI.WebControls.Table)">
+            <summary>
+            Pridanie riadkov s používateľmi v skupine.
+            </summary>
+            <param name="parentTable">Tabulka, kam pridavame checkbox-y.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersInGroupStep.GetCdoFactory">
+            <summary>
+            Získanie datovej factory priradenia používateľov do skupiny.
+            </summary>
+            <returns>Datova factory priradenia používateľov do skupiny.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersInGroupStep.SaveRightsTx(System.Data.IDbConnection,System.Data.IDbTransaction,System.Object[])">
+            <summary>
+            Samotne uloženie priradeni do DB.
+            </summary>
+            <param name="oConn">Konekcia.</param>
+            <param name="oTx">Transakcia.</param>
+            <param name="saveCallbackArgs">Argumenty uloženia.</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="T:Cora.Portal.Parts.Common.UsersWizard">
+            <summary>
+            Wizard pre správu používateľov.
+            </summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.FIELD_MENO">
+            <summary> Pole meno.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.FIELD_PRIEZVISKO">
+            <summary> Pole priezvisko.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.FIELD_TTP">
+            <summary>Pole titul pred menom.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.FIELD_TTZ">
+            <summary>Pole titul za menom.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.FIELD_POZN">
+            <summary> Pole poznámka.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.FIELD_POZN_PLATNOST">
+            <summary> Pole poznámka platnosť.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.FIELD_D_ZRUS">
+            <summary> Pole dátum zrušenia.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.FIELD_PWD_VALIDATOR">
+            <summary> Pole validátor hesla.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.FIELD_PRIRAD_SKUP">
+            <summary> Prefix polí pridadení do skupín.</summary>
+        </member>
+        <member name="F:Cora.Portal.Parts.Common.UsersWizard.DEFAULT_NEW_USER_NAME">
+            <summary> Default meno pre nového používateľa.</summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.#ctor(Cora.Portal.Parts.Users)">
+            <summary>
+            Vytvorenie wizarda pre správu používateľov.
+            </summary>
+            <param name="usersPart">Nadradený prvok správy používateľov.</param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.CheckRightsEdit">
+            <summary>
+            Zistenie práva pre úpravu nastavení používateľa.
+            </summary>
+            <returns>Právo pre úpravu nastavení používateľa.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.CheckRights">
+            <summary>
+            Zistenie prava pre úpravu ostatnych nastaveni.
+            </summary>
+            <returns>Právo pre úpravu ostatnych nastaveni.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.CreateStep1">
+            <summary>
+            Pridanie kroku na priradenie používateľa do skupín.
+            </summary>
+            <returns>Krok 1.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.CreateSteps">
+            <summary>
+            Vytvorenie krokov wizarda.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.FillList">
+            <summary>
+            Naplenie zoznamu. Zohľadňuje hierarchické spravovanie skupín/používateľov.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.ShowListItem">
+            <summary>
+            Spracovanie zmeny výberu v zozname.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.ShowListItem2(Cora.Natec.SP.CdoSP_UZ)">
+            <summary>
+            Spracovanie zmeny výberu v zozname, časť 2.
+            </summary>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard._NewLinkButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            Spracovanie kliku na "Nový používateľ".
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard._DeleteLinkButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            Spracovanie kliku "Zrušenie používateľa".
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard._CopyLinkButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            Spracovanie kliku "Kópia používateľa".
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard._EnableLinkButton_Click(System.Object,System.EventArgs)">
+            <summary>
+            Spracovanie kliku na "Obnoviť používateľa".
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.TryValidate">
+            <summary>
+            Validacia zadania dát pre používateľa - ošetrenie dupliciy zadaného názvu skupiny a správnosti zadania hesla.
+            </summary>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.WizardSave">
+            <summary>
+            Uloženie zmien.
+            </summary>
+            <returns>Úspech?</returns>
+        </member>
+        <member name="M:Cora.Portal.Parts.Common.UsersWizard.OnPreRender(System.EventArgs)">
+            <summary>
+            Pridanie kódovania (js) hesla používateľa a úpravy vzhľadu.
+            </summary>
+            <param name="e"></param>
+        </member>
+    </members>
+</doc>

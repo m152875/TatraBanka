@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WL5G3N0:definitions xmlns:WL5G3N2="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:WL5G3N1="http://interfaces.ditec.sk/" name="PoskytnutieUdajovOvozidleAdrziteloviService" targetNamespace="http://interfaces.ditec.sk/" xmlns:WL5G3N0="http://schemas.xmlsoap.org/wsdl/">
+  <WL5G3N0:types>
+    <xsd:schema xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://interfaces.ditec.sk/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="PoskytnutieUdajovOVozidleADrzitelovi-v3.xsd" namespace="http://interfaces.ditec.sk/" />
+    </xsd:schema>
+  </WL5G3N0:types>
+  <WL5G3N0:message name="wsPoskytnutieUdajovOvozidleAdrzitelovi">
+    <WL5G3N0:part name="parameters" element="WL5G3N1:wsPoskytnutieUdajovOvozidleAdrzitelovi" />
+  </WL5G3N0:message>
+  <WL5G3N0:message name="wsPoskytnutieUdajovOvozidleAdrziteloviResponse">
+    <WL5G3N0:part name="parameters" element="WL5G3N1:wsPoskytnutieUdajovOvozidleAdrziteloviResponse" />
+  </WL5G3N0:message>
+  <WL5G3N0:portType name="IPoskytnutieUdajovOvozidleAdrzitelovi">
+    <WL5G3N0:operation name="wsPoskytnutieUdajovOvozidleAdrzitelovi">
+      <WL5G3N0:input message="WL5G3N1:wsPoskytnutieUdajovOvozidleAdrzitelovi" />
+      <WL5G3N0:output message="WL5G3N1:wsPoskytnutieUdajovOvozidleAdrziteloviResponse" />
+    </WL5G3N0:operation>
+  </WL5G3N0:portType>
+  <WL5G3N0:binding name="PoskytnutieUdajovOvozidleAdrziteloviPortBinding" type="WL5G3N1:IPoskytnutieUdajovOvozidleAdrzitelovi">
+    <WL5G3N2:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <WL5G3N0:operation name="wsPoskytnutieUdajovOvozidleAdrzitelovi">
+      <WL5G3N2:operation soapAction="" />
+      <WL5G3N0:input>
+        <WL5G3N2:body use="literal" />
+      </WL5G3N0:input>
+      <WL5G3N0:output>
+        <WL5G3N2:body use="literal" />
+      </WL5G3N0:output>
+    </WL5G3N0:operation>
+  </WL5G3N0:binding>
+  <WL5G3N0:service name="PoskytnutieUdajovOvozidleAdrziteloviService">
+    <WL5G3N0:port name="PoskytnutieUdajovOvozidleAdrziteloviPort" binding="WL5G3N1:PoskytnutieUdajovOvozidleAdrziteloviPortBinding">
+      <WL5G3N2:address location="https://ssgext.minv.sk/SK/MINV/TEST/ODUEV/MP/ProxyServices/PoskytnutieUdajovOVozidleADrzitelovi-v3" />
+    </WL5G3N0:port>
+  </WL5G3N0:service>
+</WL5G3N0:definitions>

@@ -1,0 +1,3171 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Data</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Data.DBProvider.CoraOldPaging">
+            <summary>Trieda zabezpečujúca stránkovanie doťahovaných databázových údajov "starým" spôsobom.
+            To je spustenie najprv dotazu pre získanie ID-éčiek dotknutej strany a podľa nich dotiahnutie
+            všetkých dát stránky. Toto funguje aj pri veľmi zložitých dotazoch, ktoré spôsobom
+            <see cref="T:Cora.Data.DBProvider.CoraPaging"/> trvajú databáze príliš dlho.
+            <remarks>Niektoré dôvody, prečo dotazy trvajú databáze príliš dlho:
+            <list>
+            <item>Dotaz je zle postavený (PL/SQL funkcie namiesto SQL dotazov).</item>
+            <item>Optimalizátor vyráta nesprávny plán (dotaz je príliš zložitý, alebo sú staré štatistiky).</item>
+            <item>Vyrátaný plán neobsahuje STOP signály (treba dotiahnúť zbytočne veľa dát, ktoré sa nakoniec
+            zahodia). Obmedzenia na ROWNUM by mali priniesť STOP signály, ktoré majú dobrý výkon.</item>
+            </list>
+            Ak v DB neexistuje typ <c>NUMBER_VARRAY</c>, požaduje sa právo vytvárať typy (<c>grant create type to USER</c>).
+            Viď <see cref="F:Cora.Data.DBProvider.CoraOldPaging.CREATE_NUMBER_VARRAY_TYPE"/>.</remarks>
+            </summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraOldPaging.MAX_IDS_COUNT">
+            <summary>Maximálny počet IDéčiek, s ktorými treida pracuje.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraOldPaging.CREATE_NUMBER_VARRAY_TYPE">
+            <summary>Deklarácia typu NUMBER_VARRAY pre zoznam ID-éčiek.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraOldPaging.FormatCommandText(System.String,System.String,System.String,System.String)">
+            <summary>
+            Naformátovanie textu SQL dotazu.
+            </summary>
+            <param name="columns">Zoznam stĺpcov dotazu.</param>
+            <param name="from">Časť dotazu FROM (bez slova FROM).</param>
+            <param name="where">WHERE časť dotazu (bez slova WHERE).</param>
+            <param name="orderGroupEtc">Koncová časť dotazu, ktorého dáta budú stránkované napr. <c>ORDER BY col GROUP BY col2 HAVING cond</c>.
+            Obsahuje všetko, aj kľúčové slová SQL dotazu ORDER BY, GROUP BY, HAVING apod.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraOldPaging.#ctor(System.Data.IDbConnection,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Vytvorenie inštancie triedy pre stránkovanie údajov.
+            </summary>
+            <param name="connection">The connection.</param>
+            <param name="columns">Zoznam stĺpcov dotazu, ktorého dáta budú stránkované. Nesmie byť prázdny ani <c>null</c>.</param>
+            <param name="pkColumn">Alias stĺpca primárneho kľúča dotazu. Nesmie byť prázdny ani <c>null</c>.</param>
+            <param name="from">Časť dotazu FROM (bez slova FROM). Nesmie byť prázdny ani <c>null</c>.</param>
+            <param name="where">WHERE časť dotazu, ktorého dáta budú stránkované. Bez slova WHERE.</param>
+            <param name="order">Koncová časť dotazu, ktorého dáta budú stránkované napr. <c>ORDER BY col GROUP BY col2 HAVING cond</c>.
+            Obsahuje všetko, aj kľúčové slová SQL dotazu ORDER BY, GROUP BY, HAVING apod.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je niektorý z <paramref name="columns"/>,
+            <paramref name="pkColumn" />, alebo <paramref name="from" /> prázdny alebo <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="columns" /> <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak command nie je v tvare sql dotazu (select).</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraOldPaging.Dispose">
+            <summary>
+            Uvoľnenie stránkovacieho <see cref="F:Cora.Data.DBProvider.CoraOldPaging.PagingCommand"/>-u.
+            </summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraOldPaging.PagingCommand">
+            <summary>Command, ktorého dáta budú stránkované.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraOldPaging.CommandText">
+            <summary>Dotaz, ktorého dáta budú stránkované.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraOldPaging.GetPage(System.Int32,System.Int32)">
+            <summary>
+            Spustenie dotazu so stránkovaným výsledkom.
+            </summary>
+            <param name="pageSize">Požadovaná veľkosť strany.</param>
+            <param name="pageIndex">Požadovaná strana (zero index).</param>
+            <returns>Data reader výsledkov s požadovanou stranou.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="pageSize"/> alebo alebo <paramref name="pageIndex"/> negatívne.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraOldPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Zatiaľ implementované iba pre Oracle.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonávania príkazu.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraOldPaging.GetArbitraryRows(System.Int32,System.Int32)">
+            <summary>
+            Spustenie dotazu na akékoľvek riadky.
+            </summary>
+            <param name="startIndex">Index prvého vyžiadaného riadku (zero-based).</param>
+            <param name="count">Počet vyžiadaných riadkov.</param>
+            <returns>Data reader výsledkov s požadovaými riadkami.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="startIndex"/> alebo alebo <paramref name="count"/> negatívne.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraOldPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Zatiaľ implementované iba pre Oracle.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonávania príkazu.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraOldPaging.GetPageById(System.Int32,System.Int64,System.String,System.Int32@)">
+            <summary>
+            Spustenie dotazu s výsledkom stránkovaným na základe hľadaného ID záznamu.
+            </summary>
+            <param name="id">Hľadané ID záznamu. Ak nie je nájdené, dotiahne sa prvá strana (index 0).</param>
+            <param name="pageSize">Požadovaná veľkosť strany.</param>
+            <param name="idAlias">Alias stĺpca ID-éčka.</param>
+            <param name="pageIndex">Index nájdenej stránky (zero-based).</param>
+            <returns>Data reader výsledkov s požadovanou stranou.</returns>
+            <exception cref="T:System.ArgumentException">Ak je <paramref name="idAlias"/> prázdny.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="pageSize"/> 0 alebo negatívne.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraOldPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Zatiaľ implementované iba pre Oracle.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonávania príkazu.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraOldPaging.GetPageByBigId(System.Int32,System.Numerics.BigInteger,System.String,System.Int32@)">
+            <summary>
+            Spustenie dotazu s výsledkom stránkovaným na základe hľadaného ID záznamu.
+            </summary>
+            <param name="id">Hľadané ID záznamu. Ak nie je nájdené, dotiahne sa prvá strana (index 0).</param>
+            <param name="pageSize">Požadovaná veľkosť strany.</param>
+            <param name="idAlias">Alias stĺpca ID-éčka.</param>
+            <param name="pageIndex">Index nájdenej stránky (zero-based).</param>
+            <returns>Data reader výsledkov s požadovanou stranou.</returns>
+            <exception cref="T:System.ArgumentException">Ak je <paramref name="idAlias"/> prázdny.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="pageSize"/> 0 alebo negatívne.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraOldPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Zatiaľ implementované iba pre Oracle.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonávania príkazu.</exception>
+        </member>
+        <member name="T:Cora.Data.DBProvider.ExtensionMethods">
+            <summary>
+            Trieda extension metód.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ExtensionMethods.CreateCommand(System.Data.IDbConnection,System.String)">
+            <summary>
+            Vytvorenie <see cref="T:System.Data.IDbCommand"/>-u s textom príkazu.
+            </summary>
+            <param name="connection">Pripojenie do DB.</param>
+            <param name="commandText">Text príkazu.</param>
+            <returns>Vytvorený <see cref="T:System.Data.IDbCommand"/> s <paramref name="commandText"/>-om.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ExtensionMethods.GetColumnDbTypes(System.Data.IDataReader)">
+            <summary>
+            Získanie databázových typov stĺpcov, ktoré sú v <paramref name="reader"/>-i.
+            Vychádza sa z <see cref="M:System.Data.IDataRecord.GetFieldType(System.Int32)"/>.
+            </summary>
+            <param name="reader">Reader.</param>
+            <returns>Pole databázových typov stĺpcov, ktoré sú v <paramref name="reader"/>-i.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="reader"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ExtensionMethods.GetColumnSystemTypes(System.Data.IDataReader)">
+            <summary>
+            Získanie typov stĺpcov, ktoré sú v <paramref name="reader"/>-i. Vychádza sa z <see cref="M:System.Data.IDataRecord.GetFieldType(System.Int32)"/>.
+            </summary>
+            <param name="reader">Reader.</param>
+            <returns>Pole typov stĺpcov, ktoré sú v <paramref name="reader"/>-i.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="reader"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ExtensionMethods.WithExistingOrNewConnection(Cora.Data.DBProvider.CoraConnection,System.Func{Cora.Data.DBProvider.CoraConnection},System.Action{Cora.Data.DBProvider.CoraConnection})">
+            <summary>
+            Vykonanie <paramref name="action"/> s existujúcim alebo novo vytvoreným pripojením do DB.
+            </summary>
+            <param name="connection">Existujúce pripojenie do DB, alebo <c>null</c>.</param>
+            <param name="getConnectionIfNullFunc">Funkcia pre získanie nového pripojenia do DB, ak je <paramref name="connection"/>
+            <c>null</c>. Po volaní sa nové spojenie zatvorí a uvoľní. Nesmie byť <c>null</c>, kontroluje sa, až keď je potrebné ju volať.</param>
+            <param name="action">Volanie, ktoré bude vykonané so spojením do DB. Nesmie byť <c>null</c>.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="getConnectionIfNullFunc"/> alebo
+            <paramref name="withConnectionFunc"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ExtensionMethods.WithExistingOrNewConnection``1(Cora.Data.DBProvider.CoraConnection,System.Func{Cora.Data.DBProvider.CoraConnection},System.Func{Cora.Data.DBProvider.CoraConnection,``0})">
+            <summary>
+            Vykonanie <paramref name="func"/> s existujúcim alebo novo vytvoreným pripojením do DB.
+            </summary>
+            <typeparam name="T">Typ výsledku.</typeparam>
+            <param name="connection">Existujúce pripojenie do DB, alebo <c>null</c>.</param>
+            <param name="getConnectionIfNullFunc">Funkcia pre získanie nového pripojenia do DB, ak je <paramref name="connection"/>
+            <c>null</c>. Po volaní sa nové spojenie zatvorí a uvoľní. Nesmie byť <c>null</c>, kontroluje sa, až keď je potrebné ju volať.</param>
+            <param name="func">Funkcia, ktorá bude vykonaná so spojením do DB. Nesmie byť <c>null</c>.</param>
+            <returns>Výsledok volania.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="getConnectionIfNullFunc"/> alebo
+            <paramref name="withConnectionFunc"/> <c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraConnectionString">
+            <summary>
+            Trieda (statická) pre parsovanie a formátovanie connection string-ov pre rôzne <see cref="T:Cora.Data.DBProvider.Provider"/>-y.
+            </summary>
+            <remarks>
+            Pre podporované formáty connect stringov viď konštanty tejto triedy.
+            </remarks>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraConnectionString.EqualityComparer">
+            <summary>
+            Trieda na porovnávanie connection string-ov.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.EqualityComparer.Equals(System.String,System.String)">
+            <summary>
+            Zistenie, či dva connection string-y sú rovnaké. Porovnávajú sa (case sensitive): DB provider, nerozparsovaný zvyšok
+            a case insensitive: dátový zdroj, server, databáza, používateľ, heslo a initial catalog.
+            </summary>
+            <param name="x">Prvý connection string.</param>
+            <param name="y">Druhý connection string.</param>
+            <returns>Sú connection string-y rovnaké?</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.EqualityComparer.GetHashCode(System.String)">
+            <summary>
+            Získanie hash kódu connection string-u.
+            </summary>
+            <param name="obj">Reťazec.</param>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbPROVIDER">
+            <summary>Kľúč provider (CoraProvider).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbDATA_SOURCE">
+            <summary>Kľúč databázový zdroj (Data Source).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbSERVER">
+            <summary>Kľúč server (Server).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbDATABASE">
+            <summary>Kľúč databáza (Database).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbUID">
+            <summary>Kľúč databázový používateľ (User Id).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbPASSWORD">
+            <summary>Kľúč heslo (Password).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbINITIAL_CATALOG">
+            <summary>Kľúč Initial catalog.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.MASKED_PASSWORD">
+            <summary>Reťazec, ktorý zastupuje hodnotu hesla pri zamaskovaní, hodnota (****).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbFORMAT">
+            <summary>Formát connection string-u (všeobecný: provider, ds, uid, pwd).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbFORMAT_NO_PROVIDER">
+            <summary>Formát connection string-u bez providera (ds, uid, pwd).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbMSSQL_FORMAT">
+            <summary>Formát connection string-u pre MS SQL (provider, ds, uid, pwd, icat).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbMSSQL_FORMAT_NO_PROVIDER">
+            <summary>Formát connection string-u pre MS SQL - bez providera (ds, uid, pwd, icat).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbDB2_FORMAT">
+            <summary>Formát connection string-u pre DB2 (provider, serv, db, uid, pwd).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbDB2_FORMAT_NO_PROVIDER">
+            <summary>Formát connection string-u pre DB2 - bez providera (serv, db, uid, pwd).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbFORMAT_SERIALIZE">
+            <summary>Formát connection string-u pre serializáciu / deserializáciu (provider, ds).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbFORMAT_SQLITE">
+            <summary>Formát connection string-u pre SQLite (provider, ds). Pwd je optional.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraConnectionString.dbFORMAT_SQLITE_NO_PROVIDER">
+            <summary>Formát connection string-u pre SQLite bez providera (ds). Pwd je optional.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Decrypt(System.String)">
+            <summary>
+            Dekryptuje connection string z formy bežne používanej v config-och.
+            </summary>
+            <remarks>
+            Momentálna implementácia používa algoritmus <see cref="F:Cora.Crypt.Algoritmus.Symmetric_Rijndael"/>, pričom 
+            <paramref name="cryptedConnString"/> je očakávaný v Base64 tvare.
+            </remarks>
+            <param name="cryptedConnString">Kryptovaný connection string.</param>
+            <returns>Connection string v plaintexte.</returns>
+            <seealso cref="M:Cora.Data.DBProvider.CoraConnectionString.Encrypt(System.String)"/>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.TryDecrypt(System.String,System.String@)">
+             <summary>
+             Bezpečne dekryptuje connection string z formy bežne používanej v config-och. Hlási úspešnosť dekryptovania.
+             </summary>
+             <param name="cryptedConnString">Kryptovaný connection string.</param>
+             <param name="plainConnString">Connection string v plaintexte, alebo <c>null</c> v prípade chyby.</param>
+             <returns>Úspešnosť dekryptovania.</returns>
+            <remarks>Viď poznámky pri <see cref="M:Cora.Data.DBProvider.CoraConnectionString.Decrypt(System.String)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Encrypt(System.String)">
+            <summary>
+            Zakryptuje connection string do formy bežne používanej v config-och.
+            </summary>
+            <param name="plainConnString">Connection string v plaintexte</param>
+            <returns>Kryptovaný connection string.</returns>
+            <seealso cref="M:Cora.Data.DBProvider.CoraConnectionString.Decrypt(System.String)"/>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.ReadFromAaDbzdr(System.String,System.Int32)">
+            <summary>
+            Získanie connection string-u z tabuľky AA_DBZDR.
+            </summary>
+            <param name="aaDbzdrConnect">Connecttion string pre čítanie tabuľky AA_DBZDR. Zvyčajne je to systémový connection string.</param>
+            <param name="aaDbzdrId">ID riadku (AA_DBZDR.I_DBZDR).</param>
+            <returns>Connection string podľa riadku AA_DBZDR, alebo <c>null</c>, ak sa taký </returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Parse(System.String,Cora.Data.DBProvider.Provider@)">
+            <summary>
+            Rozparsovanie connection string-u na DB providera.
+            </summary>
+            <param name="connectionStr">Connection string.</param>
+            <param name="provider">DB provider.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Parse(System.String,Cora.Data.DBProvider.Provider@,System.String@)">
+            <summary>
+            Rozparsovanie connection string-u na DB providera a dátový zdroj.
+            </summary>
+            <param name="connectionStr">Connection string.</param>
+            <param name="provider">DB provider.</param>
+            <param name="dataSource">Dátový zdroj.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Parse(System.String,Cora.Data.DBProvider.Provider@,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@)">
+            <summary>
+            Rozparsovanie connection string-u na jednotlivé hodnoty atribútov.
+            </summary>
+            <param name="connectionStr">Connection string.</param>
+            <param name="provider">DB provider.</param>
+            <param name="dataSource">Dátový zdroj.</param>
+            <param name="server">Server.</param>
+            <param name="database">Databáza.</param>
+            <param name="userID">Databázový používateľ.</param>
+            <param name="password">Heslo používateľa.</param>
+            <param name="initialCatalog">Initial catalog.</param>
+            <param name="restStr">Nerozparsovaný zvyšok.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Parse(System.String,Cora.Data.DBProvider.Provider@,System.String@,System.String@,System.String@,System.String@,System.String@,System.String@)">
+            <summary>
+            Rozparsovanie connection string-u na jednotlivé hodnoty atribútov (bez zvyšku).
+            </summary>
+            <param name="connectionStr">Connection string.</param>
+            <param name="provider">DB provider.</param>
+            <param name="dataSource">Dátový zdroj.</param>
+            <param name="server">Server.</param>
+            <param name="database">Databáza.</param>
+            <param name="userID">Databázový používateľ.</param>
+            <param name="password">Heslo používateľa.</param>
+            <param name="initialCatalog">Initial catalog.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Format(Cora.Data.DBProvider.Provider,System.String,System.String,System.String,System.String)">
+            <summary>
+            Pripraví connection string pre štandardný formát.
+            </summary>
+            <param name="provider">DB provider.</param>
+            <param name="dataSource">Dátový zdroj.</param>
+            <param name="userID">Databázový používateľ.</param>
+            <param name="password">Heslo používateľa.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Format(System.String,System.String,System.String,System.String)">
+            <summary>
+            Pripraví connection string pre štandardný formát.
+            </summary>
+            <param name="dataSource">Dátový zdroj.</param>
+            <param name="userID">Databázový používateľ.</param>
+            <param name="password">Heslo používateľa.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.FormatAll(Cora.Data.DBProvider.Provider,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Pripraví connection string podľa <paramref name="provider"/>-a pre všetky provider-y.
+            </summary>
+            <param name="provider">DB provider.</param>
+            <param name="dataSource">Dátový zdroj.</param>
+            <param name="server">Server.</param>
+            <param name="database">Databáza.</param>
+            <param name="userID">Databázový používateľ.</param>
+            <param name="password">Heslo používateľa.</param>
+            <param name="initCatalogName">Initial catalog.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Format_MSSQL(Cora.Data.DBProvider.Provider,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Pripraví connection string pre formát s init catalogom.
+            </summary>
+            <param name="provider">DB provider.</param>
+            <param name="dataSource">Dátový zdroj.</param>
+            <param name="userID">Databázový používateľ.</param>
+            <param name="password">Heslo používateľa.</param>
+            <param name="initCatalogName">Initial catalog.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Format_MSSQL(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Pripraví connection string bez providera s init catalogom.
+            </summary>
+            <param name="dataSource">Dátový zdroj.</param>
+            <param name="userID">Databázový používateľ.</param>
+            <param name="password">Heslo používateľa.</param>
+            <param name="initCatalogName">Initial catalog.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Format_DB2(Cora.Data.DBProvider.Provider,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Pripraví connection string pre formát DB2.
+            </summary>
+            <param name="provider">DB provider.</param>
+            <param name="server">Server.</param>
+            <param name="database">Databáza.</param>
+            <param name="userID">Databázový používateľ.</param>
+            <param name="password">Heslo používateľa.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Format_DB2(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Pripraví connection string bez providera pre formát DB2.
+            </summary>
+            <param name="server">Server.</param>
+            <param name="database">Databáza.</param>
+            <param name="userID">Databázový používateľ.</param>
+            <param name="password">Heslo používateľa.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Format_SQLite(Cora.Data.DBProvider.Provider,System.String,System.String,System.String)">
+            <summary>
+            Pripraví connection string pre SQLite.
+            </summary>
+            <param name="provider">DB provider.</param>
+            <param name="dataSource">Dátový zdroj (DB súbor).</param>
+            <param name="password">Heslo používateľa, alebo <c>null</c>. Ak je <c>null</c>, DB nie je kryptovaná.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Format_SQLite(System.String,System.String,System.String)">
+            <summary>
+            Pripraví connection string pre SQLite bez providera.
+            </summary>
+            <param name="dataSource">Dátový zdroj (DB súbor).</param>
+            <param name="password">Heslo používateľa, alebo <c>null</c>. Ak je <c>null</c>, DB nie je kryptovaná.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Format_Serialize(Cora.Data.DBProvider.Provider,System.String,System.String)">
+            <summary>
+            Pripraví connection string pre serializáciu.
+            </summary>
+            <param name="provider">Provider pre serializáciu.</param>
+            <param name="dataSource">Dátový zdroj.</param>
+            <param name="restStr">Zvyšok, alebo <c>null</c>.</param>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.MaskPassword(System.String)">
+            <summary>
+            Zamaskovanie hesla v connection string-u tak, aby sa nedal prečítať.
+            </summary>
+            <param name="connectionStr">Connection string, v ktorom sa heslo zamaskuje.</param>
+            <returns>Connection string so zamaskovaným heslom.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnectionString.Compare(System.String,System.String,System.Boolean)">
+            <summary>
+            Zistenie, či dva connection string-y sú rovnaké. Porovnávajú sa (case sensitive): DB provider, nerozparsovaný zvyšok
+            a case insensitive: dátový zdroj, server, databáza, používateľ, heslo a initial catalog.
+            </summary>
+            <param name="x">Prvý connection string.</param>
+            <param name="y">Druhý connection string.</param>
+            <param name="exactMatch">Porovnavať všetky položky? Keď <c>false</c> tak neporovnáva dbprovider a heslo.</param>
+            <returns>Sú connection string-y rovnaké?</returns>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraDbType">
+            <summary>
+            Dodatočné databázové typy idúce nad rámec <see cref="T:System.Data.DbType"/>.
+            </summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraDbType.None">
+            <summary>Žiaden.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraDbType.Spatial">
+            <summary>Priestorový typ (geometria).</summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.DbLogWriter">
+             <summary>
+             Zapisovač logu do databázy.
+             </summary>
+             <remarks>
+            	  <para>
+            		Ukladanie logu do databázy nie je celkom možné urobiť nezávisle na rôznych implementáciách <see cref="T:Cora.Utils.Logger.ILogRecord"/>-u,
+            		pretože môžu mať vlastné atribúty ktoré nepoznáme. Táto trieda preto loguje iba známe atribúty <see cref="T:Cora.Utils.Logger.ILogRecord"/>-u
+            		(timestamp, message) + úroveň závažnosti, a to pomocou storovanej procedúry (pri vytváraní možno špecifikovať názov)
+            		berúcej paramtre (<see cref="F:Cora.Data.DBProvider.DbLogWriter.PARAMNAME_LOGLEVEL"/>, <see cref="F:Cora.Data.DBProvider.DbLogWriter.PARAMNAME_TIMESTAMP"/>, <see cref="F:Cora.Data.DBProvider.DbLogWriter.PARAMNAME_MESSAGE"/>.
+            	  </para>
+               <para>
+                 Odvodené triedy môžu implementovať špecifickejšie správanie, napr. tým že budú zapisovať iba záznamy majúce určitý
+                 tvar. Takáto customizácia spočíva v tom, že <see cref="M:Cora.Data.DBProvider.DbLogWriter.CanHandleRecord(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)"/> vráti <c>false</c> pre záznamy nevyhovujúce
+                 dohodnutému tvaru a <see cref="M:Cora.Data.DBProvider.DbLogWriter.PopulateCommand(System.Data.IDbCommand,Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)"/> spracuje do databázového príkazu záznamy vyhovujúce. 
+                 Preťažením ďalších metód ďalej možné zmeniť výrobu databázového spojenia, príkazu, ako aj samotného algoritmu
+                 zápisu.
+               </para>
+               <para>
+                 Sample kód pre testovanie (Oracle):
+                 <example>
+            			create table DB_LOG (
+            			  I_LOG number(9) primary key,
+            			  D_TIMESTAMP date,
+            			  LOGLEVEL number, 
+            			  MESSAGE varchar(4000 CHAR)
+            			);
+            			
+            			create sequence S_DB_LOG;
+            
+            			create or replace procedure DB_LOGGER_LOG(mD_TIMESTAMP date, mLOGLEVEL number, mMESSAGE VARCHAR) is
+            			begin
+            				insert into DB_LOG(I_LOG, D_TIMESTAMP, LOGLEVEL, MESSAGE)
+            				values (S_DB_LOG.nextval, mD_TIMESTAMP, mLOGLEVEL, mMESSAGE);
+            			end;
+            		</example>
+               </para>
+             </remarks>
+        </member>
+        <member name="F:Cora.Data.DBProvider.DbLogWriter.DEFAULT_DB_LOG_PROCEDURE">
+            <summary>Default názov storovanej procedúry, ktorá sa používa na zápis do DB.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.DbLogWriter.PARAMNAME_LOGLEVEL">
+            <summary>Názov DB parametra pre úroveň závažnosti záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.DbLogWriter.PARAMNAME_TIMESTAMP">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.ILogRecord.Timestamp"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.DbLogWriter.PARAMNAME_MESSAGE">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.ILogRecord.Message"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.DbLogWriter.MAXLENGTH_MESSAGE">
+            <summary>Maximálna dĺžka <see cref="P:Cora.Utils.Logger.ILogRecord.Message"/>, na ktorú sa text oreže.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.DbLogWriter.XPATH_CRYPTCONNECTSTRING">
+            <summary>XPath k parametru ConnectString pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.DbLogWriter.XPATH_DBLOGGINGPROCEDURE">
+            <summary>XPath k parametru DbLoggingProcedure pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.DbLogWriter.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí zapisovač logu podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov konštruktora. 
+            POZOR, povinný parameter <see cref="F:Cora.Data.DBProvider.DbLogWriter.XPATH_CRYPTCONNECTSTRING"/> je kryptovaný - 
+            - viď <see cref="M:Cora.Data.DBProvider.CoraConnectionString.Decrypt(System.String)"/>.</param>
+            <returns>Inštancia zapisovača zadaných atribútov.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.DbLogWriter.#ctor(System.String,System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Data.DBProvider.DbLogWriter"/>.
+            </summary>
+            <param name="connectString">Connect string do databázy.</param>
+            <param name="dbLoggingProcedure">Názov storovanej procedúry, ktora sa používa na zápis do DB.</param>
+            <exception cref="T:System.Exception">Ak sa nepodarilo pripojiť pomocou <paramref name="connectString"/>-u.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.DbLogWriter.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam. Ak ho nevie zapísať (<see cref="M:Cora.Data.DBProvider.DbLogWriter.CanHandleRecord(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)"/>==<c>false</c>), nerobí nič.
+            </summary>
+            <remarks>
+            <see cref="T:Cora.Data.DBProvider.DbLogWriter"/> pri každom volaní otvorí novú konekciu a nový command, ktorý naplní dátami z recordu a vykoná
+            <see cref="M:System.Data.IDbCommand.ExecuteNonQuery"/>.
+            </remarks>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/>	<c>null</c>.</exception>
+            <exception cref="T:System.Exception">Ak vznikla chyba pri zápise.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.DbLogWriter.CanHandleRecord(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Vie táto inštancia zapísať daný záznam? Umožňuje dedičovi odfiltrovať záznamy.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <returns><c>true</c>, ak inštancia vie zapísať <paramref name="record"/>, inak <c>false</c>.
+            	<see cref="T:Cora.Data.DBProvider.DbLogWriter"/> vždy vracia <c>true</c>.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.DbLogWriter.CreateAndOpenConnection">
+            <summary>
+            Vytvorí a otvorení spojenie do DB.
+            </summary>
+            <remarks>
+            <see cref="T:Cora.Data.DBProvider.DbLogWriter"/> vytvára spojenie z connect stringu zadaného pri konštrukcii, ale dedič
+            môže implementovať vlastné databázové spojenie, napr. ak potrebuje zohľadniť dodatočné parametre.
+            </remarks>
+            <returns>Otvorené spojenie do DB.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.DbLogWriter.CreateCommand(System.Data.IDbConnection)">
+            <summary>
+            Vytvorí databázový command použiteľný na zápis záznamu do databázy.
+            </summary>
+            <remarks>
+            <see cref="T:Cora.Data.DBProvider.DbLogWriter"/> vytvára je command storovanej procedúry (<see cref="F:System.Data.CommandType.StoredProcedure"/>) 
+            s názvom  procedúry ako bol zadaný pri konštrukcii, ale dedič môže implementovať vlastný command,
+            napr. ak chce namiesto stored procedúry použiť klauzulu INSERT INTO.
+            </remarks>
+            <param name="conn">Databázové spojenie.</param>
+            <returns>Databázový command.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.DbLogWriter.PopulateCommand(System.Data.IDbCommand,Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Naplní databázový command dátami z recordu.
+            </summary>
+            <remarks>
+            <see cref="T:Cora.Data.DBProvider.DbLogWriter"/> napĺňa parametre <see cref="F:Cora.Data.DBProvider.DbLogWriter.PARAMNAME_LOGLEVEL"/>, <see cref="F:Cora.Data.DBProvider.DbLogWriter.PARAMNAME_TIMESTAMP"/> a 
+            <see cref="F:Cora.Data.DBProvider.DbLogWriter.PARAMNAME_MESSAGE"/>.
+            </remarks>
+            <param name="command">Databázový command.</param>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+        </member>
+        <member name="T:Cora.Data.DBProvider.ErrorTranslator">
+            <summary>
+            Trieda na prekladanie textov DB chýb (výnimiek).
+            </summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.ErrorTranslator.Key">
+            <summary>Kľúč, ktorému môže patriť preklad textu DB chyby. Dvojica <see cref="F:Cora.Data.DBProvider.ErrorTranslator.Key.Provider"/> a číslo chyby.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.ErrorTranslator.Key.Provider">
+            <summary>Provider, ktorého sa chyba týka.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.ErrorTranslator.Key.Number">
+            <summary>Číslo chyby.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ErrorTranslator.Key.#ctor(Cora.Data.DBProvider.Provider,System.Int32)">
+            <summary>
+            Vytvorenie kľúča, ktorému môže patriť preklad textu DB chyby.
+            </summary>
+            <param name="provider">Provider, ktorého sa chyba týka.</param>
+            <param name="number">Číslo chyby.</param>
+        </member>
+        <member name="T:Cora.Data.DBProvider.ErrorTranslator.Translation">
+            <summary>
+            Prepravka pre uloženie jedného prekladu textu DB chyby.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ErrorTranslator.Translation.#ctor(System.String,System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Data.DBProvider.ErrorTranslator.Translation"/>.
+            </summary>
+            <param name="text">Text prekladu DB chyby. Nesmie byť <c>null</c>.</param>
+            <param name="expression">Regulárny výraz pre spracovanie textu DB chyby. Ak je <c>null</c>,
+            použije sa len text prekladu <paramref name="text"/>.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="text"/> je <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Data.DBProvider.ErrorTranslator.Translation.Text">
+            <summary>Text prekladu DB chyby.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.ErrorTranslator.Translation.Expression">
+            <summary>Regulárny výraz pre spracovanie textu DB chyby. Môže byť <c>null</c>.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ErrorTranslator.Translate(System.Exception)">
+            <summary>
+            Preloženie zadanej výnimky.
+            </summary>
+            <param name="exception">Výnimka, ktorá sa má preložiť. Ak je <c>null</c>, výsledok je <c>null</c>.</param>
+            <returns>Preklad zadanej výnimky, ak nejaký existuje, alebo zistenie jej textu (ak neexistuje jej preklad). Môže byť <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ErrorTranslator.AddTranslation(Cora.Data.DBProvider.ErrorTranslator.Key,Cora.Data.DBProvider.ErrorTranslator.Translation)">
+            <summary>
+            Pridanie alebo prepísanie prekladu pre zadaný kľúč (posledný vyhráva). Výsledkom je, či ide o novo vložený preklad.
+            </summary>
+            <param name="key">Kľúč, ktorému preklad patrí (dvojica <see cref="T:Cora.Data.DBProvider.Provider"/> a číslo chyby).</param>
+            <param name="translation">Preklad. Nesmie byť <c>null</c>.</param>
+            <returns><c>true</c>, ak bol preklad pridaný, alebo <c>false</c>, ak už bol pod zadaným kľúčom nejaký preklad uložený
+            a teraz bol prepísaný zadaným prekladom.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="translation"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ErrorTranslator.ConfigureFromDb(System.String)">
+            <summary>
+            Nakonfigurovanie prekladov z databázy (tabuľka AA_DB_ERROR).
+            </summary>
+            <param name="connectString">Connect string pre pripojenie do DB.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ErrorTranslator.ConfigureDefaults">
+            <summary>
+            Nakonfigurovanie default-ných prekladov. Nie je potrebné explicitne volať, pretože sa volá na začiatku používania tejto triedy.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ErrorTranslator.#cctor">
+            <summary>
+            Statický konštruktor - inicializácia default-ných prekladov.
+            </summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.Meta.Column">
+            <summary>
+            Popis stĺpca tabuľky databázy.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.Meta.Column.ColumnName">
+            <summary>
+            Vráti alebo nastaví meno stĺpca.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.Meta.Column.FullDataType">
+            <summary>
+            Vráti alebo nastaví dátový typ stĺpca, vrátane prípadnej dĺžky, precision atď.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.Meta.Column.IsNotNull">
+            <summary>
+            Vráti alebo nastaví hodnotu indikujúcu, či sú povolené NULL hodnoty.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.Column.GetColumnSql(System.Boolean)">
+            <summary>
+            Vráti definíciu stĺpca (meno + plný typ + nulovatelnosť) aby sa dala použiť napr. pre 
+            alter statement.
+            </summary>
+            <param name="withNullability">Má sa do výsledku zahrnúť aj nulovateľnosť?</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.Column.GetDifferingCommonColumns(System.Collections.Generic.IEnumerable{Cora.Data.DBProvider.Meta.Column},System.Collections.Generic.IEnumerable{Cora.Data.DBProvider.Meta.Column},System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Vráti stĺpce z prvej sady, ktoré sa nachádzajú v oboch sadách, ale líšia sa navzájom v dátovom type, 
+            dĺžke alebo nulovateľnosti. Stĺpce nachádzajúce sa iba v jednej sade nie sú súčasťou výstupu.
+            </summary>
+            <param name="columns1">Prvá sada stĺpcov.</param>
+            <param name="columns2">Druhá sada stĺpcov.</param>
+            <param name="columnFilter">Zoznam mien stĺpcov, ktoré sa majú zohľadniť. Ak nie sú uvedené, zohľadnia sa všetky.</param>
+        </member>
+        <member name="T:Cora.Data.DBProvider.Meta.IMetadataAccess">
+            <summary>
+            Rozhranie pre triedy poskytujúce prístup k databázovým metadátam.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.IMetadataAccess.CreateTable(System.String,Cora.Data.DBProvider.Meta.Column[])">
+            <summary>
+            Vytvorí tabuľku.
+            </summary>
+            <param name="tableName">Meno tabuľky.</param>
+            <param name="columns">Stĺpce tabuľky.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.IMetadataAccess.CreateMaterializedView(System.String,System.String)">
+            <summary>
+            Vytvorí materializovaný pohľad.
+            </summary>
+            <param name="viewName">Name of the view.</param>
+            <param name="select">Select príkaz.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.IMetadataAccess.DropMaterializedView(System.String)">
+            <summary>
+            Zmaže materializovaný pohľad.
+            </summary>
+            <param name="viewName">Meno materializovaného pohľadu.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.IMetadataAccess.DropTable(System.String)">
+            <summary>
+            Zmaže tabuľku.
+            </summary>
+            <param name="tableName">Meno tabuľky.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.IMetadataAccess.GetColumns(System.String)">
+            <summary>
+            Vráti stĺpce tabuľky.
+            </summary>
+            <param name="tableName">Meno tabuľky.</param>
+            <returns>Zoznam stĺpcov tabuľky, alebo prázdne pole ak tabuľka neexistuje.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.IMetadataAccess.GetSelectForMaterializedView(System.String)">
+            <summary>
+            Vráti definujúci select pre materializovaný pohľad.
+            </summary>
+            <param name="viewName">Meno pohľadu.</param>
+            <return>Select materializovaného pohľadu, alebo <c>null</c> ak neexistuje.</return>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.IMetadataAccess.GetSqlForMaterializedView(System.String)">
+            <summary>
+            Vráti DDL príkaz na vytvorenie materializovaného pohľadu.
+            </summary>
+            <param name="viewName">Meno pohľadu.</param>
+            <return>SQL materializovaného pohľadu, alebo <c>null</c> ak neexistuje.</return>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.IMetadataAccess.ModifyColumns(System.String,System.Collections.Generic.IEnumerable{Cora.Data.DBProvider.Meta.Column},System.Boolean)">
+            <summary>
+            Modifikuje existujúce stĺpce tabuľky podľa vzorového zoznamu stĺpcov.
+            </summary>
+            <param name="tableName">Meno tabuľky.</param>
+            <param name="columns">Zoznam stĺpcov predlohy.</param>
+            <param name="nullTolerant">Ak je <c>true</c>, nedovolí zmenu stĺpca z NULL na NOT NULL.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.IMetadataAccess.RecreateMaterializedView(System.String)">
+            <summary>
+            Znovuvytvorí (drop+create) materializovaný pohľad. 
+            </summary>
+            <param name="viewName">Meno pohľadu (case insensitive).</param>
+            <return><c>true</c> pri úspechu, <c>false</c> ak sa nepodarilo získať SQL, napr. ak objekt neexistuje.</return>
+        </member>
+        <member name="T:Cora.Data.DBProvider.Meta.MetadataAccessFactory">
+            <summary>
+            Factory tried pre prístup k metadátam databázy.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.MetadataAccessFactory.GetMetadataAccess(System.String)">
+            <summary>
+            Vráti triedu pre prístup k metadátam databázy.
+            </summary>
+            <param name="connString">Connection string.</param>
+        </member>
+        <member name="T:Cora.Data.DBProvider.Meta.NamespaceDoc">
+            <summary>
+            Namespace pre metainformácie o databázových štruktúrach, generovanie DDL, porovnávanie atď.
+            </summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.Meta.OracleMetadataAccess">
+            <summary>
+            Triedy poskytujúca prístup k databázovým metadátam databázy Oracle.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.#ctor(System.String)">
+            <summary>
+            Vytvorí inštanciu triedy pre dopyty do metadát nad danou databázou.
+            </summary>
+            <param name="connString">Connection string do databázy.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.CreateTable(System.String,Cora.Data.DBProvider.Meta.Column[])">
+            <summary>
+            Vytvorí tabuľku.
+            </summary>
+            <param name="tableName">Meno tabuľky.</param>
+            <param name="columns">Stĺpce tabuľky.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.CreateMaterializedView(System.String,System.String)">
+            <summary>
+            Vytvorí materializovaný pohľad.
+            </summary>
+            <param name="viewName">Name of the view.</param>
+            <param name="select">Select príkaz.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.DropMaterializedView(System.String)">
+            <summary>
+            Zmaže materializovaný pohľad.
+            </summary>
+            <param name="viewName">Meno materializovaného pohľadu.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.DropTable(System.String)">
+            <summary>
+            Zmaže tabuľku.
+            </summary>
+            <param name="tableName">Meno tabuľky.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.GetColumns(System.String)">
+            <summary>
+            Vráti stĺpce tabuľky.
+            </summary>
+            <param name="tableName">Meno tabuľky.</param>
+            <returns>Zoznam stĺpcov tabuľky, alebo prázdne pole ak tabuľka neexistuje.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.GetSelectForMaterializedView(System.String)">
+            <summary>
+            Vráti definujúci select pre materializovaný pohľad.
+            </summary>
+            <param name="viewName">Meno pohľadu.</param>
+            <return>Select materializovaného pohľadu, alebo <c>null</c> ak neexistuje.</return>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.GetSqlForMaterializedView(System.String)">
+            <summary>
+            Vráti DDL príkaz na vytvorenie materializovaného pohľadu.
+            </summary>
+            <param name="viewName">Meno pohľadu.</param>
+            <return>SQL materializovaného pohľadu, alebo <c>null</c> ak neexistuje.</return>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.ModifyColumns(System.String,System.Collections.Generic.IEnumerable{Cora.Data.DBProvider.Meta.Column},System.Boolean)">
+            <summary>
+            Modifikuje existujúce stĺpce tabuľky podľa vzorového zoznamu stĺpcov.
+            </summary>
+            <param name="tableName">Meno tabuľky.</param>
+            <param name="columns">Zoznam stĺpcov predlohy.</param>
+            <param name="nullTolerant">Ak je <c>true</c>, nedovolí zmenu stĺpca z NULL na NOT NULL.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.RecreateMaterializedView(System.String)">
+            <summary>
+            Znovuvytvorí (drop+create) materializovaný pohľad. 
+            </summary>
+            <param name="viewName">Meno pohľadu (case insensitive).</param>
+            <return><c>true</c> pri úspechu, <c>false</c> ak sa nepodarilo získať SQL, napr. ak objekt neexistuje.</return>
+        </member>
+        <member name="M:Cora.Data.DBProvider.Meta.OracleMetadataAccess.CreateColumnFromTabsColumnsRecord(System.Data.IDataRecord)">
+            <summary>
+            Vytvorí popis stĺpca tabuľky zo záznamu metadátových tabuliek ALL_TAB_COLUMNS/USER_TAB_COLUMNS.
+            </summary>
+            <remarks>
+            Pre dokumentaciu stlpcov ALL_TAB_COLUMNS vid
+            http://docs.oracle.com/cd/E11882_01/server.112/e25513/statviews_2103.htm#I1020277
+            </remarks>
+        </member>
+        <member name="T:Cora.Data.DBProvider.MonitoringWriter">
+            <summary>
+            Zapisovač <see cref="T:Cora.Utils.Logger.IMonitoringRecord"/>-ov do DB.
+            </summary>
+            <remarks>
+            Tento zapisovač loguje iba <see cref="T:Cora.Utils.Logger.IMonitoringRecord"/>-y, ostatné záznamy ignoruje.
+            Na logovanie sa používa storovaná procedúra <see cref="F:Cora.Data.DBProvider.MonitoringWriter.DB_LOG_PROCEDURE"/>.
+            </remarks>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.VALUE_NOT_SET">
+            <summary>Hodnota pre nenastavené hodnoty <see cref="P:Cora.Utils.Logger.IMonitoringRecord.Application"/> a <see cref="P:Cora.Utils.Logger.IMonitoringRecord.User"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.DB_LOG_PROCEDURE">
+            <summary>Default názov storovanej procedury, ktorá sa používa na zápis monitorovania do DB (SP_MONITORINGADD).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.I_MONITORING_PARAMETER_NAME">
+            <summary>Názov výstupného parametra I_MONITORING po uskutočnení zápisu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.I_MONITOR_TYP_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.MonitorTyp"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.I_APPLICATION_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.Application"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.I_UZ_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.User"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.D_MONITOR_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.ILogRecord.Timestamp"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.CONNID_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.ConnId"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.COMP_IP_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.CompIp"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.VALUE_1_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.Value1"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.VALUE_2_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.Value2"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.VALUE_3_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.Value3"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.VALUE_4_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.Value4"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.VALUE_5_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.Value5"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.MonitoringWriter.VALUES_XML_PARAMETER_NAME">
+            <summary>Názov DB parametra pre atribút <see cref="P:Cora.Utils.Logger.IMonitoringRecord.ValuesXml"/> zapisovaného záznamu.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.MonitoringWriter.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí zapisovač logu podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov konštruktora. 
+            POZOR, povinný parameter <see cref="F:Cora.Data.DBProvider.DbLogWriter.XPATH_CRYPTCONNECTSTRING"/> je kryptovaný 
+            - viď <see cref="M:Cora.Data.DBProvider.CoraConnectionString.Decrypt(System.String)"/>.</param>
+            <returns>Inštancia zapisovača zadaných atribútov.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.MonitoringWriter.#ctor(System.String)">
+            <summary>
+            Vytvorenie zapisovača pre monitorovanie do DB.
+            </summary>
+            <param name="connectString">Connect do databázy.</param>
+            <exception cref="T:System.Exception">Ak sa nepodarilo pripojiť pomocou <paramref name="connectString"/>-u.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.MonitoringWriter.CanHandleRecord(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Vie táto inštancia zapísať daný záznam?
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <returns><c>true</c>, ak <paramref name="record"/> je typu <see cref="T:Cora.Utils.Logger.IMonitoringRecord"/>, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.MonitoringWriter.PopulateCommand(System.Data.IDbCommand,Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Naplní databázový command dátami z recordu. 
+            </summary>
+            <param name="command">Databázový command.</param>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="record"/> nie je typu <see cref="T:Cora.Utils.Logger.IMonitoringRecord"/>.</exception>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="command"/> je <c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Data.DBProvider.OracleHelper">
+            <summary>
+            Pomocná trieda pre špecifiká databázy Oracle.
+            </summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.OracleHelper.MAX_EXPRESSIONS_FOR_IN_OPERATOR">
+            <summary>Maximálny zoznam výrazov pre Oracle operátor "IN".</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleHelper.AppendSqlINCondition``1(System.Text.StringBuilder,System.Data.IDataParameterCollection,System.String,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Pridá SQL podmienku s operátorom "IN" (je v zozname) pre dané meno stĺpca a zoznam hodnôt.
+            </summary>
+            <typeparam name="T">Typ hodnoty stĺpca.</typeparam>
+            <param name="query"><see cref="T:System.Text.StringBuilder"/>, kam sa pridá podmienka.</param>
+            <param name="parameters">Zoznam parametrov DB príkazu.</param>
+            <param name="colname">Názov, alebo alias stĺpca tabuľky.</param>
+            <param name="values">Zoznam hodnôt stĺpca tabuľky.</param>
+            <remarks>
+             <para>
+              Oracle dovoľuje použiť v podmienke "IN" maximálne <see cref="F:Cora.Data.DBProvider.OracleHelper.MAX_EXPRESSIONS_FOR_IN_OPERATOR"/> výrazov,
+              pri prekročení tohto počtu vznikne chyba ORA-03113. Táto metóda rozdelí dlhší zoznam na viac podmienok
+              spojených logickým "OR", pričom výsledná podmienka je uzavretá do zátvoriek.
+              Pokiaľ je zoznam prázdny, vráti podmienku ktorá je vždy nepravdivá.
+             </para><para>
+              Metóda pridáva text podmienky do parametra <paramref name="query"/>, pričom zo zoznamu hodnôt vytvorí
+              viazané parametre s unikátnym automaticky generovaným menom (viď <paramref name="parameters"/>).
+             </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleHelper.AppendSqlINCondition``1(System.Text.StringBuilder,System.Data.IDataParameterCollection,System.String,System.Collections.Generic.IEnumerable{``0},System.Data.DbType)">
+            <summary>
+            Pridá SQL podmienku s operátorom "IN" (je v zozname) pre dané meno stĺpca a zoznam hodnôt.
+            </summary>
+            <typeparam name="T">Typ hodnoty stĺpca.</typeparam>
+            <param name="query"><see cref="T:System.Text.StringBuilder" />, kam sa pridá podmienka.</param>
+            <param name="parameters">Zoznam parametrov DB príkazu.</param>
+            <param name="colname">Názov, alebo alias stĺpca tabuľky.</param>
+            <param name="values">Zoznam hodnôt stĺpca tabuľky.</param>
+            <param name="dbType">Databázový typ hodnôt v zozname. Je efektívnejšie túto hodnotu vypočítať len 1x pre celú operáciu.</param>
+            <remarks>
+            <para>
+            Oracle dovoľuje použiť v podmienke "IN" maximálne <see cref="F:Cora.Data.DBProvider.OracleHelper.MAX_EXPRESSIONS_FOR_IN_OPERATOR" /> výrazov,
+            pri prekročení tohto počtu vznikne chyba ORA-03113. Táto metóda rozdelí dlhší zoznam na viac podmienok
+            spojených logickým "OR", pričom výsledná podmienka je uzavretá do zátvoriek.
+            Pokiaľ je zoznam prázdny, vráti podmienku ktorá je vždy nepravdivá.
+            </para>
+            <para>
+            Metóda pridáva text podmienky do parametra <paramref name="query" />, pričom zo zoznamu hodnôt vytvorí
+            viazané parametre s unikátnym automaticky generovaným menom (viď <paramref name="parameters" />).
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1">
+            <summary>
+            Základná trieda pre .NET triedy mapujúce Oracle user-defined typy.
+            </summary>
+            <typeparam name="T">Typ mapujúcej triedy.</typeparam>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.MapFromCustomObject">
+            <summary>
+            Propaguje hodnoty svojich atribútov do Oracle objektu. 
+            Dedič použije metódy <see cref="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.SetValue(System.String,System.Object)"/> a <see cref="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.SetValue(System.Int32,System.Object)"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.MapToCustomObject">
+            <summary>
+            Načíta hodnoty svojich atribútov z Oracle objektu.
+            Dedič použije metódy <see cref="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.GetValue``1(System.String)"/> a <see cref="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.GetValue``1(System.Int32)"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.SetValue(System.String,System.Object)">
+            <summary>
+            Nastaví hodnotu atribútu Oracle objektu.
+            </summary>
+            <param name="oracleColumnName">Názov stĺpca user-defined Oracle typu.</param>
+            <param name="value">Hodnota.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.SetValue(System.Int32,System.Object)">
+            <summary>
+            Nastaví hodnotu atribútu Oracle objektu.
+            </summary>
+            <param name="oracleColumn_Id">Identifikátor stĺpca user-defined Oracle typu.</param>
+            <param name="value">Hodnota.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.GetValue``1(System.String)">
+            <summary>
+            Vráti hodnotu atribútu Oracle objektu.
+            </summary>
+            <typeparam name="U">Typ vrátenej hodnoty.</typeparam>
+            <param name="oracleColumnName">Názov stĺpca user-defined Oracle typu.</param>
+            <returns>Žiadaná hodnota, alebo <c>default(U)</c> ak je hodnota NULL.</returns>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak hodnota atribútu je NULL a jedná sa o value typ.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.CustomTypeBase`1.GetValue``1(System.Int32)">
+            <summary>
+            Vráti hodnotu atribútu Oracle objektu.
+            </summary>
+            <typeparam name="U">Typ vrátenej hodnoty.</typeparam>
+            <param name="oracleColumn_Id">Identifikátor stĺpca user-defined Oracle typu.</param>
+            <returns>Žiadaná hodnota, alebo <c>default(U)</c> ak je hodnota NULL.</returns>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak hodnota atribútu je NULL a jedná sa o value typ.</exception>
+        </member>
+        <member name="T:Cora.Data.DBProvider.OracleUdt.NamespaceDoc">
+            <summary>
+            Namespace obsahuje triedy mapujúce Oracle user-defined typy a spatial typy, podľa 
+            postupu: http://docs.oracle.com/html/E15167_01/featUDTs.htm#CJAEJGDC
+            </summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.OracleUdt.SdoGeometry">
+            <summary>
+            Trieda mapujúca Oracle typ MDSYS.SDO_GEOMETRY.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.OracleUdt.SdoGeometry.Gtype">
+            <summary>
+            Vráti alebo nastaví typ geometrie (SDO_GTYPE).
+            </summary>
+            <value>Typ geometrie.</value>
+        </member>
+        <member name="P:Cora.Data.DBProvider.OracleUdt.SdoGeometry.Srid">
+            <summary>
+            Vráti alebo nastaví súradnicový systém (SDO_SRID).
+            </summary>
+            <value>Súradnicový systém.</value>
+        </member>
+        <member name="P:Cora.Data.DBProvider.OracleUdt.SdoGeometry.Point">
+            <summary>
+            Vráti alebo nastaví bod pre prípad bodovej geometrie (SDO_POINT).
+            </summary>
+            <value>Bod.</value>
+        </member>
+        <member name="P:Cora.Data.DBProvider.OracleUdt.SdoGeometry.ElemArray">
+            <summary>
+            Vráti alebo nastaví informácie ako interpretovať súradnice (SDO_ELEM_INFO).
+            </summary>
+            <value>Pole informácií ako interpretovať súradnice.</value>
+        </member>
+        <member name="P:Cora.Data.DBProvider.OracleUdt.SdoGeometry.OrdinatesArray">
+            <summary>
+            Vráti alebo nastaví súradnice (SDO_ORDINATES).
+            </summary>
+            <value>Pole súradníc.</value>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.SdoGeometry.MapFromCustomObject">
+            <summary>
+            Propaguje hodnoty svojich atribútov do Oracle objektu. 
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.SdoGeometry.MapToCustomObject">
+            <summary>
+            Načíta hodnoty svojich atribútov z Oracle objektu.
+            </summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.OracleUdt.SdoPoint">
+            <summary>
+            Trieda mapujúca Oracle typ MDSYS.SDO_POINT_TYPE.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.OracleUdt.SdoPoint.X">
+            <summary>
+            Vráti alebo nastaví súradnicu X.
+            </summary>
+            <value>Súradnica X.</value>
+        </member>
+        <member name="P:Cora.Data.DBProvider.OracleUdt.SdoPoint.Y">
+            <summary>
+            Vráti alebo nastaví súradnicu Y.
+            </summary>
+            <value>Súradnica Y.</value>
+        </member>
+        <member name="P:Cora.Data.DBProvider.OracleUdt.SdoPoint.Z">
+            <summary>
+            Vráti alebo nastaví súradnicu Z.
+            </summary>
+            <value>Súradnica Z.</value>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.SdoPoint.MapFromCustomObject">
+            <summary>
+            Propaguje hodnoty svojich atribútov do Oracle objektu. 
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.OracleUdt.SdoPoint.MapToCustomObject">
+            <summary>
+            Načíta hodnoty svojich atribútov z Oracle objektu.
+            </summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.BadProviderException">
+            <summary>
+            Vynimka pre nespravny <see cref="T:Cora.Data.DBProvider.Provider"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.BadProviderException.#ctor(System.String,System.Exception)">
+            <summary>
+            Vytvorenie vynimky pre nespravny <see cref="T:Cora.Data.DBProvider.Provider"/>.
+            </summary>
+            <param name="message">Text vynimky.</param>
+            <param name="innerException">Vnutorna vynimka.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.BadProviderException.#ctor(Cora.Data.DBProvider.Provider,System.Exception)">
+            <summary>
+            Vytvorenie vynimky pre nespravny <see cref="T:Cora.Data.DBProvider.Provider"/>.
+            </summary>
+            <param name="provider">Hodnota provider-a.</param>
+            <param name="innerException">Vnutorna vynimka.</param>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraCommand">
+            <summary>
+            DB príkaz, ktorý sa vykoná na dátovom zdroji, ku ktorému existuje otvorené spojenie.
+            </summary>
+            <remarks>
+            Trieda zapuzdruje správanie príkazu pre rozličné DB providery.
+            Súčasťou príkazu môžu byť viazané parametre (<see cref="P:Cora.Data.DBProvider.CoraCommand.Parameters"/>), ktorých hodnoty sa pri <see cref="P:Cora.Data.DBProvider.CoraCommand.ParameterBind"/>==<c>true</c>
+            naviažu na miesta v príkaze označené značkami <see cref="F:Cora.Data.DBProvider.CoraCommand.PARAMBIND"/> a <see cref="F:Cora.Data.DBProvider.CoraCommand.PARAMBIND_E"/>.
+            </remarks>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraCommand.PARAMBIND">
+            <summary>Označenie začiatku viazaného parametra ("&lt;paramBind&gt;").</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraCommand.PARAMBIND_E">
+            <summary>Označenie konca viazaného parametra ("&lt;/paramBind&gt;").</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraCommand.PARAM_PREFIX">
+            <summary>Prefix viazaného parametra.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraCommand.PARAM_PREFIX_ORACLE">
+            <summary>Prefix viazaného parametra pre Oracle.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraCommand.REF_CUR_PARAM_NAME">
+            <summary>Názov pre parameter ref kurzora (mRefCursor).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraCommand.TEMP_BLOB">
+            <summary>Názov pre parameter temp blob-u (tempblob).</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.#ctor(System.String,System.Data.IDbConnection)">
+            <summary>
+            Vytvorenie commandu s príkazom a DB spojenim.
+            </summary>
+            <param name="cmdText">Text DB príkazu.</param>
+            <param name="connection">DB spojenie.</param>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.CommandText">
+            <summary>Text DB príkazu.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.CommandTimeout">
+            <summary>Timeout príkazu.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.CommandType">
+            <summary>Typ command-u, určuje ako sa interpretuje <see cref="P:Cora.Data.DBProvider.CoraCommand.CommandText"/>.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.Connection">
+            <summary>DB spojenie používané touto inštanciou.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.Parameters">
+            <summary>Zoznam parametrov.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.Transaction">
+            <summary>Transakcia.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.UpdatedRowSource">
+            <summary><see cref="P:Cora.Data.DBProvider.CoraCommand.UpdatedRowSource"/>.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.Cancel">
+            <summary>Cancel.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.CreateParameter">
+            <summary>
+            Vytvorenie parametra.
+            </summary>
+            <returns>Novo vytvorený parameter.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.ExecuteNonQuery">
+            <summary>
+            Spustenie príkazu bez datovych vysledkov.
+            </summary>
+            <returns>Výsledok.</returns>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak <see cref="P:Cora.Data.DBProvider.CoraCommand.Connection"/> je <c>null</c> alebo nie je otvorená, alebo pri chybe vykonávania príkazu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak provider DB spojenia nie je podporovaný.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.ExecuteReader(System.Data.CommandBehavior)">
+            <summary>
+            Spustenie príkazu s dátovym výsledkom.
+            </summary>
+            <param name="behavior">Nastavenie správania spustenia.</param>
+            <returns>Data reader výsledkov.</returns>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak <see cref="P:Cora.Data.DBProvider.CoraCommand.Connection"/> je <c>null</c> alebo nie je otvorená, alebo pri chybe vykonávania príkazu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak provider DB spojenia nie je podporovaný.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.ExecuteReader">
+            <summary>
+            Spustenie príkazu s dátovym výsledkom.
+            </summary>
+            <returns>Data reader výsledkov.</returns>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak <see cref="P:Cora.Data.DBProvider.CoraCommand.Connection"/> je <c>null</c> alebo nie je otvorená, alebo pri chybe vykonávania príkazu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak provider DB spojenia nie je podporovaný.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.ExecuteScalar">
+            <summary>
+            Spustenie príkazu s vysledkom skalár (jedna hodnota).
+            </summary>
+            <returns>Výsledok.</returns>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak <see cref="P:Cora.Data.DBProvider.CoraCommand.Connection"/> je <c>null</c> alebo nie je otvorená, alebo pri chybe vykonávania príkazu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak provider DB spojenia nie je podporovaný.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.Prepare">
+            <summary>Príprava commandu.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.Dispose">
+            <summary>Dispose.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.ToString">
+            <summary>
+            Získanie reťazca, vyjadrujúceho aktuálny stav command-u.
+            </summary>
+            <returns>
+            Reťazec, vyjadrujúci aktuálny stav command-u.
+            </returns>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.Command">
+            <summary>Samotný command (špeciálny pre každého providera). Je lazy-load.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.LogErrors">
+            <summary>
+            Majú sa logovať detaily (text príkazu a hodnoty parametrov) pri chybe vykonávania príkazu pomocou aplikačného loggera?
+            Defaultná hodnota je <c>true</c>.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraCommand.ParameterBind">
+            <summary>Nastavenie viazania parametrov.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.DisposeAndClearParameters(System.Boolean)">
+            <summary>Uvoľnenie parametrov commandu.</summary>
+            <param name="disposeParameterValues">Uvoľniť aj hodnoty parametrov? Aj je <c>true</c>, 
+            zavolá sa na každý <see cref="T:IDisposable"/> parameter <see cref="M:System.IDisposable.Dispose"/>.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.ExecuteRefCursor">
+            <summary>
+            Spúšťanie storovanych procedúr, ktorých výstupom (výstupným parametrom) je REF CURSOR.
+            Ak spúšťame procedúru, ktorej výstupom má byť REF CURSOR, v Oracle je potrebné pridať parameter
+            	so špecifikovaným menom (mRefCursor) typu RefCursor <see cref="M:Cora.Data.DBProvider.CoraCommand._AddOraClientRefCurParameter"/>.
+            Keďže MSSQL takýto typ parametra nemá, musí sa vytvoriť taká storovaná procedúra,
+            	ktorá bude mať volanie SELECT-u a tým pádom storovaná procedúra vráti kurzor
+            	(preto pre MSSQL volanie _Command.ExecuteReader()).
+            Keďže storovaná procedúra môže mať aj výstupné parametre, pre MSSQL je potrebné po zavolať príkaz
+            	_Command.ExecuteReader() a potom aj príkaz result.NextResult(), aby sa výstupné parametre naplnili
+            	(počet volaní result.NextResult() závisí od počtu výstupných parametrov).
+            </summary>
+            <returns></returns>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak <see cref="P:Cora.Data.DBProvider.CoraCommand.Connection"/> je <c>null</c> alebo nie je otvorená, alebo pri chybe vykonávania príkazu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak provider DB spojenia nie je podporovaný.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand.CheckValidAndOpenConnection">
+            <summary>Kontrola, že DB spojenie je nastavené a otvorené.</summary>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak <see cref="F:Cora.Data.DBProvider.CoraCommand._Connection"/> je <c>null</c> alebo nie je otvorená.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand._AddOraClientRefCurParameter">
+            <summary>Pridanie Oracle parametra pre ref kurzor.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand._AddOra8xRefCurParameter">
+            <summary>Pridanie Oracle parametra pre ref kurzor.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand._ReadParams(System.Boolean)">
+            <summary>
+            Prečíta hodnoty parametrov, ktoré boli vrátené z <see cref="M:Cora.Data.DBProvider.CoraCommand.ExecuteNonQuery"/>.
+            </summary>
+            <param name="skipRefCursorParam">Preskočiť parameter ref-kurzor?</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand._ConvertParamName(System.String,Cora.Data.DBProvider.Provider)">
+            <summary>
+            Nastavenie začiatocného znaku pre názov parametra - SQL začína "@", Oracle začína "m".
+            </summary>
+            <param name="parameterName">Názov parametra.</param>
+            <param name="provider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand._PrepareParamBind">
+            <summary>
+            Substitúcia značiek parametrov (<see cref="F:Cora.Data.DBProvider.CoraCommand.PARAMBIND"/> a <see cref="F:Cora.Data.DBProvider.CoraCommand.PARAMBIND_E"/>) podľa typu databázy.
+            </summary>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException"></exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand._CreateBlob8x(System.String,System.Byte[])">
+            <summary>
+            Vytvorenie Oracle 8i blob-u.
+            </summary>
+            <param name="paramName">Názov parametra.</param>
+            <param name="blobData">Binárne dáta.</param>
+            <returns>Oracle 8i blob.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand._CreateBlobOraClient(System.String,System.Byte[])">
+            <summary>
+            Vytvorenie Oracle Client blob-u.
+            </summary>
+            <param name="paramName">Názov parametra.</param>
+            <param name="blobData">Binárne dáta.</param>
+            <returns>Oracle Client blob.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand._ConvertToOracleDbType8x(System.Data.DbType)">
+            <summary>
+            Konverzia Db typu na Oracle 8i DB typ.
+            </summary>
+            <param name="dbType">Zdrojový DB typ.</param>
+            <returns>Oracle 8i DB typ.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraCommand._ConvertFromOraClientValue(System.Data.DbType,System.Object)">
+            <summary>
+            Konverzia hodnoty z Oracle Client DB na object. Rieši napr. problém s hodnotou
+            <see cref="T:Oracle.DataAccess.Types.OracleDecimal"/> pri 64-bitovom klientovi alebo <see cref="T:Oracle.DataAccess.Types.OracleBlob"/>.
+            </summary>
+            <param name="dbType">DB typ.</param>
+            <param name="oraValue">Hodnota z Oracle Client.</param>
+            <returns>Konvertovaná hodnota.</returns>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraConnection">
+            <summary>
+            Spojenie do DB.
+            </summary>
+            <remarks>
+            Spojenie sa vytvorí na základe connect stringu (viď <see cref="T:Cora.Data.DBProvider.CoraConnectionString"/>), v ktorom musí byť špecifikovaný
+            databázový provider. Podporované providery sú: 
+            <list type="bullet">
+            	<item><see cref="F:Cora.Data.DBProvider.Provider.SQL"/></item>
+            	<item><see cref="F:Cora.Data.DBProvider.Provider.Ora8x"/></item>
+            	<item><see cref="F:Cora.Data.DBProvider.Provider.OraClient"/></item>
+            	<item><see cref="F:Cora.Data.DBProvider.Provider.DB2v9"/></item>
+            	<item><see cref="F:Cora.Data.DBProvider.Provider.SQLite"/></item>
+            	<item><see cref="F:Cora.Data.DBProvider.Provider.Ora10g"/></item>
+            </list>
+            Podľa hodnoty providera	sa vytvára konekcia špecifická pre daný databázový zdroj, pričom connect string môže (resp. musí)
+            obsahovať všetky potrebné parametre ktoré daný databázový zdroj vyžaduje.
+            </remarks>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.GetProviderFromConnection(System.Data.IDbConnection)">
+            <summary>
+            Získanie provider-a pre zadaný objekt spojenia.
+            </summary>
+            <param name="connection">DB spojenie. Nemusí byť nutne typu <see cref="T:Cora.Data.DBProvider.CoraConnection"/>.</param>
+            <returns>Odpovedajúci provider.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="connection"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.IsConnectivity(System.String,System.Exception@)">
+            <summary>
+            Test ConnectStringu či spojenie prebehne v poriadku.
+            </summary>
+            <param name="connString">Connect String.</param>
+            <param name="e">Chyba pri pokuse o spojenie.</param>
+            <returns>
+            True ak test spojenia prebehne v poriadku.
+            </returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.ExecuteScalar(System.String,System.String,System.Object[])">
+            <summary>
+            Skratka pre <see cref="M:Cora.Data.DBProvider.CoraCommand.ExecuteScalar"/>, t.j. spustenie príkazu s vysledkom skalár.
+            </summary>
+            <param name="connectionString">Connection string.</param>
+            <param name="commandText">Text DB dopytu.</param>
+            <param name="paramValues">Voliteľné hodnoty parametrov, alebo <c>null</c>.</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.#ctor">
+            <summary>
+            Vytvorenie neinicializovaného DB spojenia (inicializuje sa tak až po priradení <see cref="P:Cora.Data.DBProvider.CoraConnection.ConnectionString"/>-u).
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.#ctor(System.String)">
+            <summary>
+            Vytvorenie a inicializácia DB spojenia podľa connection string-u.
+            </summary>
+            <param name="connectionString">Connection string.</param>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak <paramref name="connectionString"/> neobsahuje alebo obsahuje nepodporovaný DB provider.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vytvárania spojenia (napr. chýbajúce argumenty v connect stringu).</exception>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraConnection.ConnectionString">
+            <summary>Connection string. Priradenie vyžaduje ešte neinicializovanú, alebo zatvorenú konekciu; zároveň konekciu inicializuje.
+            POZOR - nastavenie vyžaduje string vo všeobecnom tvare (s určení providera), vracia sa ale už connection string vo 
+            formáte špecifickom pre daného providera.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Ak je hodnota <c>null</c>.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak bol priradený connect string, ktorý neobsahuje alebo obsahuje nepodporovaný DB provider.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak je spojenie otvorené, alebo pri chybe vytvárania spojenia (napr. chýbajúce argumenty v connect stringu).</exception>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraConnection.ConnectionTimeout">
+            <summary>Timeout pre pripojenie. <see cref="P:System.Data.IDbConnection.ConnectionTimeout"/>.</summary>
+            <exception cref="T:System.InvalidOperationException">Ak inštancia nie je inicializovaná.</exception>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraConnection.Database">
+            <summary>Databaza. <see cref="P:System.Data.IDbConnection.Database"/>.</summary>
+            <exception cref="T:System.InvalidOperationException">Ak inštancia nie je inicializovaná.</exception>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraConnection.State">
+            <summary>Stav spojenia.</summary>
+            <exception cref="T:System.InvalidOperationException">Ak inštancia nie je inicializovaná.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.BeginTransaction">
+            <summary>
+            Začiatok transakcie.
+            </summary>
+            <returns>Začatá transakcia.</returns>
+            <exception cref="T:System.InvalidOperationException">Ak inštancia nie je inicializovaná.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.BeginTransaction(System.Data.IsolationLevel)">
+            <summary>
+            Začiatok transakcie.
+            </summary>
+            <param name="il">Nastavenie zamykania transakcie.</param>
+            <returns>Začatá transakcia.</returns>
+            <exception cref="T:System.InvalidOperationException">Ak inštancia nie je inicializovaná.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.ChangeDatabase(System.String)">
+            <summary>
+            Zmena databázy.
+            </summary>
+            <param name="databaseName">Databáza.</param>
+            <exception cref="T:System.InvalidOperationException">Ak inštancia nie je inicializovaná.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.Open">
+            <summary>Otvorenie DB spojenia.</summary>
+            <exception cref="T:System.InvalidOperationException">Ak inštancia nie je inicializovaná.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.CreateCommand">
+            <summary>
+            Vytvorenie commandu.
+            </summary>
+            <returns>Command, napojený do konekcie.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.CreateCommand(System.String)">
+            <summary>
+            Vytvorenie commandu s textom príkazu.
+            </summary>
+            <returns>Command, napojený do konekcie.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.Close">
+            <summary>Close.</summary>
+            <exception cref="T:System.InvalidOperationException">Ak inštancia nie je inicializovaná.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.Dispose">
+            <summary>
+            Uvoľní alokované zdroje. 
+            POSTCOND: <see cref="P:Cora.Data.DBProvider.CoraConnection.IsInitialized"/> == <c>false</c>.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraConnection.Provider">
+            <summary>DB provider.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraConnection.Transaction">
+            <summary>
+            Transaction property
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraConnection.IsInitialized">
+            <summary>
+            Je spojenie inicializované? Inicializácia nastáva po priradení platného <see cref="P:Cora.Data.DBProvider.CoraConnection.ConnectionString"/>, stráca sa po volaní <see cref="M:Cora.Data.DBProvider.CoraConnection.Dispose"/>.
+            </summary>
+            <value><c>true</c> ak existuje inštancia konekcie špecifická pre daný provider, inak <c>false</c>.</value>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.InsertFromDataTable(System.Data.DataTable)">
+            <summary>
+            Vloženie dát do DB tabuľky z <see cref="T:System.Data.DataTable"/>.
+            </summary>
+            <param name="sourceDataTable">Zdrojová <see cref="T:System.Data.DataTable"/>.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="sourceDataTable"/> <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak je meno tabuľky <paramref name="sourceDataTable"/> prázdne.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak spojenie nie je otvorené.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.GetLastGeneratedId">
+            <summary>
+            Získanie posledného ID, ktoré bolo databázou zgenerované (pri inserte).
+            <para>MSSQL: select SCOPE_IDENTITY()</para>
+            <para>SQLite: select last_insert_rowid()</para>
+            </summary>
+            <returns>Posledné ID, ktoré bolo databázou zgenerované (pri inserte).</returns>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Keď ide o pripojenie do inej DB než uvedené.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.LockTableExclusive(System.String)">
+            <summary>
+            Zamknutie tabuľky exkluzívne - žiadne iné spojenie ju nemôže exkluzívne zamknúť, kým sa neukončí aktuálna transakcia.
+            Požiadavky pred volaním: 1. otvorené spojenie so začatou transakciou. 2. iba pre Oracle a MSSQL.
+            </summary>
+            <param name="tableName">Názov tabuľky. Nesmie byť <c>null</c>.</param>
+            <returns>Bola tabuľka zamknutá?</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="tableName"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection.ExecuteScalar(System.String,System.Object[])">
+            <summary>
+            Skratka pre <see cref="M:Cora.Data.DBProvider.CoraCommand.ExecuteScalar"/>, t.j. spustenie príkazu s vysledkom skalár.
+            </summary>
+            <param name="connection">Otvorené DB spojenie.</param>
+            <param name="commandText">Text DB dopytu.</param>
+            <param name="paramValues">Voliteľné hodnoty parametrov, alebo <c>null</c>. Parametre v dotaze sú v tvare <c>P0</c>, <c>P1</c> atd.</param>
+            <returns>Výsledok.</returns>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraConnection.Connection">
+            <summary>Vnútorné spojenie (špecifické pre daný provider) s ktorým inštancia pracuje.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection._Initialize">
+            <summary>
+            Inicializácia objektu connection podľa providera a priradenie connection stringu.
+            POSTCOND: <see cref="P:Cora.Data.DBProvider.CoraConnection.IsInitialized"/> == <c>true</c>.
+            </summary>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vytvárania spojenia (napr. chýbajúce argumenty v connect stringu).</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraConnection._ExtractProviderAndSetConnectionString(System.String)">
+            <summary>
+            Nastaví <see cref="F:Cora.Data.DBProvider.CoraConnection._Provider"/> a <see cref="F:Cora.Data.DBProvider.CoraConnection._ConnString"/>.
+            </summary>
+            <param name="connectionString">Zdrojový connection string.</param>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak v <paramref name="connectionString"/> neobsahuje alebo obsahuje nepodporovaný DB provider.</exception>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraDataAdapter">
+            <summary>
+            CoraDataAdapter class.
+            (Ak nechceme, aby volania niektorych metod museli byt v spravnom poradi, konstruktor
+            	musi mat ako vstupny parameter connect string, resp. datovu konekciu, pretoze
+            	iba na zaklade konekcie sa trieda moze rozhodnut aky DataAdapter v skutocnosti
+            	pouzit (OracleDataAdapter, SqlDataAdapter, ...)
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter.#ctor(System.String)">
+            <summary>
+            CoraDataAdapter konstruktor.
+            </summary>
+            <param name="connectionStr">Connect string.</param>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak provider dátovej konekcie nie je podporovaný.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter.#ctor(System.Data.IDbConnection)">
+            <summary>
+            CoraDataAdapter konstruktor.
+            </summary>
+            <param name="connection">Datova konekcia.</param>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak provider dátovej konekcie nie je podporovaný.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter._CreateDataAdapter(Cora.Data.DBProvider.Provider)">
+            <summary>
+            Vytvorenie DataAdapter-a podla typu DB providera.
+            </summary>
+            <param name="provider">Typ DB providera.</param>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Ak <paramref name="provider"/> nie je podporovaný.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter._CreateSQLDataAdapter">
+            <summary>
+            Vytvorenie DataAdapter-a pre MS SQL.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter._CreateOraClientDataAdapter">
+            <summary>
+            Vytvorenie DataAdapter-a pre Oracle Client.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter._CreateOra8xDataAdapter">
+            <summary>
+            Vytvorenie DataAdapter-a pre Oracle 8x.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter._CreateOleDbDataAdapter">
+            <summary>
+            Vytvorenie DataAdapter-a pre OLE DB.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter._CreateDB2v9DataAdapter">
+            <summary>
+            Vytvorenie DataAdapter-a pre DB2.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter._CreateSQLiteDataAdapter">
+            <summary>
+            Vytvorenie DataAdapter-a pre SQLite.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter._CreateOracleManagedAdapter">
+            <summary>
+            Vytvorenie DataAdapter-a pre Oracle Managed.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter.SetDataAdapterCommand(System.Data.IDbCommand@,System.Data.IDbCommand)">
+            <summary>
+            Priradenie poslaneho Command-u niektoremu z Command-ov DataAdapter-a, pricom ak vstupny Command
+            	je typu CoraCommand, vstupny Command sa upravi <see cref="M:Cora.Data.DBProvider.CoraCommand._PrepareParamBind"/>.
+            </summary>
+            <param name="dataAdapterCommand">Command DataAdapter-a, ktory chceme nastavit. (VYSTUP)</param>
+            <param name="command">Command, ktory chceme priradit DataAdapter-u. (VSTUP)</param>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataAdapter.SelectCommand">
+            <summary>
+            Vrati alebo nastavi SQL prikaz, ktory sa pouzije na dotiahnutie dat.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataAdapter.DeleteCommand">
+            <summary>
+            Vrati alebo nastavi SQL prikaz, ktory sa pouzije na vymazanie zaznamu.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataAdapter.InsertCommand">
+            <summary>
+            Vrati alebo nastavi SQL prikaz, ktory sa pouzije na vlozenie noveho zaznamu.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataAdapter.UpdateCommand">
+            <summary>
+            Vrati alebo nastavi SQL prikaz, ktory sa pouzije na editaciu zaznamu.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter.Fill(System.Data.DataSet)">
+            <summary>
+            Naplnenie (alebo aktualizacia) udajov do DataSet-u.
+            </summary>
+            <param name="dataSet">DataSet, ktory sa naplni zaznamami.</param>
+            <returns>Vrati riadkov, ktore boli uspesne pridane (alebo aktualizovane) do DataSet-u.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter.FillSchema(System.Data.DataSet,System.Data.SchemaType)">
+            <summary>
+            Prida DataTable s menom "Table" do specifikovaneho DataSet-u a konfiguruje schemu tak, aby
+            zodpovedala datovemu zdroju zalozenom na specifikovanom type schemy (<see cref="T:System.Data.SchemaType"/>).
+            </summary>
+            <param name="dataSet"></param>
+            <param name="schemaType">Niektora zo <see cref="T:System.Data.SchemaType"/> hodnot.</param>
+            <returns>
+            Vrati pole <see cref="T:System.Data.DataTable"/> objektov, ktore obsahuju informacie
+            o scheme, vratene z datoveho zdroja.
+            </returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter.GetFillParameters">
+            <summary>
+            Vrati parametre nastavene pouzivatelom, ked sa spusta SQL SELECT prikaz.
+            </summary>
+            <returns>Vrati pole <see cref="T:System.Data.IDataParameter"/> objektov.</returns>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataAdapter.MissingMappingAction">
+            <summary>
+            Indikuje alebo specifikuje, ci nemapovane zdrojove tabulky alebo stlpce su odovzdane so svojimi
+            povodnymi menami, alebo su ignorovane, alebo sa vyvola chyba.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataAdapter.MissingSchemaAction">
+            <summary>
+            Indikuje alebo specifikuje akciu, ktora nastane pri pridavani dat do DataSet-u, pricom pozadovane
+            zdrojove tabulky alebo stlpce chybaju.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataAdapter.System#Data#IDataAdapter#TableMappings">
+            <summary>
+            Indikuje ako je zdrojova tabulka namapovana na tabulku DataSet-u.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataAdapter.Update(System.Data.DataSet)">
+            <summary>
+            Vola patricny INSERT, UPDATE alebo DELETE prikaz, pre kazdy vlozeny, upraveny alebo vymazany riadok
+            v DataSet-e.
+            </summary>
+            <param name="dataSet">DataSet pouzity na aktualizaciu datoveho zdroja.</param>
+            <returns></returns>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataAdapter.TableMappings">
+            <summary>
+            Indikuje ako je zdrojova tabulka namapovana na tabulku DataSet-u.
+            </summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraDataReader">
+            <summary>
+            Data reader pre priame získanie dát z DB. Sám vytvorí <see cref="T:System.Data.IDbConnection"/> (ak treba) a <see cref="T:System.Data.IDbCommand"/>,
+            o ktorých uvoľnenie sa aj následne postará.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.#ctor(System.String)">
+            <summary>
+            Vytvorenie data reader-a.
+            </summary>
+            <param name="connectionString">Connection string pre získanie dát.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.#ctor(System.Data.IDbConnection)">
+            <summary>
+            Vytvorenie data reader-a.
+            </summary>
+            <param name="connection">DB spojenie pre získanie dát.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="connection"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.Execute(System.String,System.Data.IDbDataParameter[])">
+            <summary>
+            Spustenie zadaného dotazu.
+            </summary>
+            <param name="query">Dotaz pre získanie dát.</param>
+            <param name="parameters">Viazané parametre.</param>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonania príkazu.</exception>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataReader.Connection">
+            <summary>DB spojenie pre získanie dát.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataReader.Command">
+            <summary>DB command pre získanie dát.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetEnumerator">
+            <summary>
+            Získanie enumerátora pre prechádzanie výsledkov.
+            </summary>
+            <returns>Enumerátor pre prechadzanie výsledkov.</returns>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataReader.FieldCount">
+            <summary>Počet stĺpcov.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataReader.Item(System.String)">
+            <summary>Prístup k hodnotám aktuálneho riadku podľa mena.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataReader.Item(System.Int32)">
+            <summary>Prístup k hodnotám aktuálneho riadku podľa indexu.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetBoolean(System.Int32)">
+            <summary>
+            Bool hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetByte(System.Int32)">
+            <summary>
+            Byte hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetBytes(System.Int32,System.Int64,System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Pole bajtov podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index stĺpca.</param>
+            <param name="fieldOffset">Počiatočný ofset čítania.</param>
+            <param name="buffer">Výstupný buffer.</param>
+            <param name="bufferoffset">Ofset vo výstupnom buffer-i.</param>
+            <param name="length">Dĺžka čítania.</param>
+            <returns>Dĺžka zápisu.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetChar(System.Int32)">
+            <summary>
+            Char hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetChars(System.Int32,System.Int64,System.Char[],System.Int32,System.Int32)">
+            <summary>
+            Pole znakov podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <param name="fieldoffset">Počiatočný ofset citania.</param>
+            <param name="buffer">Výstupný buffer.</param>
+            <param name="bufferoffset">Ofset vo výstupnom buffer-i.</param>
+            <param name="length">Dĺžka čítania.</param>
+            <returns>Dĺžka zápisu.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetData(System.Int32)">
+            <summary>
+            Hodnota štruktúrovaného objektu podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Štruktúrovaný objekt.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetDataTypeName(System.Int32)">
+            <summary>
+            Názov typu hodnoty podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Názov typu hodnoty.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetDateTime(System.Int32)">
+            <summary>
+            Dátumová hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetDecimal(System.Int32)">
+            <summary>
+            <see cref="T:System.Decimal"/> hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetDouble(System.Int32)">
+            <summary>
+            <see cref="T:System.Double"/> hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetFieldType(System.Int32)">
+            <summary>
+            Typ hodnoty podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Typ hodnoty.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetFloat(System.Int32)">
+            <summary>
+            <see cref="T:System.Single"/> hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetGuid(System.Int32)">
+            <summary>
+            <see cref="T:System.Guid"/> hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetInt16(System.Int32)">
+            <summary>
+            <see cref="T:System.Int16"/> hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetInt32(System.Int32)">
+            <summary>
+            I<see cref="T:System.Int32"/> hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetInt64(System.Int32)">
+            <summary>
+            <see cref="T:System.Int64"/> hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetName(System.Int32)">
+            <summary>
+            Názov stĺpca podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Názov stĺpca.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetOrdinal(System.String)">
+            <summary>
+            Index stĺpca podľa nazvu.
+            </summary>
+            <param name="name">Požadovaný nazov.</param>
+            <returns>Index stĺpca.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetString(System.Int32)">
+            <summary>
+            Double hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetValue(System.Int32)">
+            <summary>
+            Hodnota podľa indexu.
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Hodnota.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetValues(System.Object[])">
+            <summary>
+            Pole hodnôt riadku dat.
+            </summary>
+            <param name="values">Výstupné pole hodnôt.</param>
+            <returns>Počet stĺpcov.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.IsDBNull(System.Int32)">
+            <summary>
+            Je hodnota s daným indexom NULL?
+            </summary>
+            <param name="i">Požadovaný index.</param>
+            <returns>Je hodnota NULL?</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.IsDBNull(System.String)">
+            <summary>
+            Je hodnota s daným názvom NULL?
+            </summary>
+            <param name="name">Požadovaný nazov.</param>
+            <returns>Je hodnota NULL?</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.Close">
+            <summary>
+            Zatvorenie data reader-a. Ak bolo zaslané spojenie, nie je zatvorené.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.GetSchemaTable">
+            <summary>
+            Získanie metadátovej tabuľky, popisujúcej stpĺce data reader-a.
+            </summary>
+            <returns>Tabulka o stlpcoch.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.NextResult">
+            <summary>
+            Posun na ďalšiu sadu výsledkov.
+            </summary>
+            <returns>Je ešte ďalšia sada výsledkov?</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.Read">
+            <summary>
+            Posun na ďalší riadok.
+            </summary>
+            <returns>Je ešte ďalší riadok?</returns>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataReader.Depth">
+            <summary>Hĺbka vnorenia riadku.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataReader.IsClosed">
+            <summary>Je data reader zatvorený?</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDataReader.RecordsAffected">
+            <summary>Počet dotknutých riadkov.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDataReader.Dispose">
+            <summary>Dispose.</summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraDbException">
+            <summary>
+            Výnimka pre DB operácie.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDbException.Create(System.Exception)">
+            <summary>
+            Vytvorenie výnimky pre zdrojovú databázovú výnimku.
+            </summary>
+            <param name="ex">Zdrojová výnimka. Typicky jedna z <see cref="T:System.Data.SqlClient.SqlException"/>,
+            <see cref="T:System.Data.OracleClient.OracleException"/>, <see cref="T:Oracle.DataAccess.Client.OracleException"/>,
+            <see cref="T:System.Data.OleDb.OleDbException"/>, <see cref="T:IBM.Data.DB2.DB2Exception"/>,
+            <see cref="T:System.Data.SQLite.SQLiteException"/>, alebo aj iná.</param>
+            <returns>Vytvorená výnimka.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDbException.#ctor(System.String,System.Exception,System.Int32,Cora.Data.DBProvider.Provider)">
+            <summary>
+            Vytvorenie výnimky pre DB operácie.
+            </summary>
+            <param name="message">Text výnimky.</param>
+            <param name="innerException">Zdrojová výnimka.</param>
+            <param name="number">Číslo chyby.</param>
+            <param name="provider">DB provider.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDbException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Vytvorenie výnimky pre DB operácie - používa sa v prípade deserializácie.
+            </summary>
+            <param name="info">Objekt pre načítanie serializačných údajov.</param>
+            <param name="context">Serializačný kontext.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="info"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraDbException.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Serializačná funkcia.
+            </summary>
+            <param name="info">Objekt pre uloženie serializačných údajov.</param>
+            <param name="context">Serializačný kontext.</param>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDbException.Number">
+            <summary>Číslo chyby.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraDbException.Provider">
+            <summary>DB Provider.</summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraPaging">
+            <summary>Trieda zabezpečujúca stránkovanie doťahovaných databázových údajov.</summary>
+            <remarks>
+            POZOR: Public metódy tejto triedy majú vedľajší efekt, že menia commandu, s ktorého dátami
+            pracujeme (minimálne jeho text a parametre). Preto treba vo všeobecnosti pre každý dopyt použiť nový command 
+            aj novú inštanciu tejto triedy - ich recyklácia na viacero volaní môže viesť k neočakávaným chybám.
+            </remarks>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraPaging.SELECT">
+            <summary>select</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraPaging.CORA_PAGING_ROWNUM">
+            <summary>Alias stĺpca CORA_PAGING_ROWNUM.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraPaging.CORA_PAGING_INNER_SELECT">
+            <summary>Alias vnútorného select-u CORA_PAGING_INNER_SELECT.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraPaging.CORA_PAGING_RN_MAX_PARAM">
+            <summary>Názov parametra CORA_PAGING_RN_MAX_PARAM.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraPaging.CORA_PAGING_RN_MIN_PARAM">
+            <summary>Názov parametra CORA_PAGING_RN_MIN_PARAM.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraPaging.CORA_PAGING_PAGE_INDEX">
+            <summary>Názov parametra CORA_PAGING_PAGE_INDEX.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraPaging.CORA_PAGING_PAGE_SIZE">
+            <summary>Názov parametra CORA_PAGING_PAGE_SIZE.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraPaging.#ctor(Cora.Data.DBProvider.CoraCommand)">
+            <summary>
+            Vytvorenie inštancie triedy pre stránkovanie údajov.
+            </summary>
+            <param name="pagingCommand">Command, ktorého dáta budú stránkované. Musí byť v tvare sql dotazu (select).</param>
+            <exception cref="T:System.ArgumentNullException">Ak je pagingCommand <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak command nie je v tvare sql dotazu (select).</exception>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraPaging.PagingCommand">
+            <summary>Command, ktorého dáta budú stránkované.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraPaging.GetPage(System.Int32,System.Int32,System.Data.CommandBehavior)">
+            <summary>
+            Spustenie dotazu so stránkovaným výsledkom s určením správania sa dotazu.
+            </summary>
+            <param name="pageSize">Požadovaná veľkosť strany.</param>
+            <param name="pageIndex">Požadovaná strana (zero index).</param>
+            <param name="commandBehavior">Nastavenie správania dotazu.</param>
+            <returns>Data reader výsledkov s požadovanou stranou.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="pageSize"/> alebo alebo <paramref name="pageIndex"/> negatívne.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Zatiaľ implementované iba pre Oracle a MSSQL.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonávania príkazu.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraPaging.GetArbitraryRows(System.Int32,System.Int32,System.Data.CommandBehavior)">
+            <summary>
+            Spustenie dotazu na akékoľvek riadky s určením správania sa dotazu.
+            </summary>
+            <param name="startIndex">Index prvého vyžiadaného riadku (zero-based).</param>
+            <param name="count">Počet vyžiadaných riadkov.</param>
+            <param name="commandBehavior">Nastavenie správania dotazu.</param>
+            <returns>Data reader výsledkov s požadovaými riadkami.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="startIndex"/> alebo alebo <paramref name="count"/> negatívne.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Zatiaľ implementované iba pre Oracle a MSSQL.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonávania príkazu.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraPaging.GetPageById(System.Int32,System.Int64,System.String,System.Int32@)">
+            <summary>
+            Spustenie dotazu s výsledkom stránkovaným na základe hľadaného ID záznamu.
+            </summary>
+            <param name="id">Hľadané ID záznamu. Ak nie je nájdené, dotiahne sa prvá strana (index 0).</param>
+            <param name="pageSize">Požadovaná veľkosť strany.</param>
+            <param name="idAlias">Alias stĺpca ID-éčka.</param>
+            <param name="pageIndex">Index nájdenej stránky (zero-based).</param>
+            <returns>Data reader výsledkov s požadovanou stranou.</returns>
+            <exception cref="T:System.ArgumentException">Ak je <paramref name="idAlias"/> prázdny.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="pageSize"/> 0 alebo negatívne.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Zatiaľ implementované iba pre Oracle a MSSQL.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonávania príkazu.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraPaging.GetPageByBigId(System.Int32,System.Numerics.BigInteger,System.String,System.Int32@)">
+            <summary>
+            Spustenie dotazu s výsledkom stránkovaným na základe hľadaného ID záznamu.
+            </summary>
+            <param name="id">Hľadané ID záznamu. Ak nie je nájdené, dotiahne sa prvá strana (index 0).</param>
+            <param name="pageSize">Požadovaná veľkosť strany.</param>
+            <param name="idAlias">Alias stĺpca ID-éčka.</param>
+            <param name="pageIndex">Index nájdenej stránky (zero-based).</param>
+            <returns>Data reader výsledkov s požadovanou stranou.</returns>
+            <exception cref="T:System.ArgumentException">Ak je <paramref name="idAlias"/> prázdny.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je <paramref name="pageSize"/> 0 alebo negatívne.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Zatiaľ implementované iba pre Oracle a MSSQL.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonávania príkazu.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraPaging.GetRowIndexById(System.Int64,System.String)">
+            <summary>
+            Vráti index riadku (zero-based) v dotaze, v ktorom sa nachádza záznam s danou hodnotou ID stĺpca.
+            </summary>
+            <param name="id">Hľadané ID záznamu.</param>
+            <param name="idAlias">Alias stĺpca ID-éčka.</param>
+            <returns>Index nájdeného riadku, alebo -1 ak nebol nájdený.</returns>
+            <exception cref="T:System.ArgumentException">Ak je <paramref name="idAlias"/> prázdny.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+            <exception cref="T:Cora.Data.DBProvider.BadProviderException">Zatiaľ implementované iba pre Oracle a MSSQL.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Pri chybe vykonávania príkazu.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraPaging.GetRowIndicesByIds(System.Collections.Generic.IEnumerable{System.Int64},System.String)">
+            <summary>
+            Vráti indexy riadkov (zero-based) v dotaze, v ktorých sa nachádzajú záznamy s danými hodnotami ID stĺpca.
+            </summary>
+            <param name="ids">Zoznam hľadaných ID záznamov.</param>
+            <param name="idAlias">Alias stĺpca ID-éčka.</param>
+            <returns>Zoznam indexov nájdených riadkov (v poradí) podľa ID. Nenájdené záznamy nie sú v zozname.</returns>
+            <exception cref="T:System.ArgumentException">Ak je <paramref name="idAlias"/> prázdny.</exception>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="ids"/> <c>null</c>.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak <see cref="F:Cora.Data.DBProvider.CoraPaging.PagingCommand"/> nemá platnú konekciu.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraPaging.AddOraclePagingQuery(System.Text.StringBuilder,System.String,System.String)">
+            <summary>
+            Adds the paging query.
+            </summary>
+            <param name="queryBuilder">The query builder.</param>
+            <param name="minRow">Štartovný riadok (zero-based).</param>
+            <param name="maxRow">Riadok po konečnom riadku (zero-based) - čiže tento riadok už nebude vo výsledku.</param>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraParameter">
+            <summary>
+            Parameter do DB príkazu.
+            </summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraParameter.SIZE_NOT_SPECIFIED">
+            <summary>Neurčená hodnota veľkosti parametra (-1).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraParameter.SCALE_NOT_SPECIFIED">
+            <summary>Neurčená hodnota mierky a presnosti parametra (0).</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraParameter.AUTO_NAME_PREFIX">
+            <summary>Prefix automaticky generovaného názvu parametra (hodnota AUTO_).</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.GetDbTypeFromValue(System.Object)">
+            <summary>
+            Získanie DB typu podľa zisteného typu hodnoty.
+            </summary>
+            <param name="oValue">Hodnota.</param>
+            <returns>DB typ.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="oValue"/> <c>null</c>.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak neexistuje zodpovedajúci DB typ pre typ <paramref name="oValue"/>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.GetDbTypeFromType(System.Type)">
+            <summary>
+            Získanie DB typu podľa typu hodnoty.
+            </summary>
+            <param name="type">Typ hodnoty.</param>
+            <returns>DB typ.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="type"/> <c>null</c>.</exception>
+            <exception cref="T:Cora.Data.DBProvider.CoraDbException">Ak neexistuje zodpovedajúci DB typ pre <paramref name="type"/>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.GetParamBindExpression(System.String)">
+            <summary>
+            Získanie výrazu pre viazaný parameter v tvare <c>&lt;paramBind&gt;parameterName&lt;/paramBind&gt;</c>.
+            </summary>
+            <param name="parameterName">Názov parametra.</param>
+            <returns>Výraz pre viazaný parameter.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.CreateAndAddAutoNamedParameter(System.Data.IDataParameterCollection,System.Object)">
+            <summary>
+            Vytvorenie parametra s unikátnym automaticky generovaným menom a zadanou hodnotou a jeho zaradenie do zadaného zoznamu.
+            Meno vytvoreného parametra má tvar <c>@AUTO_&lt;index v zozname&gt;</c>.
+            </summary>
+            <param name="parameterCollection">Zoznam parametrov, do ktorého sa parameter pridáva.</param>
+            <param name="value">Hodnota parmetra.</param>
+            <returns>Vytvorený parameter s unikátnym menom.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.CreateAndAddAutoNamedParameter(System.Data.IDataParameterCollection,System.Object,System.String@)">
+            <summary>
+            Vytvorenie parametra s unikátnym automaticky generovaným menom a zadanou hodnotou, jeho zaradenie do zadaného zoznamu
+            a získanie automaticky generovaného mena. Meno vytvoreného parametra má tvar <c>@AUTO_&lt;index v zozname&gt;</c>.
+            </summary>
+            <param name="parameterCollection">Zoznam parametrov, do ktorého sa parameter pridáva.</param>
+            <param name="value">Hodnota parmetra.</param>
+            <param name="paramBindExpression">Výraz pre viazaný parameter.</param>
+            <returns>Vytvorený parameter s unikátnym menom.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.CreateAndAddAutoNamedParameter(System.Data.IDataParameterCollection,System.Object,System.Data.DbType)">
+            <summary>
+            Vytvorenie parametra s unikátnym automaticky generovaným menom, zadanou hodnotou a DB typom
+            a jeho zaradenie do zadaného zoznamu. Meno vytvoreného parametra má tvar <c>@AUTO_&lt;index v zozname&gt;</c>.
+            </summary>
+            <param name="parameterCollection">Zoznam parametrov, do ktorého sa parameter pridáva.</param>
+            <param name="value">Hodnota parmetra.</param>
+            <param name="dbType">DB typ parmetra.</param>
+            <returns>Vytvorený parameter s unikátnym menom.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="parameterCollection"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.CreateAndAddAutoNamedParameter(System.Data.IDataParameterCollection,System.Object,System.Data.DbType,System.String@)">
+            <summary>
+            Vytvorenie parametra s unikátnym automaticky generovaným menom, zadanou hodnotou a DB typom, jeho zaradenie do zadaného zoznamu
+            a získanie automaticky generovaného mena. Meno vytvoreného parametra má tvar <c>@AUTO_&lt;index v zozname&gt;</c>.
+            </summary>
+            <param name="parameterCollection">Zoznam parametrov, do ktorého sa parameter pridáva.</param>
+            <param name="value">Hodnota parmetra.</param>
+            <param name="dbType">DB typ parmetra.</param>
+            <param name="paramBindExpression">Výraz pre viazaný parameter.</param>
+            <returns>Vytvorený parameter s unikátnym menom.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="parameterCollection"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.#ctor(System.String,System.Object,System.Data.DbType,System.Int32,System.Byte,System.Byte)">
+            <summary>
+            Vytvorenie parametra so zadaným menom, hodnotou, typom, veľkosťou, mierkou a presnosťou.
+            </summary>
+            <param name="parameterName">Názov parametra v tvare "@nazov").</param>
+            <param name="value">Hodnota parametra.</param>
+            <param name="type">DB typ parametra.</param>
+            <param name="size">Veľkosť parametra.</param>
+            <param name="scale">Mierka parametra.</param>
+            <param name="precision">Presnosť parametra.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.#ctor(System.String,System.Data.DbType,System.Int32,System.Byte,System.Byte)">
+            <summary>
+            Vytvorenie parametra so zadaným menom, typom, veľkosťou, mierkou a presnosťou.
+            </summary>
+            <param name="parameterName">Názov parametra v tvare "@nazov").</param>
+            <param name="type">DB typ parametra.</param>
+            <param name="size">Veľkosť parametra.</param>
+            <param name="scale">Mierka parametra.</param>
+            <param name="precision">Presnosť parametra.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.#ctor(System.String,Cora.Data.DBProvider.CoraDbType)">
+            <summary>
+            Vytvorenie parametra so zadaným menom a typom.
+            </summary>
+            <param name="parameterName">Názov parametra v tvare "@nazov").</param>
+            <param name="type">Špeciálny DB typ parametra.</param>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.#ctor">
+            <summary>
+            Vytvorenie parametra.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.DbType">
+            <summary>DB typ parametra.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.Direction">
+            <summary>Smer parametra (<see cref="T:System.Data.ParameterDirection"/>).</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.IsNullable">
+            <summary>Dovoľuje parameter NULL hodnoty?</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.ParameterName">
+            <summary>Názov parametra.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.SourceColumn">
+            <summary>Zdrojový stĺpec parametra.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.SourceVersion">
+            <summary>
+            <see cref="P:System.Data.IDataParameter.SourceVersion"/>
+            </summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.Value">
+            <summary>Vráti alebo nastaví hodnotu parametra.</summary>
+            <remarks>
+            Implementácia sa odchyľuje od dokumentácie <see cref="T:System.Data.IDbDataParameter"/> v tom, že <see cref="T:Cora.Data.DBProvider.CoraCommand"/>
+            interpretuje ako NULL nielen hodnotu <see cref="T:System.DBNull"/>, ale aj <c>null</c>.
+            </remarks>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.Size">
+            <summary>Veľkosť parametra. Hodnota <see cref="F:Cora.Data.DBProvider.CoraParameter.SIZE_NOT_SPECIFIED"/> znamená, že je neurčená.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.Precision">
+            <summary>Presnosť parametra.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.Scale">
+            <summary>Mierka parametra.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameter.SpecialDbType">
+            <summary>
+            Vráti alebo nastaví špeciálny typ DB parametra.
+            </summary>
+            <remarks>
+            Property slúži na doplnenie <see cref="P:Cora.Data.DBProvider.CoraParameter.DbType"/> pre prípady idúce nad jeho 
+            rámec. Pokiaľ má hodnotu <see cref="F:Cora.Data.DBProvider.CoraDbType.None"/>, platí  <see cref="P:Cora.Data.DBProvider.CoraParameter.DbType"/>,
+            v opačnom prípade sa tento ignoruje.
+            </remarks>
+            <value>Špeciálny ty DB Parametra, alebo <see cref="F:Cora.Data.DBProvider.CoraDbType.None"/>.</value>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameter.SetParameter(System.Data.IDbDataParameter)">
+            <summary>
+            Nastavenie zadaného parametra podľa aktuálnych hodnôt.
+            </summary>
+            <param name="destParameter">Nastavovaný parameter.</param>
+            <remarks>
+            Pokiaľ je hodnota <see cref="P:Cora.Data.DBProvider.CoraParameter.Value"/> <c>null</c>, hodnota nastavovaného parametra sa nastaví na
+            <see cref="T:System.DBNull"/>.
+            </remarks>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="destParameter"/> <c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraParameterCollection">
+            <summary>
+            Zoznam parametrov relevantných pre DB príkaz.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameterCollection.#ctor">
+            <summary>
+            Vytvorenie zoznamu parametrov.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameterCollection.Contains(System.String)">
+            <summary>
+            Obsahuje zoznam parameter so zadaným názvom?
+            </summary>
+            <param name="parameterName">Názov hľadaného parametra.</param>
+            <returns>Obsahuje zoznam parameter so zadaným názvom?</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameterCollection.IndexOf(System.String)">
+            <summary>
+            Index parametra so zadaným názvom.
+            </summary>
+            <param name="parameterName">Názov hľadaneho parametra.</param>
+            <returns>Index parametra so zadaným názvom, alebo -1 ak nie je nájdený.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameterCollection.RemoveAt(System.String)">
+            <summary>
+            Odstranenie parametra zo zoznamu.
+            </summary>
+            <param name="parameterName">Názov odstraňovaného parametra.</param>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraParameterCollection.Item(System.String)">
+            <summary>Prístup k parametrom zo zoznamu podľa názvu.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameterCollection.Add(System.Data.IDbDataParameter)">
+            <summary>
+            Pridanie parametra do zoznamu.
+            </summary>
+            <param name="parameter">Pridávaný parameter.</param>
+            <returns>Index, kde bol parameter pridaný.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="parameter"/> <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak je <see cref="P:System.Data.IDataParameter.ParameterName"/> argumentu <paramref name="parameter"/> prázdny.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameterCollection.Add(System.String,System.Data.DbType,System.Int32)">
+            <summary>
+            Pridanie parametra do zoznamu.
+            </summary>
+            <param name="parameterName">Názov pridávaného parametra.</param>
+            <param name="dbType">DB typ pridávaného parametra.</param>
+            <param name="size">Veľkosť pridávaného parametra.</param>
+            <returns>Index, kde bol parameter pridaný.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameterCollection.Add(System.String,System.Object,System.Data.DbType,System.Int32)">
+            <summary>
+            Pridanie parametra do zoznamu s menom, hodnotou, typom, veľkosťou.
+            </summary>
+            <param name="parameterName">Názov pridávaného parametra.</param>
+            <param name="value">Hodnota pridávaného parametra.</param>
+            <param name="dbType">DB typ pridávaného parametra.</param>
+            <param name="size">Veľkosť pridávaného parametra.</param>
+            <returns>Index, kde bol parameter pridaný.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraParameterCollection.Add(System.String,System.Object)">
+            <summary>
+            Pridanie parametra do zoznamu s hodnotou, typ je vypočítaný. 
+            </summary>
+            <param name="parameterName">Názov pridávaného parametra.</param>
+            <param name="value">Hodnota pridávaného parametra.</param>
+            <returns>Index, kde bol parameter pridaný.</returns>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraTransactedSave">
+            <summary>
+            Pomocná trieda na transakčné spúšťanie DB operácií.
+            </summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraTransactedSave.SaveBehaviour">
+            <summary>
+            Možnosti práce s konekciou pri volaní <see cref="!:DoTransactedSave()"/>.
+            </summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraTransactedSave.SaveBehaviour.None">
+            <summary>Žiadna akcia.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraTransactedSave.SaveBehaviour.OpenConnection">
+            <summary>Otvoriť spojenie.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraTransactedSave.SaveBehaviour.CloseConnection">
+            <summary>Zatvoriť spojenie.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.CoraTransactedSave.SaveBehaviour.OpenAndCloseConnection">
+            <summary>Otvoriť a potom zatvoriť spojenie.</summary>
+        </member>
+        <member name="E:Cora.Data.DBProvider.CoraTransactedSave.OnSaveSuccess">
+            <summary>Udalosť vyvolaná po úspešnom vykonaní DB operácie.</summary>
+        </member>
+        <member name="E:Cora.Data.DBProvider.CoraTransactedSave.OnSaveFail">
+            <summary>Udalosť vyvolaná po neúspešnom vykonaní DB operácie.</summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraTransactedSave.TransactedSaveDelegate">
+            <summary>Delegát pre samotné volanie DB operácie.</summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.CoraTransactedSave.AfterTransactedSaveDelegate">
+            <summary>Delegát po volaní DB operácie.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraTransactedSave.#ctor(System.Data.IDbConnection,Cora.Data.DBProvider.CoraTransactedSave.TransactedSaveDelegate)">
+            <summary>
+            Vytvorenie pomocnej triedy pre transakčné spúšťanie DB operácií.
+            </summary>
+            <param name="oConn">Spojenie do DB.</param>
+            <param name="saveCallback">Callback metóda pre vykonanie DB operácie.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="oConn"/> <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraTransactedSave.Connection">
+            <summary>Konekcia, nad ktorou sa budú volať DB operácie.</summary>
+        </member>
+        <member name="P:Cora.Data.DBProvider.CoraTransactedSave.SaveCallback">
+            <summary>Callback metóda, ktorá bude volaná pre vykonanie DB operácie.</summary>
+            <exception cref="T:System.ArgumentNullException">Pri priradení <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.CoraTransactedSave.DoTransactedSave(Cora.Data.DBProvider.CoraTransactedSave.SaveBehaviour,System.Object[])">
+            <summary>
+            Volanie DB operácie v transakcii s možnosťou nastavenia práce s konekciou. Ak nie je zadané nastavenie
+            <paramref name="saveBehaviour"/>, konekcia musí byť otvorená a po ukončení práce ju musí volajúci zatvoriť.
+            </summary>
+            <param name="saveBehaviour">Nastavenie práce s konekciou.</param>
+            <param name="saveCallbackArgs">Argumenty operácie.</param>
+            <returns>Výsledok transakčného spustenia DB operácie.</returns>
+        </member>
+        <member name="T:Cora.Data.DBProvider.Provider">
+            <summary>
+            Typ DB providera. Odpovedá hodnotám v tabuľke AA_SQL_TYP.
+            </summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.None">
+            <summary>Žiaden (neurčený) provider.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.SQL">
+            <summary>MSSQL, používa <see cref="N:System.Data.SqlClient"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.Ora10g">
+            <summary>Oracle DataProvider Managed Driver, používa <see cref="N:Oracle.ManagedDataAccess"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.Ora8x">
+            <summary>Oracle 8, používa <see cref="N:System.Data.OracleClient"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.OleDB">
+            <summary>OLE DB, používa <see cref="N:System.Data.OleDb"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.DB2v9">
+            <summary>IBM DB2, používa <see cref="N:IBM.Data.DB2"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.SQLite">
+            <summary>SQLite, používa <see cref="N:System.Data.SQLite"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.OraClient">
+            <summary>Oracle Client (natívny kód), používa <see cref="N:Oracle.DataAccess"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.SoapSerialize">
+            <summary>
+            Xml (SOAP) serializácia / deserializácia, používa
+            System.Runtime.Serialization.Formatters.Soap.SoapFormatter. Hodnota je 64 (0x0040).
+            </summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.Provider.BinarySerialize">
+            <summary>Binárna serializácia / deserializácia, používa
+            <see cref="T:System.Runtime.Serialization.Formatters.Binary.BinaryFormatter"/>. Hodnota je <see cref="F:Cora.Data.DBProvider.Provider.SoapSerialize"/> + 1.</summary>
+        </member>
+        <member name="T:Cora.Data.DBProvider.ProviderParser">
+            <summary>Pomocná trieda na textové parsovanie <see cref="T:Cora.Data.DBProvider.Provider"/>-a.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.ProviderParser.SQL_CONNECTION_NAMESPACE">
+            <summary>Meno namespace-u typu <see cref="T:System.Data.SqlClient.SqlConnection"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.ProviderParser.OLEDB_CONNECTION_NAMESPACE">
+            <summary>Meno namespace-u typu <see cref="T:System.Data.OleDb.OleDbConnection"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.ProviderParser.ORA8x_CONNECTION_NAMESPACE">
+            <summary>Meno namespace-u typu <see cref="T:System.Data.OracleClient.OracleConnection"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.ProviderParser.ORAMANAGED_CONNECTION_NAMESPACE">
+            <summary>Menu namespace-u typu <see cref="T:Oracle.ManagedDataAccess.Client.OracleConnection"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.ProviderParser.ORACLIENT_CONNECTION_NAMESPACE">
+            <summary>Meno namespace-u typu <see cref="T:Oracle.DataAccess.Client.OracleConnection"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.ProviderParser.DB2V9_CONNECTION_NAMESPACE">
+            <summary>Meno namespace-u typu <see cref="T:IBM.Data.DB2.DB2Connection"/>.</summary>
+        </member>
+        <member name="F:Cora.Data.DBProvider.ProviderParser.SQLITE_CONNECTION_NAMESPACE">
+            <summary>Meno namespace-u typu <see cref="T:System.Data.SQLite.SQLiteConnection"/>.</summary>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ProviderParser.ParseProviderFromType(System.Type)">
+            <summary>
+            Parsovanie <see cref="T:Cora.Data.DBProvider.Provider"/>-a podľa namespace-u zadaného typu objektu.
+            </summary>
+            <param name="parsedType">Typ, na základe ktorého zisťujem provider-a.</param>
+            <returns>Provider príslušný pre zadaný typ.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="parsedType"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ProviderParser.ParseProviderFromString(System.String)">
+            <summary>
+            Parsovanie <see cref="T:Cora.Data.DBProvider.Provider"/>-a zo string-u.
+            </summary>
+            <param name="parsedValue">String, z ktorého zisťujem provider-a.</param>
+            <returns>Provider príslušný pre zadanú hodnotu, alebo <see cref="F:Cora.Data.DBProvider.Provider.None"/>.</returns>
+        </member>
+        <member name="M:Cora.Data.DBProvider.ProviderParser.IsOracle(Cora.Data.DBProvider.Provider)">
+            <summary>
+            Ide o provider do databázy Oracle?
+            </summary>
+            <param name="provider">Provider.</param>
+            <returns>Ide o provider do databázy Oracle?</returns>
+        </member>
+        <member name="T:Cora.Data.Xml.Column">
+            <summary>
+            Stlpec RecordSet-u.
+            </summary>
+        </member>
+        <member name="P:Cora.Data.Xml.Column.Name">
+            <summary>Nazov stlpca.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.Column.ColId">
+            <summary>ID stlpca.</summary>
+            <remarks>Zmena hodnoty je možná iba ak stĺpec nepatrí definícii.</remarks>
+        </member>
+        <member name="P:Cora.Data.Xml.Column.Type">
+            <summary>Typ stlpca.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.Column.Size">
+            <summary>Velkost stlpca.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.Column.Precision">
+            <summary>Pocet desatin.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.Column.Nullable">
+            <summary>Moze byt stlpec NULL?</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.Column.Comment">
+            <summary>Poznamka.</summary>
+        </member>
+        <member name="T:Cora.Data.Xml.DataDefinitionException">
+            <summary>
+            Vynimka pre chyby definicie dat
+            </summary>
+        </member>
+        <member name="M:Cora.Data.Xml.DataDefinitionException.#ctor(System.String,System.Exception)">
+            <summary>
+            Vytvorenie vynimky definicie dat.
+            </summary>
+            <param name="message">Chybova hlaska</param>
+            <param name="innerException">Vnutorna vynimka.</param>
+        </member>
+        <member name="T:Cora.Data.Xml.DataProcessingException">
+            <summary>
+            Vynimka pre chyby, ktore vzniknu pocas prace s datami (spracovania dat).
+            </summary>
+        </member>
+        <member name="M:Cora.Data.Xml.DataProcessingException.#ctor(System.String,System.Exception)">
+            <summary>
+            Vytvorenie vynimky spracovania dat.
+            </summary>
+            <param name="message">Chybova hlaska</param>
+            <param name="innerException">Vnutorna vynimka.</param>
+        </member>
+        <member name="T:Cora.Data.Xml.DataSet">
+            <summary>
+            DataSet je suhrn RecordSet-ov.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.LoadFromFile(System.String)">
+            <summary>
+            Vytvorí DataSet z xml súboru s dátami.
+            </summary>
+            <param name="filePath">Cesta k zdrojovému xml súboru.</param>
+            <returns>Vytvorený DataSet.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.LoadFromStream(System.IO.Stream)">
+            <summary>
+            Vytvorí DataSet z xml streamu.
+            </summary>
+            <param name="stream">Zdrojový xml stream.</param>
+            <returns>Vytvorený DataSet.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.CreateEmpty">
+            <summary>
+            Vytvorenie prazdneho DataSet-u s kodovanim UTF-8
+            </summary>
+            <returns>Vytvoreny prazdny DataSet</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.CreateEmpty(System.String)">
+            <summary>
+            Vytvorenie prazdneho DataSet-u
+            </summary>
+            <param name="sEncoding">Kodovanie xml</param>
+            <returns>Vytvoreny prazdny DataSet</returns>
+        </member>
+        <member name="P:Cora.Data.Xml.DataSet.XmlDocument">
+            <summary>Zdrojovy xml dokument.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.DataSet.OldXmlFormat">
+            <summary>Zisti, ci zdrojovy xml bol starom formate (neobsahoval root element DataSet-u).</summary>
+            <remarks>Property nemá vplyv na funkčnosť triedy a pri uložení do XML sa obsah uloží vždy v aktuálnom formáte.</remarks>
+        </member>
+        <member name="P:Cora.Data.Xml.DataSet.RecordSetCount">
+            <summary>
+            Vráti počet RecordSet-ov. 
+            </summary>
+            <remarks>Počítajú sa iba RS priamo podradené DataSet-u, nie vnorené v rámci jednotlivých záznamov.</remarks>
+        </member>
+        <member name="P:Cora.Data.Xml.DataSet.Item(System.String)">
+            <summary>Vráti RecordSet daného mena, alebo <c>null</c> ak taký neexistuje.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.DataSet.Item(System.Int32)">
+            <summary>Vráti RecordSet daného indexu, alebo <c>null</c> ak je index mimo rozsah.</summary>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.AddRecordSet(System.String)">
+            <summary>
+            Pridanie noveho RecordSet-u.
+            </summary>
+            <param name="sName">Meno RecordSet-u.</param>
+            <returns>Pridany recordset, alebo <c>null</c> ak RecordSet s daným menom už existuje.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.Save(System.String)">
+            <summary>
+            Ulozenie DataSet-u do suboru.
+            </summary>
+            <param name="filePath">Cesta k cieľovému súboru.</param>
+            <returns>Vždy <c>true</c>.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.Save(System.IO.Stream)">
+            <summary>
+            Ulozenie DataSet-u do streamu.
+            </summary>
+            <param name="streamWrite">Cielovy stream.</param>
+            <returns><c>true</c> pri úspešnom zápise, <c>false</c> ak <paramref name="streamWrite"/> je <c>null</c> 
+            alebo nie je zapisovateľný.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.SaveOldFormat(System.IO.Stream)">
+            <summary>
+            Ulozenie DataSet-u do streamu do starého formátu. Požiadavkou je, že DataSet obsahuje práve jeden <see cref="T:Cora.Data.Xml.RecordSet"/>.
+            </summary>
+            <param name="streamWrite">Cielovy stream.</param>
+            <returns><c>true</c> pri úspešnom zápise, <c>false</c> ak <paramref name="streamWrite"/> je <c>null</c> 
+            alebo nie je zapisovateľný.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.RegisterRecordSet(Cora.Data.Xml.RecordSet)">
+            <summary>
+            Zaregistruje RecordSet do zoznamu všetkých RS podľa mena.
+            </summary>
+            <remarks>
+            V tomto zozname sú všetky RS majúce definíciu, kvôli možnosti vyhľadania pri zdieľanej
+            definícii. Separátny zoznam je potrebný preto, lebo na rozdiel od _RecordSets tu môžu byť
+            aj RecordSet-y podradené jednotlivým dátovým riadkom.
+            </remarks>
+            <param name="recordSet">RecordSet, ktorý ideme zaregistrovať.</param>
+            <returns><c>true</c> v prípade úspechu, <c>false</c> ak je <paramref name="recordSet"/>.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.DataSet.TryFindRegisteredRecordSet(System.String)">
+            <summary>
+            Najdenie zapisaneho RS pre vyhladavanie vo vsetkych RS
+            </summary>
+            <param name="name">Nazov hladaneho RS</param>
+            <returns>Hladany RS, alebo <c>null</c>, ak taky nebol zapisany.</returns>
+        </member>
+        <member name="T:Cora.Data.Xml.ErrorHelper">
+            <summary>
+            Pomocná trieda pre reportovanie výnimiek.
+            </summary>
+        </member>
+        <member name="T:Cora.Data.Xml.Formatter">
+            <summary>
+            Pomocna trieda pre formátovanie hodnôt podľa typu.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.Xml.Formatter.ToString(System.Object,Cora.Data.Xml.RecordSetColumnType)">
+            <summary>
+            Bezpecny prevod v DB hodnoty na retazec. Pre hodnoty <c>null</c> a <see cref="F:System.DBNull.Value"/>
+            vracia <see cref="F:System.String.Empty"/>.
+            </summary>
+            <param name="value">DB hodnota</param>
+            <param name="recordSetColumnType">Typ DB hodnoty</param>
+            <returns>Vysledna hodnota (retazec)</returns>
+        </member>
+        <member name="T:Cora.Data.Xml.Definition">
+            <summary>
+            Definicia RecordSet-u
+            </summary>
+        </member>
+        <member name="M:Cora.Data.Xml.Definition.#ctor(Cora.Data.Xml.RecordSet,Cora.Data.Xml.RecordSet)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Data.Xml.Definition"/>.
+            </summary>
+            <param name="owningRecordSet">RecordSet ktorému definícia patrí.</param>.
+            <param name="referencedRecordSet">RecordSet, z ktorého sa definícia prípadne čerpá (odkazuje).</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="owningRecordSet"/> <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Data.Xml.Definition.ColumnCount">
+            <summary>Pocet stlpcov v definicii.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.Definition.IsReadOnly">
+            <summary>
+            Možno definíciu meniť (pridať/odoberať stĺpce a pod.)?
+            </summary>
+            <value>
+            <c>true</c> ak sa definícia čerpá z referencovaného RecordSet-u, inak <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cora.Data.Xml.Definition.Item(System.String)">
+            <summary>
+            Pristup k stlpcu s nazvom ColumnName.
+            </summary>
+            <value>Stĺpec, alebo <c>null</c> ak neexistuje.</value>
+        </member>
+        <member name="P:Cora.Data.Xml.Definition.Item(System.Int32)">
+            <summary>
+            Pristup k stlpcu s indexom iIndex.
+            </summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je index mimo rozsah.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.Definition.AddColumn(Cora.Data.Xml.Column)">
+            <summary>
+            Pridanie stlpca.
+            </summary>
+            <param name="column">Stĺpec.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="column"/> <c>null</c>.</exception>
+            <exception cref="T:Cora.Data.Xml.DataDefinitionException">Ak stĺpec s daným menom už existuje.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak sa definícia čerpá z referencovaného RecordSet-u,
+            	alebo RecordSet už obsahuje záznamy.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.Definition.RemoveColumn(System.String)">
+            <summary>
+            Odstranenie stlpca z definicie.
+            </summary>
+            <param name="name">Nazov odstranovaneho stlpca.</param>
+            <remarks>K datam v odstanenom stlpci sa da stale dostat cez index.</remarks>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak stĺpec s daným názvom neexistuje.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak sa definícia čerpá z referencovaného RecordSet-u,
+            	alebo RecordSet už obsahuje záznamy.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.Definition.RemoveColumn(System.Int32)">
+            <summary>
+            Odstranenie stlpca z definicie.
+            </summary>
+            <param name="index">Index odstranovaneho stlpca.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je index mimo povoleného rozsahu.</exception>
+            <exception cref="T:System.InvalidOperationException">Ak sa definícia čerpá z referencovaného RecordSet-u,
+            	alebo RecordSet už obsahuje záznamy.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.Definition.ClearColumns">
+            <summary>
+            Odstranenie vsetkych stlpcov z definicie.
+            </summary>
+            <remarks>Logicky by mohli byt odstranene aj vsetky riadky RecordSet-u, to sa ale nerobi.
+            Data su stale pristupne cez index.</remarks>
+            <exception cref="T:System.InvalidOperationException">Ak sa definícia čerpá z referencovaného RecordSet-u,
+            	alebo RecordSet už obsahuje záznamy.</exception>
+        </member>
+        <member name="T:Cora.Data.Xml.Names">
+            <summary>
+            Trieda mien uzlov alebo atributov. Obsahuje len konstanty mien.
+            </summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.COLUNM">
+            <summary>Uzol stlpec.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.COL_ID">
+            <summary>Atribut Id stlpca.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.COMMENT">
+            <summary>Atribut poznamka stlpca.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.COUNT">
+            <summary>Uzol pocet riadkov.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.DATASET">
+            <summary>Uzol dataset.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.DATA">
+            <summary>Uzol data.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.DEF">
+            <summary>Uzol definicia.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.ERR">
+            <summary>Uzol chyba.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.ID_ROW">
+            <summary>Atribut Id riadku.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.NAME">
+            <summary>Atribut nazov recordsetu.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.NULL">
+            <summary>Atribut "je null" stlpca.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.PRECISION">
+            <summary>Atribut presnost stlpca.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.RECORDSET">
+            <summary>Uzol recordset.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.ROW">
+            <summary>Uzol riadok.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.RS_REF">
+            <summary>Atribut refencovany recordset.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.SIZE">
+            <summary>Atribut velkost.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.STATE">
+            <summary>Atribut stav.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.SQL">
+            <summary>Uzol dotaz.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.TYPE">
+            <summary>Atribut typ.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.VALUE">
+            <summary>Atribut hodnota.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Names.WINDOWS1250">
+            <summary>Kodovanie Windows-1250.</summary>
+        </member>
+        <member name="T:Cora.Data.Xml.Record">
+            <summary>
+            Zaznam s datami (riadok tabulky).
+            </summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Record.NO_ID_ROW">
+            <summary>
+            Hodnota riadku bez urcenia IdRow
+            </summary>
+        </member>
+        <member name="F:Cora.Data.Xml.Record.PREFIX_PARENT">
+            <summary>
+            Prefix stlpca pre urcenie dat z nadradeneho RecordSet-u
+            </summary>
+        </member>
+        <member name="M:Cora.Data.Xml.Record.#ctor(Cora.Data.Xml.RecordSet)">
+            <summary>
+            Vytvorenie zaznamu.
+            </summary>
+            <param name="owningRecordSet">Nadradeny recordset.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="owningRecordSet"/> je <c>null</c>.</exception>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak recordset neobsahuje definíciu.</exception>
+        </member>
+        <member name="P:Cora.Data.Xml.Record.RecordSet">
+            <summary>RecordSet, do ktoreho zaznam patri.</summary>
+        </member>
+        <member name="M:Cora.Data.Xml.Record.GetChildRecordSet(System.String)">
+            <summary>
+            Vrati podradeny RecordSet podla zadaneho mena.
+            </summary>
+            <param name="sChildRecordSetName">Nazov podradeneho RecordSet-u.</param>
+            <returns>Podradeny RecordSet, alebo <c>null</c> ak taký neexistuje.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.Record.AddChildRecordSet(System.String)">
+            <summary>
+            Pridanie podradeneho RecordSet-u.
+            </summary>
+            <param name="sChildRecordSetName">Nazov podradeneho RecordSet-u.</param>
+            <returns>Vytvoreny podradeny RecordSet.</returns>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak už existuje RecordSet</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.Record.Value(System.String)">
+            <summary>
+            Zistenie hodnoty stlpca podla mena.
+            </summary>
+            <param name="sColumnName">Meno stlpca. Ak začína <see cref="F:Cora.Data.Xml.Record.PREFIX_PARENT"/>, vzťahuje sa na nadradený záznam.</param>
+            <returns>Hodnota stlpca.</returns>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak daný stĺpec nebol nájdený v definícii.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.Record.Value(System.Int32)">
+            <summary>
+            Zistenie hodnoty stlpca podla indexu.
+            </summary>
+            <param name="iIndex">Index stlpca (zero-index).</param>
+            <returns>Hodnota stlpca.</returns>
+        </member>
+        <member name="P:Cora.Data.Xml.Record.Item(System.String)">
+            <summary>Zistenie hodnoty stlpca podla mena. Ak začína <see cref="F:Cora.Data.Xml.Record.PREFIX_PARENT"/>, vzťahuje sa na nadradený záznam.</summary>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak daný stĺpec nebol nájdený v definícii.</exception>
+        </member>
+        <member name="P:Cora.Data.Xml.Record.Item(System.Int32)">
+            <summary>Zistenie hodnoty stlpca podla indexu (zero-index).</summary>
+        </member>
+        <member name="M:Cora.Data.Xml.Record.SetValue(System.String,System.Object)">
+            <summary>
+            Nastavenie hodnoty stlpca podla mena.
+            </summary>
+            <param name="colName">Meno stlpca.</param>
+            <param name="value">Nova hodnota stlpca.</param>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak stĺpec nie je nájdený.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.Record.SetValue(System.String,System.String)">
+            <summary>
+            Nastavenie hodnoty stlpca podla mena.
+            </summary>
+            <param name="sColumnName">Meno stlpca.</param>
+            <param name="sValue">Nova hodnota stlpca.</param>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak stĺpec nie je nájdený.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.Record.SetValue(System.Int32,System.Object)">
+            <summary>
+            Nastavenie hodnoty stlpca podla indexu.
+            </summary>
+            <param name="index">Index stlpca (zero-index).</param>
+            <param name="value">Nova hodnota stlpca.</param>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak stĺpec nie je nájdený.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak stĺpec s daným indexom neexistuje.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.Record.SetValue(System.Int32,System.String)">
+            <summary>
+            Nastavenie hodnoty stlpca podla indexu.
+            </summary>
+            <param name="index">Index stlpca (zero-index).</param>
+            <param name="sValue">Nova hodnota stlpca.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak stĺpec s daným indexom neexistuje.</exception>
+        </member>
+        <member name="P:Cora.Data.Xml.Record.IdRow">
+            <summary>Poradove cislo riadku.</summary>
+        </member>
+        <member name="T:Cora.Data.Xml.RecordSet">
+            <summary>
+            RecordSet je tabulka xml dat.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.#ctor(Cora.Data.Xml.DataSet,Cora.Data.Xml.Record)">
+            <summary>
+            Vytvorenie RecordSet-u.
+            </summary>
+            <param name="dataSet">Nadradeny DataSet.</param>
+            <param name="parentRecord">Nadradeny Record.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="dataSet"/> <c>null</c></exception>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.DataSet">
+            <summary>DataSet, do ktoreho RecordSet patri.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.Name">
+            <summary>Nazov RecordSet-u (jedinecne oznacenie).</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.Type">
+            <summary>Typ RecordSet-u.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.Definition">
+            <summary>Definicia RecordSet-u.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.Count">
+            <summary>Pocet riadkov.</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.BOF">
+            <summary>Je aktualny riadok pred zaciatkom?</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.EOF">
+            <summary>Je aktualny riadok za koncom?</summary>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.ParentRecord">
+            <summary>Nadradeny Record.</summary>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.MoveFirst">
+            <summary>
+            Posun na prvy riadok.
+            </summary>
+            <returns><c>true</c> ak existujú riadky, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.MoveNext">
+            <summary>
+            Posun na dalsi riadok.
+            </summary>
+            <returns>Je uz na konci?</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.MovePrevious">
+            <summary>
+            Posun na predosly riadok.
+            </summary>
+            <returns>Je uz na zaciatku?</returns>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.Current">
+            <summary>Aktualny riadok.</summary>
+            <remarks>V stave <see cref="P:Cora.Data.Xml.RecordSet.EOF"/> alebo <see cref="P:Cora.Data.Xml.RecordSet.BOF"/> je null.</remarks>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.Item(System.String)">
+            <summary>Hodnota stlpca aktualneho riadku podla mena.</summary>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak aktuálny riadok je pred začiatkom alebo za koncom.</exception>
+        </member>
+        <member name="P:Cora.Data.Xml.RecordSet.Item(System.Int32)">
+            <summary>Hodnota stlpca aktualneho riadku podla indexu (zero-index).</summary>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak aktuálny riadok je pred začiatkom alebo za koncom.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.AddRefDefinition(System.String)">
+            <summary>
+            Pridanie zdielanej definicie do RecordSet-u.
+            </summary>
+            <param name="refRecordSetName">Nazov RecordSet-u, ktory obsahuje zdielanu definiciu.</param>
+            <returns>Vytvorena definicia, alebo null, ak taky RS nebol najdeny.</returns>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak taký RS nebol nájdený.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.AddDefinitionColumn(System.String,System.String,Cora.Data.Xml.RecordSetColumnType,System.Int32,System.Int32,System.Boolean,System.String)">
+            <summary>
+            Pridanie stlpca do definicie RecordSet-u.
+            </summary>
+            <param name="name">Nazov stlpca.</param>
+            <param name="colId">Id stlpca. Ak je null, dorata sa podla aktualneho poctu.</param>
+            <param name="type">Typ stlpca.</param>
+            <param name="size">Velkost stlpca. Irelevantný údaj.</param>
+            <param name="precision">Pocet desatin. Irelevantný údaj.</param>
+            <param name="nullable">Moze byt stlpec NULL? Irelevantný údaj.</param>
+            <param name="comment">Poznamka. Irelevantný údaj.</param>
+            <returns>Vytvoreny stlpec.</returns>
+            <exception cref="T:System.InvalidOperationException">Ak sa definícia čerpá z referencovaného RecordSet-u,
+            	alebo RecordSet už obsahuje záznamy.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.AddDefinitionColumn(System.String,Cora.Data.Xml.RecordSetColumnType)">
+            <summary>
+            Pridanie stlpca do definicie RecordSet-u.
+            </summary>
+            <param name="name">Nazov stlpca.</param>
+            <param name="type">Typ stlpca.</param>
+            <returns>Vytvoreny stlpec.</returns>
+            <exception cref="T:System.InvalidOperationException">Ak sa definícia čerpá z referencovaného RecordSet-u,
+            	alebo RecordSet už obsahuje záznamy.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.AddRow">
+            <summary>
+            Pridanie noveho riadku dat.
+            </summary>
+            <returns>Novy riadok.</returns>
+            <exception cref="T:Cora.Data.Xml.DataProcessingException">Ak recordset neobsahuje definíciu.</exception>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.AddRows(System.Int32)">
+            <summary>
+            Pridanie novych riadkov dat.
+            </summary>
+            <param name="count">Pocet novych riadkov dat.</param>
+            <returns>Pole novych riadkov.</returns>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.ClearRows">
+            <summary>Odstranenie vsetkych riadkov z RS.</summary>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.CopyFromReader(System.Data.IDataReader,System.Int32)">
+            <summary>
+            Vytvorenie kopie DataReader-a. Vytvorenie stlpcov a naplnenie datami z DataReader-a.
+            </summary>
+            <param name="reader">Zdrojovy DataReader.</param>
+            <param name="iColumnOffset">Offset stlpca, od ktoreho sa data plnia.</param>
+            <returns>Pocet odkopirovanych riadkov.</returns>
+            <remarks>Pozor, uz existujuce stlpce definicie ani riadky dat sa nemazu.</remarks>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.FillFromReader(System.Data.IDataReader)">
+            <summary>
+            Naplnenie RecordSet-u datami z DataReader-a.
+            </summary>
+            <param name="reader">Zdrojovy DataReader.</param>
+            <returns>Pocet odkopirovanych riadkov.</returns>
+            <remarks>Pozor, uz existujuce riadky dat sa nemazu.</remarks>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.FillFromReader(System.Data.IDataReader,System.Int32)">
+            <summary>
+            Naplnenie RecordSet-u datami z DataReader-a.
+            </summary>
+            <param name="reader">Zdrojovy DataReader.</param>
+            <param name="iColumnOffset">Offset stlpca, od ktoreho sa data plnia.</param>
+            <returns>Pocet odkopirovanych riadkov.</returns>
+            <remarks>Pozor, uz existujuce riadky dat sa nemazu.</remarks>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSet.FillProjectionFromReader(System.Data.IDataReader)">
+            <summary>
+            Naplnenie RecordSet-u dátami z DataReader-a s projekciou, t.j. obmedzením stĺpcov, ktorých dáta budú naplnené.
+            Použijú sa len stĺpce, ktoré sú aktuálne zaradené v definícii RecordSet-u.
+            </summary>
+            <param name="reader">Zdrojový DataReader.</param>
+            <returns>Počet odkopírovaných riadkov.</returns>
+            <remarks>Pozor, už existujúce riadky dát sa nemažú.</remarks>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSet.UniqueRecordSetId">
+            <summary>Pocitadlo pre pripady recordsetov bez zadaneho nazvu.</summary>
+        </member>
+        <member name="T:Cora.Data.Xml.RecordSetColumnType">
+            <summary>Moznosti typu stlpca.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetColumnType.N">
+            <summary>Number.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetColumnType.C">
+            <summary>Char.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetColumnType.V">
+            <summary>Varchar.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetColumnType.V2">
+            <summary>Varchar2.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetColumnType.B">
+            <summary>Binary.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetColumnType.Date">
+            <summary>Datum.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetColumnType.DateTime">
+            <summary>Datum a cas.</summary>
+        </member>
+        <member name="T:Cora.Data.Xml.RecordSetColumnTypeHelper">
+            <summary>
+            Pomocná trieda na prevody medzi <see cref="T:Cora.Data.Xml.RecordSetColumnType"/> a <see cref="T:System.Data.DbType"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Data.Xml.RecordSetColumnTypeHelper.FromDbType(System.Data.DbType)">
+            <summary>
+            Prevod <see cref="T:Cora.Data.Xml.RecordSetColumnType"/> z <see cref="T:System.Data.DbType"/>.
+            </summary>
+            <param name="dbType">Zdrojová hodnota <see cref="T:Cora.Data.Xml.RecordSetColumnType"/>.</param>
+            <returns>Výsledná hodnota <see cref="T:System.Data.DbType"/>.</returns>
+        </member>
+        <member name="T:Cora.Data.Xml.RecordSetRequestType">
+            <summary>Typ poziadavky, z ktorej RecordSet vznikol.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetRequestType.None">
+            <summary>Ziadna (neurcena) poziadavka.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetRequestType.SEL">
+            <summary>Dotaz (select).</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetRequestType.INS">
+            <summary>Insert.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetRequestType.UPD">
+            <summary>Update.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetRequestType.DEL">
+            <summary>Delete.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetRequestType.CMD">
+            <summary>Prikaz, napr. procedura.</summary>
+        </member>
+        <member name="T:Cora.Data.Xml.RecordSetType">
+            <summary>Typ RecordSet-u. Hodnoty sa mozu vzajomne kombinovat.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetType.None">
+            <summary>Recordset neobsahuje nic.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetType.Data">
+            <summary>Recordset obsahuje data.</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetType.Def">
+            <summary>Recordset obsahuje definiciu (metadata).</summary>
+        </member>
+        <member name="F:Cora.Data.Xml.RecordSetType.Sql">
+            <summary>Recordset obsahuje zdrojovy dotaz.</summary>
+        </member>
+    </members>
+</doc>

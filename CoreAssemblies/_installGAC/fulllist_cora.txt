@@ -1,0 +1,151 @@
+Cora.Convert, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Convert, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Convert, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Convert, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Convert, Version=1.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.CoraCoreObj, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=4.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=3.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=3.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=3.4.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=3.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=2.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.CoraCoreObj, Version=1.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.Crypt, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Crypt, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Crypt, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Crypt, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+
+Cora.CoraCryptNET, Version=1.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+Cora.CoraCryptNET, Version=1.2.2007.321, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.Data, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Data, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Data, Version=4.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Data, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+
+Cora.Data.DBProvider, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Data.DBProvider, Version=3.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Data.DBProvider, Version=3.4.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Data.DBProvider, Version=3.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Data.DBProvider, Version=2.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Data.DBProvider, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Data.DBProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.Data.Xml, Version=1.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.Global, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Global, Version=4.5.2016.630, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Global, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Global, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Global, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Global, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Global, Version=1.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.Mail, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Mail, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Mail, Version=4.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Mail, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Mail, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Mail, Version=3.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Mail, Version=2.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Mail, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+
+Cora.Natec.Base, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=4.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=3.8.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=3.7.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=3.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=3.4.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=3.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=3.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=3.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=2.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Natec.Base, Version=1.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+Cora.Natec.Base, Version=1.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.Report, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report, Version=4.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report, Version=3.8.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report, Version=3.7.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+
+Cora.Report.PdfReport, Version=3.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report.PdfReport, Version=3.4.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report.PdfReport, Version=3.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report.PdfReport, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Report.PdfReport, Version=1.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.Utils.HttpHandler, Version=4.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.HttpHandler, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.HttpHandler, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.HttpHandler, Version=3.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.HttpHandler, Version=3.4.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.HttpHandler, Version=3.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.HttpHandler, Version=2.4.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.HttpHandler, Version=2.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.HttpHandler, Version=1.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+Cora.Utils.HttpHandler, Version=1.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.Utils, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils, Version=4.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils, Version=3.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils, Version=3.4.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils, Version=3.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.Logger, Version=2.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.Logger, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.Logger, Version=1.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+Cora.Utils.Marking, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.Marking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+Cora.Utils.Resolver, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Utils.Resolver, Version=1.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf
+
+Cora.Web, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Web, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.Web, Version=4.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+
+Cora.WebControls, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=4.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=3.7.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=3.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=3.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=2.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=2.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=2.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+
+Cora.WebControls.CKEditor, Version=4.6.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.CKEditor, Version=4.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.CKEditor, Version=4.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.CKEditor, Version=4.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.CKEditor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.CKEditor, Version=3.7.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.CKEditor, Version=3.5.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.CKEditor, Version=3.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.CKEditor, Version=2.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.CKEditor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+
+Cora.WebControls.Graf, Version=2.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.Graf, Version=2.2.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.Graf, Version=2.1.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+Cora.WebControls.Graf, Version=2.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf, processorArchitecture=MSIL
+
+Cora.WebControls.UI, Version=1.4.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf

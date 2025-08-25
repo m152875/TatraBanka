@@ -1,0 +1,1 @@
+Microsoft.CSharp.dll je súčasťou použitého frameworku. Aktuálne .NET 4.7.2

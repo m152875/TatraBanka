@@ -1,0 +1,15 @@
+﻿<?xml version="1.0"?>
+<metadata>
+	<package_id>Copy Natec Assemblies <Version/></package_id>
+	<description>Kopírovanie knižníc Natec do adresára k verzii <Version/></description>
+	<ui_parameters>
+		<add name="CopyNatecAssembliesDirectory" value="D:\Cora\dir" />
+		<add name="AssemblyPackage" value="core">
+			<value>core</value>
+			<value>libs</value>
+			<value>base</value>
+			<value>desktop</value>
+			<value>web</value>
+		</add>
+	</ui_parameters>
+</metadata>

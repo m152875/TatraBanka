@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://interfaces.ditec.sk/" targetNamespace="http://interfaces.ditec.sk/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Vozidlo" type="tns:vozidlo" />
+  <xs:element name="vozidloRequest" type="tns:vozidloRequest" />
+  <xs:element name="wsPoskytnutieUdajovOvozidleAdrzitelovi" type="tns:wsPoskytnutieUdajovOvozidleAdrzitelovi" />
+  <xs:element name="wsPoskytnutieUdajovOvozidleAdrziteloviResponse" type="tns:wsPoskytnutieUdajovOvozidleAdrziteloviResponse" />
+  <xs:complexType name="wsPoskytnutieUdajovOvozidleAdrzitelovi">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:vozidloRequest" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="vozidloRequest">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="vin" type="xs:string" />
+      <xs:element minOccurs="0" name="evidencneCislo" type="xs:string" />
+      <xs:element name="ep" type="xs:string" />
+      <xs:element minOccurs="0" name="td" type="xs:string" />
+      <xs:element name="dovodLustracie" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="wsPoskytnutieUdajovOvozidleAdrziteloviResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="tns:poskytnutieUdajovOvozidleAdrziteloviResponse" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="poskytnutieUdajovOvozidleAdrziteloviResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="msg" type="tns:message" />
+      <xs:element minOccurs="0" name="vozidlo" type="tns:vozidlo" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="message">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="code" type="xs:string" />
+      <xs:element minOccurs="0" name="text" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="vozidlo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="VIN" type="xs:string" />
+      <xs:element minOccurs="0" name="EvidencneCislo" type="xs:string" />
+      <xs:element minOccurs="0" name="KategoriaVozidla" type="xs:string" />
+      <xs:element minOccurs="0" name="DruhVozidla" type="xs:string" />
+      <xs:element minOccurs="0" name="Znacka" type="xs:string" />
+      <xs:element minOccurs="0" name="Farba" type="xs:string" />
+      <xs:element minOccurs="0" name="StavVozidla" type="xs:string" />
+      <xs:element minOccurs="0" name="DatumZmeny" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Drzitel" type="tns:drzitel" />
+      <xs:element minOccurs="0" name="BuduciDrzitel" type="tns:buduciDrzitel" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="drzitel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DrzitelMeno" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelPriezvisko" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelDatumNarodenia" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="DrzitelRodneCislo" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelNazov" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelICO" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelPobyt" type="tns:pobytSidloDrzitela" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pobytSidloDrzitela">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DrzitelPobytTypPobytu" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelPobytOkres" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelPobytObec" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelPobytUlica" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelPobytOrientacneCislo" type="xs:string" />
+      <xs:element minOccurs="0" name="DrzitelPobytSupisneCislo" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="buduciDrzitel">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BuduciDrzitelMeno" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelPriezvisko" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelDatumNarodenia" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="BuduciDrzitelRodneCislo" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelNazov" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelICO" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelPobyt" type="tns:pobytSidloBuducehoDrzitela" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="pobytSidloBuducehoDrzitela">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="BuduciDrzitelPobytTypPobytu" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelPobytOkres" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelPobytObec" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelPobytUlica" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelPobytOrientacneCislo" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelPobytSupisneCislo" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelAdresaMimoSR" type="xs:string" />
+      <xs:element minOccurs="0" name="BuduciDrzitelStatAdresyMimoSR" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

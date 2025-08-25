@@ -1,0 +1,272 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Mail</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Mail.Config">
+            <summary>
+            Trieda pre načítanie a uschovanie nastavení portálu z web.config-u
+            </summary>
+        </member>
+        <member name="F:Cora.Mail.Config.SECTION_NAME">
+            <summary>Názov konfiguračnej sekcie (MailConfig).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.SENDER_ATTRIBUTE">
+            <summary>Názov atribútu Odosielateľ E-mailu  (Sender).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.RECEIVER_ATTRIBUTE">
+            <summary>Názov atribútu Adresát E-mailu (Receiver).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.SERVER_NODE">
+            <summary>Názov uzla pre konfiguráciu E-mailového servera (Server).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.SERVER_ADDRESS_ATTRIBUTE">
+            <summary>Názov atribútu Adresa E-mailového servera (Address).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.SERVER_PORT_ATTRIBUTE">
+            <summary>Názov atribútu Port E-mailového servera (Port).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.USER_NODE">
+            <summary>Názov uzla pre konfiguráciu používateľa E-mailového servera (User).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.USER_NAME_ATTRIBUTE">
+            <summary>Názov atribútu Meno používateľa E-mailového servera (Name).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.USER_PASSWORD_ATTRIBUTE">
+            <summary>Názov atribútu Heslo používateľa E-mailového servera (Password).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.SERVER_ADDRESS_DEFAULT">
+            <summary>Default hodnota atribútu Adresa E-mailového servera (mail.coraltj.sk).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.SERVER_PORT_DEFAULT">
+            <summary>Default hodnota atribútu Port E-mailového servera (25).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.SENDER_DEFAULT">
+            <summary>Default hodnota atribútu Odosielateľ E-mailu  (automat@corageo.sk).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.RECEIVER_DEFAULT">
+            <summary>Default hodnota atribútu Adresát E-mailu (podpora@corageo.sk).</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.ATTRIBUTE_SEPARATOR">
+            <summary>Separátor, oddeľujúci jednotlivé parametre (;)</summary>
+        </member>
+        <member name="F:Cora.Mail.Config.VALUE_SEPARATOR">
+            <summary>Separátor, oddeľujúci názov parametra od hodnoty (=)</summary>
+        </member>
+        <member name="P:Cora.Mail.Config.ServerAddress">
+            <summary>
+            Adresa E-mailového servera.
+            </summary>
+            <value>Adresa E-mailového servera.</value>
+        </member>
+        <member name="P:Cora.Mail.Config.ServerPort">
+            <summary>
+            Port E-mailového servera.
+            </summary>
+            <value>Číslo portu.</value>
+        </member>
+        <member name="P:Cora.Mail.Config.UserName">
+            <summary>
+            Meno používateľa E-mailového servera.
+            </summary>
+            <value>Meno používateľa.</value>
+        </member>
+        <member name="P:Cora.Mail.Config.UserPassword">
+            <summary>
+            Heslo používateľa E-mailového servera.
+            </summary>
+            <value>Heslo používateľa.</value>
+        </member>
+        <member name="P:Cora.Mail.Config.Sender">
+            <summary>
+            Odosielateľ E-mailu.
+            </summary>
+            <value>Odosielateľ E-mailu.</value>
+        </member>
+        <member name="P:Cora.Mail.Config.Receiver">
+            <summary>
+            Adresát E-mailu.
+            </summary>
+            <value>Adresát E-mailu.</value>
+        </member>
+        <member name="M:Cora.Mail.Config.DeserializeSection(System.Xml.XmlReader)">
+            <summary>
+            Vytvorenie konfiguračného objektu z config súboru.
+            </summary>
+            <param name="parent"></param>
+            <param name="configContext"></param>
+            <param name="section">Uzol konfiračného súboru.</param>
+            <returns>Konfiguračný objekt.</returns>
+            <exception cref="T:System.Configuration.ConfigurationErrorsException">Ak <paramref name="section"/> je <c>null</c>.
+            Ak sekcia neobsahuje <see cref="F:Cora.Mail.Config.SERVER_NODE"/>.</exception>
+        </member>
+        <member name="M:Cora.Mail.Config.GetValue(System.Xml.XmlAttribute,System.String)">
+            <summary>
+            Získanie hodnoty atribútu, resp. default hodnota (typ string).
+            </summary>
+            <param name="attr">Xml-atribút objekt.</param>
+            <param name="sDefault">Default hodnota.</param>
+            <returns>Hodnota atribútu</returns>
+        </member>
+        <member name="M:Cora.Mail.Config.GetValue(System.Xml.XmlAttribute,System.Int32)">
+            <summary>
+            Získanie hodnoty atribútu, resp. default hodnota (typ int).
+            </summary>
+            <param name="attr">Xml-atribút objekt.</param>
+            <param name="iDefault">Default hodnota.</param>
+            <returns>Hodnota atribútu</returns>
+        </member>
+        <member name="M:Cora.Mail.Config.GetChildNodeInnerText(System.Xml.XmlNode,System.String)">
+            <summary>Ziskanie hodnoty poduzla.</summary>
+            <param name="xmlNode">Zdrojovy uzol.</param>
+            <param name="childPath">Nazov poduzla.</param>
+            <returns>Hodnota poduzla.</returns>
+        </member>
+        <member name="M:Cora.Mail.Config.GetUserAccess(System.String)">
+            <summary>Získanie užívateľského prístupu k mailovej službe.</summary>
+            <param name="access">Zakryptovaný vstupný reťazec.</param>
+            <returns>Úspešnosť parsovania vstupu.</returns>
+        </member>
+        <member name="M:Cora.Mail.Config.GetParsedValue(System.String[],System.String)">
+            <summary>
+            Získanie hodnoty atribútu.
+            </summary>
+            <param name="arrAccess">Pole atribútov.</param>
+            <param name="name">Názov atribútu.</param>
+            <returns>Hodnota atribútu.</returns>
+        </member>
+        <member name="T:Cora.Mail.CoraMail">
+            <summary>
+            Statická trieda pre odosielanie elektronickej pošty.
+            </summary>
+        </member>
+        <member name="M:Cora.Mail.CoraMail.#cctor">
+            <summary>Statický konštruktor - nakonfiguruje <see cref="T:Cora.Mail.CoraMail"/> podľa nastavení v config-u.</summary>
+        </member>
+        <member name="M:Cora.Mail.CoraMail.Configure">
+            <summary>
+            Nakonfigurovanie <see cref="T:Cora.Mail.CoraMail"/> podľa nastavení v config-u. Ak nie je v config-u sekcia
+            <see cref="F:Cora.Mail.Config.SECTION_NAME"/>, nastavenia sú len reset-nuté.
+            </summary>
+        </member>
+        <member name="M:Cora.Mail.CoraMail.SendEmail(System.String,System.String,System.String)">
+            <summary>
+            Zaslanie pošty (viac na http://www.systemnetmail.com)
+            </summary>
+            <param name="adresat">Adresát, ktorému bude pošta doručena</param>
+            <param name="predmet">Predmet správy (Subject)</param>
+            <param name="obsah">Obsah, telo správy</param>
+            <returns>true pri úspešnom zaslaní pošty, inak false</returns>
+        </member>
+        <member name="M:Cora.Mail.CoraMail.SendEmail(System.String,System.String,System.String,System.Boolean,System.Net.Mail.Attachment[])">
+            <summary>
+            Zaslanie pošty
+            </summary>
+            <param name="adresat">Adresát, ktorému bude pošta doručena</param>
+            <param name="predmet">Predmet správy (Subject)</param>
+            <param name="obsah">Obsah, telo správy</param>
+            <param name="bLog">Ak true, bude za zapisovať LOG súbor</param>
+            <param name="prilohy">Pole príloh</param>
+            <returns>true pri úspešnom zaslaní pošty, inak false</returns>
+        </member>
+        <member name="P:Cora.Mail.CoraMail.SMTP">
+            <summary>SMTP server</summary>
+        </member>
+        <member name="P:Cora.Mail.CoraMail.SMTP_user">
+            <summary>Meno pre overenie na SMTP serveri</summary>
+        </member>
+        <member name="P:Cora.Mail.CoraMail.SMTP_pwd">
+            <summary>Heslo pre overenie na SMTP serveri</summary>
+        </member>
+        <member name="P:Cora.Mail.CoraMail.From">
+            <summary>Odosielateľ</summary>
+        </member>
+        <member name="P:Cora.Mail.CoraMail.Priority">
+            <summary>Priorita správy</summary>
+        </member>
+        <member name="P:Cora.Mail.CoraMail.DeliveryNotification">
+            <summary>Vyžadovanie doručenky</summary>
+        </member>
+        <member name="P:Cora.Mail.CoraMail.Port">
+            <summary>Port SMTP servera, default 25</summary>
+        </member>
+        <member name="P:Cora.Mail.CoraMail.logger">
+            <summary>Objekt loggera</summary>
+        </member>
+        <member name="P:Cora.Mail.CoraMail.isBodyHTML">
+            <summary>Obsah mailu je HTML (default false)</summary>
+        </member>
+        <member name="T:Cora.Mail.MailClient">
+            <summary>
+            Preťaženie triedy <see cref="T:System.Net.Mail.SmtpClient"/>, ktoré akceptuje nastavenia z konfiguračného súboru aplikácie.
+            </summary>
+        </member>
+        <member name="M:Cora.Mail.MailClient.Create">
+            <summary>
+            Vytvorenie objektu <see cref="T:Cora.Mail.MailClient"/> a nastavenie základných vlastnosti podľa konfiguračného súboru aplikácie.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Cora.Mail.MailClient.ApplyDefaultSender">
+            <summary>
+            Indikátor použitia nastavenia DefaultSender.
+            </summary>
+            <value>
+            <c>true</c> alebo <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cora.Mail.MailClient.ApplyDefaultRecipient">
+            <summary>
+            Indikátor použitia nastavenia DefaultRecipient.
+            </summary>
+            <value>
+            <c>true</c> alebo <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Cora.Mail.MailClient.CustomLogging">
+            <summary>
+            Indikátor logovania v tejto triede.
+            </summary>
+            <value>
+            Pri <c>true</c> sa o logovanie postará používateľ tejto triedy, pri hodnote <c>false</c> sa bude logovať v tejto triede.
+            </value>
+        </member>
+        <member name="P:Cora.Mail.MailClient.SuccessMessageLevel">
+            <summary>
+            Úroveň závažnosti logovania o úspechu odoslania E-mailu.
+            </summary>
+            <value>
+            Úroveň závažnosti logovania.
+            </value>
+        </member>
+        <member name="M:Cora.Mail.MailClient.SendMessage(System.Net.Mail.MailMessage)">
+            <summary>
+            Odoslanie E-mailu.
+            </summary>
+            <param name="oMailMessage">Objekt <see cref="T:System.Net.Mail.MailMessage"/>.</param>
+            <exception cref="T:System.ArgumentNullException">Odosielateľ alebo adresát.</exception>
+        </member>
+        <member name="M:Cora.Mail.MailClient.GetMailAddress(System.String)">
+            <summary>
+            Získanie objektu <see cref="T:System.Net.Mail.MailAddress"/> parsovaním vstupného reťazca.
+            </summary>
+            <param name="sAddr">Mailová adresa v textovom tvare.</param>
+            <returns>Výsledný objekt <see cref="T:System.Net.Mail.MailAddress"/> alebo null ak sa parsovanie nepodarilo.</returns>
+        </member>
+        <member name="M:Cora.Mail.MailClient.#cctor">
+            <summary>
+            Inicializačné nastavenie statických vlastností.
+            </summary>
+        </member>
+        <member name="F:Cora.Mail.MailClient._Config">
+            <summary>Objekt nastavení z  konfiguračného súboru aplikácie.</summary>
+        </member>
+        <member name="F:Cora.Mail.MailClient._DefaultSender">
+            <summary>Default-odosielateľ.</summary>
+        </member>
+        <member name="F:Cora.Mail.MailClient._DefaultRecipient">
+            <summary>Default-adresát.</summary>
+        </member>
+    </members>
+</doc>

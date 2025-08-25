@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.dovera.sk/b2b/types" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:s0="http://b2b.dovera.sk" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://b2b.dovera.sk" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://b2b.dovera.sk">
+      <s:import namespace="http://schemas.dovera.sk/b2b/types" />
+      <s:element name="DajStavOdoslaniaHromadnehoOznamenia">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajStavOdoslaniaHromadnehoOznameniaVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavOdoslaniaHromadnehoOznameniaVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavOdoslaniaHromadnehoOznameniaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajStavOdoslaniaHromadnehoOznameniaVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavOdoslaniaHromadnehoOznameniaVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="VysledokOdoslania" type="ns2:APIVysledokOdoslania" />
+          <s:element name="IdVolania" type="s:long" />
+          <s:element minOccurs="0" name="ProtokolId" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavOtestovaniaHromadnehoOznamenia">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajStavOtestovaniaHromadnehoOznameniaVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavOtestovaniaHromadnehoOznameniaVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavOtestovaniaHromadnehoOznameniaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajStavOtestovaniaHromadnehoOznameniaVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavOtestovaniaHromadnehoOznameniaVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="VysledokOtestovania" type="ns2:APIVysledokOtestovania" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OdosliHromadneOznamenie">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:OdosliHromadneOznamenieVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OdosliHromadneOznamenieVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="Typ" type="s:string" />
+          <s:element name="Obdobie" type="s:int" />
+          <s:element name="PocetRiadkov" type="s:int" />
+          <s:element name="HromadneOznamenie" type="ns2:APIDavka" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OdosliHromadneOznamenieResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:OdosliHromadneOznamenieVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OdosliHromadneOznamenieVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="VysledokOdoslania" type="ns2:APIVysledokOdoslania" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OtestujHromadneOznamenie">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:OtestujHromadneOznamenieVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OtestujHromadneOznamenieVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="Typ" type="s:string" />
+          <s:element name="Obdobie" type="s:int" />
+          <s:element name="PocetRiadkov" type="s:int" />
+          <s:element name="HromadneOznamenie" type="ns2:APIDavka" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OtestujHromadneOznamenieResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:OtestujHromadneOznamenieVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OtestujHromadneOznamenieVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="VysledokOtestovania" type="ns2:APIVysledokOtestovania" />
+          <s:element name="IdVolania" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.dovera.sk/b2b/types">
+      <s:complexType name="APITokenPouzivatela">
+        <s:sequence>
+          <s:element name="Login" type="s:string" />
+          <s:element name="DodavatelSW" type="s:string" />
+          <s:element minOccurs="0" name="KodNZ" type="s:string" />
+          <s:element minOccurs="0" name="KodVZ" type="s:string" />
+          <s:element minOccurs="0" name="VS" type="s:string" />
+          <s:element minOccurs="0" name="UnikatnyKodPLA" type="s:string" />
+          <s:element minOccurs="0" name="CasovyLimitVolania" type="s:int" />
+          <s:element minOccurs="0" name="ICO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIVysledokOdoslania">
+        <s:sequence>
+          <s:element name="Kod" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PopisVysledku" nillable="true" type="s:string" />
+          <s:element minOccurs="0" name="Protokol" type="ns2:APIDokument" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPopisVysledkuItemString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PopisVysledkuItem" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIDokument">
+        <s:sequence>
+          <s:element minOccurs="0" name="NazovDokumentu" type="s:string" />
+          <s:element minOccurs="0" name="Typ" type="s:string" />
+          <s:element minOccurs="0" name="Obsah" type="s:base64Binary" />
+          <s:element minOccurs="0" name="Komprimovany" type="s:boolean" />
+          <s:element minOccurs="0" name="Poznamka" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIVysledokOtestovania">
+        <s:sequence>
+          <s:element minOccurs="0" name="IdExterne" type="s:long" />
+          <s:element name="Stav" type="s:string" />
+          <s:element name="DatumPrijatia" type="s:dateTime" />
+          <s:element name="Typ" type="s:string" />
+          <s:element name="Nazov" type="s:string" />
+          <s:element name="Obdobie" type="s:int" />
+          <s:element minOccurs="0" name="Chyby" type="ns2:ArrayOfChybaAPIChyba" />
+          <s:element minOccurs="0" name="Protokol" type="ns2:APIDokument" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfChybaAPIChyba">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Chyba" nillable="true" type="ns2:APIChyba" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIChyba">
+        <s:sequence>
+          <s:element minOccurs="0" name="RC" type="s:string" />
+          <s:element minOccurs="0" name="Riadok" type="s:int" />
+          <s:element name="Chyba" type="s:string" />
+          <s:element name="Zavaznost" type="s:string" />
+          <s:element name="Popis" type="s:string" />
+          <s:element minOccurs="0" name="RiesenieChyby" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIDavka">
+        <s:sequence>
+          <s:element minOccurs="0" name="IdExterne" type="s:long" />
+          <s:element name="Nazov" type="s:string" />
+          <s:element name="Obsah" type="s:base64Binary" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DajStavOdoslaniaHromadnehoOznameniaSoapIn">
+    <wsdl:part name="parameters" element="s0:DajStavOdoslaniaHromadnehoOznamenia" />
+  </wsdl:message>
+  <wsdl:message name="DajStavOdoslaniaHromadnehoOznameniaSoapOut">
+    <wsdl:part name="parameters" element="s0:DajStavOdoslaniaHromadnehoOznameniaResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajStavOtestovaniaHromadnehoOznameniaSoapIn">
+    <wsdl:part name="parameters" element="s0:DajStavOtestovaniaHromadnehoOznamenia" />
+  </wsdl:message>
+  <wsdl:message name="DajStavOtestovaniaHromadnehoOznameniaSoapOut">
+    <wsdl:part name="parameters" element="s0:DajStavOtestovaniaHromadnehoOznameniaResponse" />
+  </wsdl:message>
+  <wsdl:message name="OdosliHromadneOznamenieSoapIn">
+    <wsdl:part name="parameters" element="s0:OdosliHromadneOznamenie" />
+  </wsdl:message>
+  <wsdl:message name="OdosliHromadneOznamenieSoapOut">
+    <wsdl:part name="parameters" element="s0:OdosliHromadneOznamenieResponse" />
+  </wsdl:message>
+  <wsdl:message name="OtestujHromadneOznamenieSoapIn">
+    <wsdl:part name="parameters" element="s0:OtestujHromadneOznamenie" />
+  </wsdl:message>
+  <wsdl:message name="OtestujHromadneOznamenieSoapOut">
+    <wsdl:part name="parameters" element="s0:OtestujHromadneOznamenieResponse" />
+  </wsdl:message>
+  <wsdl:portType name="HromadneOznamenieSoapServiceSoap">
+    <wsdl:operation name="DajStavOdoslaniaHromadnehoOznamenia">
+      <wsdl:input message="s0:DajStavOdoslaniaHromadnehoOznameniaSoapIn" />
+      <wsdl:output message="s0:DajStavOdoslaniaHromadnehoOznameniaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajStavOtestovaniaHromadnehoOznamenia">
+      <wsdl:input message="s0:DajStavOtestovaniaHromadnehoOznameniaSoapIn" />
+      <wsdl:output message="s0:DajStavOtestovaniaHromadnehoOznameniaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OdosliHromadneOznamenie">
+      <wsdl:input message="s0:OdosliHromadneOznamenieSoapIn" />
+      <wsdl:output message="s0:OdosliHromadneOznamenieSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OtestujHromadneOznamenie">
+      <wsdl:input message="s0:OtestujHromadneOznamenieSoapIn" />
+      <wsdl:output message="s0:OtestujHromadneOznamenieSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="HromadneOznamenieSoapServiceSoap" type="s0:HromadneOznamenieSoapServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DajStavOdoslaniaHromadnehoOznamenia">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.HromadneOznamenie.DajStavOdoslaniaHromadnehoOznamenia" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajStavOtestovaniaHromadnehoOznamenia">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.HromadneOznamenie.DajStavOtestovaniaHromadnehoOznamenia" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OdosliHromadneOznamenie">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.HromadneOznamenie.OdosliHromadneOznamenie" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OtestujHromadneOznamenie">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.HPP.HromadneOznamenie.OtestujHromadneOznamenie" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HromadneOznamenieSoapService">
+    <wsdl:port name="HromadneOznamenieSoapServiceSoap" binding="s0:HromadneOznamenieSoapServiceSoap">
+      <soap:address location="https://teasc.dovera.sk:443/csp/esb/ESB.Service.WS.B2B.V02.HPP.HromadneOznamenie.cls" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

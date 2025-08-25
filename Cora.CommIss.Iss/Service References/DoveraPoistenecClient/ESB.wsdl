@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.dovera.sk/b2b/types" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:s0="http://b2b.dovera.sk" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://b2b.dovera.sk" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://b2b.dovera.sk">
+      <s:import namespace="http://schemas.dovera.sk/b2b/types" />
+      <s:complexType name="APITokenPouzivatela">
+        <s:sequence>
+          <s:element name="Login" type="s:string" />
+          <s:element name="DodavatelSW" type="s:string" />
+          <s:element minOccurs="0" name="KodNZ" type="s:string" />
+          <s:element minOccurs="0" name="KodVZ" type="s:string" />
+          <s:element minOccurs="0" name="VS" type="s:string" />
+          <s:element minOccurs="0" name="UnikatnyKodPLA" type="s:string" />
+          <s:element minOccurs="0" name="CasovyLimitVolania" type="s:int" />
+          <s:element minOccurs="0" name="ICO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OverPoistenca">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:OverPoistencaVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OverPoistencaVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="s0:APITokenPouzivatela" />
+          <s:element name="RC" type="s:string" />
+          <s:element minOccurs="0" name="ICP" type="s:string" />
+          <s:element minOccurs="0" name="Datum" type="s:date" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="OverPoistencaResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:OverPoistencaVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="OverPoistencaVystup">
+        <s:sequence>
+          <s:element name="PoistnyVztahPoistenca" type="ns2:APIPoistnyVztahPoistenca" />
+          <s:element name="JeNeplatic" type="s:boolean" />
+          <s:element minOccurs="0" name="ZaciatokEUPoistenia" type="s:date" />
+          <s:element minOccurs="0" name="MaNarokNaOdkladnuZS" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.dovera.sk/b2b/types">
+      <s:simpleType name="APIPoistnyVztahPoistenca">
+        <s:restriction base="s:string">
+          <s:enumeration value="NieJePoistencom" />
+          <s:enumeration value="JePoistencom" />
+          <s:enumeration value="JePoistencomEU" />
+        </s:restriction>
+      </s:simpleType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="OverPoistencaSoapIn">
+    <wsdl:part name="parameters" element="s0:OverPoistenca" />
+  </wsdl:message>
+  <wsdl:message name="OverPoistencaSoapOut">
+    <wsdl:part name="parameters" element="s0:OverPoistencaResponse" />
+  </wsdl:message>
+  <wsdl:portType name="PoistenecServiceSoap">
+    <wsdl:operation name="OverPoistenca">
+      <wsdl:input message="s0:OverPoistencaSoapIn" />
+      <wsdl:output message="s0:OverPoistencaSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="PoistenecServiceSoap" type="s0:PoistenecServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="OverPoistenca">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.Poistenec.OverPoistenca" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="PoistenecService">
+    <wsdl:port name="PoistenecServiceSoap" binding="s0:PoistenecServiceSoap">
+      <soap:address location="https://teasc.dovera.sk:443/csp/esb/ESB.Service.WS.B2B.V02.Poistenec.cls" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

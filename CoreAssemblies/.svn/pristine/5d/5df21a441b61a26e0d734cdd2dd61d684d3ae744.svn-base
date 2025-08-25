@@ -1,0 +1,1440 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.CoraCoreObj</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.CoraCoreObj.EnsureValidConnIdMessageInspector">
+            <summary>
+            Trieda zodpovedná za overenie platnosti ConnId vo WCF správe.
+            </summary>
+            <remarks>
+            Ak je connection ID neprítomné alebo neplatné, vyhodí fault.
+            </remarks>
+        </member>
+        <member name="M:Cora.CoraCoreObj.EnsureValidConnIdMessageInspector.LogWsConn(System.ServiceModel.Channels.Message,System.String)">
+            <summary>
+            Vytvorenie logu prichádzajúceho requestu podľa ConnId.
+            </summary>
+            <param name="request">Prichádzajúci request.</param>
+            <param name="connId">Connection ID.</param>
+        </member>
+        <member name="T:Cora.CoraCoreObj.LicenceManager">
+            <summary>
+            Trieda pre správu licencií v aplikácii.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.LicenceManager.GetInstance(System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.CoraCoreObj.LicenceManager"/>.
+            </summary>
+            <param name="connectionString">Connection string pre pripojenie do systémovej DB.</param>
+            <returns><see cref="T:Cora.CoraCoreObj.LicenceManager"/>.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.LicenceManager.GetMaxLicenseNumber(System.Int32)">
+            <summary>
+            Zistenie maximálneho počtu licencií pre zadané ID licencie.
+            </summary>
+            <param name="licenceId">ID licencie.</param>
+            <returns>Maximálny počet licencií pre zadané ID licencie.</returns>
+        </member>
+        <member name="T:Cora.CoraCoreObj.MonitoringHelper">
+            <summary>
+            Klient pre posielanie monitorovacích správ klientov na remote object na servri.
+            </summary>
+        </member>
+        <member name="T:Cora.CoraCoreObj.MonitoringHelper.AppHelper">
+            <summary>
+            Trieda zaobaľujúca funkcionalitu <see cref="T:Cora.CoraCoreObj.MonitoringHelper"/>-a (klienta pre <see cref="T:Cora.CoraCoreObj.Monitoring"/>) a uľahčujúca prácu s ňou v aplikácii.
+            </summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.MonitoringHelper.AppHelper.MONITOR_TYP_LOGIN">
+            <summary>Typ záznamu monitora prihlásenia (hodnota 1).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.MonitoringHelper.AppHelper.MONITOR_TYP_LOGOUT">
+            <summary>Typ záznamu monitora prihlásenia (hodnota 2).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.MonitoringHelper.AppHelper.MONITOR_TYP_LOGIN_NO_LICENCE">
+            <summary>Typ záznamu monitora neprihlásenia z dôvodu prekročenia počtu licencií (hodnota 9).</summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.SetClientIpRetrievalFunction(System.Func{System.String})">
+            <summary>
+            Nastavenie funkcie, pomocou ktorej môže <see cref="T:Cora.CoraCoreObj.MonitoringHelper"/> získať v prípade potreby klientskú IP adresu.
+            </summary>
+            <param name="clientIpRetrievalFunction">Funkcia, pomocou ktorej môže <see cref="T:Cora.CoraCoreObj.MonitoringHelper"/> získať
+            klientskú IP adresu. Predošlá hodnota je prepísaná novou, pri <c>null</c> sa klientská IP nezískava.</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.#ctor">
+            <summary>
+            Vytvorenie <see cref="T:Cora.CoraCoreObj.MonitoringHelper.AppHelper"/>-a pre ID aplikácie nastaveného z <see cref="T:Cora.CoraCoreObj.CoreConfig"/>-u (viď <see cref="P:Cora.CoraCoreObj.MonitoringHelper.AppHelper.ApplicationId"/>).
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.#ctor(System.Int32)">
+            <summary>
+            Vytvorenie <see cref="T:Cora.CoraCoreObj.MonitoringHelper.AppHelper"/>-a.
+            </summary>
+            <param name="applicationId">ID aplikácie (AA_APPLICATION.I_APPLICATION). Hodnota 
+            <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/> (-1), viď <see cref="P:Cora.CoraCoreObj.MonitoringHelper.AppHelper.ApplicationId"/>.</param>
+        </member>
+        <member name="P:Cora.CoraCoreObj.MonitoringHelper.AppHelper.ApplicationId">
+            <summary>ID aplikácie (AA_APPLICATION.I_APPLICATION). Hodnota 
+            <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/> (-1) bude nahradená pri zápise záznamu
+            default hodnotou nastavenou v <see cref="T:Cora.CoraCoreObj.CoreConfig"/>, uzol <see cref="F:Cora.CoraCoreObj.CoreConfig.MONITORING_NODE"/>, 
+            atribút <see cref="F:Cora.CoraCoreObj.CoreConfig.MONITORING_APPLICATIONID_ATTRIBUTE"/>.</summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.WriteLoginMonitor(Cora.Global.Session.IIdentity,System.String)">
+            <summary>
+            Zapísanie monitorovacieho záznamu o prihlásení.
+            </summary>
+            <param name="identity">Identita používateľa. Nesmie byť <c>null</c>.</param>
+            <param name="compIp">IP adresa počítača.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="identity"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.WriteLogoutMonitor(Cora.Global.Session.IIdentity,System.String)">
+            <summary>
+            Zapísanie monitorovacieho záznamu o odhlásení.
+            </summary>
+            <param name="identity">Identita používateľa. Nesmie byť <c>null</c>.</param>
+            <param name="compIp">IP adresa počítača.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="identity"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.WriteLoginNoLicenceMonitor(Cora.Global.Session.IIdentity,System.String,System.Int32)">
+            <summary>
+            Zapísanie monitorovacieho záznamu o neprihlásení z dôvodu prekročenia počtu licencií.
+            </summary>
+            <param name="identity">Identita používateľa. Nesmie byť <c>null</c>.</param>
+            <param name="compIp">IP adresa počítača.</param>
+            <param name="licenceId">ID licencie.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="identity"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.CreateMonitoringRecord(System.Int32,Cora.Global.Session.IIdentity,System.String)">
+            <summary>
+            Vytvorenie záznamu monitorovania.
+            </summary>
+            <param name="monitorTyp">ID typu monitorovania.</param>
+            <param name="identity">Identita používateľa. Nesmie byť <c>null</c>.</param>
+            <param name="compIp">IP adresa počítača.</param>
+            <returns>Záznam monitorovania.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="identity"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.CreateMonitoringRecord(System.Int32,Cora.Global.Session.IIdentity,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Vytvorenie záznamu monitorovania.
+            </summary>
+            <param name="monitorTyp">ID typu monitorovania.</param>
+            <param name="identity">Identita používateľa. Nesmie byť <c>null</c>.</param>
+            <param name="compIp">IP adresa počítača.</param>
+            <param name="value1">Parameter 1.</param>
+            <param name="value2">Parameter 2.</param>
+            <param name="value3">Parameter 3.</param>
+            <param name="value4">Parameter 4.</param>
+            <param name="value5">Parameter 5.</param>
+            <param name="valuesXml">Parametre, alebo popis parametrov vo formáte XML.</param>
+            <returns>Záznam monitorovania.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="identity"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.GetMonitoringHelper">
+            <summary>
+            Získanie <see cref="T:Cora.CoraCoreObj.MonitoringHelper"/>-a (klienta pre <see cref="T:Cora.CoraCoreObj.Monitoring"/>). Pri prvom použití
+            sa vytvára na základe nastavení v config-u (<see cref="P:System.Configuration.ConfigurationManager.AppSettings"/>,
+            uzol <see cref="F:Cora.CoraCoreObj.RemoteLogForwarderHelper.COCOS_URL"/>).
+            </summary>
+            <returns><see cref="T:Cora.CoraCoreObj.MonitoringHelper"/>.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.AppHelper.GetXmlDescription(System.String[])">
+            <summary>
+            Získanie XML reťazca popisujúceho jednotlivé hodnoty monitorovacieho záznamu.
+            </summary>
+            <param name="descriptions">Popisy jednotlivých hodnôt monitorovacieho záznamu.</param>
+            <returns>XML reťazec popisujúci jednotlivé hodnoty monitorovacieho záznamu.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.#ctor(System.String)">
+            <summary>
+            Vytvorenie klienta pre remote objekt monitorovania, ktorý beží na zadanom url.
+            </summary>
+            <param name="url">URI, kde beží služba poskytujúca remote objekty.</param>
+            <exception cref="T:System.ArgumentException">Aj je <paramref name="url"/> prázdna.</exception>
+        </member>
+        <member name="P:Cora.CoraCoreObj.MonitoringHelper.DroppedRecords">
+            <summary>
+            Vráti počet zahodených záznamov (napr. preto že pri ich zápise opakovane vznikli chyby alebo pretože buffer pretiekol).
+            </summary>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Pri chybe vzdialeného volania.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.DumpBuffer(System.Int32)">
+            <summary>
+            Zápis všetkých čakajúcich záznamov z buffer-a s timeout-om.
+            </summary>
+            <param name="maxWaitSeconds">Maximálny čas zápisu (v sekundách).</param>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Pri chybe vzdialeného volania.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.WriteMonitor(Cora.Utils.Logger.MonitoringRecord)">
+            <summary>
+            Zaslanie monitorovacieho záznamu.
+            </summary>
+            <param name="monitoringRecord">Monitorovací záznam.</param>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Pri chybe vzdialeného volania.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.WriteMonitor(System.Int32,System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Zaslanie monitorovacieho záznamu.
+            </summary>
+            <param name="monitorTyp">ID typu monitorovania.</param>
+            <param name="application">ID aplikácie, alebo <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/>.</param>
+            <param name="user">ID používateľa, alebo <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/>.</param>
+            <param name="connId">ID pripojenia.</param>
+            <param name="compIp">IP adresa počítača.</param>
+            <param name="value1">Parameter 1.</param>
+            <param name="value2">Parameter 2.</param>
+            <param name="value3">Parameter 3.</param>
+            <param name="value4">Parameter 4.</param>
+            <param name="value5">Parameter 5.</param>
+            <param name="valuesXml">Parametre, alebo popis parametrov vo formáte XML.</param>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Pri chybe vzdialeného volania.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringHelper.WriteMonitor(System.Int32,System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,Cora.CoraCoreObj.MonitoringParams)">
+            <summary>
+            Zaslanie monitorovacieho záznamu.
+            </summary>
+            <param name="monitorTyp">ID typu monitorovania.</param>
+            <param name="application">ID aplikácie, alebo <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/>.</param>
+            <param name="user">ID používateľa, alebo <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/>.</param>
+            <param name="connId">ID pripojenia.</param>
+            <param name="compIp">IP adresa počítača.</param>
+            <param name="value1">Parameter 1.</param>
+            <param name="value2">Parameter 2.</param>
+            <param name="value3">Parameter 3.</param>
+            <param name="value4">Parameter 4.</param>
+            <param name="value5">Parameter 5.</param>
+            <param name="valuesXml">Parametre, alebo popis parametrov cez objekt.</param>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Pri chybe vzdialeného volania.</exception>
+        </member>
+        <member name="T:Cora.CoraCoreObj.CoraAppSrv">
+            <summary>
+            Trieda pre riadenie (nastavovanie) aplikacie.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraAppSrv.GetVersion">
+            <summary>Verzia, ktora bude definovat zmeny v implementaciach. Vracia vždy <see cref="F:System.String.Empty"/>.</summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraAppSrv.GetSrvParam(System.String)">
+            <summary>
+            Zistenie hodnoty parametra aplikácie zadaneho v config subore sluzby.
+            </summary>
+            <param name="sParamName">Nazov parametra.</param>
+            <returns>Hodnota parametra. Null, ak parameter nie je nastaveny.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraAppSrv.GetSrvParamNode(System.String)">
+            <summary>
+            Zistenie uzlu parametra aplikácie zadaneho v config subore sluzby.
+            </summary>
+            <param name="sParamName">Nazov parametra.</param>
+            <returns>Uzol parametra. Null, ak parameter nie je nastaveny.</returns>
+        </member>
+        <member name="T:Cora.CoraCoreObj.CoraAppSrvHelper">
+            <summary>
+            Klient pre <see cref="T:Cora.CoraCoreObj.CoraAppSrv"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraAppSrvHelper.#ctor(System.String)">
+            <summary>
+            Vytvorenie klienta pre <see cref="T:Cora.CoraCoreObj.CoraAppSrv"/>, ktory bezi na zadanom url.
+            </summary>
+            <param name="url">URI, kde beží služba poskytujúca remote objekty. Ak je <c>null</c>, použije sa lokálne vytvorený objekt.</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraAppSrvHelper.GetVersion">
+            <summary>Verzia, ktora bude definovat zmeny v implementaciach. Vracia vždy <see cref="F:System.String.Empty"/>.</summary>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka pri volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraAppSrvHelper.GetSrvParam(System.String)">
+            <summary>
+            Zistenie hodnoty parametra aplikácie zadaneho v config subore sluzby.
+            </summary>
+            <param name="paramName">Nazov parametra.</param>
+            <returns>Hodnota parametra. Null, ak parameter nie je nastaveny.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka pri volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraAppSrvHelper.GetSrvParamNode(System.String)">
+            <summary>
+            Zistenie uzlu parametra aplikácie zadaneho v config subore sluzby.
+            </summary>
+            <param name="paramName">Nazov parametra.</param>
+            <returns>Uzol parametra. Null, ak parameter nie je nastaveny.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraAppSrvHelper.GetSysConnect">
+            <summary>
+            Zistenie hodnoty parametra konekcie na databazu (ak je def. v config. file).
+            </summary>
+            <returns>Konekcia na DB.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="T:Cora.CoraCoreObj.CoraConnMngr">
+            <summary>
+            Trieda riadi spravu pripojeni klientov.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoraConnMngr.TimeAlive">
+            <summary>Čas "trvanlivosti" pripojenia (v minútach).</summary>
+            <remarks>Pripojenie, ktore sa za tento cas neobnovi, bude odpojene.</remarks>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.#ctor">
+            <summary>
+            Vytvorenie inštancie triedy pre správu pripojení.
+            </summary>
+            <exception cref="T:Cora.CoraCoreObj.CoreException">Pri chybe dekryptovania systémovej konekcie, 
+            	alebo chýbajúcej konfigurácii <see cref="P:Cora.CoraCoreObj.CoreConfig.CoreConfigName"/>.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetConnectionString">
+            <summary>
+            Vráti kryptovaný connection string do DB z konfigurácie.
+            </summary>
+            <returns>Connection string.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.CreateLogonUserCrypt(System.String,System.String,System.String,System.DateTime,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorenie pripojenia pre používateľa podľa hashu hesla.
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="hashPassword">Zakryptované heslo.</param>
+            <param name="compIp">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <returns>ID pripojenia; alebo prázdny string v prípade neúspechu.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.CreateLogonUserNoCrypt(System.String,System.String,System.String,System.DateTime,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorenie pripojenia pre používateľa podľa hesla v cleartexte.
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="password">Heslo.</param>
+            <param name="compIp">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <returns>ID pripojenia; alebo prázdny string v prípade neúspechu.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.CreateWindowsAuthenticated(System.String,System.String,System.String,System.DateTime,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorenie pripojenia pre používateľa overeného cez Windows.
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="domainName">Meno domény.</param>
+            <param name="clientIP">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <returns>ID pripojenia; alebo prázdny string v prípade neúspechu.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.CloseConnection(System.String)">
+            <summary>
+            Ukončí pripojenie a vráti ID riadku ukončeného pripojenia v DB.
+            </summary>
+            <param name="connId">ID pripojenia - GUID.</param>
+            <returns>ID riadku ukončeného pripojenia v DB. (-1 chyba v CoraConnMngr, -2 chyba v DB)</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetNConnections">
+            <summary>
+            Vráti počet všetkých pripojení.
+            </summary>
+            <returns>Počet pripojení.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetNConnections(System.Int32)">
+            <summary>
+            Vráti počet pripojení pre zadané ID licencie.
+            </summary>
+            <returns>Počet pripojení pre zadané ID licencie.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetMaxConnections(System.Int32)">
+            <summary>
+            Vráti maximálny počet pripojení pre zadané ID licencie.
+            </summary>
+            <returns>Maximálny počet pripojení pre zadané ID licencie.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetNUsers">
+            <summary>
+            Vráti počet používateľov.
+            </summary>
+            <returns>Počet používateľov.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.CloseAllConn">
+            <summary>
+            Ukončí všetky pripojenia.
+            </summary>
+            <returns>Počet zmazaných pripojení.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetNamePass(System.Int32,System.String@,System.String@)">
+            <summary>
+            Zistenie mena a hesla používateľa.
+            </summary>
+            <param name="i_uz">ID používateľa.</param>
+            <param name="sz_name">Meno používateľa; alebo <c>null</c> ak užívateľ neexistuje.</param>
+            <param name="sz_crypt_pass">Kryptované heslo; alebo <c>null</c> ak užívateľ neexistuje.</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetUserId(System.String)">
+            <summary>
+            Zistenie ID pripojeneho používateľa.
+            </summary>
+            <param name="connId">ID pripojenia.</param>
+            <returns>ID pripojeneho používateľa; alebo 0 ak je pripojenie neplatné/neaktívne.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.IsConnActive(System.String)">
+            <summary>
+            Zistenie stavu pripojenia.
+            </summary>
+            <param name="CONNID">ID pripojenia.</param>
+            <returns>Stav pripojenia.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetConnInfo(System.String)">
+            <summary>
+            Vráti parametre pripojenia.
+            </summary>
+            <param name="CONNID">ID pripojenia.</param>
+            <returns>Parametre pripojenia.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.ResetConnections">
+            <summary>
+            Zmaže všetky pripojenia, ktoré majú UTIME - Now > TimeAlive.
+            </summary>
+            <returns>Počet zmazaných pripojení.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.KeepAliveConnection(System.String)">
+            <summary>
+            Obnovenie pripojenia.
+            </summary>
+            <param name="CONNID">ID pripojenia.</param>
+            <returns>Počet obnovených pripojení.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.CallWsConnLogIns(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Vytvorenie záznamu do tabuľky WS_CONN_LOG, slúži na logovanie volaní Cora verejných WCF rozhraní.
+            </summary>
+            <param name="address">Adresa volajúcej strany.</param>
+            <param name="iUz">ID používateľa, pre ktorého bolo ConnId vygenerované.</param>
+            <param name="action">WCF Ackia z hlavičky.</param>
+            <param name="connId">Connection ID.</param>
+            <returns>ID záznamu.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.LDAPCrypt(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorenie pripojenia cez LDAP (napr. AD). Heslo je kryptované na klientovi.
+            </summary>
+            <param name="userName">Používateľské meno.</param>
+            <param name="passwordHash">Zakryptované heslo.</param>
+            <param name="domainName">Názov domény.</param>
+            <param name="propertyName">Názov property AD, 
+            specialna hodnota bude I_UZ - vráti I_UZ bez registracie v portáli
+            CONNID - zaregistruje používateľa v portáli.</param>
+            <param name="compIp">IP pc, z ktoreho sa hlasim.</param>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <returns>ID pripojenia.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.LDAP(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorenie pripojenia cez LDAP (napr. AD).
+            </summary>
+            <param name="userName">Používateľské meno.</param>
+            <param name="password">Heslo.</param>
+            <param name="domainName">Názov domény.</param>
+            <param name="propertyName">Názov property AD, 
+            specialna hodnota bude I_UZ - vráti I_UZ bez registracie v portáli
+            CONNID - zaregistruje používateľa v portáli.</param>
+            <param name="compIp">IP pc, z ktoreho sa hlasim.</param>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <returns>ID pripojenia.</returns>
+            <remarks>V prípade ak pri konekte na databazu sa vracia ORACLE chyba:
+            Iniciacia .. adaptera zlyhala je potrebne v oracle clientovi
+            v subore sqlnet.ora
+            zrusit SQLNET.AUTHENTICATION_SERVICES= (NTS)</remarks>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetHashString(System.String,System.Int32,System.String,System.DateTime,System.Nullable{System.Int32})">
+            <summary>
+            Vráti hash dát pre kontrolu konzistencie záznamu.
+            </summary>
+            <param name="CONNID">Identifikátor pripojenia.</param>
+            <param name="I_UZ">ID používateľa v db.</param>
+            <param name="COMP_IP">IP adresa PC klienta.</param>
+            <param name="STIME">Čas zápisu.</param>
+            <param name="I_ATCSRV_CIL">ID licencie, ktorú používateľ používa, alebo <c>null</c>.</param>
+            <returns>Zakryptované data.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.GetHashString(Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP)">
+            <summary>
+            Vráti zakryptované data z dátového objektu pripojenia.
+            </summary>
+            <param name="cdoConn">Dátový objekt pripojenia</param>
+            <returns>Zakryptované data.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.FindDomainUser(System.String,System.String)">
+            <summary>
+            Nájdenie používateľa z domény. Hľadá sa priamo v SP_UZ (N_UZ a UZOL).
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="domainName">Meno domény.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngr.CreateConnection(Cora.CoraCoreObj.SP_UZ_Static.ConnMngrSP_UZ,System.String,System.DateTime,System.Boolean,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorenie pripojenia používateľa.
+            </summary>
+            <param name="cdoUz">Dátový objekt používateľa (SP_UZ).</param>
+            <param name="compIp">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <param name="checkPwdExpiration">Kontrolovat expiraciu prihlaseneho používateľa?</param>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <returns>ID pripojenia, alebo prázdny string, ak nebolo mozne pripojenie vytvorit.</returns>
+        </member>
+        <member name="T:Cora.CoraCoreObj.CoraConnMngrHelper">
+            <summary>
+            Klientská helper trieda pre napojenie sa na remote object <see cref="T:Cora.CoraCoreObj.CoraConnMngr"/>.
+            </summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoraConnMngrHelper.LDAP_PROPERTY_I_UZ">
+            <summary>Hodnota pre získanie ID používateľa pri overovani cez LDAP.</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoraConnMngrHelper.LDAP_PROPERTY_CONNID">
+            <summary>Hodnota pre vytvorenie pripojenia a získanie jeho ID overením cez LDAP.</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoraConnMngrHelper.CONNID_PREFIX_PWD_EXPIRED">
+            <summary>Predpona ID pripojenia používateľa, ktorého heslo je expirované.</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoraConnMngrHelper.CONNID_NO_LICENCE">
+            <summary>ID pripojenia, keď je počet licencií vyčerpaný.</summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.IsPasswordExpiredConnId(System.String)">
+            <summary>
+            Zistenie, či ID pripojenia patrí používateľovi, ktorého heslo je expirované.
+            </summary>
+            <param name="connId">ID pripojenia.</param>
+            <returns>Má pripojený používateľ expirované heslo?</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.IsNoLicenceConnId(System.String)">
+            <summary>
+            Zistenie, či ide o ID pripojenia, keď je počet licencií vyčerpaný.
+            </summary>
+            <param name="connId">ID pripojenia.</param>
+            <returns>Je počet licencií vyčerpaný?</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.#ctor(System.String)">
+            <summary>
+            Vytvorenie klienta pre remote objekt <see cref="T:Cora.CoraCoreObj.CoraConnMngr"/>.
+            </summary>
+            <param name="url">URI, kde beží služba poskytujúca remote objekty. Ak je <c>null</c>, použije sa lokálne vytvorený objekt.</param>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoraConnMngrHelper.ActiveConnections">
+            <summary>
+            Vráti počet aktívnych pripojeni.
+            </summary>
+            <returns>Počet pripojení.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoraConnMngrHelper.ActiveUsers">
+            <summary>
+            Vráti počet aktívnych používateľov.
+            </summary>
+            <returns>Počet používateľov.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoraConnMngrHelper.ConnectionString">
+            <summary>
+            Kryptovaný systémový connection string do DB. Viď <see cref="M:Cora.Data.DBProvider.CoraConnectionString.Decrypt(System.String)"/>.
+            </summary>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.CreateLogonUserCrypt(System.String,System.String,System.String,System.DateTime)">
+            <summary>
+            Vytvorí pripojenie pre používateľa. Heslo sa hash-uje na strane klienta.
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="hashPassword">Hash hesla.</param>
+            <param name="compIp">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <returns>ID pripojenia; alebo prázdny string v prípade neúspechu.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.CreateLogonUserCrypt(System.String,System.String,System.String,System.DateTime,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorí pripojenie pre používateľa. Heslo sa hash-uje na strane klienta.
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="hashPassword">Hash hesla.</param>
+            <param name="compIp">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <returns>ID pripojenia; alebo prázdny string v prípade neúspechu.</returns>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.CreateLogonUserNoCrypt(System.String,System.String,System.String,System.DateTime)">
+            <summary>
+            Vytvorí pripojenie pre používateľa.
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="password">Heslo v cleartexte.</param>
+            <param name="compIp">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <returns>ID pripojenia; alebo prázdny string v prípade neúspechu.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.CreateLogonUserNoCrypt(System.String,System.String,System.String,System.DateTime,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorí pripojenie pre používateľa.
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="password">Heslo v cleartexte.</param>
+            <param name="compIp">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <returns>ID pripojenia; alebo prázdny string v prípade neúspechu.</returns>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.CreateWindowsAuthenticated(System.String,System.String,System.String,System.DateTime)">
+            <summary>
+            Vytvorí pripojenia pre používateľa s overením cez Windows.
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="domainName">Meno domeny.</param>
+            <param name="compIp">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <returns>ID pripojenia; alebo prázdny string v prípade neúspechu.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.CreateWindowsAuthenticated(System.String,System.String,System.String,System.DateTime,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorí pripojenia pre používateľa s overením cez Windows.
+            </summary>
+            <param name="userName">Meno používateľa.</param>
+            <param name="domainName">Meno domény.</param>
+            <param name="compIp">IP adresa PC klienta.</param>
+            <param name="startDateTime">Čas zápisu.</param>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <returns>
+            ID pripojenia; alebo prázdny string v prípade neúspechu.
+            </returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.GetUserId(System.String)">
+            <summary>
+            Vráti ID pripojeneho používateľa.
+            </summary>
+            <param name="connId">ID pripojenia.</param>
+            <returns>ID pripojeneho používateľa; alebo 0 ak je pripojenie neplatné/neaktívne.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.GetNamePass(System.Int32,System.String@,System.String@)">
+            <summary>
+            Zistenie mena a hesla používateľa.
+            </summary>
+            <param name="i_uz">ID používateľa.</param>
+            <param name="sz_name">Meno používateľa; alebo <c>null</c> ak používateľ neexistuje.</param>
+            <param name="sz_crypt_pass">Kryptované heslo; alebo <c>null</c> ak používateľ neexistuje.</param>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.CloseConnection(System.String)">
+            <summary>
+            Ukončí pripojenie a vráti ID riadku ukončeného pripojenia v DB.
+            </summary>
+            <param name="connId">ID pripojenia - GUID.</param>
+            <returns>ID riadku ukončeného pripojenia v DB.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.CloseAllConnection">
+            <summary>
+            Ukončí všetky pripojenia.
+            </summary>
+            <returns>Počet zmazaných pripojení.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.KeepAliveConnection(System.String)">
+            <summary>
+            Obnovenie pripojenia (ochrana pred vypršaním).
+            </summary>
+            <param name="connId">ID pripojenia.</param>
+            <returns>Počet obnovených pripojení.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.CallWsConnLogIns(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Vytvorenie záznamu do tabuľky WS_CONN_LOG, slúži na logovanie volaní Cora verejných WCF rozhraní.
+            </summary>
+            <param name="address">Adresa volajúcej strany.</param>
+            <param name="iUz">ID používateľa, pre ktorého bolo ConnId vygenerované.</param>
+            <param name="action">WCF Ackia z hlavičky.</param>
+            <param name="connId">Connection ID.</param>
+            <returns>ID záznamu.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.ResetConnections">
+            <summary>
+            Zmaže všetky pripojenia, ktoré majú UTIME - Now > TimeAlive.
+            </summary>
+            <returns>Počet zmazaných pripojení.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.LDAPCrypt(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Vytvorí pripojenie pre používateľa s overením cez LDAP (napr. Active Directory).
+            </summary>
+            <param name="userName">Meno používateľa domény.</param>
+            <param name="passwordCrypt">Zakryptované heslo do domény.</param>
+            <param name="domainName">Názov domény.</param>
+            <param name="propertyName">Názov parametra LDAP objektu usera, alebo I_UZ, CONNID.</param>
+            <param name="compIp">IP počítača, z ktorého je pripojenie vytvorené.</param>
+            <returns>ID pripojenia (GUID); alebo prázdny string v prípade neúspechu.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.LDAPCrypt(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorí pripojenie pre používateľa s overením cez LDAP (napr. Active Directory).
+            </summary>
+            <param name="userName">Meno používateľa domény.</param>
+            <param name="passwordCrypt">Zakryptované heslo do domény.</param>
+            <param name="domainName">Názov domény.</param>
+            <param name="propertyName">Názov parametra LDAP objektu usera, alebo I_UZ, CONNID.</param>
+            <param name="compIp">IP počítača, z ktorého je pripojenie vytvorené.</param>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <returns>ID pripojenia (GUID); alebo prázdny string v prípade neúspechu.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.LDAP(System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Vytvorí pripojenia pre používateľa s overením cez LDAP (napr. Active Directory).
+            </summary>
+            <param name="userName">Meno používateľa domény.</param>
+            <param name="password">Heslo do domény.</param>
+            <param name="domainName">Názov domény.</param>
+            <param name="propertyName">Názov parametra LDAP objektu usera, alebo I_UZ, CONNID.</param>
+            <param name="compIp">IP počítača, z ktorého je pripojenie vytvorené.</param>
+            <returns>
+            ID pripojenia (GUID); alebo prázdny string v prípade neúspechu.
+            </returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.LDAP(System.String,System.String,System.String,System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Vytvorí pripojenia pre používateľa s overením cez LDAP (napr. Active Directory).
+            </summary>
+            <param name="userName">Meno používateľa domény.</param>
+            <param name="password">Heslo do domény.</param>
+            <param name="domainName">Názov domény.</param>
+            <param name="propertyName">Názov parametra LDAP objektu usera, alebo I_UZ, CONNID.</param>
+            <param name="compIp">IP počítača, z ktorého je pripojenie vytvorené.</param>
+            <param name="licenceId">ID licencie, ktorú bude používateľ používať, alebo <c>null</c>.</param>
+            <returns>ID pripojenia (GUID); alebo prázdny string v prípade neúspechu.</returns>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikne výnimka vo volaní remote objektu.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.GetNConnections(System.Int32)">
+            <summary>
+            Vráti počet pripojení pre zadané ID licencie.
+            </summary>
+            <returns>Počet pripojení pre zadané ID licencie.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoraConnMngrHelper.GetMaxConnections(System.Int32)">
+            <summary>
+            Vráti maximálny počet pripojení pre zadané ID licencie.
+            </summary>
+            <returns>Maximálny počet pripojení pre zadané ID licencie.</returns>
+        </member>
+        <member name="T:Cora.CoraCoreObj.CoreClientException">
+            <summary>
+            Vynimka pre chyby klientskych objektov z namespace <see cref="N:Cora.CoraCoreObj"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreClientException.#ctor(Cora.CoraCoreObj.IRemoteHelper,System.String,System.Exception)">
+            <summary>
+            Vytvorenie vynimky klientskeho objektu.
+            </summary>
+            <param name="helper">Klientský objekt, kde vznikla výnimka.</param>
+            <param name="message">Text spravy vynimky.</param>
+            <param name="innerException">Vnutorna vynimka.</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreClientException.#ctor(Cora.CoraCoreObj.IRemoteHelper,System.Exception)">
+            <summary>
+            Vytvorenie vynimky klientskeho objektu.
+            </summary>
+            <param name="helper">Klientský objekt, kde vznikla výnimka.</param>
+            <param name="innerException">Vnutorna vynimka.</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreClientException.#ctor(Cora.CoraCoreObj.IRemoteHelper,System.String)">
+            <summary>
+            Vytvorenie vynimky klientskeho objektu.
+            </summary>
+            <param name="helper">Klientský objekt, kde vznikla výnimka.</param>
+            <param name="message">Text spravy vynimky.</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreClientException.#ctor">
+            <summary>
+            Vytvorenie vynimky klientskeho objektu.
+            </summary>
+        </member>
+        <member name="T:Cora.CoraCoreObj.CoreConfig">
+            <summary>
+            Konfiguracny objekt pre sluzbu a remote objekty.
+            </summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.CORA_CORE_CHANNEL_NAME">
+            <summary>Názov kanala, ktory pouziva remoting (CoraCore).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.SYSCONNECT_KEY">
+            <summary>Kľúč pre systémový connect string (ConnectionString).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.CORE_CONFIG_SECTION_DEFALT_NAME">
+            <summary>Default názov sekcie config suboru pre vytvorenie <see cref="T:Cora.CoraCoreObj.CoreConfig"/> (CoraCoreConfig).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.REMOTE_LOG_WRITER_NODE">
+            <summary>Názov uzla pre nastavenie zapisovača logov, ktoré prijal <see cref="T:Cora.CoraCoreObj.RemoteLogForwarder"/>.</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.MONITORING_NODE">
+            <summary>Názov uzla pre nastavenie logovania (Monitoring).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.MONITORING_APPLICATIONID_ATTRIBUTE">
+            <summary>Názov atribútu pre nastavenie ID aplikácie v monitorovaní (ApplicationId).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.APPLICATION_NODE">
+            <summary>Názov uzla pre nastavenie aplikacie (Application).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.CONNECTION_NODE">
+            <summary>Názov uzla pre nastavenie manazera pripojeni (Connection).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.TIME_ALIVE_ATTRIBUTE">
+            <summary>Názov atributu pre urcenie timeout-u pripojeni (TimeAlive).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.LDAP_NODE">
+            <summary>Názov uzla pre nastavenie LDAP (LDAP).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.CoreConfig.COCOS_URL">
+            <summary>Názov parametra sekcie &lt;appSettings&gt;, v ktorom sa defaultne konfiguruje URL CoCoS služby
+            v aplikáciách používajúcich remote objekty.</summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoreConfig.CoreConfigName">
+            <summary>
+            Názov sekcie pre vytvorenie <see cref="T:Cora.CoraCoreObj.CoreConfig"/>. Default je <see cref="F:Cora.CoraCoreObj.CoreConfig.CORE_CONFIG_SECTION_DEFALT_NAME"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreConfig.GetConfig">
+            <summary>
+            Vráti konfiguračný objekt vytvorený na základe nastavení v app.config-u, alebo <c>null</c> ak sekcia 
+            <see cref="P:Cora.CoraCoreObj.CoreConfig.CoreConfigName"/> chýba.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreConfig.GetAttributeValue(System.Xml.XmlNode,System.String)">
+            <summary>Ziskanie hodnoty atributu uzla.</summary>
+            <param name="xmlNode">Zdrojovy uzol.</param>
+            <param name="attributeName">Názov atributu.</param>
+            <returns>Hodnota atributu uzla.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreConfig.GetChildNodeInnerText(System.Xml.XmlNode,System.String)">
+            <summary>Ziskanie hodnoty poduzla.</summary>
+            <param name="xmlNode">Zdrojovy uzol.</param>
+            <param name="childPath">Názov poduzla.</param>
+            <returns>Hodnota poduzla.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreConfig.#ctor">
+            <summary>
+            Default konstruktor.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreConfig.#ctor(System.UInt32,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String)">
+            <summary>
+            Vytvorenie konfiguracneho objektu so zadanymi parametrami.
+            </summary>
+            <param name="remotePort">Port, kde pocuvaju remote objekty.</param>
+            <param name="validString">Validacny retazec sluzby (ignoruje sa).</param>
+            <param name="remoteLogWriterCfg">XML config pre <see cref="T:Cora.CoraCoreObj.RemoteLogForwarderHelper"/>. Nepovinný.</param>
+            <param name="monitoringConnect">Zakrytpovany connect string monitorovania. Nepovinný.</param>
+            <param name="version">Verzia aplikacie (ignoruje sa).</param>
+            <param name="sysConnectCrypt">Zakrytpovany systemovy connect string.</param>
+            <param name="timeAlive">Timeout pripojeni.</param>
+            <param name="lDAP">Pripojenie do LDAP. Nepovinný.</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreConfig.DeserializeSection(System.Xml.XmlReader)">
+            <summary>
+            Vytvorenie konfiguracneho objektu z config suboru.
+            </summary>
+            <param name="reader"></param>
+            <returns>Konfiguracny objekt.</returns>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoreConfig.RemoteLogWriter">
+            <summary>
+            Konfigurácia zapisovača logov, ktoré prijal <see cref="T:Cora.CoraCoreObj.RemoteLogForwarder"/>. Môže byť <c>null</c>.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoreConfig.MonitoringConnect">
+            <summary>Kryptovaný connection string pre zápis záznamov monitoringu. Ak nie je vyplnený, vracia <see cref="P:Cora.CoraCoreObj.CoreConfig.SysConnect"/>.</summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoreConfig.MonitoringApplicationId">
+            <summary>ID aplikácie pre zápis záznamov monitoringu. Použije sa, ak nie je v <see cref="T:Cora.Utils.Logger.MonitoringRecord"/>-e
+            vyplnená hodnota <see cref="P:Cora.Utils.Logger.MonitoringRecord.Application"/> (a je vyplnená hodnota v config-u).</summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoreConfig.SysConnect">
+            <summary>Kryptovaný systémový connect string.</summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoreConfig.TimeAlive">
+            <summary>Timeout pripojeni (v minutach).</summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.CoreConfig.LDAP">
+            <summary>Pripojenie do LDAP.</summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreConfig.GetApplicationParam(System.String)">
+            <summary>
+            Ziskanie parametra aplikacie ako XML uzlu.
+            </summary>
+            <param name="paramName">Názov parametra.</param>
+            <returns>XML uzol parametra.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreConfig.GetApplicationParamValue(System.String)">
+            <summary>
+            Ziskanie hodnoty parametra aplikacie.
+            </summary>
+            <param name="paramName">Názov parametra.</param>
+            <returns>Hodnota parametra.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreConfig.GetConfigXml">
+            <summary>
+            Zgenerovanie konfiguracneho XML (do config suboru).
+            </summary>
+            <returns>Konfiguracny XML.</returns>
+        </member>
+        <member name="T:Cora.CoraCoreObj.CoreException">
+            <summary>
+            Vynimka pre chyby serverovych objektov z namespace <see cref="N:Cora.CoraCoreObj"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreException.#ctor(System.String,System.Exception)">
+            <summary>
+            Vytvorenie vynimky serveroveho objektu.
+            </summary>
+            <param name="message">Text spravy vynimky.</param>
+            <param name="innerException">Vnutorna vynimka.</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreException.#ctor(System.String)">
+            <summary>
+            Vytvorenie vynimky serveroveho objektu.
+            </summary>
+            <param name="message">Text spravy vynimky.</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreException.#ctor">
+            <summary>
+            Vytvorenie vynimky serveroveho objektu.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.CoreException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.CoraCoreObj.CoreException"/>.
+            </summary>
+            <param name="info">The object that holds the serialized object data.</param>
+            <param name="context">The contextual information about the source or destination.</param>
+        </member>
+        <member name="T:Cora.CoraCoreObj.IP_Static">
+            <summary>
+            Statický objekt pre získanie IP.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.IP_Static.IP">
+            <summary>
+            IP adresa počítača.
+            </summary>
+        </member>
+        <member name="T:Cora.CoraCoreObj.IRemoteHelper">
+            <summary>
+            Rozhranie pre klientské triedy k remote objektom.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.IRemoteHelper.UsesLocal">
+            <summary>
+            Pracuje trieda s lokálne vytvoreným objektom?
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.IRemoteHelper.Url">
+            <summary>
+            Vráti URL pre komunikáciu klienta so službou. Ak je <c>null</c>, používa sa lokálne vytvorený objekt.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.IRemoteHelper.FullUrl">
+            <summary>
+            Vráti úplnú URL pre komunikáciu klienta s remote objektom. Ak je <c>null</c>, používa sa lokálne vytvorený objekt.
+            </summary>
+        </member>
+        <member name="T:Cora.CoraCoreObj.Monitoring">
+            <summary>
+            Trieda pre zaznamenávanie monitorovacích záznamov.
+            </summary>
+            <remarks>
+            Chyby pri zaznamenávaní záznamov sa logujú pomocou <see cref="T:Cora.Utils.Logger.AppLogging"/>-u.
+            </remarks>
+        </member>
+        <member name="M:Cora.CoraCoreObj.Monitoring.#ctor">
+            <summary>
+            Vytvorenie triedy pre monitoring.
+            </summary>
+            <exception cref="T:Cora.CoraCoreObj.CoreException">Pri chybe dekryptovania connect stringu pre monitoring, alebo
+            	chýbajúcej konfigurácii <see cref="P:Cora.CoraCoreObj.CoreConfig.CoreConfigName"/>.</exception>
+        </member>
+        <member name="P:Cora.CoraCoreObj.Monitoring.DroppedRecords">
+            <summary>
+            Vráti počet zahodených záznamov (napr. preto že pri ich zápise opakovane vznikli chyby alebo pretože buffer pretiekol).
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.Monitoring.DumpBuffer(System.Int32)">
+            <summary>
+            Zápis všetkých čakajúcich záznamov z buffer-a s timeout-om.
+            </summary>
+            <param name="maxWaitSeconds">Maximálny čas zápisu (v sekundách).</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.Monitoring.WriteMonitor(Cora.Utils.Logger.MonitoringRecord)">
+            <summary>
+            Zapíše monitorovací záznam. 
+            </summary>
+            <param name="monitoringRecord">Monitorovací záznam. Ak nemá vypnenú hodnotu <see cref="P:Cora.Utils.Logger.MonitoringRecord.CompIp"/>,
+            doplní ju z vlastnej IP (trieda <see cref="T:Cora.CoraCoreObj.IP_Static"/>). Ak nemá vypnenú hodnotu 
+            <see cref="P:Cora.Utils.Logger.MonitoringRecord.Application"/>, doplní ju default hodnotou nastavenou v <see cref="T:Cora.CoraCoreObj.CoreConfig"/>.</param>
+            <exception cref="T:System.Exception">Pri chybe zápisu.</exception>
+        </member>
+        <member name="T:Cora.CoraCoreObj.MonitoringParams">
+            <summary>
+            Trieda zaobaľujúca parametre monitoringu podľa poradia do XML. 
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringParams.#ctor(System.String[])">
+            <summary>
+            Vytvorenie podľa poľa vstupných parametrov s premenlivou dĺžkou, podľa poradia 
+            </summary>
+            <param name="vals">pole vstupných parametrov</param>
+        </member>
+        <member name="M:Cora.CoraCoreObj.MonitoringParams.ToXmlString">
+            <summary>
+            Zaobalenie parametrov do XML-stringu, podľa aktuálneho počtu parametrov.
+            </summary>
+        </member>
+        <member name="T:Cora.CoraCoreObj.RemoteHelper`1">
+            <summary>
+            Zakladná (abstract) trieda pre klientske triedy k remote objektom.
+            </summary>
+            <typeparam name="T">Typ remote objektu.</typeparam>
+        </member>
+        <member name="M:Cora.CoraCoreObj.RemoteHelper`1.#ctor(System.String)">
+            <summary>
+            Vytvorenie klienta pre remote objekt.
+            </summary>
+            <param name="url">URI, kde beží služba poskytujúca remote objekty. Ak je <c>null</c>, použije sa lokálne vytvorený objekt.</param>
+        </member>
+        <member name="P:Cora.CoraCoreObj.RemoteHelper`1.UsesLocal">
+            <summary>
+            Pracuje trieda s lokálne vytvoreným objektom?
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.RemoteHelper`1.Url">
+            <summary>
+            Vráti URL pre komunikáciu klienta so službou. Ak je <c>null</c>, používa sa lokálne vytvorený objekt.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.RemoteHelper`1.FullUrl">
+            <summary>
+            Vráti úplnú URL pre komunikáciu klienta s remote objektom. Ak je <c>null</c>, používa sa lokálne vytvorený objekt.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.RemoteHelper`1.GetRemoteObject">
+            <summary>
+            Vráti proxy objekt k remote objektu, resp. lokálne vytvorený objekt.
+            </summary>
+            <returns>Remote objekt.</returns>
+        </member>
+        <member name="T:Cora.CoraCoreObj.RemoteLogForwarder">
+            <summary>
+            "Vzdialený" zapisovač logovania, ktorý záznamy preposiela na zapisovač určený konfiguráciou.
+            </summary>
+            <remarks>
+            Pokiaľ nie je definovaný konfiguračný uzol <see cref="P:Cora.CoraCoreObj.CoreConfig.RemoteLogWriter"/>, správy sa budú
+            potichu ignorovať, ale pri inicializácii objektu sa vypíše varovná hláška do eventlogu.
+            </remarks>
+        </member>
+        <member name="M:Cora.CoraCoreObj.RemoteLogForwarder.#ctor">
+            <summary>
+            Vytvorenie inštancie vzdialeného zapisovača logov.
+            Na základe <see cref="T:Cora.CoraCoreObj.CoreConfig"/> určí, kam sa budú prijaté logy zapisovať.
+            </summary>
+            <exception cref="T:Cora.CoraCoreObj.CoreException">Pri chýbajúcej konfigurácii <see cref="P:Cora.CoraCoreObj.CoreConfig.CoreConfigName"/>.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.RemoteLogForwarder.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam. Ak nastane výnimka, správa o nej sa zapíše do systémového eventlogu.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Logovaný záznam.</param>
+            <exception cref="T:System.Exception">Pri chybe zápisu záznamu.</exception>
+        </member>
+        <member name="T:Cora.CoraCoreObj.RemoteLogForwarderHelper">
+            <summary>
+            Klient pre <see cref="T:Cora.CoraCoreObj.RemoteLogForwarder"/>.
+            </summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.RemoteLogForwarderHelper.XPATH_URL">
+            <summary>XPath k parametru Url pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.RemoteLogForwarderHelper.COCOS_URL">
+            <summary>Názov parametra sekcie &lt;appSettings&gt;, ktorý poskytuje defaultnú Url remotnej služby
+            pri vytvorení metódou <see cref="M:Cora.CoraCoreObj.RemoteLogForwarderHelper.Create(System.Xml.XmlNode)"/>.</summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.RemoteLogForwarderHelper.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí klienta pre <see cref="T:Cora.CoraCoreObj.RemoteLogForwarder"/> podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol s konfiguráciou loggera. URL služby ktorá poskytuje zapisovač, sa číta
+            z poduzla <see cref="F:Cora.CoraCoreObj.RemoteLogForwarderHelper.XPATH_URL"/>. Ak chýba, vezme sa default URL CoCoS-u (kľúč <see cref="F:Cora.CoraCoreObj.RemoteLogForwarderHelper.COCOS_URL"/>
+            z appSettings. Jeden z týchto dvoch parametrov je povinný.</param>
+            <returns>Inštancia zapisovača zadaných atribútov.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.RemoteLogForwarderHelper.#ctor(System.String)">
+            <summary>
+            Vytvorenie klienta pre <see cref="T:Cora.CoraCoreObj.RemoteLogForwarder"/>, ktorý beží na zadanej URL.
+            </summary>
+            <param name="url">URI, kde beží služba poskytujúca remote objekty.</param>
+            <exception cref="T:System.ArgumentException">Aj je <paramref name="url"/> prázdna.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.RemoteLogForwarderHelper.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Odovzdá záznam remote zapisovaču.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/> <c>null</c>.</exception>
+            <exception cref="T:Cora.CoraCoreObj.CoreClientException">Ak vznikla chyba pri zápise.</exception>
+        </member>
+        <member name="T:Cora.CoraCoreObj.RemoteObj">
+            <summary>
+            Zakladna (abstract) trieda pre remote objekty.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.RemoteObj.#ctor">
+            <summary>Vytvorí inštanciu základnej triedy pre remote objekty.</summary>
+            <exception cref="T:Cora.CoraCoreObj.CoreException">Pri chýbajúcej konfigurácii <see cref="P:Cora.CoraCoreObj.CoreConfig.CoreConfigName"/>.</exception>
+        </member>
+        <member name="M:Cora.CoraCoreObj.RemoteObj.InitializeLifetimeService">
+            <summary>
+            Vráti null, co znamena ze remote object sa nikdy nema zrusit.
+            </summary>
+            <returns>Null.</returns>
+        </member>
+        <member name="P:Cora.CoraCoreObj.RemoteObj.CoreConfig">
+            <summary>Konfiguracny objekt remote objektov.</summary>
+        </member>
+        <member name="T:Cora.CoraCoreObj.RequiresValidConnIdAttribute">
+            <summary>
+            Dekoruje kontrakt WCF služby obsahujúci operácie vyžadujúce platné CoCoS ConnId.
+            </summary>
+            <remarks>
+            <para>
+             Tento atribút pridá do behového prostredia služby message inspector kontrolujúci platnosť 
+             poskytnutého ConnID. Tiež zodpovedá za úpravu denerovania WSDL daného service tak, aby reflektoval
+             dodatočný SOAP header.
+            </para><para>
+             Ak zlyhá overenie ConnID, služba vyhodí <see cref="T:System.ServiceModel.FaultException"/> s jedným z kódov:
+             <list type="bullet">
+              <item>E_CONN_MISSING - SOAP správa neobsahuje ConnId
+              </item><item>E_CONN_INVALID - neplatné ConnId
+              </item><item>E_CONN_VERIFY_EXCEPTION - výnimka pri pokuse o overenie ConnId
+              </item>
+             </list>
+            </para><para>
+             Konfigurácia takto dekorovanej služby musí umožňovať verifikáciu spojenia (buď remote pripojením na
+             CoCoS alebo použitím CoCoS volaní lokálne).
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Cora.CoraCoreObj.SP_CONN_DISP_Static">
+            <summary>
+            Statický dátový objekt SP_CONN_DISP_Static.
+            </summary>
+            <remarks>
+            Statický objekt z dôvodu nezávislosti CoraCoreService na triedach a metadach NATeC-u.
+            </remarks>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_CONN_DISP_Static.sSelect">
+            <summary>
+            Select na dotiahnutie dát z tabuľky SP_CONN_DISP.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_CONN_DISP_Static.InsertRob(System.Data.IDbConnection,System.Object@,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            Insert do SP_CONN_DISP.
+            </summary>
+            <param name="oConn"></param>
+            <param name="col_I_CONN_DISP"></param>
+            <param name="col_CONNID"></param>
+            <param name="col_I_UZ"></param>
+            <param name="col_COMP_IP"></param>
+            <param name="col_STIME"></param>
+            <param name="col_CSUM"></param>
+            <param name="col_UTIME"></param>
+            <param name="col_I_ATCSRV_CIL"></param>
+            <returns>ID vloženého záznamu.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_CONN_DISP_Static.UpdateRob(System.Data.IDbConnection,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            Update SP_CONN_DISP.
+            </summary>
+            <param name="oConn"></param>
+            <param name="col_I_CONN_DISP"></param>
+            <param name="col_CONNID"></param>
+            <param name="col_I_UZ"></param>
+            <param name="col_COMP_IP"></param>
+            <param name="col_STIME"></param>
+            <param name="col_CSUM"></param>
+            <param name="col_UTIME"></param>
+            <param name="col_I_ATCSRV_CIL"></param>
+            <returns>Výsledok operácie.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_CONN_DISP_Static.UpdateRob(System.String,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            Update SP_CONN_DISP.
+            </summary>
+            <param name="sConn"></param>
+            <param name="col_I_CONN_DISP"></param>
+            <param name="col_CONNID"></param>
+            <param name="col_I_UZ"></param>
+            <param name="col_COMP_IP"></param>
+            <param name="col_STIME"></param>
+            <param name="col_CSUM"></param>
+            <param name="col_UTIME"></param>
+            <param name="col_I_ATCSRV_CIL"></param>
+            <returns>Výsledok operácie.</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_CONN_DISP_Static.Delete2Rob(System.Data.IDbConnection,System.Object@,System.Object,System.Object)">
+            <summary>
+            Delete z SP_CONN_DISP
+            </summary>
+            <param name="oConn"></param>
+            <param name="col_I_CONN_DISP"></param>
+            <param name="col_CONNID"></param>
+            <param name="col_CSUM"></param>
+            <returns>uspech odmazania</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_CONN_DISP_Static.Delete2Rob(System.String,System.Object@,System.Object,System.Object)">
+            <summary>
+            Delete z SP_CONN_DISP
+            </summary>
+            <param name="sConn"></param>
+            <param name="col_I_CONN_DISP"></param>
+            <param name="col_CONNID"></param>
+            <param name="col_CSUM"></param>
+            <returns>uspech odmazania</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_CONN_DISP_Static.GetConnByCondParam(System.String,System.String,System.Object[])">
+            <summary>
+            Vráti pole objektov ConnMngrSP_CONN_DISP podla zadanej podmienky
+            </summary>
+            <param name="sConnectionStr">Connection String do DB</param>
+            <param name="sCond">Podmienky na vyhľadanie používateľa</param>
+            <param name="aParam">Pole parametrov</param>
+            <returns>Pole naplnenych objektov ConnMngrSP_CONN_DISP. V prípade chyby vráti null</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_CONN_DISP_Static.GetConnListByCondParam(System.String,System.String,System.Object[])">
+            <summary>
+            Vráti pole objektov ConnMngrSP_CONN_DISP podla zadanej podmienky
+            </summary>
+            <param name="sConnectionStr">Connection String do DB</param>
+            <param name="sCond">Podmienky na vyhľadanie používateľa</param>
+            <param name="aParam">Pole parametrov</param>
+            <returns>Pole naplnenych objektov ConnMngrSP_CONN_DISP. V prípade chyby vráti null</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_CONN_DISP_Static.GetConnectionCount(System.String,System.Nullable{System.Int32})">
+            <summary>
+            Vráti počet pripojení - všetkých, alebo so zadaným ID licencie.
+            </summary>
+            <param name="sConnectionStr">Connection String do DB</param>
+            <param name="licenceId">ID licencie. Ak je <c>null</c>, zisťuje sa počet všetkých pripojení.</param>
+            <returns>Počet pripojení so zadaným ID licencie.</returns>
+        </member>
+        <member name="T:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP">
+            <summary>
+            Trieda SP_CONN_DISP pre potreby CoraConnMngr.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP.#ctor(System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            konstruktor triedy
+            </summary>
+            <param name="I_CONN_DISP"></param>
+            <param name="I_UZ"></param>
+            <param name="CONNID"></param>
+            <param name="COMP_IP"></param>
+            <param name="STIME"></param>
+            <param name="UTIME"></param>
+            <param name="CSUM"></param>
+            <param name="I_ATCSRV_CIL"></param>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP.I_CONN_DISP">
+            <summary>
+            ID connection v DB
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP.I_UZ">
+            <summary>
+            ID používateľa.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP.CONNID">
+            <summary>
+            ConnID - aplikačné ID.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP.COMP_IP">
+            <summary>
+            IP počítača, z ktoreho je pripojenie vytvorené.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP.STIME">
+            <summary>
+            Dátum a čas vytvorenia pripojenia.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP.UTIME">
+            <summary>
+            Dátum a čas poslednej akcie s connection.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP.CSUM">
+            <summary>
+            Kontrolný súčet.
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_CONN_DISP_Static.ConnMngrSP_CONN_DISP.I_ATCSRV_CIL">
+            <summary>
+            ID licencie.
+            </summary>
+        </member>
+        <member name="T:Cora.CoraCoreObj.SP_UZ_Static">
+            <summary>
+            Statická definicia Cdo_staticSP_UZ
+            </summary>
+            <remarks>
+            Statický objekt z dôvodu nezávislosti CoraCoreService na triedach a metadach NATeC-u.
+            </remarks>
+        </member>
+        <member name="T:Cora.CoraCoreObj.SP_UZ_Static.I_UZ_ZDROJ">
+            <summary>
+            Typ vzniku používateľa v tabuľke SP_UZ.
+            </summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.I_UZ_ZDROJ.Portal">
+            <summary>Používateľ založený v portáli.</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.I_UZ_ZDROJ.ActiveDirectory">
+            <summary>Používateľ založený z Active Directory (napr. importom z AD).</summary>
+        </member>
+        <member name="T:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP">
+            <summary>Parametre pre hodnoty v tabuľke SP_UZ_PARAM (riadky v tabuľke AA_UZ_PARAM_TYP).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.N_UZ">
+            <summary> Paramter - názov používateľa.</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.UZOL">
+            <summary> Paramter - uzol.</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.MENO">
+            <summary>Dodatočný parameter používateľa - meno (hodnota 3).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.PRIEZVISKO">
+            <summary>Dodatočný parameter používateľa - priezvisko (hodnota 4).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.TTP">
+            <summary>Dodatočný parameter používateľa - titul pred menom (hodnota 5).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.TTZ">
+            <summary>Dodatočný parameter používateľa - titul za menom (hodnota 6).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.ACTOR_ID">
+            <summary>Dodatočný parameter používateľa - Id osoby (hodnota 20).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.SUBJECT_ID">
+            <summary>Dodatočný parameter používateľa - Id subjektu (hodnota 21).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.UPVS_ACTOR_IDENTITY_ID">
+            <summary>Dodatočný parameter používateľa - IdentityId osoby z UPVS (hodnota 22).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.N_UZ_PARAM_TYP.UPVS_SUBJECT_IDENTITY_ID">
+            <summary>Dodatočný parameter používateľa - IdentityId subjektu z UPVS (hodnota 23).</summary>
+        </member>
+        <member name="F:Cora.CoraCoreObj.SP_UZ_Static.sSelect">
+            <summary>
+            Select na dotiahnutie dát z tabuľky SP_UZ
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_UZ_Static.#ctor">
+            <summary>
+            Konstruktor
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_UZ_Static.GetFullName(System.Object,System.Object,System.Object)">
+            <summary>
+            Výpočet úplného mena používateľa
+            </summary>
+            <param name="I_UZ_ZDROJ">Zdroj zaznamu</param>
+            <param name="name">Meno zaznamu</param>
+            <param name="uzol">Meno uzla</param>
+            <returns>Uplne meno</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_UZ_Static.GetFullName(System.Object,System.Object)">
+            <summary>
+            Výpočet úplného mena používateľa
+            </summary>
+            <param name="name">Meno zaznamu</param>
+            <param name="uzol">Meno uzla</param>
+            <returns>Uplne meno</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_UZ_Static.GetUzByCondParam(System.String,System.String,System.Object[])">
+            <summary>
+            Vráti pole objektov ConnMngrSP_UZ podla zadanej podmienky
+            </summary>
+            <param name="sConnectionStr">Connection String do DB</param>
+            <param name="sCond">Podmienky na vyhľadanie používateľa</param>
+            <param name="aParam">Pole parametrov</param>
+            <returns>Pole naplnenych objektov ConnMngrSP_UZ. V prípade chyby vráti null</returns>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_UZ_Static.GetUzListByCondParam(System.String,System.String,System.Object[])">
+            <summary>
+            Vráti pole objektov ConnMngrSP_UZ podla zadanej podmienky
+            </summary>
+            <param name="sConnectionStr">Connection String do DB</param>
+            <param name="sCond">Podmienky na vyhľadanie používateľa</param>
+            <param name="aParam">Pole parametrov</param>
+            <returns>Pole naplnených objektov ConnMngrSP_UZ. V prípade chyby vráti null</returns>
+        </member>
+        <member name="T:Cora.CoraCoreObj.SP_UZ_Static.ConnMngrSP_UZ">
+            <summary>
+            Trieda SP_UZ pre potrerby CoraConnMngr
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCoreObj.SP_UZ_Static.ConnMngrSP_UZ.#ctor(System.Object,System.Object,System.Object,System.Object,System.Object)">
+            <summary>
+            Konstruktor
+            </summary>
+            <param name="I_UZ">ID používateľa</param>
+            <param name="N_UZ">Meno používateľa</param>
+            <param name="UZOL">Uzol (domena)</param>
+            <param name="D_EXPIRACIE">Datum expiracie hesla</param>
+            <param name="HESLO">Heslo</param>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_UZ_Static.ConnMngrSP_UZ.I_UZ">
+            <summary>
+            ID používateľa
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_UZ_Static.ConnMngrSP_UZ.N_UZ">
+            <summary>
+            Meno používateľa
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_UZ_Static.ConnMngrSP_UZ.UZOL">
+            <summary>
+            Uzol
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_UZ_Static.ConnMngrSP_UZ.D_EXPIRACIE">
+            <summary>
+            Datum expiracie hesla
+            </summary>
+        </member>
+        <member name="P:Cora.CoraCoreObj.SP_UZ_Static.ConnMngrSP_UZ.HESLO">
+            <summary>
+            Heslo
+            </summary>
+        </member>
+    </members>
+</doc>

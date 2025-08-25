@@ -1,0 +1,1435 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Natec.Geo.Lids</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Natec.Geo.Lids.GeoPointToWrite">
+            <summary>
+            Trieda pre zápis geometrie.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.GeoPointToWrite.Domain">
+            <summary>
+            Doména geometrie.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.GeoPointToWrite.FeatureType">
+            <summary>
+            FeatureType geometrie.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.GeoPointToWrite.Point">
+            <summary>
+            Bod zápisu geometrie.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.GeoPointToWrite.Rotation">
+            <summary>
+            Rotácia geometrie.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.GeoPointToWrite.#ctor(System.String,System.String,Cora.Natec.Geo.Point3D,System.String)">
+            <summary>
+            Vytvorenie inštancie.
+            </summary>
+            <param name="domain">Doména geometrie.</param>
+            <param name="featureType">FeatureType geometrie.</param>
+            <param name="point">Bod zápisu geometrie.</param>
+            <param name="rotation">Rotácia geometrie.</param>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsActiveDetailGrdAction">
+            <summary>
+            Trieda reprezentujúca akciu slúžiacu na otvorenie aktívneho detailu mapy pre záznam z gridu v novom okne.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailGrdAction.#ctor(Cora.Natec.AA.CdoAA_AKC,Cora.Natec.Frm.IGrdManager)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.Lids.LidsActiveDetailGrdAction"/>.
+            </summary>
+            <param name="cdoAA_AKC">The CDO A a_ AKC.</param>
+            <param name="grdManager">The GRD manager.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailGrdAction.RunInner(System.Object)">
+            <summary>
+            Samotné spustenie akcie so zadaným argumentom. Implementuje dedič.
+            </summary>
+            <param name="caller">Objekt spúšťajúci akciu (grid).</param>
+            <remarks>
+            	<para>
+            Implementujúca trieda musí (najmä v prípade ak je akcia asynchrónna) dávať pozor na výnimky vznikajúce
+            v tejto metóde. Pri známej výnimke o ktorej chce akcia užívateľa špecificky informovať, je dobré túto odchytiť,
+            uložiť si ju a metódu predčasne ukončiť. Správu o výnimke je potom možné podať v rámci
+            <see cref="M:Cora.Natec.Frm.GrdAction.GetAfterControl(System.Object,Cora.Natec.Frm.IGrdManager)"/>.
+            </para>
+            	<para>
+            Neošetrená výnimka v synchrónnej akcie prebublá von z metódy <see cref="M:Cora.Natec.Frm.GrdAction.Run(System.Object,System.Boolean)"/>,
+            v asynchrónnej akcii sa odchytí a volajúca trieda ju dostane ako argument udalosti <see cref="E:Cora.Natec.Frm.GrdAction.AsyncRunCompleted"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailGrdAction.GetBeforeControl(System.Object)">
+            <summary>
+            Získanie control-u pred akciou (pre načítanie údajov od používateľa). Default vracia <c>null</c>, dedič môže preťažiť.
+            </summary>
+            <param name="caller">Objekt spúšťajúci akciu (grid).</param>
+            <returns>Control pred akciou, alebo <c>null</c>.</returns>
+            <exception cref="T:System.InvalidOperationException">Ak sa akcia nenachádza v stave <see cref="F:Cora.Natec.Frm.GrdActionState.Before"/>.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailGrdAction.GetAfterControl(System.Object,Cora.Natec.Frm.IGrdManager)">
+            <summary>
+            Získanie control-u po akcii (pre zobrazenie údajov používateľovi). Default vracia <c>null</c>, dedič môže preťažiť.
+            </summary>
+            <param name="caller">Objekt spúšťajúci akciu (grid).</param>
+            <param name="grdManager">Aktuálny manažér grid-u. V prípade asynchrónneho spúšťania môže byť odlišný
+            od pôvodného <see cref="P:Cora.Natec.Frm.GrdAction.GrdManager"/>-a. Akcia ho môže použiť na publikovanie svojich výsledkov.</param>
+            <returns>Control po akcii, alebo <c>null</c>.</returns>
+            <remarks>
+            POZOR(zatial): tuto metódu preťažujú webové akcie, kým desktopové preťažujú
+            <see cref="M:Cora.Natec.Frm.GrdAction.GetAfterControl(System.Object)"/>. V budúcnosti budeme musieť zjednotiť.
+            Kvôli zachovaniu predošlého správania táto metóda nastavuje <see cref="P:Cora.Natec.Frm.GrdAction.DisplayEndedMessage"/> na <c>true</c>,
+            pokiaľ toto správanie nie je želané, treba metódu preťažiť.
+            </remarks>
+            <exception cref="T:System.InvalidOperationException">Ak sa akcia nenachádza v stave <see cref="F:Cora.Natec.Frm.GrdActionState.After"/>.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailGrdAction.ShowError(System.Web.UI.Page,System.String,System.String)">
+            <summary>
+            Zobrazenie chybovej hlášky. Pri neprázdnom <paramref name="errorDetail"/> tento navyše loguje.
+            </summary>
+            <param name="page">The page.</param>
+            <param name="errorMessage">Chybová hláška.</param>
+            <param name="errorDetail">Detail chyby.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailGrdAction.InsertMonitoring(Cora.Natec.Frm.UI.Grid,System.Int32,System.Decimal)">
+            <summary>
+            Vloží záznam do monitoring tabuľky.
+            </summary>
+            <param name="grd">Grid.</param>
+            <param name="portalPage">ID portal page.</param>
+            <param name="detailHeader">ID detail header.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailGrdAction.AddParameterXml(System.Xml.XmlElement,Cora.Natec.SP.CdoSP_MONITORING,Cora.Natec.AA.monitorovanieParameter)">
+            <summary>
+            Pridanie parametra do zoznamu paremetrov.
+            </summary>
+            <param name="xmlParams">XML element reprezentujúci zoznam parametrov</param>
+            <param name="oSP_MONITORING">Objekt pre tabuľku SP_MONITORING</param>
+            <param name="oParameter">Parameter pre monitorovanie</param>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsActiveDetailNavigationArgument.DETAIL_WINDOW_NAME">
+            <summary>Názov nového okna pre otvorenie aktívneho detailu mapy.</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailNavigationArgument.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="!:DetailPartNavigationArgument"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailNavigationArgument.#ctor(System.Int32,System.Int32,System.Collections.Generic.List{System.Double})">
+            <summary>
+            Vytvorenie inštancie <see cref="!:DetailPartNavigationArgument"/>.
+            </summary>
+            <param name="portalPageId">The portal page id.</param>
+            <param name="geoMap">The geo map.</param>
+            <param name="bbox">The bbox.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailNavigationArgument.GetOpenInNewWindowScript(Cora.Global.Session.IIdentity)">
+            <summary>
+            Získanie js skriptu pre otvorenie okna s url pre navigáciu na detailový part s aktuálnymi nastaveniami.
+            Zatiaľ slúži na otvorenie okna s aktívnym detailom mapy.
+            </summary>
+            <param name="identity">Identita volajúceho, ktorému argumenty patria.</param>
+            <returns>Js skript pre otvorenie okna s url pre navigáciu na detailový part s aktuálnymi nastaveniami.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailNavigationArgument.GetNavigationStateUrl(Cora.Global.Session.IIdentity)">
+            <summary>
+            Získanie url pre navigáciu na detailový part s aktuálnymi nastaveniami.
+            </summary>
+            <param name="identity">Identita volajúceho, ktorému argumenty patria.</param>
+            <returns>Url pre navigáciu na detailový part s aktuálnymi nastaveniami.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailNavigationArgument.FromData(System.Byte[])">
+            <summary>
+            Naplnenie hodnôt vlastností argumentu z binárnych dát.
+            </summary>
+            <param name="data">Zdrojové dáta.</param>
+            <returns>Výsledok naplnenia z binárnych dát.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailNavigationArgument.GetData">
+            <summary>
+            Získanie reprezentácie hodnôt vlastností argumentu ako binárnych dát.
+            </summary>
+            <returns>Binárne dáta reprezentujúce hodnoty vlastností argumentu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsActiveDetailNavigationArgument.GetStringFromByteArray(System.Byte[],System.Int32)">
+            <summary>
+            Získanie string reprezentácie z poľa byte-ov.
+            </summary>
+            <param name="bytes">Pole byte-ov.</param>
+            <param name="startIndex">Štart index.</param>
+            <returns>String reprezentácia z poľa byte-ov.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsAttachementFile">
+            <summary>
+            Trieda reprezentuje dátovú triedu pre súbor (prílohu), ktorý sa získa POST requestom z LIDS mapového servera.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.ContentFull">
+            <summary>
+            Vlastnost pre ulozenie(nahratie) binarneho suboru.
+            </summary>
+            <value></value>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsAttachementFile.LoadContent(System.String)">
+            <summary>
+            Nahratie obsahu stlpca CONTENT do pozadovaneho atributu.
+            </summary>
+            <param name="sConn">Connect string.</param>
+            <returns>Uspech?</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsAttachementFile.GetAA_CLASS_col_I_CLASS">
+            <summary>
+            Vráti referencovaný dátový objekt (Trieda) podľa hodnoty cudzieho kľúča <see cref="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_I_CLASS"/>.
+            </summary>
+            <returns>Dátový objekt s ID rovným hodnote <see cref="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_I_CLASS"/>.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsAttachementFile.GetAA_TAB_col_I_TAB">
+            <summary>
+            Vráti referencovaný dátový objekt (Tabulka) podľa hodnoty cudzieho kľúča <see cref="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_I_TAB"/>.
+            </summary>
+            <returns>Dátový objekt s ID rovným hodnote <see cref="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_I_TAB"/>.</returns>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_I_FILE_REG">
+            <summary>
+            Vráti ID.
+            </summary>
+            <value>ID.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_I_CLASS">
+            <summary>
+            Vráti ID triedy, ktora poskytne binarny obsah.
+            </summary>
+            <value>ID triedy, ktora poskytne binarny obsah.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_I_FILE">
+            <summary>
+            Vráti ID z tabulky, z ktorej sa dotiahne obsah.
+            </summary>
+            <value>ID z tabulky, z ktorej sa dotiahne obsah.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_I_TAB">
+            <summary>
+            Vráti ID tabulky, ku ktorej patri obsah.
+            </summary>
+            <value>ID tabulky, ku ktorej patri obsah.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_I_REF_TAB">
+            <summary>
+            Vráti ID zaznamu v tabulke I_TAB, ku ktoremu patri obsah.
+            </summary>
+            <value>ID zaznamu v tabulke I_TAB, ku ktoremu patri obsah.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_ADD_DATA">
+            <summary>
+            Vráti Dodatocny identifikator.
+            </summary>
+            <value>Dodatocny identifikator; alebo <c>null</c>.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_FILE_NAME">
+            <summary>
+            Vráti Nazov suboru.
+            </summary>
+            <value>Nazov suboru.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_CONTENT_TYPE">
+            <summary>
+            Vráti Typ suboru (content type).
+            </summary>
+            <value>Typ suboru (content type); alebo <c>null</c>.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_CONTENT_LENGTH">
+            <summary>
+            Vráti Dlzka obsahu suboru.
+            </summary>
+            <value>Dlzka obsahu suboru; alebo <c>null</c>.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsAttachementFile.col_CONTENT">
+            <summary>
+            Vráti alebo nastaví subor v bin.tvare.
+            </summary>
+            <value>subor v bin.tvare; alebo <c>null</c>.</value>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsClient">
+            <summary>
+            Mapový klient pre Lids.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsClient.LidsCommException">
+            <summary>
+            Výnimka pri komunikácii s mapovým serverom.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.LidsCommException.#ctor(System.Exception)">
+            <summary>
+            Vytvorenie výnimky vyvolanej inou výnimkou.
+            </summary>
+            <param name="innerEx">Vnútorná výnimka, ktorá spôsobila výnimku.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.LidsCommException.#ctor(System.String,Cora.Natec.Geo.Lids.LidsRequest)">
+            <summary>
+            Vytvorenie výnimky so správou a request-om.
+            </summary>
+            <param name="msg">Správa o výnimke.</param>
+            <param name="request">Request, ktorý spôsobil výnimku.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.LidsCommException.ToString">
+            <summary>
+            Creates and returns a string representation of the current exception.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsClient.LidsCommException.Request">
+            <summary>
+            Vráti request string, ktorý spôsobil výnimku.
+            </summary>
+            <value>Request string.</value>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.#ctor(System.Int32,Cora.Global.Session.IIdentity,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.Lids.LidsClient"/>.
+            </summary>
+            <param name="placementId">ID umiestnenia, na ktoré je mapový klient naviazaný.</param>
+            <param name="identity">Identita volajúceho.</param>
+            <param name="externalSettings">Zoznam externých nastavení. Musí obsahovať nastavenia zo <see cref="T:Cora.Natec.Geo.SettingNames"/> s prefixom SELECSET.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Deserializačný konštruktor.
+            </summary>
+            <param name="info">Serializačné info.</param>
+            <param name="context">Serializačný kontext.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Naplnenie <see cref="T:System.Runtime.Serialization.SerializationInfo"/> serializačnými dátami.
+            </summary>
+            <param name="info">Serializačné info.</param>
+            <param name="context">Serializačný kontext.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetMapByRange(Cora.Natec.Geo.IMapComplexBus)">
+            <summary>
+            Vráti mapu ohraničenú súradnicami <see ref="IMapComplexBus.MapCoords"/>. Vstupné parametre, najmä zoznam vybraných tém,
+            číta z <paramref name="mapComplexBus"/>, výstupné parametre vráti v novej inštancii <see cref="T:Cora.Natec.Geo.MapComplexBus"/>.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <returns>
+            Nová inštancia <see cref="T:Cora.Natec.Geo.MapComplexBus"/> s naplnenými výstupnými parametrami (najmä mapová URL a zobrazené témy),
+            alebo <c>null</c>, ak na zbernici nie sú potrebné vstupné parametre:
+            	- aspoň jedna SelectedThemeIDs
+            	- platné MapViewSize a MapCoords.
+            </returns>
+            <exception cref="T:Cora.Natec.Geo.Lids.LidsClient.LidsCommException">Ak nastala výnimka pri komunikácii s mapovým serverom.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetMapByFeatures(Cora.Natec.Geo.IMapComplexBus)">
+            <summary>
+            Vráti mapu zoomovanú podľa zobrazených objektov (featurov) aktívnej témy.
+            Vstupné parametre, najmä zoznam vybraných tém, číta z <paramref name="mapComplexBus"/>, výstupné parametre vráti v novej inštancii
+            <see cref="T:Cora.Natec.Geo.MapComplexBus"/>. Ak je vybraný iba jeden bod, rozsah mapy určí podľa _ExternalSettings[SettingNames.SELECTSET_SCALE_POINT_FIT]
+            v defaultnom obrazovkovom rozlíšení.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <returns>
+            Nová inštancia <see cref="T:Cora.Natec.Geo.MapComplexBus"/> s naplnenými výstupnými parametrami (najmä mapová URL a zobrazené témy),
+            alebo <c>null</c>, ak na zbernici nie sú potrebné vstupné parametre:
+            	- aspoň jedna SelectedThemeIDs
+            	- platné MapViewSize 
+            	- platná ActiveTheme a FeatureKeys popisujúce aspoň jeden objekt
+            </returns>
+            <exception cref="T:Cora.Natec.Geo.Lids.LidsClient.LidsCommException">Ak nastala výnimka pri komunikácii s mapovým serverom.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetMap(Cora.Natec.Geo.IMapComplexBus,System.Boolean)">
+            <summary>
+            Získa mapu pre client-a.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <param name="zoomByFeatures">Ak <c>true</c>, tak vráti mapu zoomovanú podľa zobrazených objektov (featurov) aktívnej témy.</param>
+            <returns>Mapa.</returns>
+            <remarks>Tento mapový klient nastavuje <see cref="P:Cora.Natec.Geo.Lids.LidsClient.RetrieveDisplayedThemesInGetMap"/> na hodnotu <c>false</c>, 
+            preto musí registrovať udalosť <see cref="E:Cora.Natec.Geo.MapComplexBus.DisplayedThemeIDsRequired"/>, pri 
+            ktorej odchytení sa ad-hoc získa zoznam viditeľných tém.</remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetLazyDisplayedThemeIDs(System.Object,System.EventArgs)">
+            <summary>
+            Ošetrí udalosť <see cref="E:Cora.Natec.Geo.MapComplexBus.DisplayedThemeIDsRequired"/>.
+            </summary>
+            <param name="sender">Odosielateľ udalosti.</param>
+            <param name="e">The <see cref="T:System.EventArgs"/> instance containing the event data.</param>
+            <remarks>
+            Je nežiadúce z pohľadu rýchlosti aplikácie aby sa tieto témy získavali pri každom mapovom dopyte, preto
+            sa získajú až na požiadanie.
+            </remarks>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsClient.WorkOnlyWithMaps">
+            <summary>
+            Pracuje pri mapových dotazoch len s mapami (nie témami)?
+            </summary>
+            <returns>
+              <c>true</c>, ak pracuje pri mapových dotazoch len s mapami; inak <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetDisplayedThemes(Cora.Natec.Geo.MapRange,System.Collections.Generic.List{System.String},System.Collections.Generic.List{System.Int32})">
+            <summary>
+            Získa témy vybraných kategórií, ktoré majú viditeľné objekty v danom rozsahu mapy.
+            </summary>
+            <param name="range">Rozsah mapy (v jednotkách súradnicového systému S-JTSK).</param>
+            <param name="catNames">Názvy vybraných kategórií.</param>
+            <param name="allThemesFromSelectedCats">Zoznam tém vybraných kategórií.</param>
+            <returns>
+            Zoznam tém, ktoré majú viditeľné objekty v danom rozsahu mapy..
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetFeaturesWFS(Cora.Natec.Geo.MapRange,System.Collections.Generic.List{System.String})">
+            <summary>
+            Vráti zoznam feature-s pre vybrané témy.
+            </summary>
+            <param name="range">Rozsah mapy (v jednotkách súradnicového systému S-JTSK).</param>
+            <param name="selectedThemes">Zoznam vybraných tém.</param>
+            <returns>Zoznam feature-s pre vybrané témy.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.FillRequest(Cora.Natec.Geo.IMapComplexBus,System.Collections.Generic.List{Cora.Natec.Geo.Lids.LidsTheme},System.Boolean)">
+            <summary>
+            Naplnenie request-u, ktorý zabezpečí získanie mapy z mapového servera.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <param name="selectedThemes">Táma, nad ktorou request pracuje.</param>
+            <param name="zoomByFeatures">Ak <c>true</c>, tak pripraví request tak, aby bola výsledná mapa zoomovaná
+            podľa zobrazených objektov (featurov) aktívnej témy.</param>
+            <returns>Request, pripravený na získanie výslednej mapy.</returns>
+            <remarks>Pokiaľ je požadované zobraziť mapu, ktorá je zoomovaná podľa zobrazených objektov (featurov) aktívnej témy (zoomByFeatures == true),
+            musí sa lokalizačná vrstva, na serveri, pripraviť 2 dodatočnými request-mi. Prvý z nich (GetFeatureFid) získava "Fid" hodnoty a BoundingBox pre vybrané objekty
+            (feature), podľa zadaných "Sid" hodnôt. Druhý request (SaveLocationLayer) vygeneruje hodnotu "auto-generated", ktorá sa priradí "handle" parametru 
+            v "GetMap" request-e. Pri týchto request-och je potrebné zachovať aktívne sessionID.
+            </remarks>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsClient.AllowsEmptyFeatureKeyWhenWriteGeometry">
+            <summary>
+            Je povolená prázdna hodnota GID (stĺpec <see cref="F:Cora.Natec.Geo.FeatureThemeInfo.BaseTableGidColName"/>) pri zápise geometrie?
+            </summary>
+            <value>Táto implementácia vracia <c>false</c>.</value>
+            <remarks>
+            Táto property existuje pre rozlíšenie rozdielnej implementácie <see cref="M:Cora.Natec.Geo.Lids.LidsClient.WriteGeometryPoint(Cora.Natec.Geo.GeoWriteInfo,System.String@)"/> mapovými servermi.
+            Kým niektoré zapisujú geometriu pre existujúci GID, iné zakladajú nový záznam v <see cref="P:Cora.Natec.Geo.CdoGEO_TREE_UZ.col_BASE_TABLE"/>.
+            V prvom prípade sa považuje zápis nad záznamom s chýbajúcim GID za chybu.
+            </remarks>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsClient.RetrieveDisplayedThemesInGetMap">
+            <summary>
+            Získava sa zároveň pri (každom) doťahovaní mapy z mapového servera aj zoznam tém(vrstiev), ktoré majú v rozsahu
+            mapy/výberu viditeľné objekty?
+            </summary>
+            <value>Táto implementácia vracia <c>false</c>.</value>
+            <remarks>Hodnota tejto property sa predpokladá ako <c>true</c> pri databázovo orientovaných mapových
+            serveroch (klientoch) a ako <c>false</c> pri web/OGC ladených mapových serveroch (klientoch).</remarks>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsClient.WHOLE_DOMAIN">
+            <summary>
+            Pokiaľ sa nepodarí získať doménu, tak sa použije celé územie ako územie, do ktorého sa insert vykonáva.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.WriteGeometryPoint(Cora.Natec.Geo.GeoWriteInfo,System.String@)">
+            <summary>
+            Zapíše bodovú geometriu záznamu (záznamov) v danej téme.
+            </summary>
+            <param name="themeInfo">Informácie o téme, ku ktorej sa bude geometria zapisovať .</param>
+            <param name="frmRecordId">ID záznamu vo formulári, ku ktorému sa bude geometria zapisovať.</param>
+            <param name="featureKey">Hodnota klúča identifikujúca záznamy, ktorým sa bude geometria zapisovať (hodnotový stĺpec je: <see ref="themeInfo.BaseTableGidColName"/>).</param>
+            <param name="point">Súradnice bodu (v jednotkách súradnicového systému).</param>
+            <param name="rotation">Otočenie (v stupňoch, 0-360).</param>
+            <param name="message">Správa obsahujúca popis chyby v dátach zistenej pri zápise geometrie.</param>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetSIDFromWriteGeometryPointResponse(System.String,Cora.Natec.Geo.Lids.LidsRequest,System.String)">
+            <summary>
+            Získa SID z odpovede pri zápise bodu.
+            </summary>
+            <param name="responseXmlString">Odpoveď zo servera.</param>
+            <param name="request">Požiadavok na server.</param>
+            <param name="fTypeName">Názov featureType.</param>
+            <returns>SID z odpovede pri zápise bodu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetFIDFromWriteGeometryPointResponse(System.String,Cora.Natec.Geo.Lids.LidsRequest,System.String)">
+            <summary>
+            Získa FID z odpovede pri zápise bodu.
+            </summary>
+            <param name="responseXmlString">Odpoveď zo servera.</param>
+            <param name="request">Požiadavok na server.</param>
+            <param name="fTypeName">Názov featureType.</param>
+            <returns>FID z odpovede pri zápise bodu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.FillWriteGeometryPointRequest(Cora.Natec.Geo.Point3D,System.Int32,System.String,System.String)">
+            <summary>
+            Naplní <see cref="T:Cora.Natec.Geo.Lids.GeoPointToWrite">bod</see> request-u.
+            </summary>
+            <param name="point">Lokalizačný bod vybraného záznamu.</param>
+            <param name="rotation">Otočenie bodu.</param>
+            <param name="domain">Územie, do ktorého sa bod vkladá.</param>
+            <param name="fType">FeatureType, ktorý sa vkladá.</param>
+            <returns>
+            Request naplnený potrebnými hodnotami pre zápis bodu.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.AfterWriteGeometryPoint">
+            <summary>
+            Metóda je volaná po úspešnom zápise geo prvku.
+            </summary>
+            <remarks>
+            Momentálne je telo metódy prázdne. Táto metóda bude využiteľná v budúcnosti.
+            </remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.PrepareCoordinates(System.String)">
+            <summary>
+            Do aktuálneho zoznamu súradníc pridá ďalšie súradnice.
+            </summary>
+            <param name="rawCoords">Nespracované súradnice.</param>
+            <returns>Súradníce vo formáte pre web request.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetCategoryName(System.Nullable{System.Int32})">
+            <summary>
+            Získa názov kategórie pre zadané ID témy.
+            </summary>
+            <param name="mapId">The map id.</param>
+            <returns>Názov kategórie.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetCategoryThemeIDList(System.Int32)">
+            <summary>
+            Získa zoznam ID tém pre zadané ID kategórie.
+            </summary>
+            <param name="catID">The map id.</param>
+            <returns>Názov kategórie.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetFeatureTypeList(System.Collections.Generic.List{Cora.Natec.Geo.Lids.LidsTheme},Cora.Natec.Geo.Lids.LidsRequest)">
+            <summary>
+            Získa zoznam elementov typu FeatureType z vybraných kategórií (tém).
+            </summary>
+            <param name="selectedThemes">Vybrané témy.</param>
+            <param name="request">Vytváraný request.</param>
+            <returns>Zoznam elementov typu FeatureType.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetFeatureCount(Cora.Natec.Geo.CdoSP_GEO_THEMES)">
+            <summary>
+            Vráti počet prvkov témy.
+            </summary>
+            <param name="spGeoThemes">Objekt témy.</param>
+            <returns>Počet prvkov v téme.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetClientSpecificTheme(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+            <summary>
+            Factory-metóda na výrobu témy na základe dátového objektu <paramref name="cdoTheme"/> - vracia inštancie <see cref="T:Cora.Natec.Geo.Lids.LidsTheme"/>.
+            </summary>
+            <param name="cdoTheme">Dátový objekt témy.</param>
+            <returns>Téma typu <see cref="T:Cora.Natec.Geo.Lids.LidsTheme"/>.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.GetThemeById(System.Int32)">
+            <summary>
+            Vráti tému podľa ID. Nájdená téma sa zapamätá aj v <see cref="P:ThemeCache"/>.
+            </summary>
+            <param name="themeId">ID témy (I_GEO_THEME).</param>
+            <returns>Dátový objekt témy, alebo <c>null</c> ak téma s daným ID nebola nájdená.</returns>
+            <exception cref="T:Cora.Natec.Geo.ACoraMapClient.DBClientException">Ak nastala výnimka pri získavaní témy.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsClient.Clone">
+            <summary>
+            Vytvorenie klonu LidsClienta.
+            </summary>
+            <returns>Klon LidsClienta.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsDesktopMapPart">
+            <summary>
+            Trieda controllera prvku desktopového portálu s mapovým komplexom.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsDesktopMapPart.PART_ID">
+            <summary>ID portálového prvku v metadátach.</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsDesktopMapPart.#ctor(Cora.Desktop.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+            <summary>
+            Vytvorenie prvku <see cref="T:Cora.Natec.Geo.Lids.LidsDesktopMapPart"/>.
+            </summary>
+            <param name="portalPanel">Panel, kam prvok patrí.</param>
+            <param name="cdoPlac">Data objekt pre umiestnenie prvku.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsDesktopMapPart.MapClient">
+            <summary>
+            Vráti mapového klienta.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsDesktopTabbedGridDetailMapPart">
+            <summary>
+            Trieda controllera prvku desktopového portálu s mapovým komplexom.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsDesktopTabbedGridDetailMapPart.PART_ID">
+            <summary>ID portálového prvku v metadátach.</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsDesktopTabbedGridDetailMapPart.#ctor(Cora.Desktop.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+            <summary>
+            Vytvorenie prvku <see cref="T:Cora.Natec.Geo.Lids.LidsDesktopMapPart"/>.
+            </summary>
+            <param name="portalPanel">Panel, kam prvok patrí.</param>
+            <param name="cdoPlac">Data objekt pre umiestnenie prvku.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsDesktopTabbedGridDetailMapPart.MapClient">
+            <summary>
+            Vráti mapového klienta.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsMapPart">
+            <summary>
+            Controller prvku webového portálu s layoutovateľným mapovým komplexom.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsMapPart.PART_ID">
+            <summary>ID portálového prvku v metadátach.</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsMapPart.#ctor(Cora.Portal.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+            <summary>
+            Vytvorenie prvku <see cref="T:Cora.Natec.Geo.Lids.LidsMapPart"/>.
+            </summary>
+            <param name="panel">Panel, kam prvok patrí.</param>
+            <param name="cdoPlac">Data objekt pre umiestnenie prvku.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsMapPart.MapClient">
+            <summary>
+            Vráti mapového klienta.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsRequestType">
+            <summary>
+            Typy dotazov na Lids server.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.GetFeature">
+            <summary>
+            Získanie feature-s pre tému.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.GetFeatureCount">
+            <summary>
+            Získanie počtu feature-s pre tému.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.SaveLocationLayer">
+            <summary>
+            Vytvorenie location vrstvy.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.GetModelElement">
+            <summary>
+            Získanie featureType-ov pre zadaný alias.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.GetFeatureFid">
+            <summary>
+            Získanie featureType FID podľa SID.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.GetMap">
+            <summary>
+            Získanie mapy.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.GetFeatureInfo">
+            <summary>
+            Získanie featureType informacií.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.InsertPoint">
+            <summary>
+            Insert bodu.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.Commit">
+            <summary>
+            COMMIT transakcie.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsRequestType.GetAttachementFile">
+            <summary>
+            Získanie súborov (príloh).
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsNames">
+            <summary>
+            Názvy pre Lids.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.SRS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.GET_MAP_EXCEPTION">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.WMS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.GET_MAP">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.GET_FEATURE_INFO">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.IMAGE_PNG">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.APP_GML">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.VERSION_1_1_1">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.WEB_MAP_SERVICE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.ATTACHEMENT_CONTENT_SERVICE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.IMPORT_SERVICE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.TRANSACTION_MANAGER">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.LOCATION_LAYER">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.LIDS_REQUEST_CONFIG">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.WFS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.VERSION_1_0_0">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.BGML">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.GET_MODEL_ELEMENT">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.PROJECT_SERVICE_TEST">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.AT_GEOM">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.SID">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.ATTRIB_SID">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.BPOINT">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_BER">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_WFS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_GML">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_OGC">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_XSI">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_LOCATION_WFS_BASIC">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_LOCATION_WFS_TRANSACTION">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_MYNS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_HANDLE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_SOAP">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_SOAP_ENC">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_TNS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_TYPES">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsNames.NM_XSD">
+            <summary></summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsQueryBuilder">
+            <summary>
+            Trieda pre vytvorenie dotazu.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.#ctor(Cora.Natec.Geo.Lids.LidsRequest,System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.Lids.LidsQueryBuilder"/>.
+            </summary>
+            <param name="request"></param>
+            <param name="catName"></param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.GetGETRequestQuery(Cora.Natec.Geo.Lids.LidsRequestType)">
+            <summary>
+            Vracia vyskladaný dotaz na mapový server podľa štandardov OGC.
+            </summary>
+            <param name="reqType">Typ request-u.</param>
+            <returns>GET dotaz na Lids server.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.GetBBox">
+            <summary>
+            Zo súradníc vytvorí valídny BoundingBox pre dotaz.
+            </summary>
+            <returns>BoundigBox mapového dotazu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.GetThemesAndStyles(System.Collections.ArrayList)">
+            <summary>
+            Z poskytnutého zoznamu tém vytvorí časť dotazu, ktorá obsahuje názvy požadovaných vrstiev a štýlov.
+            </summary>
+            <param name="themes">Zoznam vybraných tém.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.GetCategoriesAndStyles(System.Collections.Generic.List{System.String})">
+            <summary>
+            Z poskytnutého zoznamu kategórií vytvorí časť dotazu, ktorá obsahuje názvy požadovaných kategórií a štýlov.
+            </summary>
+            <param name="catNames">Zoznam vybraných kategórií.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.GetBgColor">
+            <summary>
+            Vráti farbu pozadie pre dotaz. Ak nie je zadaná, tak defaultne sa podľa OGC posiela hodnota '0xFFFFFF'.
+            </summary>
+            <returns>Farba pozadia mapového dozazu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.GetPOSTRequestQuery(Cora.Natec.Geo.Lids.LidsRequestType)">
+            <summary>
+            Vracia vyskladaný dotaz na mapový server podľa štandardov OGC.
+            </summary>
+            <param name="reqType">Typ request-u.</param>
+            <returns>POST dotaz na Lids server.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.BuildFeatureTypesIdsQuery(System.Text.StringBuilder@)">
+            <summary>
+            Vytvorí dotaz podľa zadaných Feature typov a ID-čiek.
+            </summary>
+            <param name="builder">Vytváraný dotaz.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.BuildInsertQuery(System.Text.StringBuilder@)">
+            <summary>
+            Vytvorí dotaz pre vloženie bodu.
+            </summary>
+            <param name="builder">Vytváraný dotaz.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsQueryBuilder.GetEdgeCoords">
+            <summary>
+            Vráti string reprezentáciu súradníc, ktoré by mali udávať rohové hodnoty.
+            </summary>
+            <param name="points">Zoznam bodov.</param>
+            <returns>String reprezentáciu súradníc.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsRequest">
+            <summary>
+            Dotaz na mapový server Lids.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.#ctor(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Vytvorenie dotazu na mapový server.
+            </summary>
+            <param name="externalSettings">Zoznam externých nastavení. Musí obsahovať nastavenia zo <see cref="T:Cora.Natec.Geo.SettingNames"/> s prefixom SELECSET.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.BackgroundColor">
+            <summary>Farba pozadia mapy. Alternatíva k <see cref="P:Cora.Natec.Geo.Lids.LidsRequest.BackgroundColorHex"/></summary>
+            <value>Farba pozadia. Ak nie je zadaná, vracia <see cref="P:System.Drawing.Color.White"/>.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.BackgroundColorHex">
+            <summary>Farba pozadia mapy (vo formáte #HHHHHH). Alternatíva k <see cref="P:Cora.Natec.Geo.Lids.LidsRequest.BackgroundColor"/>.</summary>
+            <value>Farba pozadia. Ak nie je zadaná, vracia bielu (#FFFFFF).</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.Height">
+            <summary>Výška mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.Width">
+            <summary>Šírka mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.BoundingBox">
+            <summary>Požadovaný rozsah mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.AllBoundingBox">
+            <summary>
+            Bounding Box pre celu mapu. Y je problematicky (s posunom).
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.Handle">
+            <summary>
+            Auto-generated hodnota pri lokalizačnom dotaze.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.HoldSessionId">
+            <summary>
+            Príznak určujúci, či sa sessionID uchováva.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.SessionIdHolder">
+            <summary>
+            Udržiava aktívne sessionID.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.SelectedFeatureTypes">
+            <summary>
+            Názvy vybraných FeatureType prvkov.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.Categories">
+            <summary>
+            Názvy vybraných kategórií (máp).
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.Themes">
+            <summary>
+            Zoznam vybraných tém.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.FeatureTypesFids">
+            <summary>
+            Slovník tém a Fid-čiek vybraných objektov z formulára.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.ActiveThemeName">
+            <summary>
+            Názov aktívnej témy.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.SelectedSIDs">
+            <summary>
+            Zoznam SID pre vybrané objekty z formulára.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.X">
+            <summary>
+            Počiatočná súradnica X.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.Y">
+            <summary>
+            Počiatočná súradnica Y.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.Range">
+            <summary>
+            Delty výberu.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.MaxFeatures">
+            <summary>
+            Maximálny počet vybraných (feature) objektov.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.GeoPointToWrite">
+            <summary>
+            Bod, ktorý je určený na Insert.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsRequest.FileId">
+            <summary>
+            ID súboru ako prílohy.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.ToString">
+            <summary>
+            Vráti reťazec reprezentujúci tento objekt. Obsahuje aj text XML requestu.
+            </summary>
+            <returns>
+            Reťazec reprezentujúci tento objekt.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.SendGetRequest(System.Boolean,Cora.Natec.Geo.Lids.LidsRequestType,Cora.Natec.Geo.RequesMethod.Method)">
+            <summary>
+            Odoslanie GET dotazu na mapový server.
+            </summary>
+            <param name="holdSessionId">Príznak určujúci, či sa sessionID uchováva.</param>
+            <param name="reqType">Typ dotazu.</param>
+            <param name="method">Typ použitej metódy.</param>
+            <returns>Odpoveď mapového servra.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.SendPostRequest(System.Boolean,Cora.Natec.Geo.Lids.LidsRequestType,System.String,Cora.Natec.Geo.RequesMethod.Method)">
+            <summary>
+            Odoslanie POST dotazu na mapový server.
+            </summary>
+            <param name="holdSessionId">Príznak určujúci, či sa sessionID uchováva.</param>
+            <param name="reqType">Typ request-u.</param>
+            <param name="catName">Názov kategórie.</param>
+            <param name="method">Typ metódy request-u.</param>
+            <returns>Odpoveď mapového servra.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.GetPOSTQueryString(Cora.Natec.Geo.Lids.LidsRequestType,System.String)">
+            <summary>
+            Volá <see cref="T:Cora.Natec.Geo.Lids.LidsQueryBuilder"/> pre vytvorenie string dotazu na Lids server podľa štandardov OGC.
+            </summary>
+            <param name="reqType">Typ dotazu.</param>
+            <param name="catName">Názov kategórie.</param>
+            <returns>POST dotaz.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.GetGETQueryString(Cora.Natec.Geo.Lids.LidsRequestType)">
+            <summary>
+            Volá <see cref="T:Cora.Natec.Geo.Lids.LidsQueryBuilder"/> pre vytvorenie string dotazu na Lids server podľa štandardov OGC.
+            </summary>
+            <param name="reqType">Typ dotazu.</param>
+            <returns>GET dotaz.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.SendLogoutRequest">
+            <summary>
+            Odoslanie dotazu na mapový server.
+            </summary>
+            <returns>Odpoveď mapového servra.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.SendReceiveAttachement">
+            <summary>
+            Odoslanie dotazu na získanie súboru (prílohy).
+            </summary>
+            <returns>Súbor (príloha) z mapového servera.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.AddThemes(Cora.Natec.Geo.Lids.LidsTheme[])">
+            <summary>
+            Pridanie jednej alebo viacerých tém do dotazu.
+            </summary>
+            <param name="themes">Pridávaná téma alebo témy.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.AddCategoryNames(System.Collections.Generic.List{System.String})">
+            <summary>
+            Pridanie názvu jednej alebo viacerých kategórií.
+            </summary>
+            <param name="categoryNames">Pridávaná kategória alebo kategórie.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.AddSelectedSIDs(System.Collections.Generic.List{System.String})">
+            <summary>
+            Pridanie SID vybraných objektov z formulára.
+            </summary>
+            <param name="selectedSIDs">Zoznam vybraných SID-čiek.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.AddRange(System.String,System.String)">
+            <summary>
+            Pridanie rozsahu výberu na mape.
+            </summary>
+            <param name="xDelta">Rozdiel od počiatočného bodu na X-ovej osy.</param>
+            <param name="yDelta">Rozdiel od počiatočného bodu na Y-ovej osy.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.ClearThemes">
+            <summary>
+            Vyčistenie tém dotazu.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.AddFeatureTypeFids(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Zapíše do slovníka dvojice featureType a zoznam Fid jeho prvkov.
+            </summary>
+            <param name="fType">FeatureType.</param>
+            <param name="fIds">FeatureId.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.AddRequestToCache(System.Boolean)">
+            <summary>
+            Pridanie objektu implementujúceho Cora.Web.HttpHandlers.IOutputStreamer do cache.
+            </summary>
+            <param name="holdSessioId">Príznak určujúci, či sa sessionID uchováva.</param>
+            <returns>
+            Url pre priamy výpis dát do http stream-u.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsRequest.Cora#Web#HttpHandlers#IOutputStreamer#WriteToOutputStream(System.IO.Stream)">
+            <summary>
+            Zapíše obrázok mapy do výstupného http strem-u.
+            </summary>
+            <param name="outputStream">Výstupný stream.</param>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsResponse">
+            <summary>
+            Odpoveď mapového servra Lids.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.#ctor(System.String,Cora.Natec.Geo.RequesMethod.Method,System.Boolean,System.String)">
+            <summary>
+            Odoslanie odpovede na mapový server a jej následné spracovanie.
+            </summary>
+            <param name="queryData"></param>
+            <param name="method"></param>
+            <param name="holdSessionId"></param>
+            <param name="sessionIdHolder"></param>
+            <remarks>
+            Podľa zadaného typu request metódy (<see cref="T:Cora.Natec.Geo.RequesMethod.Method"/>) sa volá konkrátny Http request.
+            Každý z týchto requestov umožňuje nastaviť pre request aktuálnu sessionID alebo si vyrobiť novú z odpovede. Pokiaľ príznak 
+            na uchovanie sessionID (holdSessionId) je false, tak nasleduje request, ktorý aktuálnu sessionID zo servera odhlási.
+            </remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.LOGOUTrequest(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig)">
+            <summary>
+            Odošle LOGOUT request na server.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.POSTrequest(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig,System.String,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Odošle POST request na server a spracuje odpoveď.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+            <param name="queryData">Dotaz na server.</param>
+            <param name="holdSessionId">Ak nastavené na <c>true</c>, tak sa použije aktívne sessionID (pokiaľ existuje). Ak aktévne sessionID
+            neexistuje, z odpovede sa získa nové a uchová sa pre ďalšie request-y.</param>
+            <param name="isEncoded">Ak nastavené na <c>true</c>, tak sa pošle "url-encoded" request.</param>
+            <param name="isInsertService">Ak nastavené na <c>true</c>, tak je volaní import služba.</param>
+            <param name="isCommit">Ak nastavené na <c>true</c>, tak ide o commit dotaz.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.GETrequest(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig,System.String,System.Boolean,System.Boolean)">
+            <summary>
+            Odošle GET request na server a spracuje odpoveď.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+            <param name="queryData">Dotaz na server.</param>
+            <param name="holdSessionId">Ak nastavené na <c>true</c>, tak sa použije aktívne sessionID (pokiaľ existuje). Ak aktévne sessionID 
+            neexistuje, z odpovede sa získa nové a uchová sa pre ďalšie request-y.</param>
+            <param name="isResponseXml">Ak nastavené na <c>true</c>, tak odpoveď príde vo forme XML, ináč typ byte[].</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.ATTACHEMENTrequest(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig,System.String)">
+            <summary>
+            Odošle POST request na server a spracuje odpoveď.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+            <param name="queryData">Dotaz na server.</param>
+            <remarks>
+            Cieľom je získať súbor (prílohu) z LIDS mapového servera.
+            </remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.AssignErrorImageToResponse(System.String)">
+            <summary>
+            Do odpovede priradí default error obrázok a zaloguje chybovú správu.
+            </summary>
+            <param name="message">Chybová správa na zalogovanie.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.InitializeConfigureRequest(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig,System.String,System.Boolean)">
+            <summary>
+            Inicializuje a nakonfiguruje request.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+            <param name="requestUrl">Adresa servera, na ktorý sa request bude posielať.</param>
+            <param name="holdSessionId">Ak nastavené na <c>true</c>, tak sa použije aktívne sessionID (pokiaľ existuje). Ak aktévne sessionID 
+            neexistuje, z odpovede sa získa nové a uchová sa pre ďalšie request-y.</param>
+            <returns>Nakonfigurovaný request.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.CheckServiceExceptionAndAssignErrorImg(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig)">
+            <summary>
+            Kontroluje odpoveď zo servera na výnimku služby.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.CheckInsertServiceResponse">
+            <summary>
+            Kontroluje odpoveď zo servera na výnimku služby.
+            </summary>
+            <returns>True, ak odpoveď obsahuje výnimku. Ináč false.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.InvalidateSession(System.Net.HttpWebRequest)">
+            <summary>
+            Odhlásenie užívateľskej session na serveri.
+            </summary>
+            <param name="request">Request, ktorého session sa má odhlásiť.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsResponse.ResponseImageByte">
+            <summary>
+            Predstavuje odpoveď zo servera vo formáte image/png.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsResponse.ResponseXmlString">
+            <summary>
+            Predstavuje odpoveď zo servera vo formáte xml.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsResponse.SessionIdHolder">
+            <summary>
+            Udržiava aktívne sessionID.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsResponse.ToString">
+            <summary>
+            Vráti reťazec reprezentujúci tento objekt. Obsahuje aj text XML response.
+            </summary>
+            <returns>
+            Reťazec reprezentujúci tento objekt.
+            </returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.GClass">
+            <summary>Trieda geometrie objektu.</summary>
+            <remarks>Číselná reprezentácia zodpovedá kódovaniu tejto informácie v <see cref="P:Cora.Natec.Geo.CdoGEO_TREE_UZ.col_GTYPE"/>.</remarks>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.GClass.none">
+            <summary>Neurčená trieda.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.GClass.marker">
+            <summary>Trieda značka (bod).</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.GClass.line">
+            <summary>Trieda čiara.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.GClass.color">
+            <summary>Trieda farba.</summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.LidsTheme">
+            <summary>
+            Téma (mapová vrstva) obohatená o atribúty a metódy špecifické pre Lids.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsTheme.MS_PARAMS_PATH_MAPSERVERURL">
+            <summary>Xpath ku nastaveniu URL mapového servera v stĺpci MS_PARAMS.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsTheme.MS_PARAMS_PATH_DATASOURCE">
+            <summary>Xpath ku nastaveniu datasource témy v stĺpci MS_PARAMS.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Lids.LidsTheme.MS_PARAMS_PATH_BGCOLOR">
+            <summary>Xpath ku nastaveniu farby pozadia témy v stĺpci MS_PARAMS.</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsTheme.#ctor(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.Lids.LidsTheme"/>.
+            </summary>
+            <param name="cdoTheme">Dátový objekt témy.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="cdoTheme"/> <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="cdoTheme"/> nemá platný atribút <see ref="cdoTheme.col_I_GEO_THEME"/>.</exception>
+            <exception cref="T:Cora.Natec.Base.AppException">Pri chybe parsovania XML atribútov <paramref name="cdoTheme"/>.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsTheme.MapServerUrl">
+            <summary>
+            URL mapového servra (Oracle MapViewer) pre tému. Povinný atribút.
+            </summary>
+            <exception cref="T:System.Exception">Ak sa nepodarí získať atribút.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsTheme.DataSource">
+            <summary>
+            Dátový zdroj témy. Povinný atribút.
+            </summary>
+            <exception cref="T:System.Exception">Ak sa nepodarí získať atribút.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.LidsTheme.BgColor">
+            <summary>
+            Farba pozadia témy v HTML notácii. Default: #FFFFFF.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsTheme.GetStyleName">
+            <summary>
+            Vráti názov štýlu témy. Keďže štýly sa v Lids requeste definujú on demand, vrátený string je síce konštantný, ale vytvorený svojvoľne
+            (nemá žiadny špeciálny význam).
+            </summary>
+            <returns>Názov štýlu témy.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsTheme.GetGeoClass">
+            <summary>
+            Vráti triedu geometrie objektov témy. Dekóduje sa z <see cref="P:Cora.Natec.Geo.CdoGEO_TREE_UZ.col_GTYPE"/>, ak je formát nesprávny, vracia <see cref="F:Cora.Natec.Geo.Lids.GClass.none"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsTheme.GetFeatureKeys(Cora.Natec.Geo.IMapComplexBus,Cora.Natec.Geo.MapRange,System.Double)">
+            <summary>
+            Vráti zoznam hodnôt zadaného stĺpca pre objekty (feature) témy, ktoré priestorovo interagujú s daným rozsahom mapy.
+            </summary>
+            <param name="mapComplexBus">Map complex bus.</param>
+            <param name="range">Rozsah mapy (v jednotkách súradnicového systému S-JTSK).</param>
+            <param name="actualScale">Aktuálna mierka zobrazenia mapy na obrazovke.</param>
+            <returns>(Nenulový) zoznam kľúčov.</returns>
+            <remarks>Default-na implementácia je rovnaká ako <see cref="!:Cora.Natec.Geo.Theme.GetFeatureKeys(string, MapRange)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsTheme.GetSIDsFromMapServer(Cora.Natec.Geo.MapRange,System.Double)">
+            <summary>
+            Vráti zoznam SIDs pre túto témy, ktoré priestorovo interagujú s daným rozsahom mapy.
+            </summary>
+            <param name="range">Rozsah mapy (v jednotkách súradnicového systému S-JTSK).</param>
+            <param name="actualScale">Aktuálna mierka zobrazenia mapy na obrazovke.</param>
+            <returns>Zoznam SIDs pre túto témy, ktoré priestorovo interagujú s daným rozsahom mapy.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsTheme.GetFeatureCount">
+            <summary>
+            Získa počet feature-s pre tému.
+            </summary>
+            <returns>Počet feature-s pre tému.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.LidsTheme.GetCategoryName(System.Nullable{System.Int32})">
+            <summary>
+            Získa názov kategórie pre zadané ID témy.
+            </summary>
+            <param name="mapId">The map id.</param>
+            <returns>Názov kategórie.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.NamespaceDoc">
+            <summary>
+            Tento namespace obsahuje triedy (webového) klienta pre komunikáciu s mapovým serverom <b>Lids</b>. Oproti iným mapovým serverom (napr. OMV) Lids
+            poskytuje všetky potrebné informácie pre prácu s mapou na serveri, preto je potrebné získavať tieto informácie a potrebné dáta mapovými
+            dotazmi (GET, POST).
+            <br/><br/>
+            Keďže Lids pri generovaní mapového výstupu nedokáže pracovať s názvami <i>featureType-ov</i> (témy), ale len priamo s názvami kategórií, 
+            tak strom tém obsahuje kategórie tém (mapy) ako nerozbaliteľné položky. Avšak formulár je prepojený s mapou na základe <i>featureType-u</i>, 
+            preto je vždy potrebné si k <i>featureType</i> získať názov kategórie, do ktorej patrí a tento názov sa posiela ako parameter vo
+            výslednom GetMap dotaze.
+            <br/><br/>
+            <b>Licenčná</b> politika nie je na Lids serveri vyriešená najšťastnejšie. Pokiaľ je už na serveri vytvorená <i>session</i>, nie je možné poslať ďalší
+            dotaz s tým istým používateľom, pod ktorým je prihlásená už existujúca <i>session</i> (sessionID). Z tohto dôvodu je potrebné zneplatniť <i>session</i>
+            vždy po získaní odpovede zo servera.
+            <br/><br/>
+            <b>Lokalizácia:</b>
+            <list type="bullet">
+            <item>
+            <b>Formulár - Mapa:</b> lokalizačná vrstva, na serveri, sa musí pripraviť 2 dodatočnými request-mi. Prvý z nich (GetFeatureFid) získava "Fid" 
+            hodnoty a BoundingBox pre vybrané objekty (feature), podľa zadaných "Sid" hodnôt. Druhý request (SaveLocationLayer) vygeneruje hodnotu 
+            "auto-generated", ktorá sa priradí "handle" parametru v "GetMap" request-e. Pri týchto request-och je potrebné zachovať <b>jedno aktívne sessionID</b>.
+            </item>
+            <item>
+            <b>Mapa - Formulár:</b> pre lokalizáciu smerom z mapy do formulára Lids vyžaduje na vstupe okrem iných aj tieto informácie: šírka a výška mapy, 
+            súradnice počiatočného bodu výberu a posun na osiach X,Y od počiatočného bodu. Riešenie: výška a šírka mapy sú vypočítané ako výška a šírka
+            samotného výberu (podľa aktuálnej mierky), tzn. že výber je následne samotnou mapou. Preto i počiatočný bod má súradnice (1,1) a posun na osiach je  
+            počítaný ako šírka (resp. výška) -1.
+            </item>
+            </list>
+            
+            
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.Properties.Resources.ActiveDetailWindowOpened">
+            <summary>
+              Looks up a localized string similar to Otvára sa okno s aktívnym detailom. Ak nie je otvorené, pravdepodobne ho zablokoval Váš prehliadač. Je potrebné, aby ste povolili otváranie nových okien pre túto webovú aplikáciu..
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.Properties.Resources.ActiveDetailWindowText">
+            <summary>
+              Looks up a localized string similar to Aktívny detail.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.Properties.Resources.ServerCommunicationErrorImg">
+            <summary>
+              Looks up a localized string similar to Cora.Natec.Geo.Lids.Images.ServerError.jpg.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Lids.Properties.Resources.ServerError">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Lids.XmlHelper">
+            <summary>
+            Pomocná trieda pre prácu s XML.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.GetValueOfXPathForOneElement(System.String,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Spracuje XPath výraz a aplikuje ho.
+            </summary>
+            <param name="xmlString">XML dokument ako reťazec.</param>
+            <param name="nsMan">Manažér namespace-ov.</param>
+            <param name="xpathExpression">Hľadaný výraz.</param>
+            <returns>
+            Hodnotu hľadaného/nájdeného <see cref="T:System.Xml.XPath.XPathNavigator"/>, ináč null.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.GetValuesOfXPathForMoreElements(System.String,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Spracuje XPath výraz a aplikuje ho.
+            </summary>
+            <param name="xmlString">XML dokument ako reťazec.</param>
+            <param name="nsMan">Manažér namespace-ov.</param>
+            <param name="xpathExpression">Hľadaný výraz.</param>
+            <returns>
+            Hodnoty hľadaných/nájdených <see cref="T:System.Xml.XPath.XPathNavigator"/>, ináč prázdny zoznam.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.GetValuesOfXPathForAttribute(System.String,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Spracuje XPath výraz a aplikuje ho.
+            </summary>
+            <param name="xmlString">XML dokument ako reťazec.</param>
+            <param name="nsMan">Manažér namespace-ov.</param>
+            <param name="xpathExpression">Hľadaný výraz.</param>
+            <returns>Hodnotu hľadaného/nájdeného <see cref="T:System.Xml.XPath.XPathNavigator"/>, ináč null. </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.GetValueOfXPathForAttribute(System.String,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Spracuje XPath výraz a aplikuje ho.
+            </summary>
+            <param name="xmlString">XML dokument ako reťazec.</param>
+            <param name="nsMan">Manažér namespace-ov.</param>
+            <param name="xpathExpression">Hľadaný výraz.</param>
+            <returns>Hodnotu hľadaného/nájdeného <see cref="T:System.Xml.XPath.XPathNavigator"/>, ináč null. </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.GetOrCreateAttribute(System.Xml.XmlNode,System.String)">
+            <summary>
+            Získanie atribútu podľa mena. Ak neexistuje, je vytvorený nový.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="attributeName">Názov hľadaného atribútu.</param>
+            <returns>Požadovaný atribút.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.CreateAppendAttribute(System.Xml.XmlNode,System.String)">
+            <summary>
+            Vytvorenie a vrátenie atribútu podľa mena.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="attributeName">Názov vytváraného atribútu.</param>
+            <returns>Nový atribútu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.CreateAppendAttribute(System.Xml.XmlNode,System.String,System.String)">
+            <summary>
+            Vytvorenie a vrátenie atribútu podľa mena.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="attributeName">Názov vytváraného atribútu.</param>
+            <param name="attributeValue">Hodnota vytváraného atribútu.</param>
+            <returns>Nový atribútu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.GetOrCreateChild(System.Xml.XmlNode,System.String)">
+            <summary>
+            Získanie podradeného uzla podľa mena. Ak neexistuje, je vytvorený nový.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="childName">Názov hľadaného podradeného uzla.</param>
+            <returns>Požadovaný podradený uzol.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.CreateAppendChild(System.Xml.XmlNode,System.String)">
+            <summary>
+            Vytvorenie a vrátenie podradeného uzla podľa mena.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="childName">Názov vytváraného podradeného uzla.</param>
+            <returns>Nový podradený uzol.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Lids.XmlHelper.GetDocument(System.Xml.XmlNode)">
+            <summary>
+            Ziskanie dokumentu xml uzla (alebo samotneho xml dokumentu).
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <returns>Xml dokument.</returns>
+        </member>
+    </members>
+</doc>

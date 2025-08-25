@@ -1,0 +1,6 @@
+﻿<?xml version="1.0"?>
+<instructions description="Úvodná kontrola existencie vnorených balíkov">
+	<file_exists file_name="@(InstallNatecWebPackage)" />
+	
+	<file_exists file_name="@(InstallNatecDesktopPackage)" />
+</instructions>

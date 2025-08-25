@@ -1,0 +1,22 @@
+DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL
+ceTe.DynamicPDF.40, Version=7.0.3.40, Culture=neutral, PublicKeyToken=09b5ce0d5c0a9d8b
+DynamicPDF.Generator.Developer, Version=3.0.3.0, Culture=neutral, PublicKeyToken=09b5ce0d5c0a9d8b
+DynamicPDF.Merger.Developer, Version=3.0.3.0, Culture=neutral, PublicKeyToken=09b5ce0d5c0a9d8b
+ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL
+ICSharpCode.SharpZipLib, Version=0.85.0.0, Culture=neutral, PublicKeyToken=1b03e6acf1164f73
+zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160
+CabLib, Version=12.0.0.0, Culture=neutral, PublicKeyToken=5c838b77b53f84a0, processorArchitecture=x86
+Oracle.ManagedDataAccess, Version=4.121.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342
+Oracle.ManagedDataAccess, Version=4.112.3.50, Culture=neutral, PublicKeyToken=89b483f429c47342
+
+System.Windows.Forms.DataVisualization, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL
+
+AjaxControlToolkit, Version=3.0.20229.20843, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL
+Coolite.Ext.Web, Version=0.7.0.9936, Culture=neutral, PublicKeyToken=f58c952e9aa5b80a, processorArchitecture=MSIL
+Coolite.Ext.Web, Version=0.6.0.7019, Culture=neutral, PublicKeyToken=f58c952e9aa5b80a, processorArchitecture=MSIL
+Coolite.Ext.Web, Version=0.5.1.3571, Culture=neutral, PublicKeyToken=f58c952e9aa5b80a, processorArchitecture=MSIL
+HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL
+Microsoft.Web.UI.WebControls, Version=1.0.2.226, Culture=neutral, PublicKeyToken=31bf3856ad364e35
+System.Web.DataVisualization, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL
+ZedGraph, Version=4.5.8.22068, Culture=neutral, PublicKeyToken=02a83cbd123fcd60
+ZedGraph.Web, Version=4.5.8.22070, Culture=neutral, PublicKeyToken=02a83cbd123fcd60

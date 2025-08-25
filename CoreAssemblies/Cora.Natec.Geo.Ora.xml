@@ -1,0 +1,819 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Natec.Geo.Ora</name>
+    </assembly>
+    <members>
+        <member name="M:Cora.Natec.Geo.Ora.IconGenerator.#ctor(System.Int64,System.String,System.Int32,System.Int32)">
+            <summary>
+            Konštruktor generátora pre ORA (generuje cestu k img).
+            </summary>
+            <param name="_i_geo_mapserver">Id geo map srv.</param>
+            <param name="n_theme">Názov témy</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.IconGenerator.CreateRequest(System.String,System.String)">
+            <summary>
+            Vytvorenie Xml requestu.
+            </summary>
+            <param name="datasource_name"> Data source map srv.</param>
+            <param name="theme_name">Názov témy</param>
+            <returns>Xml request.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.IconGenerator.SendRequest(System.String,System.String,System.Xml.XmlDocument)">
+            <summary>
+            Odoslanie requestu.
+            </summary>
+            <param name="serverUrl">Url map srv.</param>
+            <param name="datasource_name">Data source map srv.</param>
+            <param name="request">Xml request.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.IconGenerator.CreateImgUrl(System.String,System.String,System.String)">
+            <summary>
+            Vytvotrenie Img URL ikony stromu.
+            </summary>
+            <param name="serverUrl">Url map srv.</param>
+            <param name="themeStyleName">Theme style name prečítané z Omv response</param>
+            <param name="datasource">Data source map srv.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.IconGenerator.GetSingleNodeIfPossible(System.Xml.XmlDocument,System.String)">
+            <summary>
+            Pokúsi sa vrátiť uzol dokumentu definovaný cestou.
+            </summary>
+            <param name="doc">XML Dokument, môže byť <c>null</c>.</param>
+            <param name="xpath">Cesta k uzlu.</param>
+            <returns>Uzol, alebo <c>null</c> ak je dokument <c>null</c> alebo uzol neexistuje.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.IconGenerator.GenerateIcon">
+            <summary>
+            Generovanie url ikony.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.IconGenerator.IconPath">
+            <summary>
+            Vygenerovaná Url ikony.
+            </summary>
+            <returns>Url ikony.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.GClass">
+            <summary>Trieda geometrie objektu.</summary>
+            <remarks>Číselná reprezentácia zodpovedá kódovaniu tejto informácie v <see cref="P:Cora.Natec.Geo.CdoGEO_TREE_UZ.col_GTYPE"/>.</remarks>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.GClass.none">
+            <summary>Neurčená trieda.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.GClass.marker">
+            <summary>Trieda značka (bod).</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.GClass.line">
+            <summary>Trieda čiara.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.GClass.color">
+            <summary>Trieda farba.</summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.OmvTheme">
+            <summary>
+            Téma (mapová vrstva) obohatená o atribúty a metódy špecifické pre Oracle MapViewer.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvTheme.MS_PARAMS_PATH_MAPSERVERURL">
+            <summary>Xpath ku nastaveniu URL mapového servera v stĺpci MS_PARAMS.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvTheme.MS_PARAMS_PATH_DATASOURCE">
+            <summary>Xpath ku nastaveniu datasource témy v stĺpci MS_PARAMS.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvTheme.MS_PARAMS_PATH_BGCOLOR">
+            <summary>Xpath ku nastaveniu farby pozadia témy v stĺpci MS_PARAMS.</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvTheme.#ctor(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.Ora.OmvTheme"/>.
+            </summary>
+            <param name="cdoTheme">Dátový objekt témy.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="cdoTheme"/> <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="cdoTheme"/> nemá platný atribút <paramref name="cdoTheme.col_I_GEO_THEME.col_I_GEO_THEME"/>.</exception>
+            <exception cref="T:Cora.Natec.Base.AppException">Pri chybe parsovania XML atribútov <paramref name="cdoTheme"/>.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvTheme.MapServerUrl">
+            <summary>
+            URL mapového servra (Oracle MapViewer) pre tému. Povinný atribút.
+            </summary>
+            <exception cref="T:System.Exception">Ak sa nepodarí získať atribút.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvTheme.DataSource">
+            <summary>
+            Dátový zdroj témy. Povinný atribút.
+            </summary>
+            <exception cref="T:System.Exception">Ak sa nepodarí získať atribút.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvTheme.BgColor">
+            <summary>
+            Farba pozadia témy v HTML notácii. Default: #FFFFFF.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvTheme.GetStyleName">
+            <summary>
+            Vráti názov štýlu témy. Keďže štýly sa v Omv requeste definujú on demand, vrátený string je síce konštantný, ale vytvorený svojvoľne
+            (nemá žiadny špeciálny význam).
+            </summary>
+            <returns>Názov štýlu témy.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvTheme.GetGeoClass">
+            <summary>
+            Vráti triedu geometrie objektov témy. Dekóduje sa z <see cref="P:Cora.Natec.Geo.CdoGEO_TREE_UZ.col_GTYPE"/>, ak je formát nesprávny, vracia <see cref="F:Cora.Natec.Geo.Ora.GClass.none"/>.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.OmvClient">
+            <summary>
+            Mapový klient pre Oracle MapViewer (Release 10.1.3.1).
+            </summary>
+            <remarks>
+            Dokumentacia: http://download.oracle.com/docs/cd/B14099_19/web.1012/b14036/toc.htm
+            </remarks>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.OmvClient.OmvCommException">
+            <summary>
+            Výnimka pri komunikácii s mapovým serverom.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.OmvCommException.#ctor(System.Exception)">
+            <summary>
+            Vytvorenie výnimky vyvolanej inou výnimkou.
+            </summary>
+            <param name="innerEx">Vnútorná výnimka, ktorá spôsobila výnimku.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.OmvCommException.#ctor(System.String,Cora.Natec.Geo.Ora.OmvRequest)">
+            <summary>
+            Vytvorenie výnimky so správou a requstom.
+            </summary>
+            <param name="msg">Správa o výnimke.</param>
+            <param name="request">Request, ktorý spôsobil výnimku.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.OmvCommException.ToString">
+            <summary>
+            Creates and returns a string representation of the current exception.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvClient.OmvCommException.Request">
+            <summary>
+            Vráti request string, ktorý spôsobil výnimku.
+            </summary>
+            <value>Request string.</value>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.#ctor(System.Int32,Cora.Global.Session.IIdentity,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.Ora.OmvClient"/>.
+            </summary>
+            <param name="placementId">ID umiestnenia, na ktoré je mapový klient naviazaný.</param>
+            <param name="identity">Identita volajúceho.</param>
+            <param name="externalSettings">Zoznam externých nastavení. Musí obsahovať nastavenia zo <see cref="T:Cora.Natec.Geo.SettingNames"/> s prefixom SELECSET.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Deserializačný konštruktor.
+            </summary>
+            <param name="info">Serializačné info.</param>
+            <param name="context">Serializačný kontext.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Naplnenie <see cref="T:System.Runtime.Serialization.SerializationInfo"/> serializačnými dátami.
+            </summary>
+            <param name="info">Serializačné info.</param>
+            <param name="context">Serializačný kontext.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.GetMapByRange(Cora.Natec.Geo.IMapComplexBus)">
+            <summary>
+            Vráti mapu ohraničenú súradnicami <see name="IMapComplexBus.MapCoords"/>. Vstupné parametre, najmä zoznam vybraných tém,
+            číta z <paramref name="mapComplexBus"/>, výstupné parametre vráti v novej inštancii <see cref="T:Cora.Natec.Geo.MapComplexBus"/>.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <returns>
+            Nová inštancia <see cref="T:Cora.Natec.Geo.MapComplexBus"/> s naplnenými výstupnými parametrami (najmä mapová URL a zobrazené témy),
+            alebo <c>null</c>, ak na zbernici nie sú potrebné vstupné parametre:
+            	- aspoň jedna SelectedThemeIDs
+            	- platné MapViewSize a MapCoords.
+            </returns>
+            <exception cref="T:Cora.Natec.Geo.Ora.OmvClient.OmvCommException">Ak nastala výnimka pri komunikácii s mapovým serverom.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.GetMapByFeatures(Cora.Natec.Geo.IMapComplexBus)">
+            <summary>
+            Vráti mapu zoomovanú podľa zobrazených objektov (featurov) aktívnej témy.
+            Vstupné parametre, najmä zoznam vybraných tém, číta z <paramref name="mapComplexBus"/>, výstupné parametre vráti v novej inštancii
+            <see cref="T:Cora.Natec.Geo.MapComplexBus"/>. Ak je vybraný iba jeden bod, rozsah mapy určí podľa _ExternalSettings[SettingNames.SELECTSET_SCALE_POINT_FIT]
+            v defaultnom obrazovkovom rozlíšení.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <returns>
+            Nová inštancia <see cref="T:Cora.Natec.Geo.MapComplexBus"/> s naplnenými výstupnými parametrami (najmä mapová URL a zobrazené témy),
+            alebo <c>null</c>, ak na zbernici nie sú potrebné vstupné parametre:
+            	- aspoň jedna SelectedThemeIDs
+            	- platné MapViewSize 
+            	- platná ActiveTheme a FeatureKeys popisujúce aspoň jeden objekt
+            </returns>
+            <exception cref="T:Cora.Natec.Geo.Ora.OmvClient.OmvCommException">Ak nastala výnimka pri komunikácii s mapovým serverom.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.GetClientSpecificTheme(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+            <summary>
+            Factory-metóda na výrobu témy na základe dátového objektu <paramref name="cdoTheme"/> - vracia inštancie <see cref="T:Cora.Natec.Geo.Ora.OmvTheme"/>.
+            </summary>
+            <param name="cdoTheme">Dátový objekt témy.</param>
+            <returns>Téma typu <see cref="T:Cora.Natec.Geo.Ora.OmvTheme"/>.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.GetThemeById(System.Int32)">
+            <summary>
+            Vráti tému podľa ID. Nájdená téma sa zapamätá aj v <see cref="P:ThemeCache"/>.
+            </summary>
+            <param name="themeId">ID témy (I_GEO_THEME).</param>
+            <returns>Dátový objekt témy, alebo <c>null</c> ak téma s daným ID nebola nájdená.</returns>
+            <exception cref="T:Cora.Natec.Geo.ACoraMapClient.DBClientException">Ak nastala výnimka pri získavaní témy.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.GetFeatureCount(Cora.Natec.Geo.CdoSP_GEO_THEMES)">
+            <summary>
+            Vráti počet prvkov témy a pre objekt témy synchronizuje where podmienku z OMV metadát.
+            </summary>
+            <param name="spGeoThemes">Objekt témy.</param>
+            <returns>Počet prvkov v téme.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.GetSelectThemeCount(System.String,System.String,System.String@)">
+            <summary>
+            Vyskladá select na zistenie počtu prvkov podľa konekcie a názvu témy s podmienkou whereCond ak je zadaná. 
+            </summary>
+            <param name="connString">Connect string na schému kde je base Table témy.</param>
+            <param name="themeName">Name témy z definície v metadátach.</param>
+            <param name="whereCond">Where podmienka témy z metadát.</param>
+            <returns>Select na zistenie počtu prvkov v téme.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.GetWhereCond(System.String)">
+            <summary>
+            Vráti AND where Cond popísanú v xmlStylingRules.
+            </summary>
+            <param name="xmlStylingRules">Xml string StylingRules.</param>
+            <returns>Vráti AND where Cond  ak sa nachádza v StylingRules inak null. </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.GetWhereCond(System.String,System.Boolean)">
+             <summary>
+             Vráti where Cond popísanú v xmlStylingRules.
+             </summary>
+             <param name="xmlStylingRules">Xml string StylingRules.</param>
+            <param name="isAtributeAND">Má sa použiť vo where cond AND.</param>
+             <returns>Vráti where Cond  ak sa nachádza v popise inak null. </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.SynchronizeWhereCond(Cora.Natec.Geo.CdoSP_GEO_THEMES,System.String)">
+            <summary>
+            Synchronizácia where podmienky témy z definicie v OMV metedatach.
+            </summary>
+            <param name="cdoSpGeoThemes">Objekt témy.</param>
+            <param name="metadataWhereCond">Where podmienka témy z definicie v OMV metedatach.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvClient.AllowsEmptyFeatureKeyWhenWriteGeometry">
+            <summary>
+            Nastavenie možnosti zápisu nového bodu.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvClient.Clone">
+            <summary>
+            Vytvorenie klonu OmvClienta.
+            </summary>
+            <returns>Klon OmvClienta.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.OmvMapPart">
+            <summary>
+            Controller prvku webového portálu s layoutovateľným mapovým komplexom používajúcim Oracle MapViewer.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvMapPart.PART_ID">
+            <summary>ID portálového prvku v metadátach.</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvMapPart.#ctor(Cora.Portal.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+            <summary>
+            Vytvorenie prvku <see cref="T:Cora.Natec.Geo.Ora.OmvMapPart"/>.
+            </summary>
+            <param name="panel">Panel, kam prvok patrí.</param>
+            <param name="cdoPlac">Data objekt pre umiestnenie prvku.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvMapPart.MapClient">
+            <summary>
+            Vráti mapového klienta.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.ImageFormat">
+            <summary>Formáty generovania OMV odpovede.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.GIF">
+            <summary>GIF data v odpovedi.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.GIF_URL">
+            <summary>Odpoveď obsahuje URL na zgenerovaný GIF.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.GIF_STREAM">
+            <summary>Odpoveďou je zgenerovaný GIF.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.JAVA_IMAGE">
+            <summary>Odpoveď ako java 2D BufferedImage object.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.PNG_STREAM">
+            <summary>Odpoveďou je zgenerovaný neindexovaný PNG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.PNG_URL">
+            <summary>Odpoveď obsahuje URL na zgenerovaný neindexovaný PNG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.PNG8_STREAM">
+            <summary>Odpoveďou je zgenerovaný indexovaný PNG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.PNG8_URL">
+            <summary>Odpoveď obsahuje URL na zgenerovaný indexovaný PNG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.JPEG_STREAM">
+            <summary>Odpoveďou je zgenerovaný JPEG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.JPEG_URL">
+            <summary>Odpoveď obsahuje URL na zgenerovaný JPEG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.SVG_STREAM">
+            <summary>Odpoveďou je zgenerovaný SVG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.SVGZ_STREAM">
+            <summary>Odpoveďou je zgenerovaný komprimovaný SVG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.SVGTINY_STREAM">
+            <summary>Odpoveďou je zgenerovaný Tiny SVG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.SVG_URL">
+            <summary>Odpoveď obsahuje URL na zgenerovaný SVG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.SVGZ_URL">
+            <summary>Odpoveď obsahuje URL na zgenerovaný komprimovaný SVG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.SVGTINY_URL">
+            <summary>Odpoveď obsahuje URL na zgenerovaný Tiny SVG.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.ImageFormat.Default">
+            <summary>Default formát (<see cref="F:Cora.Natec.Geo.Ora.ImageFormat.GIF_URL"/>).</summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.OmvNames">
+            <summary>
+            Nazvy pre OMV.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.ASIS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.BOX">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.BG_COLOR">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.BOUNDING_THEMES">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.CLASS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.COORDINATES">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.DATASOURCE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.FEATURES">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.FILL">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.FILL_OPACITY">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.FORMAT">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.G">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.GENERALIZED_PIXELS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.HEIGHT">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.JDBC_QUERY">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.KEY_COLUMN">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.MAP_CONTENT">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.MAP_IMAGE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.MAP_DEFINITION">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.MAP_REQUEST">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.MAP_RESPONSE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.MATRIX">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.MAX_SCALE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.MIN_SCALE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.MIN_DIST">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.NAME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.NON_MAP_REQUEST">
+            <summary>Nemapový dotaz.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.OMS_ERROR">
+            <summary>Odpoveď po chybe spracovania.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.RENDER_STYLE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.RULE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.SELECTED">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.SELECTED_NEIGHBOR">
+            <summary>Style pre lokalizované susedné obj.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.SIZE_HINT">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.SPATIAL_COLUMN">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.STROKE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.STROKE_WIDTH">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.STYLE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.STYLES">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.STYLING_RULES">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.SVG">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.URL">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.THEMES">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.THEME">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.TITLE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.WIDTH">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.XFM">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.XML_REQUEST">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.NON_MAP_RESPONSE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.LIST_THEME_STYLES">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.Ora.OmvNames.THEME_STYLES">
+            <summary></summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.OmvRequest">
+            <summary>
+            Dotaz na mapový server OMV.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.GetBoundingBox(System.Xml.XmlNode)">
+            <summary>
+            Zistenie rozsahu mapy.
+            </summary>
+            <param name="parentNode">Nadradený uzol, z ktorého sa rozsah zisťuje.</param>
+            <returns>Rozsah mapy.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.CreateFromString(System.String)">
+            <summary>
+            Vytvorenie dotazu na mapový server OMV z reťazca.
+            </summary>
+            <param name="requestString">Reťazec pre dotaz.</param>
+            <returns>Dotaz na mapový server.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.#ctor(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Vytvorenie dotazu na mapový server.
+            </summary>
+            <param name="dataSource">Názov dátového zdroja dotazu.</param>
+            <param name="title">Titulok dotazu.</param>
+            <param name="externalSettings">Zoznam externých nastavení. Musí obsahovať nastavenia zo <see cref="T:Cora.Natec.Geo.SettingNames"/> s prefixom SELECSET.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.#ctor(System.String,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Vytvorenie dotazu na mapový server.
+            </summary>
+            <param name="dataSource">Názov dátového zdroja dotazu.</param>
+            <param name="externalSettings">Zoznam externých nastavení.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.IsMapRequest">
+            <summary>Je to mapový dotaz?</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.DataSource">
+            <summary>Názov dátového zdroja dotazu.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.Title">
+            <summary>Titulok dotazu.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.BackgroundColor">
+            <summary>Farba pozadia mapy. Alternatíva k <see cref="P:Cora.Natec.Geo.Ora.OmvRequest.BackgroundColorHex"/></summary>
+            <value>Farba pozadia. Ak nie je zadaná, vracia <see cref="P:System.Drawing.Color.White"/>.</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.BackgroundColorHex">
+            <summary>Farba pozadia mapy (vo formáte #HHHHHH). Alternatíva k <see cref="P:Cora.Natec.Geo.Ora.OmvRequest.BackgroundColor"/>.</summary>
+            <value>Farba pozadia. Ak nie je zadaná, vracia bielu (#FFFFFF).</value>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.Height">
+            <summary>Výška mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.Width">
+            <summary>Šírka mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.ImageFormat">
+            <summary>Formát odpovede mapového dotazu.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.BoundingBox">
+            <summary>Požadovaný rozsah mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.JdbcQueryText">
+            <summary>
+            Vytvorenie sql dotazu na test GEOMETRY.
+            </summary>
+            <param></param>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvRequest.XmlRequestString">
+            <summary>Úplný text dotazu (XML formátovaný).</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.ToString">
+            <summary>
+            Vráti reťazec reprezentujúci tento objekt. Obsahuje aj text XML requestu.
+            </summary>
+            <returns>
+            Reťazec reprezentujúci tento objekt.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.GetRequestUrl(System.String)">
+            <summary>
+            Získanie celého URL dotazu na mapový server.
+            </summary>
+            <param name="serverUrl">URL mapového servra.</param>
+            <returns>Celý URL dotazu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.SendRequest(System.String)">
+            <summary>
+            Odoslanie dotazu na mapový server.
+            </summary>
+            <param name="serverUrl">URL mapového servra.</param>
+            <returns>Odpoveď mapového servra.</returns>
+            <exception cref="T:System.Exception">Pri komunikačnej chybe (zlyhanie pripojenia alebo chyba parsovania odpovede). 
+            POZOR! Pri neexistujucej URL sa ako inner exception vyskytuje <see cref="T:System.IO.FileNotFoundException"/>
+            - nedat sa nou pomylit.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.AddThemes(Cora.Natec.Geo.Ora.OmvTheme[])">
+            <summary>
+            Pridanie jednej alebo viacerých tém do dotazu.
+            </summary>
+            <param name="themes">Pridávaná téma alebo témy.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.ClearThemes">
+            <summary>
+            Vyčistenie tém dotazu.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.AddSelectedTheme(Cora.Natec.Geo.Ora.OmvTheme,System.String,System.Boolean)">
+            <summary>
+            Pridanie témy, z ktorej pochádzajú vybraté feature.
+            </summary>
+            <param name="cdoTheme">Vybratá téma.</param>
+            <param name="featureWhereCond">WHERE podmienka nad tabuľkou <see name="CdoGEO_TREE_UZ.col_BASE_TABLE"/> z <paramref name="cdoTheme"/> identifikujúca vybrané feature.</param>
+            <param name="isSelNeihbor">Jedná sa o zobrazenie susedných feature?</param>
+            <returns>Názov pridanej vybratej témy (v OMV requeste je k nej pridávaný suffix).</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.SetBoundingThemes(System.String,System.Int32)">
+            <summary>
+            Nastavenie tém pre určenie výpočtu rozsahu.
+            </summary>
+            <param name="boundingThemesList">Zoznam názvov tém (oddelený čiarkami) pre určenie výpočtu rozsahu.</param>
+            <param name="sizeHint">Pomoc pre prípad výsledku s jediným bodom.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.AddStyle(System.String,System.String)">
+            <summary>
+            Pridanie štýlu do dotazu.
+            </summary>
+            <param name="styleName">Názov štýlu.</param>
+            <param name="innerText">Text štýlu.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.AddStyle(System.String,System.Xml.XmlElement)">
+            <summary>
+            Pridanie štýlu do dotazu.
+            </summary>
+            <param name="styleName">Názov štýlu.</param>
+            <param name="childElement">XML uzol štýlu.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.#ctor(System.Boolean)">
+            <summary>
+            Vytvorenie dotazu na mapový server.
+            </summary>
+            <param name="isMapRequest">Je dotaz mapový?</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.#ctor(System.Xml.XmlDocument)">
+            <summary>
+            Vytvorenie dotazu na mapový server.
+            </summary>
+            <param name="xmlDocument">Zdrojový XML dotazu.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvRequest.GetStyleNode(System.String)">
+            <summary>
+            Získanie uzlu štýlu.
+            </summary>
+            <param name="styleName">Názov štýlu.</param>
+            <returns>Uzol štýlu.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.OmvResponse">
+            <summary>
+            Odpoveď mapového servra OMV.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvResponse.#ctor(System.String,System.Xml.XmlDocument)">
+            <summary>
+            Vytvorenie objektu na základe odpovede na dotaz podľa zadanej URL.
+            </summary>
+            <remarks>
+            Pre poslanie requestu sa pouziva nie-nativna kniznica MSXML2, pretoze bezny .NET HttpClient si 
+            s OMV serverom "nerozumie" - tento klient posiela HTTP 100 Continue, co ale Oracle MapViewer neimplementuje.
+            Okrem toho vid poznamku o exceptions.
+            </remarks>
+            <param name="omvRequestUrl">URL mapového servera.</param>
+            <param name="xmlDocument">Request ako XML dokument.</param>
+            <exception cref="T:System.Exception">Pri komunikačnej chybe (zlyhanie pripojenia alebo chyba parsovania odpovede). 
+            POZOR! Pri neexistujucej URL sa ako inner exception vyskytuje <see cref="T:System.IO.FileNotFoundException"/>
+            - nedat sa nou pomylit.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvResponse.MapContentUrl">
+            <summary>URL na pripravenu mapu.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvResponse.MapBoundingBox">
+            <summary>Rozsah mapy. Jedná sa o "raw" odpoveď servra, pre skutočný vypočítaný rozsah viď <see cref="P:Cora.Natec.Geo.Ora.OmvResponse.AllBoundingBox"/>.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvResponse.AllBoundingBox">
+            <summary>
+            Bounding Box pre celu mapu. Y je problematicky (s posunom).
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvResponse.XfmMatrix">
+            <summary>Transfrormačná matica výsledného rozsahu mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvResponse.IsErrorResponse">
+            <summary>Je odpoveď po chybe spracovania?</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.Ora.OmvResponse.HasThemes">
+            <summary>Má odpoveď témy?</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvResponse.ToString">
+            <summary>
+            Vráti reťazec reprezentujúci tento objekt. Obsahuje aj text XML response.
+            </summary>
+            <returns>
+            Reťazec reprezentujúci tento objekt.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvResponse.GetMapUrl(System.Xml.XmlDocument)">
+            <summary>
+            URL na mapu z XML DOC
+            </summary>
+            <param name="XML"></param>
+            <returns>attr.Value</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvResponse.GetErrorMessage">
+            <summary>
+            Text odpovede po chybe spracovania.
+            </summary>
+            <returns>Text odpovede po chybe spracovania.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvResponse.GetThemeNames">
+            <summary>
+            Zoznam tém odpovede, ktoré majú feature ktorých minimum bounding box sa prekrýva s <see cref="P:Cora.Natec.Geo.Ora.OmvResponse.AllBoundingBox"/>.
+            </summary>
+            <remarks>
+            POZOR! 
+            1) To o.i. značí, že medzi nimi môžu byť aj také, ktoré sa na výslednom obrázku vôbec nenachádzajú
+               (napr. MBR cesty idúcej šikmo pomimo obdĺžnikového výrezu sa s ním prekrýva, hoci cesta sa nenachádza na výreze).
+            2) Selected téma je zo suffixom "selected" (v zozname sa ale nachádza aj bez)
+            </remarks>
+            <returns>Zoznam tém odpovede.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.OmvResponse.GetThemeStyleName">
+            <summary>
+            StyleName temy z odpovede dotazu pre nastavenie ikony temy stromu.
+            </summary>
+            <returns>StyleName temy</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.SelectSet">
+            <summary>
+            Trieda operácií nad množinou výberu (vybrané features v aktívnej téme) a ich štýlmi pre <see cref="T:Cora.Natec.Geo.Ora.OmvRequest"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.SelectSet.GetSelectSetStyle(Cora.Natec.Geo.Ora.GClass,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Ziskanie štýlu (do OmvRequest-u) vybratého prvku z jeho pôvodného štýlu.
+            </summary>
+            <param name="styleGClass">Trieda geometrie prvku.</param>
+            <param name="externalSettings">Externé nastavenia.</param>
+            <returns>Štýl vybratého prvku.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.SelectSet.GetSelectSetNeighborStyle(Cora.Natec.Geo.Ora.GClass,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Ziskanie štýlu (do OmvRequest-u) vybratých susedných prvkov z ich pôvodného štýlu.
+            </summary>
+            <param name="styleGClass">Trieda geometrie prvku.</param>
+            <param name="externalSettings">Externé nastavenia.</param>
+            <returns>Štýl vybratých susedných prvkov.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.Ora.XmlHelper">
+            <summary>
+            Pomocná trieda pre prácu s XML.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.XmlHelper.GetOrCreateAttribute(System.Xml.XmlNode,System.String)">
+            <summary>
+            Získanie atribútu podľa mena. Ak neexistuje, je vytvorený nový.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="attributeName">Názov hľadaného atribútu.</param>
+            <returns>Požadovaný atribút.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.XmlHelper.CreateAppendAttribute(System.Xml.XmlNode,System.String)">
+            <summary>
+            Vytvorenie a vrátenie atribútu podľa mena.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="attributeName">Názov vytváraného atribútu.</param>
+            <returns>Nový atribútu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.XmlHelper.CreateAppendAttribute(System.Xml.XmlNode,System.String,System.String)">
+            <summary>
+            Vytvorenie a vrátenie atribútu podľa mena.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="attributeName">Názov vytváraného atribútu.</param>
+            <param name="attributeValue">Hodnota vytváraného atribútu.</param>
+            <returns>Nový atribútu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.XmlHelper.GetOrCreateChild(System.Xml.XmlNode,System.String)">
+            <summary>
+            Získanie podradeného uzla podľa mena. Ak neexistuje, je vytvorený nový.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="childName">Názov hľadaného podradeného uzla.</param>
+            <returns>Požadovaný podradený uzol.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.XmlHelper.CreateAppendChild(System.Xml.XmlNode,System.String)">
+            <summary>
+            Vytvorenie a vrátenie podradeného uzla podľa mena.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="childName">Názov vytváraného podradeného uzla.</param>
+            <returns>Nový podradený uzol.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.Ora.XmlHelper.GetDocument(System.Xml.XmlNode)">
+            <summary>
+            Ziskanie dokumentu xml uzla (alebo samotneho xml dokumentu).
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <returns>Xml dokument.</returns>
+        </member>
+    </members>
+</doc>

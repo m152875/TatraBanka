@@ -1,0 +1,7 @@
+﻿<?xml version="1.0"?>
+<instructions description="Úvodné nastavenie parametrov">
+	<parameter_declare name="Version"><Version/></parameter_declare>
+	
+	<parameter_declare name="CopyNatecAssembliesDirectory" />
+	<parameter_declare name="AssemblyPackage" />
+</instructions>

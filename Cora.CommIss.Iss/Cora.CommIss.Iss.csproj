@@ -1,0 +1,678 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D4516ACD-0060-458B-BFF7-E0553236D4CC}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Cora.CommIss.Iss</RootNamespace>
+    <AssemblyName>Cora.CommIss.Iss</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Cora.CommIss, Version=2025.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ProjAssemblies\Cora.CommIss.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.CommIss.Impl, Version=2025.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ProjAssemblies\Cora.CommIss.Impl.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.Convert">
+      <HintPath>..\CoreAssemblies\Cora.Convert\Cora.Convert.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.CoraApp.ISS.NUM.AA">
+      <HintPath>..\ISSNumAssemblies\Cora.CoraApp.ISS.NUM.AA.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.CoraCoreObj">
+      <HintPath>..\CoreAssemblies\Cora.CoraCoreObj\Cora.CoraCoreObj.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.Crypt">
+      <HintPath>..\CoreAssemblies\Cora.Crypt\Cora.Crypt.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.Data">
+      <HintPath>..\CoreAssemblies\Cora.Data\Cora.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.DMS.Base">
+      <HintPath>..\DmsAssemblies\Cora.DMS.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.Global">
+      <HintPath>..\CoreAssemblies\Cora.Global\Cora.Global.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.Natec.Base">
+      <HintPath>..\CoreAssemblies\Cora.Natec.Base\Cora.Natec.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.Utils">
+      <HintPath>..\CoreAssemblies\Cora.Utils\Cora.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="Cora.Web">
+      <HintPath>..\CoreAssemblies\Cora.Web\Cora.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json.Bson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.Bson.1.0.2\lib\net45\Newtonsoft.Json.Bson.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.121.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\CoreAssemblies\Oracle.ManagedDataAccess\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=6.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.6.0.0\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.3.0\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.3.0\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.3.0\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.3.0\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\Web.pubxml" />
+    <Content Include="Global.asax" />
+    <Content Include="index.html" />
+    <Content Include="Service References\DoveraHromadneOznamenieClient\Cora.CommIss.Iss.DoveraHromadneOznamenieClient.DajStavOdoslaniaHromadnehoOznameniaVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraHromadneOznamenieClient\Cora.CommIss.Iss.DoveraHromadneOznamenieClient.DajStavOtestovaniaHromadnehoOznameniaVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraHromadneOznamenieClient\Cora.CommIss.Iss.DoveraHromadneOznamenieClient.OdosliHromadneOznamenieVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraHromadneOznamenieClient\Cora.CommIss.Iss.DoveraHromadneOznamenieClient.OtestujHromadneOznamenieVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraMesacnyVykazClient\Cora.CommIss.Iss.DoveraMesacnyVykazClient.DajStavOdoslaniaMesacnehoVykazuVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraMesacnyVykazClient\Cora.CommIss.Iss.DoveraMesacnyVykazClient.DajStavOtestovaniaMesacnehoVykazuVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraMesacnyVykazClient\Cora.CommIss.Iss.DoveraMesacnyVykazClient.OdosliMesacnyVykazVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraMesacnyVykazClient\Cora.CommIss.Iss.DoveraMesacnyVykazClient.OtestujMesacnyVykazVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\DoveraHromadneOznamenieClient\ESB.wsdl" />
+    <None Include="Service References\DoveraMesacnyVykazClient\ESB.wsdl" />
+    <None Include="Service References\DoveraPlatitelClient\configuration91.svcinfo" />
+    <None Include="Service References\DoveraPlatitelClient\configuration.svcinfo" />
+    <None Include="Service References\DoveraHromadneOznamenieClient\configuration91.svcinfo" />
+    <None Include="Service References\DoveraHromadneOznamenieClient\configuration.svcinfo" />
+    <None Include="Service References\DoveraHromadneOznamenieClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\DoveraMesacnyVykazClient\configuration91.svcinfo" />
+    <None Include="Service References\DoveraMesacnyVykazClient\configuration.svcinfo" />
+    <None Include="Service References\DoveraMesacnyVykazClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Service References\DoveraPlatitelClient\Cora.CommIss.Iss.DoveraPlatitelClient.AktualizujUdajeZamestnavatelaVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraPlatitelClient\Cora.CommIss.Iss.DoveraPlatitelClient.DajStavUctuVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraPlatitelClient\Cora.CommIss.Iss.DoveraPlatitelClient.DajUdajeZamestnavatelaVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraPlatitelClient\Cora.CommIss.Iss.DoveraPlatitelClient.DajZoznamZamestnancovVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraPlatitelClient\Cora.CommIss.Iss.DoveraPlatitelClient.OverOOPVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraPlatitelClient\Cora.CommIss.Iss.DoveraPlatitelClient.OverPlatitelaVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraPlatitelClient\Cora.CommIss.Iss.DoveraPlatitelClient.DajVysledokOvereniaZnizenaSadzbaVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraPlatitelClient\Cora.CommIss.Iss.DoveraPlatitelClient.OverNarokNaZnizenuSadzbuVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\DoveraPlatitelClient\ESB.wsdl" />
+    <None Include="Service References\DoveraPlatitelClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Service References\DoveraPoistenecClient\Cora.CommIss.Iss.DoveraPoistenecClient.OverPoistencaResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraPoistenecClient\Cora.CommIss.Iss.DoveraPoistenecClient.OverPoistencaVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\DoveraPoistenecClient\ESB.wsdl" />
+    <None Include="Service References\DoveraSystemClient\configuration91.svcinfo" />
+    <None Include="Service References\DoveraSystemClient\configuration.svcinfo" />
+    <None Include="Service References\DoveraPoistenecClient\configuration91.svcinfo" />
+    <None Include="Service References\DoveraPoistenecClient\configuration.svcinfo" />
+    <None Include="Service References\DoveraPoistenecClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Service References\DoveraSystemClient\Cora.CommIss.Iss.DoveraSystemClient.DajOznamyDZPResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraSystemClient\Cora.CommIss.Iss.DoveraSystemClient.DajOznamyDZPVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraSystemClient\Cora.CommIss.Iss.DoveraSystemClient.DajPrihlasovaciTokenResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraSystemClient\Cora.CommIss.Iss.DoveraSystemClient.DajPrihlasovaciTokenVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraSystemClient\Cora.CommIss.Iss.DoveraSystemClient.DajStavSystemuResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraSystemClient\Cora.CommIss.Iss.DoveraSystemClient.DajStavSystemuVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraSystemClient\Cora.CommIss.Iss.DoveraSystemClient.PrihlasenieTokenomResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\DoveraSystemClient\Cora.CommIss.Iss.DoveraSystemClient.PrihlasenieTokenomVystup.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\DoveraSystemClient\ESB.wsdl" />
+    <None Include="Service References\DoveraSystemClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Service References\EVOClient\Cora.CommIss.Iss.EVOClient.poskytnutieUdajovOvozidleAdrziteloviResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\EVOClient\Cora.CommIss.Iss.EVOClient.wsPoskytnutieUdajovOvozidleAdrziteloviResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\EVOClient\PoskytnutieUdajovOVozidleADrzitelovi-v3.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\EVOClient\PoskytnutieUdajovOvozidleAdrziteloviService.wsdl" />
+    <None Include="Service References\EVOClient\configuration91.svcinfo" />
+    <None Include="Service References\EVOClient\configuration.svcinfo" />
+    <None Include="Service References\EVOClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ZelenaPostaAPI2ProductRequireClient\configuration91.svcinfo" />
+    <None Include="Service References\ZelenaPostaAPI2ProductRequireClient\configuration.svcinfo" />
+    <Content Include="Service References\ZelenaPostaAPI2ProductRequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2ProductRequireClient.computePriceInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2ProductRequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2ProductRequireClient.computePriceResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2ProductRequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2ProductRequireClient.getEnumsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2ProductRequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2ProductRequireClient.getEnumsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2ProductRequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2ProductRequireClient.getProductsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2ProductRequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2ProductRequireClient.getProductsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\ZelenaPostaAPI2ProductRequireClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.cancelBundlesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.cancelBundlesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.cancelMailingsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.cancelMailingsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.deleteBundlesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.deleteBundlesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.deleteMailingsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.deleteMailingsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.exportMailingsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getBundleExportsForMailingsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getBundleExportsForMailingsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getBundlesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getBundlesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getBundlesStatsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getBundlesStatsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getDeliveryReceiptRawResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getMailingImageResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getMailingPostStatusesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getMailingPostStatusesResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getMailingRawResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getMailingResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getMailingResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getMailingsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getMailingsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getStatisticsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.getStatisticsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.prepareResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.prepareResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.processAnonymousBundleResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.sendMailingsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.sendMailingsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.sendPostcardsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaAPI2RequireClient\Cora.CommIss.Iss.ZelenaPostaAPI2RequireClient.sendPostcardsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\ZelenaPostaAPI2ProductRequireClient\product.wsdl" />
+    <None Include="Service References\ZelenaPostaAPI2RequireClient\sent.wsdl" />
+    <None Include="Service References\ZelenaPostaAPI2RequireClient\configuration91.svcinfo" />
+    <None Include="Service References\ZelenaPostaAPI2RequireClient\configuration.svcinfo" />
+    <None Include="Service References\ZelenaPostaAPI2RequireClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ZelenaPostaProvidePrivateClient\configuration91.svcinfo" />
+    <None Include="Service References\ZelenaPostaProvidePrivateClient\configuration.svcinfo" />
+    <Content Include="Service References\ZelenaPostaProvidePrivateClient\Cora.CommIss.Iss.ZelenaPostaProvidePrivateClient.ZelenaPostaResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaProvidePrivateClient\Cora.CommIss.Iss.ZelenaPostaProvidePrivateClient.ZelenaPostaStatusMailingStates.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaProvidePrivateClient\Cora.CommIss.Iss.ZelenaPostaProvidePrivateClient.productInfo.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\ZelenaPostaProvidePrivateClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.deleteResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.deleteResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.getProductsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.getProductsResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.listResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.listResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.prepareResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.prepareResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.sendElectronicResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.sendElectronicResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.sendResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <Content Include="Service References\ZelenaPostaRequireClient\Cora.CommIss.Iss.ZelenaPostaRequireClient.sendResponse1.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Content>
+    <None Include="Service References\ZelenaPostaProvidePrivateClient\ZelenaPostaProvidePrivate.wsdl" />
+    <None Include="Service References\ZelenaPostaRequireClient\mailing.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ZelenaPostaRequireClient\configuration91.svcinfo" />
+    <None Include="Service References\ZelenaPostaRequireClient\configuration.svcinfo" />
+    <None Include="Service References\ZelenaPostaRequireClient\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="CdoCto\ExtData\CdoMET_C_CM.cs" />
+    <Compile Include="CdoCto\ExtData\CdoMET_C_PA_MM.cs" />
+    <Compile Include="CdoCto\ExtData\CdoMET_C_U.cs" />
+    <Compile Include="CdoCto\ExtData\CdoMET_DN_POZ.cs" />
+    <Compile Include="CdoCto\ExtData\CdoMET_PO_PES.cs" />
+    <Compile Include="CdoCto\ExtData\CtoMET_C_CM.cs" />
+    <Compile Include="CdoCto\ExtData\CtoMET_C_PA_MM.cs" />
+    <Compile Include="CdoCto\ExtData\CtoMET_C_U.cs" />
+    <Compile Include="CdoCto\ExtData\CtoMET_DN_POZ.cs" />
+    <Compile Include="CdoCto\ExtData\CtoMET_PO_PES.cs" />
+    <Compile Include="CdoCto\ExtData\CtoVW_ZM_POZ.AttachVm.cs" />
+    <Compile Include="CdoCto\ExtData\CtoVW_ZM_POZ.cs" />
+    <Compile Include="CdoCto\ExtData\CtoVW_ZM_POZ.MainVm.cs" />
+    <Compile Include="CdoCto\ExtData\CtoVW_ZM_POZ.PredmetVm.cs" />
+    <Compile Include="CdoCto\ExtData\CtoVW_ZM_POZ.StavbaVm.cs" />
+    <Compile Include="CdoCto\ExtData\CtoVW_ZM_POZ.ZmluvaVm.cs" />
+    <Compile Include="CdoCto\ZelenaPosta\CdoZPO_C_STATE.cs" />
+    <Compile Include="CdoCto\ZelenaPosta\CdoZPO_MAILING.cs" />
+    <Compile Include="CdoCto\ZelenaPosta\CdoZPO_MAILING_STATE.cs" />
+    <Compile Include="CdoCto\ZelenaPosta\CtoZPO_C_STATE.cs" />
+    <Compile Include="CdoCto\ZelenaPosta\CtoZPO_MAILING.cs" />
+    <Compile Include="CdoCto\ZelenaPosta\CtoZPO_MAILING_STATE.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TatraBankaController.cs" />
+    <Compile Include="DMS\GetFileByFileIdRes.cs" />
+    <Compile Include="DMS\IDMSProvide.cs" />
+    <Compile Include="Dovera\DoveraExtResponse.cs" />
+    <Compile Include="Dovera\IDoveraProvidePrivate.cs" />
+    <Compile Include="EVO\IPoskytnutieUdajovEVO.cs" />
+    <Compile Include="EVO\RequestMapper.cs" />
+    <Compile Include="EVO\ResponseMapper.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="GScan\PersonWithAddress.cs" />
+    <Compile Include="Impl\DoveraProvidePrivate.svc.cs" />
+    <Compile Include="Impl\GScanReceiveProvide.svc.cs" />
+    <Compile Include="GScan\IGScanReceiveProvide.cs" />
+    <Compile Include="GScan\ScannedFile.cs" />
+    <Compile Include="GScan\ScannedMessage.cs" />
+    <Compile Include="IExtDataProvide.cs" />
+    <Compile Include="Impl\DMSProvide.svc.cs" />
+    <Compile Include="Impl\ExtDataProvide.svc.cs" />
+    <Compile Include="Impl\TatraBankaService.svc.cs" />
+    <Compile Include="TatraBanka\ITatraBankaService.cs" />
+    <Compile Include="Impl\PoskytnutieUdajovEVOProvidePrivate.svc.cs" />
+    <Compile Include="Impl\TLZProvidePrivate.svc.cs" />
+    <Compile Include="Impl\ZelenaPostaProvidePrivate.svc.cs" />
+    <Compile Include="ITLZProvidePrivate.cs" />
+    <Compile Include="Service References\DoveraHromadneOznamenieClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\DoveraMesacnyVykazClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\DoveraPlatitelClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\DoveraPoistenecClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\DoveraSystemClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\EVOClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ZelenaPostaAPI2ProductRequireClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ZelenaPostaAPI2RequireClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\ZelenaPostaProvidePrivateClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="TatraBanka\AuthorizationResultVm.cs" />
+    <Compile Include="TatraBanka\HtmlActionResult.cs" />
+    <Compile Include="ZelenaPosta\MailingItem.cs" />
+    <Compile Include="ZelenaPosta\ZelenaPostaResponse.cs" />
+    <Compile Include="ZelenaPosta\ZelenaPostaStatus.cs" />
+    <Compile Include="ZelenaPosta\IZelenaPostaProvidePrivate.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\ZelenaPostaRequireClient\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="..\SolutionInfo.cs">
+      <Link>SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="ZelenaPosta\Recipient.cs" />
+    <Compile Include="ZelenaPosta\Sender.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\DoveraHromadneOznamenieClient\" />
+    <WCFMetadataStorage Include="Service References\DoveraMesacnyVykazClient\" />
+    <WCFMetadataStorage Include="Service References\DoveraPlatitelClient\" />
+    <WCFMetadataStorage Include="Service References\DoveraPoistenecClient\" />
+    <WCFMetadataStorage Include="Service References\DoveraSystemClient\" />
+    <WCFMetadataStorage Include="Service References\EVOClient\" />
+    <WCFMetadataStorage Include="Service References\ZelenaPostaAPI2ProductRequireClient\" />
+    <WCFMetadataStorage Include="Service References\ZelenaPostaAPI2RequireClient\" />
+    <WCFMetadataStorage Include="Service References\ZelenaPostaProvidePrivateClient\" />
+    <WCFMetadataStorage Include="Service References\ZelenaPostaRequireClient\" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="foxtlarchiv">
+      <Guid>{14087EB4-B5D9-44B6-803C-E20E1D024E9F}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release+Install|AnyCPU'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>13981</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/Cora.CommIss.Iss</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>if "$(ConfigurationName)" == "Release+Install" xcopy "$(TargetDir)$(TargetName).???" "$(ProjectDir)..\ProjAssemblies\" /F /R /Y</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

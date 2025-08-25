@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sch="http://schemas.zelenaposta.sk/api/mailing" xmlns:tns="http://schemas.zelenaposta.sk/api/mailing" targetNamespace="http://schemas.zelenaposta.sk/api/mailing" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xs:schema xmlns:xmime="http://www.w3.org/2005/05/xmlmime" elementFormDefault="qualified" targetNamespace="http://schemas.zelenaposta.sk/api/mailing" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:complexType name="addressType">
+        <xs:all>
+          <xs:element name="name" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The name.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="street" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The street.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="city" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The city.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="zip" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The postal code.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="country" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The country.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:element name="getProductsRequest">
+        <xs:complexType>
+          <xs:all>
+            <xs:element minOccurs="0" name="freeProductsOnly" type="xs:boolean" />
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="getProductsResponse">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="products">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="product">
+                    <xs:complexType>
+                      <xs:all>
+                        <xs:element name="name" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The name.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="title" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The title.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="usageLeft" type="xs:int">
+                          <xs:annotation>
+                            <xs:documentation>How many usages are left.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="description" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The description.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="pagesPerMailing" type="xs:int">
+                          <xs:annotation>
+                            <xs:documentation>The maximum allowed number of pages per mailing.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="duplex" type="xs:boolean">
+                          <xs:annotation>
+                            <xs:documentation>Indicates whether the document will be printed as duplex.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="correspondence" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Correspondence type (e.g. 2ndClass, officialLetter, postcard).</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                      </xs:all>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="prepareRequest">
+        <xs:annotation>
+          <xs:documentation>Prepares mailings for sending. The UIZ1/UIZ2 need to be provided, so the UID/PIN is generated if needed. For already registered users, no UID/PIN will be generated and the acceptsEmails will indicate whether the user accepts mailings electronically. If no UIZ1 is provided, only the information acceptsMailings=false will be returned.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:all>
+            <xs:element minOccurs="0" name="printed" type="xs:boolean">
+              <xs:annotation>
+                <xs:documentation>Indicates whether the mailings are going to be printed locally (without using API). If so, the generated token will be marked as printed.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="mailings">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="mailing">
+                    <xs:complexType>
+                      <xs:all>
+                        <xs:element minOccurs="0" name="uiz1" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Primary customer identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="uiz2" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Optional secondary customer identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="address" type="tns:addressType">
+                          <xs:annotation>
+                            <xs:documentation>Optional address of the customer. This information will be used to fill in customer details after registration.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                      </xs:all>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="prepareResponse">
+        <xs:complexType>
+          <xs:all>
+            <xs:element name="mailings">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="mailing">
+                    <xs:complexType>
+                      <xs:all>
+                        <xs:element minOccurs="0" name="uid" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The UID to use for the document addressed to the customer UIZ1/UIZ2. If undefined, the customer is already registered.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="pin" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The PIN bound to the UID. The user has to know both UID/PIN for registration.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="acceptsEmails" type="xs:boolean">
+                          <xs:annotation>
+                            <xs:documentation>Indicates whether the customer accepts e-mails. Unregistered customers cannot accept e-mails, registered customers can specify it in their settings.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                      </xs:all>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="sendRequest">
+        <xs:annotation>
+          <xs:documentation>Sends the mailings electronically or physically.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:all>
+            <xs:element minOccurs="0" name="title" type="xs:string" />
+            <xs:element name="mailings">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="mailing">
+                    <xs:complexType>
+                      <xs:all>
+                        <xs:element minOccurs="0" name="product" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The product code, e.g. 'ACME_Z2TRA4SPRODLDLP' or leave it blank to automatically select cheapest product.When product is not specified you can use 'correspondence', 'envelope' and 'printing' to filter cheapest product detection.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="correspondence" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The required product correspondence code, e.g. '2ndClass', 'registered'.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="envelope" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The product envelope code, e.g. 'c6c5', 'c4'.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="printing" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The product printing code for printing type. Set code to 'blackWhite' or 'color'.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="duplex" type="xs:boolean">
+                          <xs:annotation>
+                            <xs:documentation>Indicates whether the mailing should be printed as duplex.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="uiz1" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Primary customer identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="uiz2" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Optional secondary customer identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="uid" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The UID to use for the document addressed to the customer UIZ1/UIZ2. If undefined, the customer is already registered.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="pin" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The PIN bound to the UID. The user has to know both UID/PIN for registration.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="deliveryConfirmationText" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Additional text that is printed on a delivery with confirmation.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="customId" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The custom identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="documents">
+                          <xs:annotation>
+                            <xs:documentation>The documents in the mailing.</xs:documentation>
+                          </xs:annotation>
+                          <xs:complexType>
+                            <xs:sequence>
+                              <xs:element minOccurs="0" maxOccurs="unbounded" name="document">
+                                <xs:annotation>
+                                  <xs:documentation>The document.</xs:documentation>
+                                </xs:annotation>
+                                <xs:complexType>
+                                  <xs:all>
+                                    <xs:element xmime:expectedContentTypes="*/*" name="file" type="xs:base64Binary">
+                                      <xs:annotation>
+                                        <xs:documentation>The file.</xs:documentation>
+                                      </xs:annotation>
+                                    </xs:element>
+                                  </xs:all>
+                                </xs:complexType>
+                              </xs:element>
+                            </xs:sequence>
+                          </xs:complexType>
+                        </xs:element>
+                        <xs:element name="recipient" type="tns:addressType">
+                          <xs:annotation>
+                            <xs:documentation>The recipient's correspondence address.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="sender" type="tns:addressType">
+                          <xs:annotation>
+                            <xs:documentation>The sender's correspondence address, if it is different from address in the settings.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="address" type="tns:addressType">
+                          <xs:annotation>
+                            <xs:documentation>Optional address of the customer, if it is different from recipient's correspondence address. This information will be used to fill in customer details after registration.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                      </xs:all>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="sendResponse">
+        <xs:complexType>
+          <xs:all>
+            <xs:element minOccurs="0" name="slotId" type="xs:string" />
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="sendElectronicRequest">
+        <xs:annotation>
+          <xs:documentation>Send electronic document to the customer (typically after registration, welcome letter is sent to the customer).</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:all>
+            <xs:element minOccurs="0" name="uiz1" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>Primary customer identifier.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="uiz2" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>Optional secondary customer identifier.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="filename" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>Physical filename to assign to customer.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="sendElectronicResponse">
+        <xs:complexType>
+          <xs:all />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="listRequest">
+        <xs:annotation>
+          <xs:documentation>Lists sent mailings.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:all>
+            <xs:element minOccurs="0" name="statusChangedSince" type="xs:dateTime">
+              <xs:annotation>
+                <xs:documentation>Get only mailings changed after this time (inclusive).</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="statusChangedUntil" type="xs:dateTime">
+              <xs:annotation>
+                <xs:documentation>Get only mailings changed before this time (inclusive).</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="slotIds">
+              <xs:annotation>
+                <xs:documentation>The slot identifiers of the mailings.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="slotId" type="xs:string" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="ids">
+              <xs:annotation>
+                <xs:documentation>The identifiers of the mailings.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="customIds">
+              <xs:annotation>
+                <xs:documentation>The custom identifiers of the mailings.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="customId" type="xs:string" />
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="limit" type="xs:int">
+              <xs:annotation>
+                <xs:documentation>Start offset of returned list, default is 0.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element minOccurs="0" name="offset" type="xs:int">
+              <xs:annotation>
+                <xs:documentation>Count of items in returned list, default is 10.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="listResponse">
+        <xs:annotation>
+          <xs:documentation>The list of the sent mailings.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:all>
+            <xs:element minOccurs="0" name="mailings">
+              <xs:annotation>
+                <xs:documentation>The list of the sent mailings.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="mailing">
+                    <xs:annotation>
+                      <xs:documentation>The mailing.</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:all>
+                        <xs:element name="id" type="xs:int">
+                          <xs:annotation>
+                            <xs:documentation>The mailing identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="status" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The mailing status.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="statusChangedOn" type="xs:dateTime">
+                          <xs:annotation>
+                            <xs:documentation>The date when the mailing status has changed.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="bundleId" type="xs:int">
+                          <xs:annotation>
+                            <xs:documentation>The bundle identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="slotId" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The slot identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="uid" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The UID used in the mailing.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="pin" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The PIN used in the mailing.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="uiz1" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Primary customer identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="uiz2" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>Optional secondary customer identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="product" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The product code.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="filingDate" type="xs:dateTime">
+                          <xs:annotation>
+                            <xs:documentation />
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="recipient" type="tns:addressType">
+                          <xs:annotation>
+                            <xs:documentation>The recipient's correspondence address.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="sender" type="tns:addressType">
+                          <xs:annotation>
+                            <xs:documentation>The sender's correspondence address, if it is different from address in the settings.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="registeredPostId" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The registered post identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element minOccurs="0" name="customId" type="xs:string">
+                          <xs:annotation>
+                            <xs:documentation>The custom identifier.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="postageWithVat" type="xs:decimal">
+                          <xs:annotation>
+                            <xs:documentation>Postage price with VAT.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="productWithVat" type="xs:decimal">
+                          <xs:annotation>
+                            <xs:documentation>Product price with VAT.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                        <xs:element name="pageCount" type="xs:int">
+                          <xs:annotation>
+                            <xs:documentation>Number of pages in mailing.</xs:documentation>
+                          </xs:annotation>
+                        </xs:element>
+                      </xs:all>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="deleteRequest">
+        <xs:annotation>
+          <xs:documentation>Deletes sent mailings or bundles permanently.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:all>
+            <xs:element minOccurs="0" name="mailings">
+              <xs:annotation>
+                <xs:documentation>The mailings to delete.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int">
+                    <xs:annotation>
+                      <xs:documentation>The mailing identifier.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+            <xs:element minOccurs="0" name="bundles">
+              <xs:annotation>
+                <xs:documentation>The bundles to delete.</xs:documentation>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int">
+                    <xs:annotation>
+                      <xs:documentation>The bundle identifier.</xs:documentation>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:all>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="deleteResponse">
+        <xs:complexType>
+          <xs:all />
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="listResponse">
+    <wsdl:part name="listResponse" element="tns:listResponse" />
+  </wsdl:message>
+  <wsdl:message name="prepareRequest">
+    <wsdl:part name="prepareRequest" element="tns:prepareRequest" />
+  </wsdl:message>
+  <wsdl:message name="sendResponse">
+    <wsdl:part name="sendResponse" element="tns:sendResponse" />
+  </wsdl:message>
+  <wsdl:message name="getProductsRequest">
+    <wsdl:part name="getProductsRequest" element="tns:getProductsRequest" />
+  </wsdl:message>
+  <wsdl:message name="sendElectronicRequest">
+    <wsdl:part name="sendElectronicRequest" element="tns:sendElectronicRequest" />
+  </wsdl:message>
+  <wsdl:message name="deleteResponse">
+    <wsdl:part name="deleteResponse" element="tns:deleteResponse" />
+  </wsdl:message>
+  <wsdl:message name="deleteRequest">
+    <wsdl:part name="deleteRequest" element="tns:deleteRequest" />
+  </wsdl:message>
+  <wsdl:message name="prepareResponse">
+    <wsdl:part name="prepareResponse" element="tns:prepareResponse" />
+  </wsdl:message>
+  <wsdl:message name="listRequest">
+    <wsdl:part name="listRequest" element="tns:listRequest" />
+  </wsdl:message>
+  <wsdl:message name="sendElectronicResponse">
+    <wsdl:part name="sendElectronicResponse" element="tns:sendElectronicResponse" />
+  </wsdl:message>
+  <wsdl:message name="getProductsResponse">
+    <wsdl:part name="getProductsResponse" element="tns:getProductsResponse" />
+  </wsdl:message>
+  <wsdl:message name="sendRequest">
+    <wsdl:part name="sendRequest" element="tns:sendRequest" />
+  </wsdl:message>
+  <wsdl:portType name="Mailing">
+    <wsdl:operation name="list">
+      <wsdl:input name="listRequest" message="tns:listRequest" />
+      <wsdl:output name="listResponse" message="tns:listResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="prepare">
+      <wsdl:input name="prepareRequest" message="tns:prepareRequest" />
+      <wsdl:output name="prepareResponse" message="tns:prepareResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="send">
+      <wsdl:input name="sendRequest" message="tns:sendRequest" />
+      <wsdl:output name="sendResponse" message="tns:sendResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="getProducts">
+      <wsdl:input name="getProductsRequest" message="tns:getProductsRequest" />
+      <wsdl:output name="getProductsResponse" message="tns:getProductsResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="sendElectronic">
+      <wsdl:input name="sendElectronicRequest" message="tns:sendElectronicRequest" />
+      <wsdl:output name="sendElectronicResponse" message="tns:sendElectronicResponse" />
+    </wsdl:operation>
+    <wsdl:operation name="delete">
+      <wsdl:input name="deleteRequest" message="tns:deleteRequest" />
+      <wsdl:output name="deleteResponse" message="tns:deleteResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="MailingSoap11" type="tns:Mailing">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="list">
+      <soap:operation soapAction="" />
+      <wsdl:input name="listRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="listResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="prepare">
+      <soap:operation soapAction="" />
+      <wsdl:input name="prepareRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="prepareResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="send">
+      <soap:operation soapAction="" />
+      <wsdl:input name="sendRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="sendResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getProducts">
+      <soap:operation soapAction="" />
+      <wsdl:input name="getProductsRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getProductsResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="sendElectronic">
+      <soap:operation soapAction="" />
+      <wsdl:input name="sendElectronicRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="sendElectronicResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="delete">
+      <soap:operation soapAction="" />
+      <wsdl:input name="deleteRequest">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="deleteResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="MailingService">
+    <wsdl:port name="MailingSoap11" binding="tns:MailingSoap11">
+      <soap:address location="http://gateway.zelenaposta.sk:80/api/mailing" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

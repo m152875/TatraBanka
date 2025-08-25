@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.dovera.sk/b2b/types" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:s0="http://b2b.dovera.sk" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://b2b.dovera.sk" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://b2b.dovera.sk">
+      <s:import namespace="http://schemas.dovera.sk/b2b/types" />
+      <s:complexType name="APIDokument">
+        <s:sequence>
+          <s:element minOccurs="0" name="NazovDokumentu" type="s:string" />
+          <s:element minOccurs="0" name="Typ" type="s:string" />
+          <s:element minOccurs="0" name="Obsah" type="s:base64Binary" />
+          <s:element minOccurs="0" name="Komprimovany" type="s:boolean" />
+          <s:element minOccurs="0" name="Poznamka" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajOznamyDZP">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajOznamyDZPVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajOznamyDZPVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="FormaVystup" type="ns2:APIFormaVystup" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajOznamyDZPResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajOznamyDZPVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajOznamyDZPVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="OznamDZP" type="s:base64Binary" />
+          <s:element minOccurs="0" name="Dokument" type="ns2:APIDokument" />
+          <s:element minOccurs="0" name="OznamyDZPTab" type="s0:ArrayOfOznamDZPTabAPIOznamDZPTab" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOznamDZPTabAPIOznamDZPTab">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OznamDZPTab" nillable="true" type="ns2:APIOznamDZPTab" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajPrihlasovaciToken">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajPrihlasovaciTokenVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajPrihlasovaciTokenVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajPrihlasovaciTokenResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajPrihlasovaciTokenVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajPrihlasovaciTokenVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="PrihlasovaciToken" type="s:string" />
+          <s:element minOccurs="0" name="PlatnostTokenuDo" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavSystemu">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:DajStavSystemuVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavSystemuVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DajStavSystemuResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:DajStavSystemuVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="DajStavSystemuVystup">
+        <s:sequence>
+          <s:element name="JeOnline" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PrihlasenieTokenom">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vstup" type="s0:PrihlasenieTokenomVstup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PrihlasenieTokenomVstup">
+        <s:sequence>
+          <s:element name="TokenPouzivatela" type="ns2:APITokenPouzivatela" />
+          <s:element name="PrihlasovaciToken" type="s:string" />
+          <s:element name="StrankaPoPrihlaseni" type="s:string" />
+          <s:element minOccurs="0" name="Filter" type="s0:ArrayOfPolozkaAPIPrihlasenieFilter" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPolozkaAPIPrihlasenieFilter">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Polozka" nillable="true" type="ns2:APIPrihlasenieFilter" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PrihlasenieTokenomResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Vystup" type="s0:PrihlasenieTokenomVystup" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PrihlasenieTokenomVystup">
+        <s:sequence>
+          <s:element minOccurs="0" name="UrlOdkaz" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.dovera.sk/b2b/types">
+      <s:complexType name="APITokenPouzivatela">
+        <s:sequence>
+          <s:element name="Login" type="s:string" />
+          <s:element name="DodavatelSW" type="s:string" />
+          <s:element minOccurs="0" name="KodNZ" type="s:string" />
+          <s:element minOccurs="0" name="KodVZ" type="s:string" />
+          <s:element minOccurs="0" name="VS" type="s:string" />
+          <s:element minOccurs="0" name="UnikatnyKodPLA" type="s:string" />
+          <s:element minOccurs="0" name="CasovyLimitVolania" type="s:int" />
+          <s:element minOccurs="0" name="ICO" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="APIFormaVystup">
+        <s:restriction base="s:string">
+          <s:enumeration value="API" />
+          <s:enumeration value="PDF" />
+          <s:enumeration value="TAB" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="APIDokument">
+        <s:sequence>
+          <s:element minOccurs="0" name="NazovDokumentu" type="s:string" />
+          <s:element minOccurs="0" name="Typ" type="s:string" />
+          <s:element minOccurs="0" name="Obsah" type="s:base64Binary" />
+          <s:element minOccurs="0" name="Komprimovany" type="s:boolean" />
+          <s:element minOccurs="0" name="Poznamka" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIOznamDZPTab">
+        <s:sequence>
+          <s:element name="TypOznamu" type="s:string" />
+          <s:element name="Rola" type="s:string" />
+          <s:element name="Nadpis" type="s:string" />
+          <s:element minOccurs="0" name="Popis" type="s:string" />
+          <s:element name="Zaciatok" type="s:dateTime" />
+          <s:element name="Koniec" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIPrihlasenieFilter">
+        <s:sequence>
+          <s:element minOccurs="0" name="TypObjektu" type="s:string" />
+          <s:element minOccurs="0" name="Parametre" type="ns2:ArrayOfParameterAPIPrihlasenieFilterParameter" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfParameterAPIPrihlasenieFilterParameter">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Parameter" nillable="true" type="ns2:APIPrihlasenieFilterParameter" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="APIPrihlasenieFilterParameter">
+        <s:sequence>
+          <s:element name="Kod" type="s:string" />
+          <s:element name="Hodnota" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="DajOznamyDZPSoapIn">
+    <wsdl:part name="parameters" element="s0:DajOznamyDZP" />
+  </wsdl:message>
+  <wsdl:message name="DajOznamyDZPSoapOut">
+    <wsdl:part name="parameters" element="s0:DajOznamyDZPResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajPrihlasovaciTokenSoapIn">
+    <wsdl:part name="parameters" element="s0:DajPrihlasovaciToken" />
+  </wsdl:message>
+  <wsdl:message name="DajPrihlasovaciTokenSoapOut">
+    <wsdl:part name="parameters" element="s0:DajPrihlasovaciTokenResponse" />
+  </wsdl:message>
+  <wsdl:message name="DajStavSystemuSoapIn">
+    <wsdl:part name="parameters" element="s0:DajStavSystemu" />
+  </wsdl:message>
+  <wsdl:message name="DajStavSystemuSoapOut">
+    <wsdl:part name="parameters" element="s0:DajStavSystemuResponse" />
+  </wsdl:message>
+  <wsdl:message name="PrihlasenieTokenomSoapIn">
+    <wsdl:part name="parameters" element="s0:PrihlasenieTokenom" />
+  </wsdl:message>
+  <wsdl:message name="PrihlasenieTokenomSoapOut">
+    <wsdl:part name="parameters" element="s0:PrihlasenieTokenomResponse" />
+  </wsdl:message>
+  <wsdl:portType name="SystemServiceSoap">
+    <wsdl:operation name="DajOznamyDZP">
+      <wsdl:input message="s0:DajOznamyDZPSoapIn" />
+      <wsdl:output message="s0:DajOznamyDZPSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajPrihlasovaciToken">
+      <wsdl:input message="s0:DajPrihlasovaciTokenSoapIn" />
+      <wsdl:output message="s0:DajPrihlasovaciTokenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DajStavSystemu">
+      <wsdl:input message="s0:DajStavSystemuSoapIn" />
+      <wsdl:output message="s0:DajStavSystemuSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PrihlasenieTokenom">
+      <wsdl:input message="s0:PrihlasenieTokenomSoapIn" />
+      <wsdl:output message="s0:PrihlasenieTokenomSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SystemServiceSoap" type="s0:SystemServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="DajOznamyDZP">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.System.DajOznamyDZP" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajPrihlasovaciToken">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.System.DajPrihlasovaciToken" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DajStavSystemu">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.System.DajStavSystemu" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PrihlasenieTokenom">
+      <soap:operation soapAction="http://b2b.dovera.sk/ESB.Service.WS.B2B.V02.System.PrihlasenieTokenom" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SystemService">
+    <wsdl:port name="SystemServiceSoap" binding="s0:SystemServiceSoap">
+      <soap:address location="https://teasc.dovera.sk:443/csp/esb/ESB.Service.WS.B2B.V02.System.cls" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

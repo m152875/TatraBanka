@@ -1,0 +1,4 @@
+﻿<?xml version="1.0"?>
+<instructions description="Inštalovanie knižníc Web do GAC">
+	<embed_deploy file_name="@(InstallNatecWebPackage)" />
+</instructions>

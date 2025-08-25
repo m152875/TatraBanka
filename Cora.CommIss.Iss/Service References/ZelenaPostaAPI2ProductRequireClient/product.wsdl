@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:tns="http://schemas.zelenaposta.sk/product" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://schemas.zelenaposta.sk/product" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.zelenaposta.sk/product" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="computePriceRequest" type="tns:computePriceRequest" />
+      <xs:element name="computePriceResponse" type="tns:computePriceResponse" />
+      <xs:element name="getEnumsRequest" type="tns:getEnumsRequest" />
+      <xs:element name="getEnumsResponse" type="tns:getEnumsResponse" />
+      <xs:element name="getProductsRequest" type="tns:getProductsRequest" />
+      <xs:element name="getProductsResponse" type="tns:getProductsResponse" />
+      <xs:complexType name="getEnumsRequest">
+        <xs:annotation>
+          <xs:documentation>Empty request for authenticated user.</xs:documentation>
+        </xs:annotation>
+        <xs:all />
+      </xs:complexType>
+      <xs:complexType name="getEnumsResponse">
+        <xs:all>
+          <xs:element minOccurs="0" name="correspondence">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:codeTitleRegisteredTuple" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="envelope">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:codeTitleTuple" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="printing">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="item" type="tns:codeTitleTuple" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="codeTitleRegisteredTuple">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="code" type="xs:string" />
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element name="registered" type="xs:boolean" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="codeTitleTuple">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="code" type="xs:string" />
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="computePriceRequest">
+        <xs:annotation>
+          <xs:documentation>Request to calculate price for mailings delivery.
+ 
+  Fields:
+  - `deliveryType`: Type of delivery service (defaults to "SP").
+  - `mailings`: List of mailings to calculate price for.
+ 
+Mailings fields:
+  - `productName`: The mailing product identifier.
+  - `pageCount`: [DEPRECATED] Total page count. Do not use - inaccurate for duplex printing
+                 and special page arrangements. Use mailingDocumentsPageCounts instead.
+  - `mailingDocumentsPageCounts`: List of page counts for each document in the mailing.
+                                  Required for accurate pricing with duplex printing and
+                                  special page arrangements.
+</xs:documentation>
+        </xs:annotation>
+        <xs:all>
+          <xs:element minOccurs="0" name="mailings">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="mailing" type="tns:computePriceMailing" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" default="SP" name="deliveryType" type="xs:string" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="computePriceMailing">
+        <xs:all>
+          <xs:element minOccurs="0" name="productName" type="xs:string" />
+          <xs:element name="pageCount" type="xs:int">
+            <xs:annotation>
+              <xs:documentation>Deprecated - price is not correct when using duplex, simplex to duplex or backpage</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" name="mailingDocumentsPageCounts">
+            <xs:annotation>
+              <xs:documentation>Page counts of every mailing document</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="mailingDocumentPageCount" type="xs:int" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="computePriceResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="priceInfo" nillable="true" type="tns:computePriceInfo" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="computePriceInfo">
+        <xs:all>
+          <xs:element minOccurs="0" name="price" type="xs:decimal" />
+          <xs:element minOccurs="0" name="priceAndVat" type="xs:decimal" />
+          <xs:element minOccurs="0" name="productionPrice" type="xs:decimal" />
+          <xs:element minOccurs="0" name="productionPriceAndVat" type="xs:decimal" />
+          <xs:element minOccurs="0" name="postagePrice" type="xs:decimal" />
+          <xs:element minOccurs="0" name="postagePriceAndVat" type="xs:decimal" />
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getProductsRequest">
+        <xs:annotation>
+          <xs:documentation>Request to retrieve filtered list of products.
+ 
+  Fields:
+  - `onBehalfOf`: Account number of user on behalf.
+  - Inherits all unrequired filter fields from ProductFilter:
+    - `duplex`: Filter for double-sided printing capability
+    - `backpage`: Filter for products supporting back page printing
+    - `electronic`: Filter for electronic delivery products
+    - `pages`: Filter by number of pages supported
+    - `correspondence`: Type of correspondence (uses CorrespondenceEnum)
+    - `envelope`: Envelope type filter
+    - `envelopeCode`: Specific envelope code filter
+    - `printing`: Printing method filter (uses PrintingEnum)
+    - `paper`: Paper type filter
+    - `countryCode`: Filter by destination country
+</xs:documentation>
+        </xs:annotation>
+        <xs:all>
+          <xs:element minOccurs="0" name="duplex" type="xs:boolean" />
+          <xs:element minOccurs="0" name="backpage" type="xs:boolean" />
+          <xs:element minOccurs="0" name="electronic" type="xs:boolean" />
+          <xs:element minOccurs="0" name="pages" type="xs:int" />
+          <xs:element minOccurs="0" name="correspondence" type="xs:string" />
+          <xs:element minOccurs="0" name="envelope" type="xs:string" />
+          <xs:element minOccurs="0" name="envelopeCode" type="xs:string" />
+          <xs:element minOccurs="0" name="printing" type="xs:string" />
+          <xs:element minOccurs="0" name="paper" type="xs:string" />
+          <xs:element minOccurs="0" name="countryCode" type="xs:string" />
+          <xs:element minOccurs="0" name="onBehalfOf" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Account number of user on behalf.</xs:documentation>
+            </xs:annotation>
+          </xs:element>
+        </xs:all>
+      </xs:complexType>
+      <xs:complexType name="getProductsResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="products">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="product" type="tns:productInfo" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="productInfo">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="code" type="xs:string" />
+          <xs:element minOccurs="0" name="title" type="xs:string" />
+          <xs:element minOccurs="0" name="correspondence" type="xs:string" />
+          <xs:element minOccurs="0" name="envelope" type="xs:string" />
+          <xs:element minOccurs="0" name="envelopeCode" type="xs:string" />
+          <xs:element minOccurs="0" name="printing" type="xs:string" />
+          <xs:element minOccurs="0" name="usageLeft" type="xs:int" />
+          <xs:element minOccurs="0" name="pagesPerMailing" type="xs:int" />
+          <xs:element name="isDuplex" type="xs:boolean" />
+          <xs:element name="isRegisteredPost" type="xs:boolean" />
+          <xs:element minOccurs="0" name="countries">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="code" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="regions">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="code" type="xs:string" />
+              </xs:sequence>
+            </xs:complexType>
+          </xs:element>
+          <xs:element minOccurs="0" name="properties" type="xs:string" />
+          <xs:element minOccurs="0" name="paper" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </types>
+  <message name="getEnumsRequest">
+    <part name="getEnumsRequest" element="tns:getEnumsRequest" />
+  </message>
+  <message name="getEnumsResponse">
+    <part name="getEnumsResponse" element="tns:getEnumsResponse" />
+  </message>
+  <message name="computePriceRequest">
+    <part name="computePriceRequest" element="tns:computePriceRequest" />
+  </message>
+  <message name="computePriceResponse">
+    <part name="computePriceResponse" element="tns:computePriceResponse" />
+  </message>
+  <message name="getProductsRequest">
+    <part name="getProductsRequest" element="tns:getProductsRequest" />
+  </message>
+  <message name="getProductsResponse">
+    <part name="getProductsResponse" element="tns:getProductsResponse" />
+  </message>
+  <portType name="ProductService">
+    <operation name="getEnums">
+      <input name="getEnumsRequest" message="tns:getEnumsRequest" />
+      <output name="getEnumsResponse" message="tns:getEnumsResponse" />
+    </operation>
+    <operation name="computePrice">
+      <input name="computePriceRequest" message="tns:computePriceRequest" />
+      <output name="computePriceResponse" message="tns:computePriceResponse" />
+    </operation>
+    <operation name="getProducts">
+      <input name="getProductsRequest" message="tns:getProductsRequest" />
+      <output name="getProductsResponse" message="tns:getProductsResponse" />
+    </operation>
+  </portType>
+  <binding name="ProductServiceSoap11" type="tns:ProductService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="getEnums">
+      <soap:operation soapAction="" />
+      <input name="getEnumsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getEnumsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="computePrice">
+      <soap:operation soapAction="" />
+      <input name="computePriceRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="computePriceResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+    <operation name="getProducts">
+      <soap:operation soapAction="" />
+      <input name="getProductsRequest">
+        <soap:body use="literal" />
+      </input>
+      <output name="getProductsResponse">
+        <soap:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="ProductService">
+    <port name="ProductServiceSoap11" binding="tns:ProductServiceSoap11">
+      <soap:address location="https://gateway.zelenaposta.sk/api/2/product" />
+    </port>
+  </service>
+</definitions>

@@ -1,0 +1,81 @@
+﻿<?xml version="1.0"?>
+<instructions description="Kopírovanie knižníc Natec do adresára">
+	<directory_create directory="@(CopyNatecAssembliesDirectory)" />
+	
+	<file_multi_copy destination_directory="@(CopyNatecAssembliesDirectory)">
+		<xml_preprocess attribute_name="directory"><parameter_get_value name="ActivityDirectory"/>\_installGAC\</xml_preprocess>
+		<xml_preprocess attribute_name="search">
+			<file_read>
+				<xml_preprocess attribute_name="file_name"><parameter_get_value name="ActivityDirectory"/>\_installGAC\list_core.txt</xml_preprocess>
+			</file_read>
+		</xml_preprocess>
+	</file_multi_copy>
+	
+	<conditional>
+		<if_any>
+			<parameter_equals name="AssemblyPackage">libs</parameter_equals>
+			<parameter_equals name="AssemblyPackage">desktop</parameter_equals>
+			<parameter_equals name="AssemblyPackage">web</parameter_equals>
+		</if_any>
+		<then>
+			<file_multi_copy destination_directory="@(CopyNatecAssembliesDirectory)">
+				<xml_preprocess attribute_name="directory"><parameter_get_value name="ActivityDirectory"/>\_installGAC\</xml_preprocess>
+				<xml_preprocess attribute_name="search">
+					<file_read>
+						<xml_preprocess attribute_name="file_name"><parameter_get_value name="ActivityDirectory"/>\_installGAC\list_libs.txt</xml_preprocess>
+					</file_read>
+				</xml_preprocess>
+			</file_multi_copy>
+		</then>
+	</conditional>
+	
+	<conditional>
+		<if_any>
+			<parameter_equals name="AssemblyPackage">base</parameter_equals>
+			<parameter_equals name="AssemblyPackage">desktop</parameter_equals>
+			<parameter_equals name="AssemblyPackage">web</parameter_equals>
+		</if_any>
+		<then>
+			<file_multi_copy destination_directory="@(CopyNatecAssembliesDirectory)">
+				<xml_preprocess attribute_name="directory"><parameter_get_value name="ActivityDirectory"/>\_installGAC\</xml_preprocess>
+				<xml_preprocess attribute_name="search">
+					<file_read>
+						<xml_preprocess attribute_name="file_name"><parameter_get_value name="ActivityDirectory"/>\_installGAC\list_base.txt</xml_preprocess>
+					</file_read>
+				</xml_preprocess>
+			</file_multi_copy>
+		</then>
+	</conditional>
+	
+	<conditional>
+		<if>
+			<parameter_equals name="AssemblyPackage">desktop</parameter_equals>
+		</if>
+		<then>
+			<file_multi_copy destination_directory="@(CopyNatecAssembliesDirectory)">
+				<xml_preprocess attribute_name="directory"><parameter_get_value name="ActivityDirectory"/>\_installGAC\</xml_preprocess>
+				<xml_preprocess attribute_name="search">
+					<file_read>
+						<xml_preprocess attribute_name="file_name"><parameter_get_value name="ActivityDirectory"/>\_installGAC\list_desktop.txt</xml_preprocess>
+					</file_read>
+				</xml_preprocess>
+			</file_multi_copy>
+		</then>
+	</conditional>
+	
+	<conditional>
+		<if>
+			<parameter_equals name="AssemblyPackage">web</parameter_equals>
+		</if>
+		<then>
+			<file_multi_copy destination_directory="@(CopyNatecAssembliesDirectory)">
+				<xml_preprocess attribute_name="directory"><parameter_get_value name="ActivityDirectory"/>\_installGAC\</xml_preprocess>
+				<xml_preprocess attribute_name="search">
+					<file_read>
+						<xml_preprocess attribute_name="file_name"><parameter_get_value name="ActivityDirectory"/>\_installGAC\list_web.txt</xml_preprocess>
+					</file_read>
+				</xml_preprocess>
+			</file_multi_copy>
+		</then>
+	</conditional>
+</instructions>

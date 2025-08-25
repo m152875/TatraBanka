@@ -1,0 +1,1034 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Natec.Geo.ArcGIS</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Natec.Geo.ArcGIS.ArcGisClient">
+            <summary>
+            Mapový klient pre  ArcGIS.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.ArcGisClient.ArcGisCommException">
+            <summary>
+            Výnimka pri komunikácii s mapovým serverom.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.ArcGisCommException.#ctor(System.Exception)">
+            <summary>
+            Vytvorenie výnimky vyvolanej inou výnimkou.
+            </summary>
+            <param name="innerEx">Vnútorná výnimka, ktorá spôsobila výnimku.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.ArcGisCommException.#ctor(System.String,Cora.Natec.Geo.ArcGIS.ArcGisRequest)">
+            <summary>
+            Vytvorenie výnimky so správou a request-om.
+            </summary>
+            <param name="msg">Správa o výnimke.</param>
+            <param name="request">Request, ktorý spôsobil výnimku.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.ArcGisCommException.ToString">
+            <summary>
+            Creates and returns a string representation of the current exception.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisClient.ArcGisCommException.Request">
+            <summary>
+            Vráti request string, ktorý spôsobil výnimku.
+            </summary>
+            <value>Request string.</value>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.#ctor(System.Int32,Cora.Global.Session.IIdentity,System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.ArcGIS.ArcGisClient"/>.
+            </summary>
+            <param name="placementId">ID umiestnenia, na ktoré je mapový klient naviazaný.</param>
+            <param name="identity">Identita volajúceho.</param>
+            <param name="externalSettings">Zoznam externých nastavení. Musí obsahovať nastavenia zo <see cref="T:Cora.Natec.Geo.SettingNames"/> s prefixom SELECSET.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Deserializačný konštruktor.
+            </summary>
+            <param name="info">Serializačné info.</param>
+            <param name="context">Serializačný kontext.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Naplnenie <see cref="T:System.Runtime.Serialization.SerializationInfo"/> serializačnými dátami.
+            </summary>
+            <param name="info">Serializačné info.</param>
+            <param name="context">Serializačný kontext.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.GetMapByRange(Cora.Natec.Geo.IMapComplexBus)">
+            <summary>
+            Vráti mapu ohraničenú súradnícami <see cref="P:Cora.Natec.Geo.IMapComplexBus.MapCoords"/>. Vstupné parametre, najmä zoznam vybraných tém,
+            číta z <paramref name="mapComplexBus"/>, výstupné parametre vráti v novej inštancii <see cref="T:Cora.Natec.Geo.MapComplexBus"/>.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <returns>
+            Nová inštancia <see cref="T:Cora.Natec.Geo.MapComplexBus"/> s naplnenými výstupnými parametrami (najmä mapová URL a zobrazené témy),
+            alebo <c>null</c>, ak na zbernici nie sú potrebné vstupné parametre (najmä zoznam vybraných tém, súradnice a veľkosť).
+            </returns>
+            <exception cref="T:Cora.Natec.Geo.MapClientException">Ak nastala výnimka pri dopyte.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.GetMapByFeatures(Cora.Natec.Geo.IMapComplexBus)">
+            <summary>
+            Vráti mapu zoomovanú podľa zobrazených objektov (featurov) aktívnej témy.
+            Vstupné parametre, najmä zoznam vybraných tém, číta z <paramref name="mapComplexBus"/>, výstupné parametre vráti v novej inštancii
+            <see cref="T:Cora.Natec.Geo.MapComplexBus"/>. Ak je vybraný iba jeden bod, rozsah mapy určí podľa _ExternalSettings[SettingNames.SELECTSET_SCALE_POINT_FIT]
+            v defaultnom obrazovkovom rozlíšení.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <returns>
+            Nová inštancia <see cref="T:Cora.Natec.Geo.MapComplexBus"/> s naplnenými výstupnými parametrami (najmä mapová URL a zobrazené témy),
+            alebo <c>null</c>, ak na zbernici nie sú potrebné vstupné parametre:
+            	- aspoň jedna SelectedThemeIDs
+            	- platné MapViewSize 
+            	- platná ActiveTheme a FeatureKeys popisujúce aspoň jeden objekt
+            </returns>
+            <exception cref="T:Cora.Natec.Geo.ArcGIS.ArcGisClient.ArcGisCommException">Ak nastala výnimka pri komunikácii s mapovým serverom.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.GetMap(Cora.Natec.Geo.IMapComplexBus,System.Boolean)">
+            <summary>
+            Získa mapu pre client-a.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <param name="zoomByFeatures">Ak <c>true</c>, tak vráti mapu zoomovanú podľa zobrazených objektov (featurov) aktívnej témy.</param>
+            <returns>Mapa.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.FillRequest(Cora.Natec.Geo.IMapComplexBus,System.Collections.Generic.List{Cora.Natec.Geo.ArcGIS.ArcGisTheme},System.Boolean)">
+            <summary>
+            Naplnenie request-u, ktorý zabezpečí získanie mapy z mapového servera.
+            </summary>
+            <param name="mapComplexBus">Zbernica mapového komplexu.</param>
+            <param name="selectedThemes">Táma, nad ktorou request pracuje.</param>
+            <param name="zoomByFeatures">Ak <c>true</c>, tak pripraví request tak, aby bola výsledná mapa zoomovaná
+            podľa zobrazených objektov (featurov) aktívnej témy.</param>
+            <returns>Request, pripravený na získanie výslednej mapy.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.GetFeatureCount(Cora.Natec.Geo.CdoSP_GEO_THEMES)">
+            <summary>
+            Vráti počet prvkov témy.
+            </summary>
+            <param name="spGeoThemes">Objekt témy.</param>
+            <returns>Počet prvkov v téme.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.GetClientSpecificTheme(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+            <summary>
+            Factory-metóda na výrobu témy na základe dátového objektu <paramref name="cdoTheme"/> - vracia inštancie <see cref="!:LidsTheme"/>.
+            </summary>
+            <param name="cdoTheme">Dátový objekt témy.</param>
+            <returns>Téma typu <see cref="!:LidsTheme"/>.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.GetThemeById(System.Int32)">
+            <summary>
+            Vráti tému podľa ID. Nájdená téma sa zapamätá aj v <see cref="P:ThemeCache"/>.
+            </summary>
+            <param name="themeId">ID témy (I_GEO_THEME).</param>
+            <returns>Dátový objekt témy, alebo <c>null</c> ak téma s daným ID nebola nájdená.</returns>
+            <exception cref="T:Cora.Natec.Geo.ACoraMapClient.DBClientException">Ak nastala výnimka pri získavaní témy.</exception>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisClient.Clone">
+            <summary>
+            Vytvorenie klonu ArcGisClienta.
+            </summary>
+            <returns>Klon ArcGisClienta.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.ArcGisMapPart">
+            <summary>
+            Controller prvku webového portálu s layoutovateľným mapovým komplexom.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisMapPart.PART_ID">
+            <summary>ID portálového prvku v metadátach.</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisMapPart.#ctor(Cora.Portal.PortalPanel,Cora.Natec.SP.CdoSP_PORTAL_PLACEMENT)">
+            <summary>
+            Vytvorenie prvku <see cref="T:Cora.Natec.Geo.ArcGIS.ArcGisMapPart"/>.
+            </summary>
+            <param name="panel">Panel, kam prvok patrí.</param>
+            <param name="cdoPlac">Data objekt pre umiestnenie prvku.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisMapPart.MapClient">
+            <summary>
+            Vráti mapového klienta.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.ArcGisRequestType">
+            <summary>
+            Typy dotazov na Lids server.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisRequestType.GetFeature">
+            <summary>
+            Získanie vlastností featureType-ov.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisRequestType.SaveLocationLayer">
+            <summary>
+            Vytvorenie location vrstvy.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisRequestType.GetModelElement">
+            <summary>
+            Získanie featureType-ov pre zadaný alias.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisRequestType.GetFeatureFid">
+            <summary>
+            Získanie featureType FID podľa SID.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisRequestType.GetMap">
+            <summary>
+            Získanie mapy.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisRequestType.GetFeatureInfo">
+            <summary>
+            Získanie featureType informacií.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisRequestType.InsertPoint">
+            <summary>
+            Insert bodu.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisRequestType.Commit">
+            <summary>
+            COMMIT transakcie.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.GType">
+            <summary>
+            Typ geometrie.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.GType.Unknown">
+            <summary>
+            Unknown.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.GType.Point">
+            <summary>
+            Bod.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.GType.Line">
+            <summary>
+            Línia.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.GType.Polygon">
+            <summary>
+            Polygón.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.ArcGisNames">
+            <summary>
+            Názvy pre ArcGis.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.GET_MAP_EXCEPTION">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.WMS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.GET_MAP">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.GET_FEATURE_INFO">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.IMAGE_PNG">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.APP_GML">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.APP_WMS_XML">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.APP_XML">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.APP_FEATUREINFO_XML">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.VERSION_1_0_0">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.VERSION_1_1_0">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.VERSION_1_1_1">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.VERSION_1_3_0">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.WEB_MAP_SERVICE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.WEB_FEATURE_SERVICE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.IMPORT_SERVICE">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.MAP_SERVER">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.WFS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.BGML">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.GET_MODEL_ELEMENT">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.PROJECT_SERVICE_TEST">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.AT_GEOM">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.OBJECTID">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.XMAX">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.YMAX">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.XMIN">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.YMIN">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.XMAX_DB">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.YMAX_DB">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.XMIN_DB">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.YMIN_DB">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.NUM_OF_POINTS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.ARCGIS_REQUEST_CONFIG">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.ARCGIS_NAMESPACE_CONFIG_WFS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.ARCGIS_NAMESPACE_CONFIG_WMS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.ARCGIS_SRS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.ENABLE_HIGHLIGHTING">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.HIGHLIGHT_STYLE_PATH">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.NM_ESRI_WMS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.NM_WFS">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.NM_GML">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.NM_SLD">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.NM_OGC">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.NM_CGF">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.NM_XSI">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisNames.NM_LOCATION_WFS_BASIC">
+            <summary></summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder">
+            <summary>
+            Trieda pre vytvorenie (OGC) dotazu na mapový server.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder.#ctor(Cora.Natec.Geo.ArcGIS.ArcGisRequest)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder"/>
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder.GetGETRequestQuery(Cora.Natec.Geo.ArcGIS.ArcGisRequestType)">
+            <summary>
+            Vracia vyskladaný dotaz na mapový server podľa štandardov OGC.
+            </summary>
+            <param name="reqType">Typ request-u.</param>
+            <returns>GET dotaz na Lids server.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder.GetBBox">
+            <summary>
+            Zo súradníc vytvorí valídny BoundingBox pre dotaz.
+            </summary>
+            <returns>BoundigBox mapového dotazu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder.GetThemesAndStyles(System.Collections.ArrayList)">
+            <summary>
+            Z poskytnutého zoznamu tém vytvorí časť dotazu, ktorá obsahuje názvy požadovaných vrstiev a štýlov.
+            </summary>
+            <param name="themes">Zoznam vybraných tém.</param>
+            <remarks>Pri lokalizácii záznamov z gridu do mapy sa generuje (ak je generovanie v config povolené)
+            nový highlight štýl pre vybrané geometrie. Tento štýl sa v dotaze použije pre vrstvu, v ktorej budú
+            zvýraznené výbrané záznamy. Keďže generovaný štýl obsahuje filter na OBJECTID vybraných záznamov,
+            tak ostatné geometrie sú automaticky bez štýlu, tzn. v mape nezobrazené. Riešením je duplicitné 
+            pridanie názvu tejto vrstvy do dotazu a tiež priradenie default štýlu tejto duplicitnej vrstve.</remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder.GetHighlightStyleName(Cora.Natec.Geo.ArcGIS.ArcGisTheme)">
+            <summary>
+            Spracuje xml pre highlight-ovanie objektov tej vrstvy, ktorá sa lokalizuje z gridu do mapy a vráti názov
+            tohto štýlu.
+            </summary>
+            <param name="theme">Téma, ktorej objekty sa lokalizujú.</param>
+            <returns>Názov highlight štýlu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder.GetPOSTRequestQuery(Cora.Natec.Geo.ArcGIS.ArcGisRequestType)">
+            <summary>
+            Vracia vyskladaný dotaz na mapový server podľa štandardov OGC.
+            </summary>
+            <param name="reqType">Typ request-u.</param>
+            <returns>POST dotaz na Lids server.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder.BuildFeatureTypesQuery(System.Text.StringBuilder@)">
+            <summary>
+            Vytvorí dotaz podľa zadaných Feature typov a ID-čiek.
+            </summary>
+            <param name="builder">Vytváraný dotaz.</param>
+            <remarks>Ak pri lokalizácii v smere map->grid téma obsahuje parametre (null != _Request.ActiveTheme.CdoGEO_TREE_UZ.col_T_PARAMS), 
+            tak sa tieto parametre pridajú do WFS FILTER ako podmienky. Jeden z parametrov definuje operátor v podmienke, preto tento operátor 
+            musí byť definovaný v súlade s ArcGIS serverom (napr. PropertyIsEqualTo). Tieto parametre zjemňujú zoznam tém, ktoré vyhovujú
+            podmienkam, čo je hlavne výhodné v prípade lokalizácie map->grid, že je viacero (SP_GEO_THEME)tém naviazaných 
+            na 1 feature_type (SP_GEO_THEME.BASE_TABLE atribut).</remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder.WFSGetPropertyNames(System.String)">
+            <summary>
+            Získa názvy vlastností z parametrov témy.
+            </summary>
+            <param name="tParams">Parametre témy.</param>
+            <returns>Názov vlastnosti.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisQueryBuilder.WFSGetPropertyValue(System.String,System.String,System.String)">
+            <summary>
+            Získa atribút vlastnosti z parametrov témy.
+            </summary>
+            <param name="tParams">Parametre témy</param>
+            <param name="propertyName">Názov vlastnosti.</param>
+            <param name="attribName">Názov atribútu.</param>
+            <returns>Názov atribútu.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.ArcGisRequest">
+            <summary>
+            Dotaz na mapový server ArcGis.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.#ctor(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Vytvorenie dotazu na mapový server.
+            </summary>
+            <param name="externalSettings">Zoznam externých nastavení. Musí obsahovať nastavenia zo <see cref="T:Cora.Natec.Geo.SettingNames"/> s prefixom SELECSET.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.Height">
+            <summary>Výška mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.Width">
+            <summary>Šírka mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.BoundingBox">
+            <summary>Požadovaný rozsah mapy.</summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.AllBoundingBox">
+            <summary>
+            Bounding Box pre celu mapu. Y je problematicky (s posunom).
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.SelectedFeatureTypes">
+            <summary>
+            Názvy vybraných FeatureType prvkov.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.Themes">
+            <summary>
+            Zoznam vybraných tém.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.FeatureTypesFids">
+            <summary>
+            Slovník tém a Fid-čiek vybraných objektov z formulára.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.ActiveTheme">
+            <summary>
+            Aktívna téma.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.SelectedObjIDs">
+            <summary>
+            Zoznam SID pre vybrané objekty z formulára.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.X">
+            <summary>
+            Počiatočná súradnica X.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.Y">
+            <summary>
+            Počiatočná súradnica Y.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.Range">
+            <summary>
+            Delty výberu.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.MaxFeatures">
+            <summary>
+            Maximálny počet vybraných (feature) objektov.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.IsMapToGridLokalizing">
+            <summary>
+            Definuje, či bola spustená lokalizácia Map->Grid.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisRequest.IsGridToMapLokalizing">
+            <summary>
+            Definuje, či bola spustená lokalizácia Grid->Mapa.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.ToString">
+            <summary>
+            Vráti reťazec reprezentujúci tento objekt. Obsahuje aj text XML requestu.
+            </summary>
+            <returns>
+            Reťazec reprezentujúci tento objekt.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.SendGetRequest(Cora.Natec.Geo.ArcGIS.ArcGisRequestType,Cora.Natec.Geo.RequesMethod.Method)">
+            <summary>
+            Odoslanie GET dotazu na mapový server.
+            </summary>
+            <param name="holdSessionId">Príznak určujúci, či sa sessionID uchováva.</param>
+            <param name="reqType">Typ dotazu.</param>
+            <param name="method">Typ použitej metódy.</param>
+            <returns>Odpoveď mapového servra.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.SendPostRequest(Cora.Natec.Geo.ArcGIS.ArcGisRequestType,System.String,Cora.Natec.Geo.RequesMethod.Method)">
+            <summary>
+            Odoslanie POST dotazu na mapový server.
+            </summary>
+            <param name="holdSessionId">Príznak určujúci, či sa sessionID uchováva.</param>
+            <param name="reqType">Typ request-u.</param>
+            <param name="catName">Názov kategórie.</param>
+            <param name="method">Typ metódy request-u.</param>
+            <returns>Odpoveď mapového servra.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.GetPOSTQueryString(Cora.Natec.Geo.ArcGIS.ArcGisRequestType,System.String)">
+            <summary>
+            Volá <see cref="!:Cora.Natec.Geo.Lids.LidsQueryBuilder"/> pre vytvorenie string dotazu na Lids server podľa štandardov OGC.
+            </summary>
+            <param name="reqType">Typ dotazu.</param>
+            <param name="catName">Názov kategórie.</param>
+            <returns>POST dotaz.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.GetGETQueryString(Cora.Natec.Geo.ArcGIS.ArcGisRequestType)">
+            <summary>
+            Volá <see cref="!:Cora.Natec.Geo.ArcGIS.LidsQueryBuilder"/> pre vytvorenie string dotazu na Lids server podľa štandardov OGC.
+            </summary>
+            <param name="reqType">Typ dotazu.</param>
+            <returns>GET dotaz.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.AddThemes(Cora.Natec.Geo.ArcGIS.ArcGisTheme[])">
+            <summary>
+            Pridanie jednej alebo viacerých tém do dotazu.
+            </summary>
+            <param name="themes">Pridávaná téma alebo témy.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.AddSelectedObjIDs(System.Collections.Generic.List{System.String})">
+            <summary>
+            Pridanie SID vybraných objektov z formulára.
+            </summary>
+            <param name="selectedObjIDs">Zoznam vybraných SID-čiek.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.AddRange(System.String,System.String)">
+            <summary>
+            Pridanie rozsahu výberu na mape.
+            </summary>
+            <param name="xDelta">Rozdiel od počiatočného bodu na X-ovej osy.</param>
+            <param name="yDelta">Rozdiel od počiatočného bodu na Y-ovej osy.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.ClearThemes">
+            <summary>
+            Vyčistenie tém dotazu.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisRequest.AddFeatureTypeFids(System.String,System.Collections.Generic.List{System.String})">
+            <summary>
+            Zapíše do slovníka dvojice featureType a zoznam Fid jeho prvkov.
+            </summary>
+            <param name="fType">FeatureType.</param>
+            <param name="fIds">FeatureId.</param>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.ArcGisResponse">
+            <summary>
+            Odpoveď mapového servra ArcGis.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisResponse.#ctor(System.String,Cora.Natec.Geo.RequesMethod.Method)">
+            <summary>
+            Odoslanie odpovede na mapový server a jej následné spracovanie.
+            </summary>
+            <param name="queryData"></param>
+            <param name="method"></param>
+            <param name="holdSessionId"></param>
+            <param name="sessionIdHolder"></param>
+            <remarks>
+            Podľa zadaného typu request metódy (<see cref="T:Cora.Natec.Geo.RequesMethod.Method"/>) sa volá konkrátny Http request.
+            Každý z týchto requestov umožňuje nastaviť pre request aktuálnu sessionID alebo si vyrobiť novú z odpovede. Pokiaľ príznak 
+            na uchovanie sessionID (holdSessionId) je false, tak nasleduje request, ktorý aktuálnu sessionID zo servera odhlási.
+            </remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisResponse.POSTrequest(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig,System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Odošle POST request na server a spracuje odpoveď.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+            <param name="queryData">Dotaz na server.</param>
+            <param name="holdSessionId">Ak nastavené na <c>true</c>, tak sa použije aktívne sessionID (pokiaľ existuje). Ak aktévne sessionID
+            neexistuje, z odpovede sa získa nové a uchová sa pre ďalšie request-y.</param>
+            <param name="isEncoded">Ak nastavené na <c>true</c>, tak sa pošle "url-encoded" request.</param>
+            <param name="isInsertService">Ak nastavené na <c>true</c>, tak je volaní import služba.</param>
+            <param name="isCommit">Ak nastavené na <c>true</c>, tak ide o commit dotaz.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisResponse.GETrequest(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig,System.String,System.Boolean)">
+            <summary>
+            Odošle GET request na server a spracuje odpoveď.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+            <param name="queryData">Dotaz na server.</param>
+            <param name="holdSessionId">Ak nastavené na <c>true</c>, tak sa použije aktívne sessionID (pokiaľ existuje). Ak aktévne sessionID 
+            neexistuje, z odpovede sa získa nové a uchová sa pre ďalšie request-y.</param>
+            <param name="isResponseXml">Ak nastavené na <c>true</c>, tak odpoveď príde vo forme XML, ináč typ byte[].</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisResponse.AssignErrorImageToResponse(System.String)">
+            <summary>
+            Do odpovede priradí default error obrázok a zaloguje chybovú správu.
+            </summary>
+            <param name="message">Chybová správa na zalogovanie.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisResponse.InitializeConfigureRequest(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig,System.String)">
+            <summary>
+            Inicializuje a nakonfiguruje request.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+            <param name="requestUrl">Adresa servera, na ktorý sa request bude posielať.</param>
+            <param name="holdSessionId">Ak nastavené na <c>true</c>, tak sa použije aktívne sessionID (pokiaľ existuje). Ak aktévne sessionID 
+            neexistuje, z odpovede sa získa nové a uchová sa pre ďalšie request-y.</param>
+            <returns>Nakonfigurovaný request.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisResponse.CheckServiceExceptionAndAssignErrorImg(Cora.Web.HttpHandlers.ProxyHttpHandlerConfig)">
+            <summary>
+            Kontroluje odpoveď zo servera na výnimku služby.
+            </summary>
+            <param name="requestConfig">Konfigurátor request-u.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisResponse.CheckIfServiceException(System.String)">
+            <summary>
+            Ak odpoveď zo servera obsahuje výnimka, tá je zalogovaná.
+            </summary>
+            <param name="xmlResponse">Odpoveď mapového servera.</param>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisResponse.ResponseImageByte">
+            <summary>
+            Predstavuje odpoveď zo servera vo formáte image/png.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisResponse.ResponseXmlString">
+            <summary>
+            Predstavuje odpoveď zo servera vo formáte xml.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisResponse.SessionIdHolder">
+            <summary>
+            Udržiava aktívne sessionID.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisResponse.ToString">
+            <summary>
+            Vráti reťazec reprezentujúci tento objekt. Obsahuje aj text XML response.
+            </summary>
+            <returns>
+            Reťazec reprezentujúci tento objekt.
+            </returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.ArcGisTheme">
+            <summary>
+            Téma (mapová vrstva) obohatená o atribúty a metódy špecifické pre ArcGIS.
+            </summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisTheme.MS_PARAMS_PATH_MAPSERVERURL">
+            <summary>Xpath ku nastaveniu URL mapového servera v stĺpci MS_PARAMS.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisTheme.MS_PARAMS_PATH_DATASOURCE">
+            <summary>Xpath ku nastaveniu datasource témy v stĺpci MS_PARAMS.</summary>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.ArcGisTheme.MS_PARAMS_PATH_BGCOLOR">
+            <summary>Xpath ku nastaveniu farby pozadia témy v stĺpci MS_PARAMS.</summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisTheme.#ctor(Cora.Natec.Geo.CdoGEO_TREE_UZ)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.ArcGIS.ArcGisTheme"/>.
+            </summary>
+            <param name="cdoTheme">Dátový objekt témy.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="cdoTheme"/> <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="cdoTheme"/> nemá platný atribút <see ref="cdoTheme.col_I_GEO_THEME"/>.</exception>
+            <exception cref="T:Cora.Natec.Base.AppException">Pri chybe parsovania XML atribútov <paramref name="cdoTheme"/>.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisTheme.MapServerUrl">
+            <summary>
+            URL mapového servra (Oracle MapViewer) pre tému. Povinný atribút.
+            </summary>
+            <exception cref="T:System.Exception">Ak sa nepodarí získať atribút.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisTheme.DataSource">
+            <summary>
+            Dátový zdroj témy. Povinný atribút.
+            </summary>
+            <exception cref="T:System.Exception">Ak sa nepodarí získať atribút.</exception>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.ArcGisTheme.BgColor">
+            <summary>
+            Farba pozadia témy v HTML notácii. Default: #FFFFFF.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisTheme.GetStyleName">
+            <summary>
+            Vráti názov štýlu témy. Keďže štýly sa v ArcGis requeste definujú on demand, vrátený string je síce konštantný, ale vytvorený svojvoľne
+            (nemá žiadny špeciálny význam).
+            </summary>
+            <returns>Názov štýlu témy.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisTheme.GetFeatureKeys(Cora.Natec.Geo.IMapComplexBus,Cora.Natec.Geo.MapRange,System.Double)">
+            <summary>
+            Vráti zoznam hodnôt zadaného stĺpca pre objekty (feature) témy, ktoré priestorovo interagujú s daným rozsahom mapy.
+            </summary>
+            <param name="mapComplexBus">Map complex bus.</param>
+            <param name="range">Rozsah mapy (v jednotkách súradnicového systému S-JTSK).</param>
+            <param name="actualScale">Aktuálna mierka zobrazenia mapy na obrazovke.</param>
+            <returns>(Nenulový) zoznam kľúčov.</returns>
+            <remarks>Default-na implementácia je rovnaká ako <see cref="!:Cora.Natec.Geo.Theme.GetFeatureKeys(string, MapRange)"/>.</remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisTheme.IsThemeDisplayedInRange(Cora.Natec.Geo.MapRange)">
+            <summary>
+            Zistenie, či má téma viditeľné objekty v danom rozsahu mapy.
+            </summary>
+            <param name="range">Rozsah mapy.</param>
+            <returns>
+            	<c>true</c> ak má téma viditeľné objekty v danom rozsahu mapy; inak <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisTheme.GetObjectIDsFromMapServer(Cora.Natec.Geo.MapRange)">
+            <summary>
+            Vráti zoznam OBJECTID z mapového servera pre túto tému, ktoré priestorovo interagujú s daným rozsahom mapy.
+            </summary>
+            <param name="range">Rozsah mapy.</param>
+            <returns>Zoznam OBJECTID z mapového servera pre túto tému, ktoré priestorovo interagujú s daným rozsahom mapy.</returns>
+            <remarks>Pre lokalizáciu smerom z mapy do formulára je použitý hack s WFS službou, konkrétne je zneužitý GetFeature dotaz. 
+            Zakomentovaný kód obsahuje pôvodné riešenie v súlade s OGC pomocou WMS GetFeatureInfo dotazu.
+            </remarks>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.ArcGisTheme.GetCategoryName(System.Nullable{System.Int32})">
+            <summary>
+            Získa názov kategórie pre zadané ID témy.
+            </summary>
+            <param name="mapId">The map id.</param>
+            <returns>Názov kategórie.</returns>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.BoundingBox">
+            <summary>
+            Trieda slúžiaca na výpočet BoundingBox-u vybraných záznamov z formulára. 
+            </summary>
+            <remarks>
+            Tento výpočet je potrebný, pretože ArcGIS server nedokáže spočítať a vrátiť BoundingBox pre vybrané features v odpovedi na dotaz GetFeatures. 
+            (Viď http://support.esri.com/en/bugs/nimbus/TklNMDQwODk4).
+            </remarks>
+        </member>
+        <member name="F:Cora.Natec.Geo.ArcGIS.BoundingBox.DEFAULT_BBOX_EXTENSION">
+            <summary>
+            Ak v konfigurácii nie je zadané rozšírenie BoundingBox-u, tak sa použije táto default hodnota.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.BoundingBox.#ctor(System.Xml.XmlDocument,System.Collections.Generic.List{System.String},Cora.Natec.Geo.ArcGIS.ArcGisTheme)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.ArcGIS.BoundingBox"/>.
+            </summary>
+            <param name="doc">XML dokument obsahujúci odpoveď z mapového servera na GetFeature request.</param>
+            <param name="objIDs">Zoznam id-čiek vybraných záznamov z formulára.</param>
+            <param name="activeTheme">Aktívna téma.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.BoundingBox.GetBBoxFromGeoDB(System.Collections.Generic.List{System.String},Cora.Natec.Geo.ArcGIS.ArcGisTheme,System.Collections.Generic.List{System.Double}@,System.Collections.Generic.List{System.Double}@,System.Collections.Generic.List{System.Double}@,System.Collections.Generic.List{System.Double}@)">
+            <summary>
+            Získava envelope (BBox) z DB na základe zoznamu OBJECTID.
+            </summary>
+            <param name="objIDs">Zoznam id-čiek vybraných záznamov z formulára.</param>
+            <param name="activeTheme">Aktívna téma.</param>
+            <param name="xmax">Zoznam maximálnych súradníc na osi X.</param>
+            <param name="ymax">Zoznam maximálnych súradníc na osi Y.</param>
+            <param name="xmin">Zoznam minimálnych súradníc na osi X.</param>
+            <param name="ymin">Zoznam minimálnych súradníc na osi Y.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.BoundingBox.CalculateBBox(System.Collections.Generic.List{Cora.Natec.Geo.Point},System.Int32)">
+            <summary>
+            Výpočet BoundingBox-u na základne súradníc bodov.
+            </summary>
+            <param name="points">Zoznam bodov.</param>
+            <param name="objIDsCount">Počet id-čiek vybraných záznamov vo formulári.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.BoundingBox.CalculateBBox(System.Collections.Generic.List{System.Double},System.Collections.Generic.List{System.Double},System.Collections.Generic.List{System.Double},System.Collections.Generic.List{System.Double},System.Int32)">
+            <summary>
+            Výpočet BoundingBox-u na základne zoznamov minimálnych a maximálnych súradníc.
+            </summary>
+            <param name="xmax">Zoznam maximálnych súradníc na osi X.</param>
+            <param name="ymax">Zoznam maximálnych súradníc na osi Y.</param>
+            <param name="xmin">Zoznam minimálnych súradníc na osi X.</param>
+            <param name="ymin">Zoznam minimálnych súradníc na osi Y.</param>
+            <param name="objIDsCount">Počet id-čiek vybraných záznamov vo formulári.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.BoundingBox.CheckMinMax">
+            <summary>
+            Kontrola na minimálnych/maximálnych súradníc (uistenie).
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.BoundingBox.PrepareCoordinates">
+            <summary>
+            Príprava súradníc BoundingBox-u pre ich použitie do vektora.
+            </summary>
+            <returns>Súradnice v tvare, v akom ich vyžaduje <see cref="T:Cora.Natec.Geo.Vector"/></returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.BoundingBox.IsBBoxValid">
+            <summary>
+            Zistenie, či je BoundingBox valídny.
+            </summary>
+            <returns>
+            	<c>true</c> ak je BoundingBox valídny; inak <c>false</c>.
+            </returns>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.BoundingBox.XMAX">
+            <summary> XMAX. </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.BoundingBox.YMAX">
+            <summary> YMAX. </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.BoundingBox.XMIN">
+            <summary> XMIN. </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.BoundingBox.YMIN">
+            <summary> YMIN. </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.SldBody">
+            <summary>
+            Trieda dynamicky vytvára OGC filter pre SLD štýl a následne tento štýl poskytne v HttpHandler cache, ktorý 
+            je použiteľný pre mapový server v prípade potreby zvýraznenia vybraných objektov z gridu na mape.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.SldBody.GetStyleContent(Cora.Natec.Geo.ArcGIS.GType,System.Collections.Generic.List{System.String})">
+            <summary>
+            Vytvorí štýlovacie xml s filtrom na porovnávané hodnoty.
+            </summary>
+            <param name="gtype">Typ geometrie.</param>
+            <param name="SelectedObjIDs">ID vybraných objektov z gridu.</param>
+            <returns>Štýl v štruktúre OGC SLD.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.SldBody.AppendFilterCondition(System.Collections.Generic.List{System.String},System.Xml.XmlNode,System.Xml.XmlDocument)">
+            <summary>
+            Vytvorí a pripojí OGC filter podmienku pre porovnanie hodnôt.
+            </summary>
+            <param name="SelectedObjIDs">ID vybraných objektov z gridu.</param>
+            <param name="rule">Rule element.</param>
+            <param name="doc">XML dokument.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.SldBody.CreateRecursiveFilter(System.Xml.XmlElement,System.Collections.Generic.List{System.String},System.Xml.XmlDocument,System.String)">
+            <summary>
+            Rekurzívne vytvárana (v prípade potreby vnorené) OR filtre.
+            </summary>
+            <param name="paretnOr">Rodičovský element.</param>
+            <param name="SelectedObjIDs">Zoznam ID pre filtrovanie.</param>
+            <param name="doc">Xml dokument, do ktorého sa filtre vytvárajú.</param>
+            <param name="projNamespace">Namespace OGC služby.</param>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.SldBody.CreateStyleServerPath(System.Boolean,System.Xml.XmlDocument)">
+            <summary>
+            Vyskladá cestu alebo Url k súboru na serveri a v prípade generovania vytvorí súbor v cache.
+            </summary>
+            <param name="generate">ak <c>true</c>, tak sa súbor vygenerovaný súbor aj uloží do cache.</param>
+            <param name="doc">Vygenerovaný súbor na uloženie.</param>
+            <returns>Cestu alebo Url k súboru na serveri.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.SldBody.WriteToOutputStream(System.IO.Stream)">
+            <summary>
+            Zápis do výstupného http stream-u.
+            </summary>
+            <param name="outputStream">Výstupný http stream.</param>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.Properties.Resources.ServerCommunicationErrorImg">
+            <summary>
+              Looks up a localized string similar to Cora.Natec.Geo.ArcGis.Images.ServerError.jpg.
+            </summary>
+        </member>
+        <member name="P:Cora.Natec.Geo.ArcGIS.Properties.Resources.ServerError">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="T:Cora.Natec.Geo.ArcGIS.XmlHelper">
+            <summary>
+            Pomocná trieda pre prácu s XML.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Natec.Geo.ArcGIS.XmlHelper"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.GetValueOfXPathForOneElement(System.String,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Spracuje XPath výraz a aplikuje ho.
+            </summary>
+            <param name="xmlString">XML dokument ako reťazec.</param>
+            <param name="nsMan">Manažér namespace-ov.</param>
+            <param name="xpathExpression">Hľadaný výraz.</param>
+            <returns>
+            Hodnotu hľadaného/nájdeného <see cref="T:System.Xml.XPath.XPathNavigator"/>, ináč null.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.GetValuesOfXPathForMoreElements(System.String,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Spracuje XPath výraz a aplikuje ho.
+            </summary>
+            <param name="xmlString">XML dokument ako reťazec.</param>
+            <param name="nsMan">Manažér namespace-ov.</param>
+            <param name="xpathExpression">Hľadaný výraz.</param>
+            <returns>
+            Hodnoty hľadaných/nájdených <see cref="T:System.Xml.XPath.XPathNavigator"/>, ináč prázdny zoznam.
+            </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.GetValuesOfXPathForAttribute(System.String,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Spracuje XPath výraz a aplikuje ho.
+            </summary>
+            <param name="xmlString">XML dokument ako reťazec.</param>
+            <param name="nsMan">Manažér namespace-ov.</param>
+            <param name="xpathExpression">Hľadaný výraz.</param>
+            <returns>Hodnotu hľadaného/nájdeného <see cref="T:System.Xml.XPath.XPathNavigator"/>, ináč null. </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.GetValueOfXPathForAttribute(System.String,System.Xml.XmlNamespaceManager,System.String)">
+            <summary>
+            Spracuje XPath výraz a aplikuje ho.
+            </summary>
+            <param name="xmlString">XML dokument ako reťazec.</param>
+            <param name="nsMan">Manažér namespace-ov.</param>
+            <param name="xpathExpression">Hľadaný výraz.</param>
+            <returns>Hodnotu hľadaného/nájdeného <see cref="T:System.Xml.XPath.XPathNavigator"/>, ináč null. </returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.GetOrCreateAttribute(System.Xml.XmlNode,System.String)">
+            <summary>
+            Získanie atribútu podľa mena. Ak neexistuje, je vytvorený nový.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="attributeName">Názov hľadaného atribútu.</param>
+            <returns>Požadovaný atribút.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.CreateAppendAttribute(System.Xml.XmlNode,System.String)">
+            <summary>
+            Vytvorenie a vrátenie atribútu podľa mena.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="attributeName">Názov vytváraného atribútu.</param>
+            <returns>Nový atribútu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.CreateAppendAttribute(System.Xml.XmlNode,System.String,System.String)">
+            <summary>
+            Vytvorenie a vrátenie atribútu podľa mena.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="attributeName">Názov vytváraného atribútu.</param>
+            <param name="attributeValue">Hodnota vytváraného atribútu.</param>
+            <returns>Nový atribútu.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.GetOrCreateChild(System.Xml.XmlNode,System.String)">
+            <summary>
+            Získanie podradeného uzla podľa mena. Ak neexistuje, je vytvorený nový.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="childName">Názov hľadaného podradeného uzla.</param>
+            <returns>Požadovaný podradený uzol.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.CreateAppendChild(System.Xml.XmlNode,System.String)">
+            <summary>
+            Vytvorenie a vrátenie podradeného uzla podľa mena.
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <param name="childName">Názov vytváraného podradeného uzla.</param>
+            <returns>Nový podradený uzol.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.GetDocument(System.Xml.XmlNode)">
+            <summary>
+            Ziskanie dokumentu xml uzla (alebo samotneho xml dokumentu).
+            </summary>
+            <param name="xmlNode">Xml uzol.</param>
+            <returns>Xml dokument.</returns>
+        </member>
+        <member name="M:Cora.Natec.Geo.ArcGIS.XmlHelper.ReadDocument(System.String)">
+            <summary>
+            Načíta obsah súboru zo zadanej cesty.
+            </summary>
+            <param name="filePath">Cesta k súboru.</param>
+            <returns>Načítaný xml obsah dokumentu.</returns>
+        </member>
+    </members>
+</doc>

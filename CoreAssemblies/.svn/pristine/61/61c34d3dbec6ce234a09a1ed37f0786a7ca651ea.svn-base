@@ -1,0 +1,2490 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Web</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandler">
+            <summary>
+            Http handler pre preposielanie úplne všetkých http dotazov (z celej website, kde funguje) na určenú adresu.
+            Zovšeobecnený <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/> s inou logikou parsovania URL (nepožaduje mať v ceste <c>ProxyHttpHandler</c>).
+            Naviac podporuje prihlasovanie cez WWW_AUTHENTICATE.
+            </summary>
+            <remarks>
+            <para>Aby bolo možné preposielať úplne všetky dotazy z celej website, požaduje sa integrovaný mód dotazov v IIS (IIS 7+,
+            nastavuje sa pre aplikačný pool, v ktorom website beží). Tým nie je potrebné "ošalenie" mapovania IIS pre ASP.NET
+            ako sa uvádza v dokumentácii <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/>-a.
+            </para>
+            Http handler sa musí zaregistrovať vo web.configu do &lt;system.webServer/handlers&gt; (kvôli integrovanému módu IIS).
+            Obsluhuje všetky dotazy, preto v atribúte path nastavíme <c>*</c>. Potom ich preposiela na cieľovú adresu
+            a ich výsledky preposiela späť. Činnosť preposielania sa konfiguruje pomocou sekcie
+            <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig"/> s menom <c>AuthGlobalProxyHttpHandler</c>.</remarks>
+            <example>Príklad konfigurácie pre spracovanie dotazov na adresu napr. <c>ProxyHttpHandler.ashx/img.gif</c>:
+            <code>
+            &lt;configSections&gt;
+            	&lt;section name="AuthGlobalProxyHttpHandler" type="Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig, 
+            		Cora.Web, Version=4.3.0.0, Culture=neutral, PublicKeyToken=80AB63AD4CD8C4BF"/&gt;
+            &lt;/configSections&gt;
+            &lt;AuthGlobalProxyHttpHandler Url=&quot;http://server/WebService.asmx&quot; 
+            	UserName=&quot;pouzivatel&quot; Password=&quot;pwd&quot; Domain=&quot;domena&quot;&gt;
+            	&lt;WebProxy HostName=&quot;proxyhost&quot; HostPort=&quot;8080&quot;
+            		UserName=&quot;proxypouzivatel&quot; Password=&quot;proxypwd&quot; Domain=&quot;proxydomena&quot;/&gt;
+            	&lt;Params SessionName=&quot;JSESSIONID&quot;&gt;
+            	&lt;/Params&gt;
+            &lt;/AuthGlobalProxyHttpHandler&gt;
+            &lt;system.webServer&gt;
+            	&lt;handlers&gt;
+            		&lt;remove name="*" /&gt;
+            		&lt;add name="AuthGlobalProxyHttpHandler" verb="*" path="*" type="Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandler, 
+            			Cora.Web, Version=4.3.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf"/&gt;
+            	&lt;/handlers&gt;
+            &lt;/system.webServer&gt;
+            </code>
+            </example>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandler.GetConfig">
+            <summary>
+            Získanie konfiguračného objektu pre <see cref="T:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig"/>.
+            </summary>
+            <returns>Konfiguračný objekt pre <see cref="T:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig"/>.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandler.ExtractRelativeUrlAndHandlerNameOrThrow(System.Web.HttpRequest,System.String@,System.String@)">
+            <summary>
+            Získanie relatívnej URL z dotazu, ktorá sa prepošle ďalej a názvu handler-a.
+            </summary>
+            <param name="request">Web dotaz.</param>
+            <param name="relativeUrl">Získaná relatívna URL.</param>
+            <param name="handlerName">Získaný názov handler-a.</param>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandler.ResendData(System.Net.HttpWebRequest,System.Web.HttpRequest)">
+            <summary>
+            Preposlanie údajov na server. 
+            Ak ma dopyt prihlasovacie údaje, neprihlasuje sa podľa config-u.
+            Ak ma dopyt nemá prihlasovanie údaje alebo session už neexistuje tak sa použijú tie z config-u.
+            Ak ma dopyt nemá prihlasovanie údaje a session existuje netreba prihlasovacie udaje (z cache).
+            </summary>
+            <param name="proxiedRequest">Servrový dotaz.</param>
+            <param name="originalRequest">Dotaz pôvodného klienta.</param>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandler.SendBack(System.Net.HttpWebRequest,System.Web.HttpResponse)">
+            <summary>
+            Odoslanie údajov získaných zo servra späť klientovi a zaznamenanie aktivity aktuálnej session.
+            </summary>
+            <param name="proxiedRequest">Servrový dotaz.</param>
+            <param name="originalResponse">Odpoveď pôvodnému klientovi.</param>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig">
+            <summary>
+            Konfiguračný objekt pre <see cref="T:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandler"/>.
+            </summary>
+            <example>Ucelený príklad konfigurácie viď <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/>.
+            Príklad samotného uzla konfigurácie <see cref="T:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandler"/>-a:
+            <code>
+            &lt;AuthGlobalProxyHttpHandler Url=&quot;http://server/WebService.asmx&quot; 
+            	UserName=&quot;user&quot; Password=&quot;pwd&quot; Domain=&quot;domain&quot;&gt;
+            	&lt;WebProxy HostName=&quot;proxyhost&quot; HostPort=&quot;8080&quot;
+            		UserName=&quot;proxyuser&quot; Password=&quot;proxypwd&quot; Domain=&quot;proxydomain&quot;/&gt;
+            	&lt;Params SessionName=&quot;JSESSIONID&quot;&gt;
+            	&lt;/Params&gt;
+            &lt;/AuthGlobalProxyHttpHandler&gt;
+            </code>
+            </example>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig.DEFAULT_SECTION_NAME">
+            <summary>Defaultný názov konfiguračnej sekcie (ProxyHttpHandlerConfig).</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig.PARAMS">
+            <summary>Názov uzla pre uvedenie dalsich parametrov.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig.SESSION_NAME">
+            <summary>Názov atribútu pre názov session cookie (SessionName).</summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig.SessionName">
+            <summary>Názov cookie, v ktorej sa ukladá session ID.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig.CreateInner(System.Xml.XmlNode)">
+            <summary>
+            Nastavenie inštancie <see cref="T:Cora.Web.HttpHandlers.AuthGlobalProxyHttpHandlerConfig"/>-u podľa sekcie v config-u.
+            </summary>
+            <param name="section"><see cref="T:System.Xml.XmlNode"/> konfiguračnej sekcie.</param>
+            <returns>Konfiguračný objekt.</returns>
+            <remarks>Časti rovnaké s <see cref="T:Cora.Web.WebServiceClientConfig"/>-om nechá nakonfigurovať predka
+            (<see cref="T:Cora.Web.WebServiceClientConfig"/>) a pridá k tomu svoje vlastné nastavenia.</remarks>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.FileHandler.IsReusable">
+            <summary>
+            Handler na zapísanie/prepísanie a zmazanie suboru
+            </summary>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.NamespaceDoc">
+            <summary>
+            Obsahuje HTTP handlery a moduly.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.ResourceHttpHandler">
+            <summary>
+            Http handler pre získavanie resource-ov. V prípade získania skriptu je pridaný kód s notifikáciou pre prípad partial rendering-u.
+            </summary>
+            <remarks>Príklad použitia: do web.config, sekcia <c>system.web</c> zaradiť (so správnym strong name)
+            <code language="other">
+            &lt;httpHandlers&gt;
+            	&lt;add verb="*" path="ResourceHttpHandler.ashx"
+            		type="Cora.Web.HttpHandlers.ResourceHttpHandler, Cora.Web.HttpHandlers, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf"/&gt;
+            &lt;/httpHandlers&gt;</code>
+            <para>Vloženie skriptu do stránky:
+            <code language="javascript">&lt;script type="text/javascript"
+            src="http://srv/test_portal/ResourceHttpHandler.ashx?Cora.Portal%2fportal.js"&gt;&lt;/script&gt;</code>
+            Na správne formátovanie url je možné použiť niektorú zo statických metód
+            <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceHandlerUrl(System.String,System.String)"/>, 
+            <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceHandlerUrl(System.Reflection.Assembly,System.String,System.String)"/>.</para>
+            Handler nastavuje trvanlivosť na 1 deň a dátum modifikácie podľa dátumu modifikácie knižnice.</remarks>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ResourceHttpHandler.DEFAULT_RESOURCE_HANDLER">
+            <summary>Default názov handlera. Hodnota je "ResourceHttpHandler.ashx".</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ResourceHttpHandler.NOTIFY_SCRIPT_LOADED">
+            <summary>Kód pre pridanie notifikácie nahratia skriptu pre prípad partial rendering-u.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ResourceHttpHandler.COMBINE_JS_LIST">
+            <summary>Kľúč do aplikačných nastavení, ktorým sa určuje zoznam kombinovaných js skriptov,
+            uložených v resource-och (Cora.Web.HttpHandlers.ResourceHttpHandler.CombineList.js).
+            Všetky kombinované súbory musia byť uložené v kódovaní UTF-8.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ResourceHttpHandler.COMBINE_CSS_LIST">
+            <summary>Kľúč do aplikačných nastavení, ktorým sa určuje zoznam kombinovaných css štýlov,
+            uložených v resource-och (Cora.Web.HttpHandlers.ResourceHttpHandler.CombineList.css).
+            Všetky kombinované súbory musia byť uložené v kódovaní UTF-8.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceHandlerUrl(System.String,System.String)">
+            <summary>
+            Získanie url pre získanie resource-ov s default handler-a.
+            </summary>
+            <param name="assemblyName">Názov assembly.</param>
+            <param name="resourceName">Názov resource-u.</param>
+            <returns>Url pre získanie resource-ov.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceHandlerUrl(System.String,System.String,System.String)">
+            <summary>
+            Získanie url pre získanie resource-ov. Je v tvare <paramref name="resourceHandler"/>?<paramref name="assemblyName"/>/<paramref name="resourceName"/>,
+            presnejšie v kódovanom tvare napr. <c>ResourceHttpHandler.ashx?Cora.Portal%2fportal.js</c>.
+            </summary>
+            <param name="assemblyName">Názov assembly.</param>
+            <param name="resourceName">Názov resource-u.</param>
+            <param name="resourceHandler">Názov handlera.</param>
+            <returns>Url pre získanie resource-ov.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceHandlerUrl(System.Reflection.Assembly,System.String)">
+            <summary>
+            Získanie url pre získanie resource-ov s default názvom handler-a.
+            </summary>
+            <param name="assembly">Názov assembly.</param>
+            <param name="resourceName">Názov resource-u.</param>
+            <returns>Url pre získanie resource-ov.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceHandlerUrl(System.Reflection.Assembly,System.String,System.String)">
+            <summary>
+            Získanie url pre získanie resource-ov.
+            </summary>
+            <param name="assembly">Názov assembly.</param>
+            <param name="resourceName">Názov resource-u.</param>
+            <param name="resourceHandler">Názov handlera.</param>
+            <returns>Url pre získanie resource-ov.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.#ctor">
+            <summary>
+            Vytvorenie handlera pre získavanie resource-ov.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.ProcessRequest(System.Web.HttpContext)">
+            <summary>
+            Spracovanie dotazu.
+            </summary>
+            <param name="context">Web kontext.</param>
+            <remarks>Poradie volaní je <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.ParseResourceHandlerUrl"/>,
+            <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceStream"/>, <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.SetExpiration"/>,
+            <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.SetContentType"/>, <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.SendResponse(System.IO.Stream)"/></remarks>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.ResourceHttpHandler.IsReusable">
+            <summary>
+            Výsledok je "bezstavový" (použiteľný aj pre ďalšie request-y).
+            </summary>
+            <remarks>Pouzivame premenne tak, ze objekt je po skončení
+            <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.ProcessRequest(System.Web.HttpContext)"/> priamo znovu použiteľný.</remarks>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.ParseResourceHandlerUrl">
+            <summary>
+            Rozparsovanie url pre získanie resource-ov.
+            </summary>
+            <returns>Úspešné parsovanie url?</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceStream">
+            <summary>
+            Získanie stream-u pre požadovaný resource.
+            </summary>
+            <returns>Stream pre požadovaný resource.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetAssemblyModificationDate(System.Reflection.Assembly)">
+            <summary>
+            Zistenie dátumu zmeny assembly.
+            </summary>
+            <param name="assembly">Assembly, ktorej dátum zmeny sa zisťuje.</param>
+            <returns>Dátum zmeny assembly.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.SetExpiration">
+            <summary>
+            Nastavenie hlavičky odpovede - nic.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.SetContentType">
+            <summary>
+            Nastavenie hlavičky odpovede - nastavenie ContentType.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.SendResponse(System.IO.Stream)">
+            <summary>
+            Odoslanie odpovede.
+            </summary>
+            <param name="resourceStream">Zdrojový stream resource-ov pre odpoveď.</param>
+            <returns>Veľkosť zapísaných dát.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceHttpHandler.AppendScriptLoadedNotification">
+            <summary>
+            Má sa do výslednej odpovede pridať js kód notifikácie? Defautne sa pridáva sa do js súborov (pre prípad partial rendering-u).
+            </summary>
+            <returns>Má sa do výslednej odpovede pridať js kód notifikácie?</returns>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ResourceHttpHandler._Context">
+            <summary>Aktuálny web kontext.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ResourceHttpHandler._AssemblyName">
+            <summary>Názov assembly pre získanie resource-u.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ResourceHttpHandler._ResourceName">
+            <summary>Názov resource-u pre získanie.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ResourceHttpHandler._AssemblyModificationDate">
+            <summary>Čas poslednej zmeny assembly.</summary>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.CompressionHttpModule">
+            <summary>
+            Kompresny http modul.
+            </summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.CompressionHttpModule.COMPRESS_ALLOW_EXT">
+            <summary> Kluc pre povolenie kompresie podla pripony.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.CompressionHttpModule.DEFAULT_COMPRESS_ALLOW_EXT">
+            <summary> Defalut hodnota povolenych pripon pre kompresiu (aspx;asmx;js;css).</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressionHttpModule.GetAllowedExtensions">
+            <summary>
+            Ziskanie zoznamu povolenych pripon pre kompresiu.
+            </summary>
+            <returns>Zoznam povolenych pripon pre kompresiu.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressionHttpModule.#ctor">
+            <summary>
+            Vytvorenie kompresneho http modulu.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressionHttpModule.Init(System.Web.HttpApplication)">
+            <summary>
+            Inicializacia: zavesim sa na <see cref="E:System.Web.HttpApplication.BeginRequest"/>
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressionHttpModule.Dispose">
+            <summary>
+            Uvolnovanie zdrojov.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressionHttpModule.IsAllowedUrl(System.Uri)">
+            <summary>
+            Je pripona povolena pre kompresiu?
+            </summary>
+            <returns>Je pripona povolena pre kompresiu?</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressionHttpModule.CompressContent(System.Object,System.EventArgs)">
+            <summary>
+            Kompresia obsahu.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.CompressResourceHttpHandler">
+            <summary>
+            Http handler pre ziskavanie resource-ov s kompesiou.
+            </summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.CompressResourceHttpHandler.COMPRESS_RESOURCE_ALLOW_EXT">
+            <summary> Kluc pre povolenie kompresie podla pripony.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.CompressResourceHttpHandler.DEFAULT_COMPRESS_RESOURCE_ALLOW_EXT">
+            <summary> Defalut hodnota povolenych pripon pre kompresiu (js;css).</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressResourceHttpHandler.GetCompressAllowedExtensions">
+            <summary>
+            Ziskanie zoznamu povolenych pripon pre kompresiu resource-ov.
+            </summary>
+            <returns>Zoznam povolenych pripon pre kompresiu resource-ov.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressResourceHttpHandler.#ctor">
+            <summary>
+            Vytvorenie http handler-a pre ziskavanie resource-ov s kompesiou.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.CompressResourceHttpHandler.CanCompress">
+            <summary>
+            Je mozne posielat odpovede komprimovane?
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressResourceHttpHandler.IsAllowedExtension">
+            <summary>
+            Je pripona povolena pre kompresiu?
+            </summary>
+            <returns>Je pripona povolena pre kompresiu?</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressResourceHttpHandler.ParseResourceHandlerUrl">
+            <summary>
+            Po parsovaní url ešte zistím, či môžem komprimovať.
+            </summary>
+            <returns>Úspešné parsovanie url?</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressResourceHttpHandler.ParseCanCompress">
+            <summary>
+            Zistenie, či sa má odpoveď komprimovať.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressResourceHttpHandler.SendResponse(System.IO.Stream)">
+            <summary>
+            Pred odoslanim dat skusim pridat kompresiu.
+            </summary>
+            <param name="responseStream"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.CompressResourceHttpHandler.AddCompression">
+            <summary>
+            Pridanie kompresie.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.DialogHttpHandler">
+            <summary>
+            Http handler pre zobrazenie dialógu.
+            </summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.DialogHttpHandler.DEFAULT_DIALOG_HANDLER">
+            <summary>Default názov handlera. Hodnota je "DialogHttpHandler.ashx".</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.DialogHttpHandler.DIALOG_TITLE">
+            <summary>Názov parametra titulku dialógu (dlgTitle).</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.DialogHttpHandler.DIALOG_URL">
+            <summary>Názov parametra url stránky dialógu (dlgUrl).</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.DialogHttpHandler.GetDialogHandlerUrl(System.String,System.String,System.String,System.Text.Encoding)">
+            <summary>
+            Vráti URL pre vyvolanie dialógu.
+            </summary>
+            <param name="dialogUrl">URL dialógu.</param>
+            <param name="dialogTitle">Titulok dialógu. Ak je <see langword="null"/>,
+            parameter <see cref="F:Cora.Web.HttpHandlers.DialogHttpHandler.DIALOG_TITLE"/> sa vôbec nevloží.</param>
+            <param name="dialogHandlerName">Názov handler-a.</param>
+            <param name="requestEncoding">Encoding dotazu.</param>
+            <returns>URL pre vyvolanie dialógu.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.DialogHttpHandler.GetDialogHandlerUrl(System.String,System.String,System.Text.Encoding)">
+            <summary>
+            Vráti URL pre vyvolanie dialógu.
+            </summary>
+            <param name="dialogUrl">URL dialógu.</param>
+            <param name="dialogTitle">Titulok dialógu.</param>
+            <param name="requestEncoding">Encoding dotazu.</param>
+            <returns>URL pre vyvolanie dialógu.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.DialogHttpHandler.GetDialogHandlerUrl(System.String,System.Text.Encoding)">
+            <summary>
+            Vráti URL pre vyvolanie dialógu.
+            </summary>
+            <param name="dialogUrl">URL dialógu.</param>
+            <param name="requestEncoding">Encoding dotazu.</param>
+            <returns>URL pre vyvolanie dialógu.</returns>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.DialogHttpHandler.DialogUrl">
+            <summary>URL dialógovej stránky.</summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.DialogHttpHandler.DialogTitle">
+            <summary>Titulok dialógovej stránky.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.DialogHttpHandler.ParseRequest">
+            <summary>
+            Parse-ovanie dotazu.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.DialogHttpHandler.GetResponseString">
+            <summary>
+            Získanie výsledku spracovania dotazu.
+            </summary>
+            <returns>Výsledný reťazec do response-u.</returns>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.GlobalProxyHttpHandler">
+            <summary>
+            Http handler pre preposielanie úplne všetkých http dotazov (z celej website, kde funguje) na určenú adresu.
+            Zovšeobecnený <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/> s inou logikou parsovania URL (nepožaduje mať v ceste <c>ProxyHttpHandler</c>).
+            </summary>
+            <remarks>
+            <para>Aby bolo možné preposielať úplne všetky dotazy z celej website, požaduje sa integrovaný mód dotazov v IIS (IIS 7+,
+            nastavuje sa pre aplikačný pool, v ktorom website beží). Tým nie je potrebné "ošalenie" mapovania IIS pre ASP.NET
+            ako sa uvádza v dokumentácii <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/>-a.
+            </para>
+            Http handler sa musí zaregistrovať vo web.configu do &lt;system.webServer/handlers&gt; (kvôli integrovanému módu IIS).
+            Obsluhuje všetky dotazy, preto v atribúte path nastavíme <c>*</c>. Potom ich preposiela na cieľovú adresu
+            a ich výsledky preposiela späť. Činnosť preposielania sa konfiguruje pomocou sekcie
+            <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig"/> s menom <c>GlobalProxyHttpHandler</c>.</remarks>
+            <example>Príklad konfigurácie pre spracovanie dotazov na adresu napr. <c>ProxyHttpHandler.ashx/img.gif</c>:
+            <code>
+            &lt;configSections&gt;
+            	&lt;section name="ProxyHttpHandler" type="Cora.Web.HttpHandlers.ProxyHttpHandlerConfig, 
+            		Cora.Web.HttpHandlers, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80AB63AD4CD8C4BF"/&gt;
+            &lt;/configSections&gt;
+            &lt;GlobalProxyHttpHandler Url=&quot;http://server/WebService.asmx&quot; 
+            	UserName=&quot;pouzivatel&quot; Password=&quot;pwd&quot; Domain=&quot;domena&quot;&gt;
+            	&lt;WebProxy HostName=&quot;proxyhost&quot; HostPort=&quot;8080&quot;
+            		UserName=&quot;proxypouzivatel&quot; Password=&quot;proxypwd&quot; Domain=&quot;proxydomena&quot;/&gt;
+            &lt;/GlobalProxyHttpHandler&gt;
+            &lt;system.webServer&gt;
+            	&lt;handlers&gt;
+            		&lt;remove name="*" /&gt;
+            		&lt;add name="GlobalProxyHttpHandler" verb="*" path="*" type="Cora.Web.HttpHandlers.GlobalProxyHttpHandler, 
+            			Cora.Web.HttpHandlers, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf"/&gt;
+            	&lt;/handlers&gt;
+            &lt;/system.webServer&gt;
+            </code>
+            </example>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.GlobalProxyHttpHandler.ExtractRelativeUrlAndHandlerNameOrThrow(System.Web.HttpRequest,System.String@,System.String@)">
+            <summary>
+            Získanie relatívnej URL z dotazu, ktorá sa prepošle ďalej a názvu handler-a.
+            </summary>
+            <param name="request">Web dotaz.</param>
+            <param name="relativeUrl">Získaná relatívna URL.</param>
+            <param name="handlerName">Získaný názov handler-a.</param>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.HttpHandlerBase">
+            <summary>
+            Základná (abstract) trieda pre http handler.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.HttpHandlerBase.ProcessRequest(System.Web.HttpContext)">
+            <summary>
+            Spracovanie dotazu: ak prejde <see cref="M:Cora.Web.HttpHandlers.HttpHandlerBase.ParseRequest"/>, výpis odpovede podľa <see cref="M:Cora.Web.HttpHandlers.HttpHandlerBase.GetResponseString"/>.
+            </summary>
+            <param name="context">Web kontext.</param>
+            <remarks>Pri <c>null</c> hodnote <param>context</param> je spracovanie ukončené.</remarks>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.HttpHandlerBase.IsReusable">
+            <summary>
+            Je handler znovupoužiteľný? Default je <c>false</c>.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.HttpHandlerBase.Context">
+            <summary>Web kontext.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.HttpHandlerBase.#ctor">
+            <summary>
+            Konštruktor pre dedičov.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.HttpHandlerBase.ParseRequest">
+            <summary>
+            Parse-ovanie dotazu. Default vracia <c>true</c>.
+            </summary>
+            <returns>Výsledok parse-ovania.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.HttpHandlerBase.GetResponseString">
+            <summary>
+            Získanie výsledného reťazca do odpovede.
+            </summary>
+            <returns>Výsledný reťazec do response-u.</returns>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.IOutputStreamer">
+            <summary>
+            Rozhranie pre objekty, ktoré zapisujú priamo do výstupného http stream-u.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.IOutputStreamer.WriteToOutputStream(System.IO.Stream)">
+            <summary>
+            Zápis do výstupného http stream-u.
+            </summary>
+            <param name="outputStream">Výstupný http stream.</param>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.IOutputStreamerWeb">
+            <summary>
+            Rozhranie pre objekty, ktoré zapisujú priamo do výstupného http stream-u a majú prístup k web kontextu.
+            </summary>
+            <remarks>
+             <para>
+              Dôležité poznámky pre triedy implementujúce toto rozhranie za účelom streamovania súborov:
+             </para><para>
+              Aby prehliadač vedel otvoriť súbor, je potrebné do response objektu webového kontextu 
+              zapísať Content-Type súboru a tiež pridať header Content-Disposition s menom súboru (pre tvar viď RFC 2183).
+              Rôzne prehliadače majú rôzne požiadavky, napr. pre IE7 je dosť dôležitá koncovka súboru...
+             </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.IOutputStreamerWeb.WriteToOutputStream(System.IO.Stream,System.Web.HttpContext)">
+            <summary>
+            Zápis do výstupného http stream-u.
+            </summary>
+            <param name="outputStream">Výstupný http stream.</param>
+            <param name="webContext">Web kontext.</param>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig">
+            <summary>
+            Konfiguračný objekt pre <see cref="T:Cora.Web.HttpHandlers.LogoutProxyHttpHandler"/>.
+            </summary>
+            <example>Ucelený príklad konfigurácie viď <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/>.
+            Príklad samotného uzla konfigurácie <see cref="T:Cora.Web.HttpHandlers.LogoutProxyHttpHandler"/>-a:
+            <code>
+            &lt;ProxyHttpHandler Url=&quot;http://server/WebService.asmx&quot; 
+            	UserName=&quot;user&quot; Password=&quot;pwd&quot; Domain=&quot;domain&quot;&gt;
+            	&lt;WebProxy HostName=&quot;proxyhost&quot; HostPort=&quot;8080&quot;
+            		UserName=&quot;proxyuser&quot; Password=&quot;proxypwd&quot; Domain=&quot;proxydomain&quot;/&gt;
+            	&lt;Logout Url=&quot;StatusService&quot; Timeout=&quot;1&quot; Method=&quot;POST&quot; SessionName=&quot;JSESSIONID&quot;&gt;
+            	logout
+            	&lt;/Logout&gt;
+            &lt;/ProxyHttpHandler&gt;
+            </code>
+            </example>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.DEFAULT_SECTION_NAME">
+            <summary>Defaultný názov konfiguračnej sekcie (ProxyHttpHandlerConfig).</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.LOGOUT">
+            <summary>Názov uzla pre uvedenie nastavení odhlasovania (Logout).</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.TIMEOUT">
+            <summary>Názov atribútu pre čas odhlasovania (maximálny čas nečinnosti v minútach, Timeout).</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.METHOD">
+            <summary>Názov atribútu pre metódu odhlasovania (Method).</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.SESSION_NAME">
+            <summary>Názov atribútu pre názov session cookie (SessionName).</summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.Logout_Url">
+            <summary>Url pre poslanie dotazu odhlásenia.</summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.Logout_Timeout">
+            <summary>Čas nečinnosti, po ktorom sa pošle dotaz odhlásenia (v minútach).</summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.Logout_Method">
+            <summary>Metóda dotazu odhlásenia (GET/POST).</summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.Logout_SessionName">
+            <summary>Názov cookie, v ktorej sa ukladá session ID.</summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.Logout_Body">
+            <summary>Telo dotazu odhlásenia (má zmysel len pri použití metódy POST).</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.ConfigureLogoutRequest(System.Net.HttpWebRequest,System.String)">
+            <summary>
+            Nastavenie zadaného web requestu podľa načítanej konfigurácie pre odhlásenie. Okrem konfigurácie pomocou
+            <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig"/> sa konfigurujú jeho <see cref="P:System.Net.HttpWebRequest.Method"/>,
+            ID odhlasovanej sesion (príslušná cookie) a v prípade metódy POST aj telo dotazu.
+            </summary>
+            <param name="logoutWebRequest">Nastavovaný web request odhlásenia. Nesmie byť <c>null</c>.</param>
+            <param name="sessionId">ID odhlasovanej session.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="logoutWebRequest"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig.CreateInner(System.Xml.XmlNode)">
+            <summary>
+            Nastavenie inštancie <see cref="T:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig"/>-u podľa sekcie v config-u.
+            </summary>
+            <param name="section"><see cref="T:System.Xml.XmlNode"/> konfiguračnej sekcie.</param>
+            <returns>Konfiguračný objekt.</returns>
+            <remarks>Časti rovnaké s <see cref="T:Cora.Web.WebServiceClientConfig"/>-om nechá nakonfigurovať predka
+            (<see cref="T:Cora.Web.WebServiceClientConfig"/>) a pridá k tomu svoje vlastné nastavenia.</remarks>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.OutputStreamHttpHandler">
+            <summary>
+            Http handler pre priamy výpis dát do http stream-u.
+            </summary>
+            <remarks>
+             <para>
+              Dôležitá poznámka pre volanie tohto handlera, pokiaľ jeho streamer slúži na download súboru:
+             </para><para>
+              V IE7/8 je problematický download súboru otvorením handlera v novom okne (javascript <c>window.open</c>).
+              Pravdepodobne na základe bugu v práci s bezpečnostnými zónami môže tento spôsob fungovať na lokálne
+              hostovanom serveri, ale browser nespustí aplikáciu v ktorej sa má downloadovaný súbor otvoriť.
+             </para><para>
+              Ako workaround zafungovalo otvorenie okna s menom "_parent" (Content-Disposition je dobre keď je "attachment",
+              aby sa súbor neotvoril v tom istom tabe):
+               <code>
+                window.open("NejakyOutputStreamHandler.ashx?File=123456", "_parent");
+               </code>
+             </para><para>
+              Pokiaľ je odkaz súčasťou linku, nie je problém:
+               <code>
+                &lt;a href="NejakyOutputStreamHandler.ashx?File=123456" target="_blank"&gt; odkaz &lt;/a&gt;
+               </code>
+             </para>
+            </remarks>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.OutputStreamHttpHandler.CACHE_KEY">
+            <summary>Názov parametra kľúča do request-u, pod ktorým je v <see cref="T:System.Web.Caching.Cache"/>
+            uložený objekt implementujúci <see cref="T:Cora.Web.HttpHandlers.IOutputStreamer"/> (cacheKey).</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.OutputStreamHttpHandler.DEFAULT_OUTPUT_STREAM_HANDLER">
+            <summary> Default názov handlera (OutputStreamHttpHandler.ashx).</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.OutputStreamHttpHandler.GetContentDisposition(System.Web.HttpContext,System.String,System.String)">
+            <summary>
+            Vráti hodnotu pre nastavenie header-a Content-Disposition v závislosti od typu súboru a použitého browsera.
+            </summary>
+            <param name="webContext">Webový kontext.</param>
+            <param name="filename">Názov súboru.</param>
+            <param name="contentType">Typ súboru (mime type).</param>
+            <returns>Hodnota pre header Content-Disposition.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="webContext"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.OutputStreamHttpHandler.GetOutputStreamHandlerUrl(System.String)">
+            <summary>
+            Získanie url pre priamy výpis dát do http stream-u.
+            </summary>
+            <param name="cacheKey">Kľúč, pod ktorým je v <see cref="T:System.Web.Caching.Cache"/> uložený
+            objekt implementujúci <see cref="T:Cora.Web.HttpHandlers.IOutputStreamer"/>.</param>
+            <returns>Url pre priamy výpis dát do http stream-u.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.OutputStreamHttpHandler.GetOutputStreamHandlerUrl(System.String,System.String)">
+            <summary>
+            Získanie url pre priamy výpis dát do http stream-u s určením názvu handlera.
+            </summary>
+            <param name="cacheKey">Kľúč, pod ktorým je v <see cref="T:System.Web.Caching.Cache"/> uložený
+            objekt implementujúci <see cref="T:Cora.Web.HttpHandlers.IOutputStreamer"/>.</param>
+            <param name="outputStreamHttpHandler">Názov handlera.</param>
+            <returns>Url pre priamy výpis dát do http stream-u.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.OutputStreamHttpHandler.AddToCacheAndGetOutputStreamHandlerUrl(Cora.Web.HttpHandlers.IOutputStreamer,System.TimeSpan)">
+            <summary>
+            Pridanie objektu implementujúceho <see cref="T:Cora.Web.HttpHandlers.IOutputStreamer"/> do cache s expiráciou 
+            <paramref name="slidingExpiration"/> a získanie url pre priamy výpis dát do http stream-u.
+            </summary>
+            <param name="outputStreamer">Objekt implementujúci <see cref="T:Cora.Web.HttpHandlers.IOutputStreamer"/>.</param>
+            <param name="slidingExpiration">Expirácia objektu v <see cref="T:System.Web.Caching.Cache"/>.</param>
+            <returns>Url pre priamy výpis dát do http stream-u.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.OutputStreamHttpHandler.AddToCacheAndGetOutputStreamHandlerUrl(Cora.Web.HttpHandlers.IOutputStreamer,System.TimeSpan,System.String)">
+            <summary>
+            Pridanie objektu implementujúceho <see cref="T:Cora.Web.HttpHandlers.IOutputStreamer"/> do cache s expiráciou 
+            <paramref name="slidingExpiration"/> a získanie url pre priamy výpis dát do http stream-u s určením názvu handlera.
+            </summary>
+            <param name="outputStreamer">Objekt implementujúci <see cref="T:Cora.Web.HttpHandlers.IOutputStreamer"/>.</param>
+            <param name="slidingExpiration">Expirácia objektu v <see cref="T:System.Web.Caching.Cache"/>.</param>
+            <param name="outputStreamHttpHandler">Názov handlera.</param>
+            <returns>Url pre priamy výpis dát do http stream-u.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.OutputStreamHttpHandler.ProcessRequest(System.Web.HttpContext)">
+            <summary>
+            Spracovanie dotazu: zistenie kľúča, pod ktorým sa hľadá <see cref="T:Cora.Web.HttpHandlers.IOutputStreamer"/>, jeho nájdenie a potom 
+            zavolanie výpisu <see cref="M:Cora.Web.HttpHandlers.IOutputStreamer.WriteToOutputStream(System.IO.Stream)"/>.
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.OutputStreamHttpHandler.IsReusable">
+            <summary>
+            Výsledok je "bezstavový" (použiteľný aj pre ďalšie request-y).
+            </summary>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.ProxyHttpHandler">
+            <summary>
+            Http handler pre preposielanie http dotazov na určenú adresu.
+            </summary>
+            <remarks>Http handler sa musí zaregistrovať vo web.configu medzi &lt;httpHandlers&gt;. Obsluhuje dotazy podľa predpisu
+            v atribúte path, ktorý musí obsahovať reťazec <c>ProxyHttpHandler</c>, všeobecne odporúčaný názov je
+            <c>ProxyHttpHandler.ashx</c> (dôvody viď nižšie). Všetky preposiela na cieľovú adresu
+            a ich výsledky preposiela späť. Činnosť preposielania sa konfiguruje pomocou sekcie
+            <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig"/> s rovnakým menom, ktoré obsluhuje.</remarks>
+            <example>Príklad konfigurácie pre spracovanie dotazov na adresu napr. <c>ProxyHttpHandler.ashx/img.gif</c>:
+            <code>
+            &lt;configSections&gt;
+            	&lt;section name="ProxyHttpHandler" type="Cora.Web.HttpHandlers.ProxyHttpHandlerConfig, 
+            		Cora.Web.HttpHandlers, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80AB63AD4CD8C4BF"/&gt;
+            &lt;/configSections&gt;
+            &lt;ProxyHttpHandler Url=&quot;http://server/WebService.asmx&quot; 
+            	UserName=&quot;pouzivatel&quot; Password=&quot;pwd&quot; Domain=&quot;domena&quot;&gt;
+            	&lt;WebProxy HostName=&quot;proxyhost&quot; HostPort=&quot;8080&quot;
+            		UserName=&quot;proxypouzivatel&quot; Password=&quot;proxypwd&quot; Domain=&quot;proxydomena&quot;/&gt;
+            &lt;/ProxyHttpHandler&gt;
+            &lt;system.web&gt;
+            	&lt;httpHandlers&gt;
+            		&lt;add verb="*" path="ProxyHttpHandler/*.*" type="Cora.Web.HttpHandlers.ProxyHttpHandler, 
+            			Cora.Web.HttpHandlers, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf"/&gt;
+            	&lt;/httpHandlers&gt;
+            &lt;/system.web&gt;
+            </code>
+            Pozor, uvedený príklad nespracováva dotazy na ďalšie "podadresáre", napr. <c>ProxyHttpHandler/images/img.gif</c>.
+            Ak má spracovávať aj dotazy na všetky vnorené adresy, je potrebné vytvoriť webový adresár <c>ProxyHttpHandler.ashx</c>,
+            umiestniť doňho aspoň tento minimalistický <c>web.config</c> a v ňom uviesť
+            <code>
+            		&lt;add verb="*" path="*" type="Cora.Web.HttpHandlers.ProxyHttpHandler, ...
+            </code>
+            Prípona adresára <c>.ashx</c> je kvôli "ošaleniu" mapovania IIS pre ASP.NET. Takto sa totiž ASP.NET dostane
+            aj k spracovaniu dotazov na všetky prípony súborov (naňho inak nemapované) a aj dotazy bez prípony.
+            Iný spôsob riešenia je zadať <c>*</c> do mapovaní v IIS (ISAPI filters v IIS6, Handler mappings v IIS7).
+            </example>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ProxyHttpHandler.PROXY_HTTP_HANDLER">
+            <summary>Defaultný názov konfiguračnej sekcie (ProxyHttpHandler).</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ProxyHttpHandler._AllowedCookieNames">
+            <summary>Obmedzenie nazvov cookie: http://msdn.microsoft.com/en-us/library/kesbe27x(v=vs.110).aspx</summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.ProxyHttpHandler.IsReusable">
+            <summary>Výsledky volania nie sú znovu použiteľné.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandler.ProcessRequest(System.Web.HttpContext)">
+            <summary>
+            Spracovanie web requestu. Rozparsovanie dotazu, konfigurácia, preposlanie dotazu na server
+            a spätné odoslanie výslednej odpovede pôvodnému klientovi.
+            </summary>
+            <param name="context">Webový kontext.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="context"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandler.ExtractRelativeUrlAndHandlerNameOrThrow(System.Web.HttpRequest,System.String@,System.String@)">
+            <summary>
+            Získanie relatívnej URL z dotazu, ktorá sa prepošle ďalej a názvu handler-a.
+            </summary>
+            <param name="request">Web dotaz.</param>
+            <param name="relativeUrl">Získaná relatívna URL.</param>
+            <param name="handlerName">Získaný názov handler-a.</param>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandler.CreateAndConfigureProxiedRequest(System.String)">
+            <summary>
+            Vytvorenie nového dotazu na preposlanie na server a jeho nakonfigurovanie podľa aktuálnej konfgurácie.
+            </summary>
+            <param name="relativeUrl">Relatívna url na preposlanie na server.</param>
+            <returns>Nový nakonfigurovaný dotaz na preposlanie na server.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandler.GetConfig">
+            <summary>
+            Získanie konfiguračného objektu pre <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/>.
+            </summary>
+            <returns>Konfiguračný objekt pre <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/>.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandler.ResendData(System.Net.HttpWebRequest,System.Web.HttpRequest)">
+            <summary>
+            Preposlanie údajov na server.
+            </summary>
+            <param name="proxiedRequest">Servrový dotaz.</param>
+            <param name="originalRequest">Dotaz pôvodného klienta.</param>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandler.SendBack(System.Net.HttpWebRequest,System.Web.HttpResponse)">
+            <summary>
+            Odoslanie údajov získaných zo servra späť klientovi.
+            </summary>
+            <param name="proxiedRequest">Servrový dotaz.</param>
+            <param name="originalResponse">Odpoveď pôvodnému klientovi.</param>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ProxyHttpHandler._wwwAuthentificateDisabled">
+            <summary>
+            Určuje či sa bude na server preposielať hlavička pre www-autentifikaciu.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig">
+            <summary>
+            Konfiguračný objekt pre <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/>.
+            </summary>
+            <example>Príklad konfigurácie viď <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandler"/>.</example>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig.Create``1">
+            <summary>
+            Vytvorenie novej inštancie konfiguračného objektu typu <typeparamref name="T"/>, dediaceho
+            z <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig"/>-u, podľa defaultného názvu sekcie (<see cref="F:Cora.Web.WebServiceClientConfig.DEFAULT_SECTION_NAME"/>).
+            </summary>
+            <returns><see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig"/> nastavený podľa defaultného názvu sekcie.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig.Create``1(System.String)">
+            <summary>
+            Vytvorenie novej inštancie konfiguračného objektu typu <typeparamref name="T"/>,
+            dediaceho z <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig"/>-u, podľa zadaného názvu sekcie.
+            </summary>
+            <typeparam name="T">Typ konfiguračného objektu, dediaceho z <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig"/>.</typeparam>
+            <param name="sectionName">Názov sekcie, z ktorej sa nastavenia prečítajú.</param>
+            <returns>Konfiguračný objekt nastavený podľa zadaného názvu sekcie,
+            alebo <c>null</c>, ak taká sekcia neexistuje, alebo je nesprávneho typu.
+            </returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig.ConfigureRequest(System.Net.WebRequest)">
+            <summary>
+            Nastavenie zadaného web requestu podľa načítanej konfigurácie. Môžu sa konfigurovať jeho
+            <see cref="P:System.Net.WebRequest.Credentials"/>, <see cref="P:System.Net.WebRequest.Proxy"/> a <see cref="P:System.Net.IWebProxy.Credentials"/>.
+            </summary>
+            <param name="webRequest">Nastavovaný web request. Nesmie byť <c>null</c>.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="webRequest"/> je <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig.SectionName">
+            <summary>Názov sekcie, z ktorej konfiguračný objekt vytvorený.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig.CreateInner(System.Xml.XmlNode)">
+            <summary>
+            Nastavenie inštancie <see cref="T:Cora.Web.HttpHandlers.ProxyHttpHandlerConfig"/>-u podľa sekcie v config-u.
+            </summary>
+            <param name="section"><see cref="T:System.Xml.XmlNode"/> konfiguračnej sekcie.</param>
+            <returns>Konfiguračný objekt.</returns>
+            <remarks>Časti rovnaké s <see cref="T:Cora.Web.WebServiceClientConfig"/>-om nechá nakonfigurovať predka
+            (<see cref="T:Cora.Web.WebServiceClientConfig"/>) a pridá k tomu svoje vlastné nastavenia.</remarks>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.ResourceDebugHttpHandler">
+            <summary>Http handler pre debugovanie alebo dočasné presmerovanie resource-ov.</summary>
+            <remarks>Trieda funguje ako debug-ovací zástupca <see cref="T:Cora.Web.HttpHandlers.ResourceHttpHandler"/>-a. Pretože ladenie vložených resource-ov
+            (napr. skriptov) je dosť nepraktické (opraviť chybu, build a prekopírovanie knižnice, príp. reštart servra),
+            <see cref="T:Cora.Web.HttpHandlers.ResourceDebugHttpHandler"/> sa najprv pozrie, či na disku nie je uložená debug verzia resource-u
+            a ak je, tak ju použije. Ak nie je nájdená, postupuje sa ako v prípade <see cref="T:Cora.Web.HttpHandlers.ResourceHttpHandler"/>-a,
+            ale bez nastavenia expirácie. Umiestnenie debug verzie popisuje <see cref="M:Cora.Web.HttpHandlers.ResourceDebugHttpHandler.GetResourceStream"/>.
+            <para>Do web.config-u sa zapíše podobne ako <see cref="T:Cora.Web.HttpHandlers.ResourceHttpHandler"/>, po dokončení ladenia sa zápis odstráni.</para></remarks>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceDebugHttpHandler.#ctor">
+            <summary>Vytvorenie http handler-a pre debugovanie alebo dočasné presmerovanie resource-ov.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceDebugHttpHandler.GetResourceStream">
+            <summary>
+            Získanie stream-u pre požadovaný resource z disku. Umiestnenie je
+            <see cref="F:Cora.Web.HttpHandlers.ResourceHttpHandler._AssemblyName"/>\<see cref="F:Cora.Web.HttpHandlers.ResourceHttpHandler._ResourceName"/>
+            z aktuálnej cesty (<see cref="P:Cora.Global.Environment.AssemblyProbePath"/>). Ak je súbor/adresár nenájdený
+            (<see cref="T:System.IO.FileNotFoundException"/>), použije sa <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceStream"/>.
+            </summary>
+            <returns>Stream pre požadovaný resource.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceDebugHttpHandler.TryGetDebugResourceStream(System.String,System.String,System.Boolean@)">
+            <summary>
+            Získanie stream-u pre požadovaný resource z disku. Umiestnenie je <paramref name="assemblyName"/>\<paramref name="resourceName"/>
+            z aktuálnej cesty (<see cref="P:Cora.Global.Environment.AssemblyProbePath"/>). Ak je súbor/adresár nenájdený
+            (<see cref="T:System.IO.FileNotFoundException"/>/<see cref="T:System.IO.DirectoryNotFoundException"/>),
+            použije sa <see cref="M:Cora.Web.HttpHandlers.ResourceHttpHandler.GetResourceStream"/>.
+            </summary>
+            <param name="assemblyName">Názov knižnice.</param>
+            <param name="resourceName">Názov resource-u.</param>
+            <param name="isError">Nastala chyba pri čítaní z disku (okrem <see cref="T:System.IO.FileNotFoundException"/> a <see cref="T:System.IO.DirectoryNotFoundException"/>)?</param>
+            <returns>Výsledný stream pre požadovaný resource, alebo <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceDebugHttpHandler.SetExpiration">
+            <summary>Nastavenie hlavičky odpovede - nastavenie trvanlivosti na strašne dávno.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceDebugHttpHandler.GetAssemblyModificationDate(System.Reflection.Assembly)">
+            <summary>
+            Zistenie dátumu zmeny assembly - strašne dávno.
+            </summary>
+            <param name="assembly">Assembly, ktorej dátum zmeny sa zisťuje.</param>
+            <returns>Dátum zmeny assembly.</returns>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.ResourceDebugLocationHttpHandler">
+            <summary>
+            Http handler pre debugovanie alebo dočasné presmerovanie získavania resource-ov. Použitie viď <see cref="T:Cora.Web.HttpHandlers.ResourceDebugHttpHandler"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceDebugLocationHttpHandler.GetResourceStream">
+            <summary>
+            Získanie stream-u pre požadovaný resource, ala <see cref="M:Cora.Web.HttpHandlers.ResourceDebugHttpHandler.TryGetDebugResourceStream(System.String,System.String,System.Boolean@)"/>.
+            </summary>
+            <returns>Stream pre požadovaný resource.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceDebugLocationHttpHandler.SetExpiration">
+            <summary>Nastavenie hlavičky odpovede - nastavenie trvanlivosti na strašne dávno.</summary>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.LogoutProxyHttpHandler">
+            <summary>
+            Http handler pre preposielanie http dotazov na určenú adresu so schopnosťou odhlasovania sa na vzdialenom servri.
+            Je označený rozhraním <see cref="T:System.Web.SessionState.IRequiresSessionState"/>, takže vyžaduje aj klientskú session.
+            </summary>
+            <remarks>POZOR: V aplikácii môže fungovať len jeden <see cref="T:Cora.Web.HttpHandlers.LogoutProxyHttpHandler"/>.</remarks>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.LogoutProxyHttpHandler.GetConfig">
+            <summary>
+            Získanie konfiguračného objektu pre <see cref="T:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig"/>.
+            </summary>
+            <returns>Konfiguračný objekt pre <see cref="T:Cora.Web.HttpHandlers.LogoutProxyHttpHandlerConfig"/>.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.LogoutProxyHttpHandler.ResendData(System.Net.HttpWebRequest,System.Web.HttpRequest)">
+            <summary>
+            Preposlanie údajov na server. 
+            Ak ma dopyt prihlasovacie údaje, neprihlasuje sa podľa config-u.
+            Ak ma dopyt nemá prihlasovanie údaje alebo session už neexistuje tak sa použijú tie z config-u.
+            Ak ma dopyt nemá prihlasovanie údaje a session existuje netreba prihlasovacie udaje (z cache).
+            </summary>
+            <param name="proxiedRequest">Servrový dotaz.</param>
+            <param name="originalRequest">Dotaz pôvodného klienta.</param>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.LogoutProxyHttpHandler.SendBack(System.Net.HttpWebRequest,System.Web.HttpResponse)">
+            <summary>
+            Odoslanie údajov získaných zo servra späť klientovi a zaznamenanie aktivity aktuálnej session.
+            </summary>
+            <param name="proxiedRequest">Servrový dotaz.</param>
+            <param name="originalResponse">Odpoveď pôvodnému klientovi.</param>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.ResourceLocationHttpHandler">
+            <summary>
+            Http handler pre získavanie resource-ov. Používa v prípade, že nejaký framework obsahuje celý podadreaár súborov (css, js, img, ai.).
+            Pridáva kompresiu (dedí z <see cref="T:Cora.Web.HttpHandlers.CompressResourceHttpHandler"/>-a).
+            </summary>
+            <remarks>
+            Viď poznámky ku <see cref="T:Cora.Web.HttpHandlers.ResourceHttpHandler"/>.
+            <para>Príklad použitia, do web.config zaradiť sekciu <c>location</c> s názvom ResourceLocation.ashx:
+            <code language="other">
+            &lt;location path="ResourceLocation.ashx"&gt;
+            	&lt;system.web&gt;
+            		&lt;httpHandlers&gt;
+            			&lt;add verb="*" path="*" 
+            				type="Cora.Web.HttpHandlers.ResourceLocationHttpHandler, Cora.Web.HttpHandlers, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf"/&gt;
+            		&lt;/httpHandlers&gt;
+            	&lt;/system.web&gt;
+            &lt;/location&gt;</code>
+            </para>
+            <para>Vloženie skriptu do stránky:
+            <code language="javascript">&lt;script type="text/javascript"
+            src="http://srv/test_portal/ResourceLocation.ashx/Cora.WebControls/extjs/ext-all.js"&gt;&lt;/script&gt;</code>
+            ///	Na správne formátovanie url je možné použiť niektorú zo statických metód
+            <see cref="M:Cora.Web.HttpHandlers.ResourceLocationHttpHandler.GetResourceHandlerUrl(System.String,System.String)"/>, 
+            <see cref="M:Cora.Web.HttpHandlers.ResourceLocationHttpHandler.GetResourceHandlerUrl(System.Reflection.Assembly,System.String)"/>.</para>
+            
+            Handler nastavuje trvanlivosť na 3 mesiace a dátum modifikácie podľa dátumu modifikácie knižnice.</remarks>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.ResourceLocationHttpHandler.RESOURCE_LOCATION">
+            <summary>Názov podadresára, v ktorom framework očakáva svoje súbory ("ResourceLocation.ashx").</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceLocationHttpHandler.GetResourceHandlerUrl(System.String,System.String)">
+            <summary>
+            Získanie url pre získanie resource-ov z podadresára. Je v tvare <c>ResourceLocation.ashx/<paramref name="assemblyName"/>/<paramref name="resourcePath"/></c>.
+            </summary>
+            <param name="assemblyName">Názov assembly.</param>
+            <param name="resourcePath">Cesta k resource-u.</param>
+            <returns>Url pre získanie resource-ov z podadresára.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceLocationHttpHandler.GetResourceHandlerUrl(System.Reflection.Assembly,System.String)">
+            <summary>
+            Získanie url pre získanie resource-ov z podadresára. Je v tvare <c>ResourceLocation.ashx/meno_kniznice/<paramref name="resourcePath"/></c>.
+            </summary>
+            <param name="assembly">Assembly.</param>
+            <param name="resourcePath">Cesta k resource-u.</param>
+            <returns>Url pre získanie resource-ov z podadresára.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResourceLocationHttpHandler.ParseResourceHandlerUrl">
+            <summary>
+            Rozparsovanie url pre získanie resource-ov z podadresára.
+            </summary>
+            <returns>Úspešné parsovanie url?</returns>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.ResponseStopwatchHttpModule">
+            <summary>
+            Http modul pre sledovanie času odozvy web servra. Výsledky zapisuje do aplikačného log-u.
+            </summary>
+            <example>
+            Príklad časti web.config-u s pridaným http modulom ResponseStopwatchHttpModule:
+            <code>
+            &lt;configuration&gt;
+            	...
+            	&lt;system.web&gt;
+            		...
+            		&lt;httpModules&gt;
+            			&lt;add name="ResponseStopwatchHttpModule" 
+            				type="Cora.Web.HttpHandlers.ResponseStopwatchHttpModule, Cora.Web.HttpHandlers, Version=4.0.0.0, Culture=neutral, PublicKeyToken=80ab63ad4cd8c4bf"/&gt;
+            		&lt;/httpModules&gt;
+            	&lt;/system.web&gt;
+            &lt;/configuration&gt;
+            </code>
+            </example>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResponseStopwatchHttpModule.Init(System.Web.HttpApplication)">
+            <summary>
+            Inicializácia - zaregistrovanie udalostí začiatku a konca requestu.
+            </summary>
+            <param name="context">Web kontext.</param>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.ResponseStopwatchHttpModule.Dispose">
+            <summary>
+            Žiadne zdroje nedržíme - nič.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.UploadHttpHandler">
+            <summary>
+            <see cref="T:System.Web.IHttpHandler"/> pre spracovanie uploadu súborov. Zabezpečuje príjem upload-ovaného súboru a jeho dočasné uloženie.
+            </summary>
+            <remarks>
+             <para>
+              Uploadované súbory sa dočasne ukladajú do temporárneho adresára, info viď poznámky k <see cref="P:Cora.Web.HttpHandlers.UploadHttpHandler.UploadDirectory"/>.
+             </para><para>
+              Súčasti prvku pre výber uploadovaného súboru (&lt;input type="file"&gt;) sa nedajú priamo štýlovať,
+              ak by to bolo potrebné viď hack: http://www.quirksmode.org/dom/inputfile.html. Vzhľad prvku po zvolení
+              súboru na upload však obsahuje CSS štýly (viď konšťanty začínajuce na "CSS_"), pričom do výslednej stránky
+              sa (zatiaľ) dostane iba ich defaultná definícia (defaultstyles.css), v budúcnosti by mohla byť cesta k 
+              nie-defaultnému CSS súbor napr. jednen z parametrov.
+             </para>
+            </remarks>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.UploadHttpHandler.FileProp">
+            <summary>
+            Prepravka pre uschovávanie názvu a typu upload-ovaného súboru.
+            </summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.FileProp._FileName">
+            <summary>Názov upload-ovaného súboru.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.FileProp._ContentType">
+            <summary>Typ obsahu upload-ovaného súboru.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.FileProp.#ctor(System.String,System.String)">
+            <summary>
+            Vytvorenie prepravky pre uschovávanie názvu a typu upload-ovaného súboru.
+            </summary>
+            <param name="fileName">Názov upload-ovaného súboru.</param>
+            <param name="contentType">Typ obsahu upload-ovaného súboru.</param>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.DEFAULT_UPLOAD_HANDLER">
+            <summary>Default názov handlera. Hodnota je "UploadHttpHandler.ashx".</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.STEP_REQUEST_KEY">
+            <summary>Kľúč do request-u pre určenie kroku ("step").</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.UPLOADID_REQUEST_KEY">
+            <summary>Kľúč do request-u pre určenie ID upload-u a dočasného uloženia ("uploadid").</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.FILE_UPLOAD_ID">
+            <summary>Kľúč pre uploadovaný súbor.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.CSS_FILE_CELL">
+            <summary>CSS trieda pre bunku s menom súboru v prvku pre upload súborov.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.CSS_BTN_CELL">
+            <summary>CSS trieda pre bunku s tlačidlom v prvku pre upload súborov.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.CSS_FILE_TITLE">
+            <summary>CSS trieda pre titulok "Súbor" v prvku pre upload súborov.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.CSS_FILE_NAME">
+            <summary>CSS trieda pre meno súboru v prvku pre upload súborov.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.APPSETTING_CUSTOM_CSS_FILE_NAME">
+            <summary>Nazov kľúča aplikačného nastavenia pre určenie mena dodatočného CSS súboru
+            v prvku pre upload súborov. Pozostáva z názvu triedy a prípony <c>.CustomCssFileName</c>.</summary>
+        </member>
+        <member name="T:Cora.Web.HttpHandlers.UploadHttpHandler.UploadStep">
+            <summary>Možné kroky (operácie) pri upload-ovaní súboru.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.UploadStep.Start">
+            <summary>Začiatočné zobrazenie s možnosťou upload-u súboru.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.UploadStep.Upload">
+            <summary>Zobrazenie po upload-e súboru.</summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler.UploadStep.Delete">
+            <summary>Požiadavka na zmazanie upload-ovaného súboru. Po nej nasleduje krok <see cref="F:Cora.Web.HttpHandlers.UploadHttpHandler.UploadStep.Start"/>.</summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.GetNewUploadHandlerUrl(System.String,System.String@)">
+            <summary>
+            Získanie url handlera so zadaným názvom pre nový upload a dočasné uloženie súboru.
+            </summary>
+            <param name="uploadHandler">The upload handler.</param>
+            <param name="uploadId">ID pre upload.</param>
+            <returns>Url handlera pre nový upload.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.GetNewUploadHandlerUrl(System.String@)">
+            <summary>
+            Získanie url handlera s default (<see cref="F:Cora.Web.HttpHandlers.UploadHttpHandler.DEFAULT_UPLOAD_HANDLER"/>) názvom pre nový upload a dočasné uloženie súboru.
+            </summary>
+            <param name="uploadId">ID pre upload.</param>
+            <returns>Url handlera pre nový upload.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.GetNewUploadId">
+            <summary>
+            Získanie nového ID pre upload a dočasné uloženie súboru. Je potrebné pre úspešné začatie upload-u.
+            </summary>
+            <returns>Nové ID pre upload.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.GetUploadedFiles(System.String)">
+            <summary>
+            Získanie zoznamu upload-nutých a dočasne uložených súborov pre zadané ID.
+            </summary>
+            <param name="uploadId">ID pre upload.</param>
+            <returns>Zoznam upload-nutých a dočasne uložených súborov.</returns>
+            <exception cref="T:System.Exception">Rôzne výnimky pri zlyhaní IO (upload adresár nejestvuje, nie je prístup, zlý path).</exception>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.RemoveUploadItem(System.String,System.Boolean)">
+            <summary>
+            Odstránenie upload-nutých a dočasne uložených súborov pre zadané ID.
+            </summary>
+            <param name="uploadId">ID pre upload.</param>
+            <param name="removeFilesOnly">Majú sa odstrániť iba súbory (pri <c>true</c>), alebo aj ID pre upload (hodnota <c>false</c>)?</param>
+            <returns>Počet odstránených upload-nutých a dočasne uložených súborov.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.ClearUploadItems">
+            <summary>
+            Vyčistenie celého zoznamu upload-nutých a dočasne uložených súborov.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.UploadHttpHandler.UploadDirectory">
+            <summary>
+            Adresár pre upload súborov. Viď poznámky pre bližšie info.
+            </summary>
+            <remarks>
+            Adresár sa berie primárne z aplikačného configu aplikácie podľa <see cref="P:Cora.Global.DirectoriesConfig.TempDirectoryConfig"/>.
+            Pokiaľ nie je uvedený alebo má neplatný tvar (podporovaná je iba absolútna cesta), používa sa 
+            systémový temp adresár pre daného usera.
+            Vrátená hodnota je v tvare cesty, t.j. končí znakom <see cref="F:System.IO.Path.DirectorySeparatorChar"/>.
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.GetContentType(System.String)">
+            <summary>
+            Získanie typ súboru pre zadané ID.
+            </summary>
+            <param name="uploadId">Upload ID.</param>
+            <returns>Typ súboru.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.GetFileName(System.String,System.Boolean)">
+            <summary>
+            Získanie názvu súboru pre plné meno.
+            </summary>
+            <param name="fullName">Plné meno.</param>
+            <param name="removeId">Oddeliť ID upload-u?</param>
+            <returns>Názov súboru.</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.ProcessRequest(System.Web.HttpContext)">
+            <summary>
+            Spracovanie dotazu.
+            </summary>
+            <param name="context">Webový kontext.</param>
+        </member>
+        <member name="P:Cora.Web.HttpHandlers.UploadHttpHandler.IsReusable">
+            <summary><c>false.</c></summary>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.SaveFile(System.Web.HttpContext)">
+            <summary>
+            Uloženie súboru.
+            </summary>
+            <param name="context">Webový kontext.</param>
+            <returns>Bolo uloženie úspešné?</returns>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.ProcessStart(System.Web.HttpContext)">
+            <summary>
+            Spracovanie dotazu - začiatočné zobrazenie.
+            </summary>
+            <param name="context">Webový kontext.</param>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.ProcessAfterUpload(System.Web.HttpContext)">
+            <summary>
+            Spracovanie dotazu - zobrazenie po upload-e súboru.
+            </summary>
+            <param name="context">Webový kontext.</param>
+        </member>
+        <member name="M:Cora.Web.HttpHandlers.UploadHttpHandler.ProcessError(System.Web.HttpContext)">
+            <summary>
+            Spracovanie chybových stavov.
+            </summary>
+        </member>
+        <member name="F:Cora.Web.HttpHandlers.UploadHttpHandler._UploadSteps">
+            <summary>Zoznam aktívnych upload handler-ov a ich posledných stavov.</summary>
+        </member>
+        <member name="M:Cora.Web.ExtensionMethods.EndResponse(System.Web.HttpResponse,System.Net.HttpStatusCode,System.String)">
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="response"/> je <c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Web.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Properties.Resources.DebugResourceNotFound">
+            <summary>
+              Looks up a localized string similar to Debug resource not found..
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Properties.Resources.ResourceAssemblyNotFound">
+            <summary>
+              Looks up a localized string similar to Resource assembly not found..
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Properties.Resources.ResourceAssemblyNotModified">
+            <summary>
+              Looks up a localized string similar to Resource assembly not modified..
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Properties.Resources.ResourceNotFound">
+            <summary>
+              Looks up a localized string similar to Resource not found..
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Properties.Resources.ResourceNotModified">
+            <summary>
+              Looks up a localized string similar to Resource not modified..
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Saml.IamAuthenticationModule.SignOutFromPortalSession">
+            <summary>
+            Odstránia sa Session, Cookies záznamy
+            </summary>
+        </member>
+        <member name="T:Cora.Web.Saml.IamIdentityFactory">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamIdentityFactory.Login">
+            <summary>Udalosť prihlásenia používateľa.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamIdentityFactory.Logout">
+            <summary>Udalosť odhlásenia používateľa.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamIdentityFactory.NoLogout">
+            <summary>Udalosť bez odhlásenia používateľa.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamIdentityFactory.NoLogin">
+            <summary>Udalosť bez prihlásenia používateľa.</summary>
+        </member>
+        <member name="P:Cora.Web.Saml.IamIdentityFactory.Identity">
+            <summary>Identita.</summary>
+        </member>
+        <member name="M:Cora.Web.Saml.IamIdentityFactory.Refresh">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Web.Saml.IamIdentityFactory.LoggedStatus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamIdentityFactory.LoggedStatus.None">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamIdentityFactory.LoggedStatus.Login">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamIdentityFactory.LoggedStatus.Logout">
+            <summary></summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamIdentityFactory.BeforeLoadIdentity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamIdentityFactory.AfterLoadIdentity">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Saml.IamIdentityFactory.IsLogged">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Web.Saml.IamIdentityFactory.HasClaims(System.Security.Claims.ClaimsIdentity)">
+            <summary>
+            
+            </summary>
+            <param name="oClaimsIdentity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Web.Saml.IamIdentityFactory.Get_IamIdentity">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Web.Saml.IamSaml2TokenHelper">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamSaml2TokenHelper.SAMLRESPONSE_FORM">
+            <summary>
+            Názov formulárovej položky SAMLResponse.
+            </summary>
+        </member>
+        <member name="F:Cora.Web.Saml.IamSaml2TokenHelper.ATTR_UPVS_SESSION_INDEX_NAME">
+            <summary>(UpvsSessionIndex).</summary>
+        </member>
+        <member name="M:Cora.Web.Saml.IamSaml2TokenHelper.IsSamlResponseForm(System.Web.HttpRequestBase)">
+            <summary>
+            Kontrola, že http dopyt obsahuje neprázdnu formulárovú položku SAMLResponse.
+            </summary>
+            <param name="request">Http dopyt.</param>
+            <returns>Obsahuje http dopyt formulárovú položku SAMLResponse?</returns>
+        </member>
+        <member name="M:Cora.Web.Saml.IamSaml2TokenHelper.ReadAndParseXmlResponse(System.Web.HttpRequestBase)">
+            <summary>
+            Prečítanie a parse-ovanie Http dopytu pre SAMLResponse.
+            </summary>
+            <param name="request">Http dopyt.</param>
+            <returns>Výsledný <see cref="T:System.Xml.XmlDocument"/> so SAMLResponse-om.</returns>
+        </member>
+        <member name="M:Cora.Web.Saml.IamSaml2TokenHelper.ReadAndParseXmlResponse(System.String)">
+            <summary>
+            Prečítanie a parse-ovanie Http dopytu pre SAMLResponse.
+            </summary>
+            <param name="samlResponse">The saml response.</param>
+            <returns>Výsledný <see cref="T:System.Xml.XmlDocument" /> so SAMLResponse-om.</returns>
+        </member>
+        <member name="M:Cora.Web.Saml.IamSaml2TokenHelper.ReadSaml2Token(System.Web.HttpRequestBase)">
+            <summary>
+            Vytvorenie tokenu z HTTP dopytu pre SAMLResponse.
+            </summary>
+            <param name="request">Http dopyt pre SAMLResponse.</param>
+            <returns>Výsledný token, alebo <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.Web.Saml.IamSaml2TokenHelper.ReadSaml2Token(System.Xml.XmlDocument)">
+            <summary>Vytvorenie tokenu z XML dokumentu SAMLResponse-u.</summary>
+            <param name="requestXmlDoc">The request XML document.</param>
+            <returns>Výsledný token, alebo <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.Web.Saml.IamSaml2TokenHelper.CreateTokenXml(System.Security.Claims.ClaimsPrincipal)">
+            <summary>Vytvorenie tokenu z HTTP dopytu pre SAMLResponse.</summary>
+            <param name="claimsPrincipal"></param>
+            <returns>Výsledný token, alebo <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.Web.Saml.IamSaml2TokenHelper.GetCurrentClaimsPrincipalSecurityToken">
+            <summary>
+            Získanie <see cref="T:System.IdentityModel.Tokens.SecurityToken"/>u z aktívneho <see cref="T:System.Security.Claims.ClaimsPrincipal"/>a. Ak ho nie je možné získať,
+            vráti <c>null</c> a pri <see cref="F:Cora.Utils.Logger.LogLevel.Finest"/> logovaní píše do logu dôvod.
+            </summary>
+            <returns><see cref="T:System.IdentityModel.Tokens.SecurityToken"/> z aktívneho <see cref="T:System.Security.Claims.ClaimsPrincipal"/>a, alebo <c>null</c>, ak ho nie možné získať.</returns>
+        </member>
+        <member name="M:Cora.Web.Saml.IamSaml2TokenHelper.SelectNodeValue(System.Xml.XmlElement,System.String)">
+            <summary>
+            Vráti vnútorný text <see cref="T:System.Xml.XmlElement"/>-u alebo hodnotu xml atribútu najdených podľa <paramref name="xPath"/>,
+            alebo <c>null</c>, ak nie sú nájdené.
+            </summary>
+            <param name="xmlElement"><see cref="T:System.Xml.XmlElement"/>, v ktorom sa hľadá.</param>
+            <param name="xPath">Výraz, podľa ktorého sa hľadá.</param>
+            <returns>Výsledok, alebo <c>nll</c>.</returns>
+        </member>
+        <member name="T:Cora.Web.Saml.SamlRequestGenerator">
+            <summary>Generátor SAML Request-ov.</summary>
+        </member>
+        <member name="T:Cora.Web.Saml.SamlRequestGenerator.RequestTypeEnum">
+            <summary>Typy SAML Request-u.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.RequestTypeEnum.SignIn">
+            <summary>Prihlásenie.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.RequestTypeEnum.SignOut">
+            <summary>Odhlásenie.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.RequestTypeEnum.ProlongSession">
+            <summary>Žiadosť o predĺženie ÚPVS Session.</summary>
+        </member>
+        <member name="T:Cora.Web.Saml.SamlRequestGenerator.SignatureAlgorithmEnum">
+            <summary>Typy SAML Request-u.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.SignatureAlgorithmEnum.Sha1">
+            <summary>Algoritmus SHA1.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.SignatureAlgorithmEnum.Sha256">
+            <summary>Algoritmus SHA256.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.XSI_NAMESPACE">
+            <summary>XSI namespace.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.XSD_NAMESPACE">
+            <summary>XSD namespace.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.SAML_PROTOCOL_NAMESPACE">
+            <summary>SAML:2.0:protocol namespace.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.SAML_ASSERTION_NAMESPACE">
+            <summary>SAML:2.0:assertion namespace.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.SAML_TRANSIENT_NAMESPACE">
+            <summary>SAML:2.0:transient namespace.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.SAML_VERSION">
+            <summary>SAML verzia.</summary>
+        </member>
+        <member name="F:Cora.Web.Saml.SamlRequestGenerator.SIG_ALG_PARAMETER_NAME">
+            <summary>Názov parametra pre Signature Alghoritm.</summary>
+        </member>
+        <member name="P:Cora.Web.Saml.SamlRequestGenerator.RequestType">
+            <summary>Typ SAML Request-u.</summary>
+        </member>
+        <member name="M:Cora.Web.Saml.SamlRequestGenerator.#ctor(Cora.Web.Saml.SamlRequestGenerator.RequestTypeEnum,System.Security.Cryptography.X509Certificates.X509Certificate2,System.String,System.String)">
+            <summary>
+            Inicializácia triedy <see cref="T:Cora.Web.Saml.SamlRequestGenerator"/>.
+            </summary>
+            <param name="requestType">Typ SAML Request-u.</param>
+            <param name="certificate">Certifikát.</param>
+            <param name="realm">The realm.</param>
+            <param name="issuer">The issuer.</param>
+        </member>
+        <member name="M:Cora.Web.Saml.SamlRequestGenerator.GenerateQueryString(System.String)">
+            <summary>
+            Generuje QueryString.
+            </summary>
+            <param name="request">Request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Web.Saml.SamlRequestGenerator.GetGeneratedRequest(System.Nullable{System.DateTime},System.Nullable{System.Guid})">
+            <summary>
+            Generuje Request.
+            </summary>
+            <param name="now">The now.</param>
+            <param name="guid">The unique identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Web.Saml.SamlRequestGenerator.Zip(System.Byte[])">
+            <summary>
+            Generátor ZIPu pre Request.
+            </summary>
+            <param name="data">Vstup.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Web.Saml.SessionAuthenticationModule">
+            <summary>
+            Riešenie chyby ID4243, vyskytujúcej sa pri nekonzistencii FedAuth cookie a token cache.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Saml.SessionAuthenticationModule.OnAuthenticateRequest(System.Object,System.EventArgs)">
+            <summary>
+            Handles the <see cref="E:System.Web.HttpApplication.AuthenticateRequest" /> event from the ASP.NET pipeline.
+            </summary>
+            <param name="sender">The source for the event. This will be an <see cref="T:System.Web.HttpApplication" /> object.</param>
+            <param name="eventArgs">The data for the event.</param>
+        </member>
+        <member name="T:Cora.Web.Security.CapabilityManager">
+            <summary>
+            Konfigurácia priradenia capabilities jednotlivým rolám.
+            </summary>
+            <remarks>
+            <para>
+             Capability autorizuje používateľa používať určitú jednotke funkčnosti (feature) aplikácie.
+             Táto trieda vie načítať priradenie capabilities jednotlivým rolám z konfiguračného súboru XML.
+            </para><para>
+             Verejné statické metódy triedy sú thread-safe.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:Cora.Web.Security.CapabilityManager.CONFIG_FILENAME">
+            <summary>Názov konfiguračného súboru pre defaultný capability manager - relatívne k app.config resp. web.config.</summary>
+        </member>
+        <member name="M:Cora.Web.Security.CapabilityManager.Create(System.IO.Stream)">
+            <summary>
+            Vytvorí konfiguračného manažéra zo streamu obsahujúceho konfiguračný súbor.
+            </summary>
+            <param name="configFileStream">Stream konfiguračného súboru.</param>
+            <exception name="XmlSchemaValidationException=">Ak konfiguračný súbor nie je validný.</exception>
+        </member>
+        <member name="P:Cora.Web.Security.CapabilityManager.Default">
+            <summary>
+            Vráti capability manager podľa konfigurácie v konfiguračnom súbore.
+            Ak konfiguračný súbor chýba, výsledný capability manažér je "prázdny".
+            </summary>
+            <exception name="XmlSchemaValidationException=">Ak konfiguračný súbor nie je validný (pri prvom volaní).</exception>
+        </member>
+        <member name="M:Cora.Web.Security.CapabilityManager.GetCapabilities(System.String)">
+            <summary>
+            Vráti množinu capabilities priradenú používateľskej role.
+            </summary>
+            <param name="role">Názov roly.</param>
+        </member>
+        <member name="M:Cora.Web.Security.CapabilityManager.GetRoles(System.String)">
+            <summary>
+            Vráti množinu rolí, ktoré majú priradenú danú capability.
+            </summary>
+            <param name="capability">Názov capability.</param>
+        </member>
+        <member name="M:Cora.Web.Security.CapabilityManager.HasCapability(System.String,System.String)">
+            <summary>
+            Má používateľská rola priradenú danú capability?
+            </summary>
+            <param name="role">Názov roly.</param>
+            <param name="capability">Názov capability.</param>
+        </member>
+        <member name="T:Cora.Web.Security.CapabilityManagerExtensions">
+            <summary>
+            Rozšírenie <see cref="T:Cora.Web.Security.ICapabilityManager"/> pre prácu s používateľskými identitami obsahujúcimi role.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Security.CapabilityManagerExtensions.GetCapabilities(Cora.Web.Security.ICapabilityManager,System.Security.Claims.ClaimsPrincipal)">
+            <summary>
+            Vráti množinu capabilities priradenú používateľovi.
+            </summary>
+            <param name="cm">Capability manager.</param>
+            <param name="principal">Principal používateľa. Ak je <c>null</c>, vráti prázdnu množinu.</param>
+        </member>
+        <member name="M:Cora.Web.Security.CapabilityManagerExtensions.HasCapability(Cora.Web.Security.ICapabilityManager,System.Security.Principal.IPrincipal,System.String)">
+            <summary>
+            Má používateľ priradenú danú capability?
+            </summary>
+            <param name="cm">Capability manager.</param>
+            <param name="principal">Principal používateľa. Ak je <c>null</c>, vráti prázdnu množinu.</param>
+            <param name="capability">Názov capability.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Web.Security.ICapabilityManager">
+            <summary>
+            Rozhranie pre triedu spravujúcu priradenie capabilities jednotlivým rolám.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Security.ICapabilityManager.GetCapabilities(System.String)">
+            <summary>
+            Vráti množinu capabilities priradenú používateľskej role.
+            </summary>
+            <param name="role">Názov roly.</param>
+        </member>
+        <member name="M:Cora.Web.Security.ICapabilityManager.GetRoles(System.String)">
+            <summary>
+            Vráti množinu rolí, ktoré majú priradenú danú capability.
+            </summary>
+            <param name="capability">Názov capability.</param>
+        </member>
+        <member name="M:Cora.Web.Security.ICapabilityManager.HasCapability(System.String,System.String)">
+            <summary>
+            Má používateľská rola priradenú danú capability?
+            </summary>
+            <param name="role">Názov roly.</param>
+            <param name="capability">Názov capability.</param>
+        </member>
+        <member name="M:Cora.Web.STS.CustomClientCredentials.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cora.Web.STS.CustomClientCredentials"/> class.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.STS.CustomClientCredentials.#ctor(System.ServiceModel.Description.ClientCredentials)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cora.Web.STS.CustomClientCredentials"/> class.
+            </summary>
+            <param name="other">A <see cref="T:System.ServiceModel.Description.ClientCredentials" />. All properties of the newly-constructed instance reflect the values of this parameter.</param>
+        </member>
+        <member name="M:Cora.Web.STS.CustomClientCredentials.CloneCore">
+            <summary>
+            Creates a new copy of this <see cref="T:System.ServiceModel.Description.ClientCredentials" /> instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.ServiceModel.Description.ClientCredentials" /> instance.
+            </returns>
+        </member>
+        <member name="M:Cora.Web.STS.CustomClientCredentials.CreateSecurityTokenManager">
+            <summary> 
+            Vráti custom security token manager.
+            </summary> 
+            <returns></returns> 
+        </member>
+        <member name="M:Cora.Web.STS.CustomClientCredentialsSecurityTokenManager.CreateSecurityTokenProvider(System.IdentityModel.Selectors.SecurityTokenRequirement)">
+            <summary> 
+            Vráti custom token provider v prípade, že je vyžadovaný issued token.
+            </summary> 
+        </member>
+        <member name="M:Cora.Web.STS.CustomIssuedSecurityTokenProvider.#ctor(System.ServiceModel.Security.Tokens.IssuedSecurityTokenProvider)">
+            <summary> 
+            Konštruktor.
+            </summary> 
+        </member>
+        <member name="M:Cora.Web.STS.CustomIssuedSecurityTokenProvider.GetTokenCore(System.TimeSpan)">
+            <summary> 
+            Získa security token.
+            </summary> 
+            <param name="timeout"></param> 
+            <returns></returns> 
+        </member>
+        <member name="M:Cora.Web.STS.CustomIssuedSecurityTokenProvider.IsServiceTokenTimeValid(System.IdentityModel.Tokens.SecurityToken)">
+            <summary> 
+            Kontrola na časovú expiráciu tokenu. 
+            </summary> 
+        </member>
+        <member name="T:Cora.Web.Wcf.AppSessionServiceContext">
+            <summary>
+            Kontext pre uchovanie a získanie <see cref="P:Cora.Web.Wcf.AppSessionServiceContext.AppSession"/> vo WCF službe. <see cref="P:Cora.Web.Wcf.AppSessionServiceContext.AppSession"/> sa musí
+            vytvoriť a uložiť z vonku. Aby začal <see cref="T:Cora.Web.Wcf.AppSessionServiceContext"/> vo WCF službe fungovať, najprv sa volá 
+            <see cref="M:Cora.Web.Wcf.AppSessionServiceContext.RegisterForAppSessionRetrieval"/>.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.AppSessionServiceContext.Current">
+            <summary>
+            Vráti kontext pre aktuálnu operáciu.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Ak neexistuje kontext vykonávania operácie služby.</exception>
+        </member>
+        <member name="M:Cora.Web.Wcf.AppSessionServiceContext.RegisterForAppSessionRetrieval">
+            <summary>
+            Zaregisterovanie volania <see cref="T:Cora.Web.Wcf.AppSessionServiceContext"/>, pomocou ktorého sa v aplikácii získa <see cref="P:Cora.Web.Wcf.AppSessionServiceContext.AppSession"/>
+            (pri volaní <see cref="M:Cora.Global.Session.AppSession.RetrieveAppSession"/>).
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.AppSessionServiceContext.AppSession">
+            <summary>
+            Získanie <see cref="P:Cora.Web.Wcf.AppSessionServiceContext.AppSession"/> v tomto kontexte. Ak ešte nebola v tomto kontexte uložená, výsledok je <c>null</c>.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Wcf.AppSessionServiceContext.SaveAppSession(Cora.Global.Session.AppSession)">
+            <summary>
+            Uloženie <see cref="P:Cora.Web.Wcf.AppSessionServiceContext.AppSession"/> v tomto kontexte.
+            </summary>
+            <param name="appSession">Ukladaná <see cref="P:Cora.Web.Wcf.AppSessionServiceContext.AppSession"/>. Nesmie byť <c>null</c>.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="appSession"/> je <c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Web.Wcf.BulkOperationAttribute">
+            <summary>
+            Dekoruje bulk operáciu v kontrakte WCF služby.
+            </summary>
+            <remarks>
+            <para>
+             Bulk operáciou je web metóda, ktorá typicky vracia veľa záznamov a teda má podporovať stránkovanie,
+             sortovanie atď. Má prístup ku kontextu <see cref="T:Cora.Web.Wcf.BulkOperationServiceContext"/>, odkiaľ si tieto dodatočné
+             parametre vie prečítať. V prípade ak <see cref="P:Cora.Web.Wcf.BulkOperationInput.GetPageInfo"/> je <c>true</c>, metóda
+             do kontextu uloží informácie <see cref="T:Cora.Web.Wcf.BulkOperationOutput"/> o skutočnom počte záznamov.
+            </para><para>
+             Tento behavior rozširuje SOAP správy danej operácie o dodatočné message header-y. V prípade, ak je 
+             potrebné premietnuť tieto header-y do generovaného WSDL, je treba dekorovať kontrakt služby pomocou
+             <see cref="T:Cora.Web.Wcf.BulkOperationWsdlAttribute"/>.
+            </para><para>
+             Pre konzumovanie bulk operácií na strane klienta sa použije <see cref="T:Cora.Web.Wcf.BulkOperationClientContext"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Cora.Web.Wcf.BulkOperationClientContext">
+            <summary>
+            Kontext pre volanie bulk operácie WCF služby na strane klienta.
+            </summary>
+            <remarks>
+             <para>
+              Tento kontext sa použije pri volaní bulk operácie, ak kontrakt služby nie je dekorovaný pomocou
+              <see cref="T:Cora.Web.Wcf.BulkOperationWsdlAttribute"/> (vtedy totiž svcutil.exe zahrnie dodatočné parametre do
+              signatúr metód proxy objektu).
+             </para><para>
+              Príklad použitia:
+              <example><code>
+              	using ( var svcClient = new WcfServiceProxy.NejakyClient() )
+            	using ( var bulkOpContext = new BulkOperationClientContext(svcClient.InnerChannel) )
+            	{ 
+            		bulkOpContext.SetBulkParameters(new BulkParameters() 
+            		{
+            			PageIndex = 1,
+            			PageSize = 20,
+            			GetPageInfo = true
+            		});
+            		svcClient.NejakaBulkOperacia();	
+            		var pageInfo = bulkOpContext.GetPageInfo();
+            	}
+              </code></example>
+             </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.Wcf.BulkOperationClientContext.#ctor(System.ServiceModel.IClientChannel)">
+            <summary>
+            Vytvorí kontext pre bulk operáciu na stranke klienta.
+            </summary>
+            <param name="clientChannel">Kanál servisnej proxy triedy na strane klienta.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.BulkOperationClientContext.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Wcf.BulkOperationClientContext.SetBulkParameters(Cora.Web.Wcf.BulkOperationInput)">
+            <summary>
+            Nastaví parametre na zjemnenie veľkého výsledku operácie (vstupné parametre - pred volaním).
+            </summary>
+            <remarks>
+            Pozor, aplikovanie parametrov je "by value", nie "by reference" - t.j. prípadná zmena parametrov
+            po volaní tejto metódy sa na volaní WCF služby neprejaví.
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.Wcf.BulkOperationClientContext.GetPageInfo">
+            <summary>
+            Vráti informáciu o výsledku stránkovania (výstupné parametre - po volaní).
+            </summary>
+        </member>
+        <member name="T:Cora.Web.Wcf.BulkOperationData">
+            <summary>
+            Vstupné a výstupné doplňujúce informácie pre bulk dopyt.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationData.In">
+            <summary>
+            Vstupné dáta.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationData.Out">
+            <summary>
+            Výstupné dáta.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.Wcf.BulkOperationInput">
+            <summary>
+            Vstupné doplňujúce informácie/parametre pre bulk dopyt.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationInput.PageIndex">
+            <summary>
+            Číslo stránky slúžiace na obmedzenie výsledkov dopytu. Prvá stránka má index 0.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationInput.PageSize">
+            <summary>
+            Počet záznamov na jeden stránke. Ak je menšie rovné 0, stránkovanie sa neaplikuje.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationInput.GetPageInfo">
+            <summary>
+            Ak je <c>true</c>, operácia vráti popisné informácie o stránkovaní a celkovom počte záznamov 
+            (<see cref="P:Cora.Web.Wcf.BulkOperationOutput.Pages"/> a <see cref="P:Cora.Web.Wcf.BulkOperationOutput.Records"/>).
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationInput.DModifySince">
+            <summary>
+            Obmedzenie výsledkov dopytu na záznamy zmenené po tomto dátume (vrátane).
+            </summary>
+            <remarks>Aplikuje sa, len keď záznamy obsahujú dátum zmeny.</remarks>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationInput.DModifyBefore">
+            <summary>
+            Obmedzenie výsledkov dopytu na záznamy zmenené pred týmto dátumom (vrátane).
+            </summary>
+            <remarks>Aplikuje sa, len keď záznamy obsahujú dátum zmeny.</remarks>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationInput.Sorting">
+            <summary>
+            Špecifikuje poradie triedenia výsledkov dopytu podľa zoznamu názvov stĺpcov v danom poradí.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.Wcf.BulkOperationMessageInspector">
+            <summary>
+            Rozšírenie SOAP správ pre podporu bulk operácií vo WCF službách.
+            </summary>
+            <remarks>
+             Trieda slúži na preklad informácií medzi kontextom bulk operácii (<see cref="T:Cora.Web.Wcf.BulkOperationServiceContext"/>) 
+             a SOAP requestom, t.j. prečíta parametre pre bulk operáciu z hlavičky SOAP requestu
+             do kontextu bulk operácie; po volaní po volaní uloží relevantné dáta z kontextu do hlavičky 
+             SOAP responsu.
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.Wcf.BulkOperationMessageInspector.AddOperation(System.ServiceModel.Description.OperationDescription)">
+            <summary>
+            Pridá operáciu, na ktorú sa rozšírenie má aplikovať.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.Wcf.BulkOperationOutput">
+            <summary>
+            Výstupné informácie z bulk dopytu.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationOutput.Pages">
+            <summary>
+            Celkový počet stránok pre daný dopyt. 
+            Ak nebola špecifikovaná veľkosť stránky (<see cref="P:Cora.Web.Wcf.BulkOperationInput.PageSize"/>), hodnota je nedefinovaná.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationOutput.Records">
+            <summary>
+            Celkový počet záznamov pre daný dopyt (ktoré by boli vrátené ak by sa neaplikovalo stránkovanie).
+            </summary>
+        </member>
+        <member name="T:Cora.Web.Wcf.BulkOperationServiceContext">
+            <summary>
+            Kontext pre bulk operáciu WCF služby na strane service.
+            </summary>
+            <remarks>
+            Operácie dekorované pomocou <see cref="T:Cora.Web.Wcf.BulkOperationAttribute"/> sprístupnňujú tento kontext pre použitie
+            v ich tele.
+            </remarks>
+        </member>
+        <member name="P:Cora.Web.Wcf.BulkOperationServiceContext.Current">
+            <summary>
+            Vráti kontext pre aktuálnu operáciu.
+            </summary>
+            <exception cref="T:System.InvalidOperationException">Ak neexistuje kontext vykonávania operácie služby.</exception>
+        </member>
+        <member name="T:Cora.Web.Wcf.BulkOperationWsdlAttribute">
+            <summary>
+            Dekoruje kontrakt WCF služby obsahujúci bulk operácie, pokiaľ chceme rozšírenia SOAP správ propagovať do WSDL.
+            </summary>
+            <remarks>
+             <para>
+              Tento atribút zodpovedá za úpravu generovania WSDL daného service contractu tak, aby reflektoval 
+              dodatočné SOAP message header-y pre operácie dekorované pomocou <see cref="T:Cora.Web.Wcf.BulkOperationAttribute"/>,
+              a následne aby ich svcutil.exe sprístupnil ako súčasť signatúr daných operácií proxy objektu.
+              Implementácia <see cref="T:System.ServiceModel.Description.IWsdlExportExtension"/> priamo v triede <see cref="T:Cora.Web.Wcf.BulkOperationAttribute"/>
+              žiaľ neposkytovala požadovaný výsledok, hoci dokumentácia to výslovne nespomína 
+              (viď tiež http://tintoy.snoscillator.net/2012/06/24/wcf-and-out-of-band-info/).
+             </para><para>
+              Ak kontrakt nie je týmto atribútom dekorovaný, na funkčnosť bulk operácií to nemá žiaden vplyv.
+             </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.Wcf.BulkOperationWsdlAttribute.ExportContract(System.ServiceModel.Description.WsdlExporter,System.ServiceModel.Description.WsdlContractConversionContext)">
+            <summary>
+            Writes custom Web Services Description Language (WSDL) elements into the generated WSDL for a contract.
+            </summary>
+            <param name="exporter">The <see cref="T:System.ServiceModel.Description.WsdlExporter" /> that exports the contract information.</param>
+            <param name="context">Provides mappings from exported WSDL elements to the contract description.</param>
+        </member>
+        <member name="T:Cora.Web.Wcf.ContractDescriptionExtensions">
+            <summary>
+            Extension metódy pre triedu <see cref="T:System.ServiceModel.Description.ContractDescription"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Wcf.ContractDescriptionExtensions.GetOperationsWithAttribute``1(System.ServiceModel.Description.ContractDescription)">
+            <summary>
+            Vráti popis všetkých operácií dekorovaných atribútom daného typu.
+            </summary>
+            <typeparam name="TAttribute">Typ attribútu.</typeparam>
+            <param name="contract">Popis kontraktu WCF služby.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="contract"/> je <c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Web.Wcf.MessageFileLoggingBehavior">
+            <summary>
+            Behavior WCF endpointu, ktorý zapisuje obsah prijatých a odoslaných správ do aplikačného logu. 
+            Používa sa na logovanie na strane služby aj klienta. Zároveň plní konfiguračnú úlohu
+            ako <see cref="T:System.ServiceModel.Configuration.BehaviorExtensionElement"/>.
+            <example>Príklad zaradenia <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u pomocou konfigurácie:
+            <code language="other">
+            &lt;system.serviceModel&gt;
+            	&lt;bindings&gt;
+            		&lt;basicHttpBinding&gt;
+            			&lt;binding name="BasicHttpBinding_client" /&gt;
+            		&lt;/basicHttpBinding&gt;
+            	&lt;/bindings&gt;
+            	&lt;client&gt;
+            		&lt;endpoint ... /&gt;
+            	&lt;/client&gt;
+            	&lt;behaviors&gt;
+            		&lt;endpointBehaviors&gt;
+            			&lt;behavior&gt;
+            				&lt;messageLoggingBehavior /&gt;
+            			&lt;/behavior&gt;
+            		&lt;/endpointBehaviors&gt;
+            	&lt;/behaviors&gt;
+            	&lt;extensions&gt;
+            		&lt;behaviorExtensions&gt;
+            			&lt;add name="messageLoggingBehavior" type="Cora.Web.Wcf.MessageFileLoggingBehavior, Cora.Web, Version=4.3.0.0, Culture=neutral, PublicKeyToken=80AB63AD4CD8C4BF"/&gt;
+            		&lt;/behaviorExtensions&gt;
+            	&lt;/extensions&gt;
+            &lt;/system.serviceModel&gt;
+            </code>
+            </example>
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingBehavior.AddBindingParameters(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Channels.BindingParameterCollection)">
+            <summary>
+            Implement to pass data at runtime to bindings to support custom behavior.
+            </summary>
+            <param name="endpoint">The endpoint to modify.</param>
+            <param name="bindingParameters">The objects that binding elements require to support the behavior.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingBehavior.ApplyClientBehavior(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Dispatcher.ClientRuntime)">
+            <summary>
+            Pridanie logovania správ klientského endpoint-u.
+            </summary>
+            <param name="endpoint">The endpoint that is to be customized.</param>
+            <param name="clientRuntime">The client runtime to be customized.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingBehavior.ApplyDispatchBehavior(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Dispatcher.EndpointDispatcher)">
+            <summary>
+            Pridanie inšpektora logovania správ endpoint-u služby.
+            </summary>
+            <param name="endpoint">The endpoint that exposes the contract.</param>
+            <param name="endpointDispatcher">The endpoint dispatcher to be modified or extended.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingBehavior.Validate(System.ServiceModel.Description.ServiceEndpoint)">
+            <summary>
+            Implement to confirm that the endpoint meets some intended criteria.
+            </summary>
+            <param name="endpoint">The endpoint to validate.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingBehavior.AddBindingParameters(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase,System.Collections.ObjectModel.Collection{System.ServiceModel.Description.ServiceEndpoint},System.ServiceModel.Channels.BindingParameterCollection)">
+            <summary>
+            Provides the ability to pass custom data to binding elements to support the contract implementation.
+            </summary>
+            <param name="serviceDescription">The service description of the service.</param>
+            <param name="serviceHostBase">The host of the service.</param>
+            <param name="endpoints">The service endpoints.</param>
+            <param name="bindingParameters">Custom objects to which binding elements have access.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingBehavior.ApplyDispatchBehavior(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase)">
+            <summary>
+            Pridanie inšpektora logovania správ endpoint-om služby.
+            </summary>
+            <param name="serviceDescription">The service description.</param>
+            <param name="serviceHostBase">The host that is currently being built.</param>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingBehavior.Validate(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase)">
+            <summary>
+            Provides the ability to inspect the service host and the service description to confirm that the service can run successfully.
+            </summary>
+            <param name="serviceDescription">The service description.</param>
+            <param name="serviceHostBase">The service host that is currently being constructed.</param>
+        </member>
+        <member name="P:Cora.Web.Wcf.MessageFileLoggingBehavior.BehaviorType">
+            <summary>
+            Získanie typu <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u.
+            </summary>
+            <returns>Typ <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u.</returns>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingBehavior.CreateBehavior">
+            <summary>
+            Vytvorenie rozšírenia <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u.
+            </summary>
+            <returns>
+            Nová inštancia <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u.
+            </returns>
+        </member>
+        <member name="T:Cora.Web.Wcf.MessageFileLoggingInspector">
+            <summary>
+            Inšpektor WCF správ, ktorý loguje obsah zasielaných a prijímaných správ pomocou <see cref="T:Cora.Web.WebLogging"/>
+            (od úrovne <see cref="!:Cora.Utils.LogLevel.Debug"/>).
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingInspector.BeforeSendRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel)">
+            <summary>
+            Zalogovanie správy predtým, než je odoslaná službe.
+            </summary>
+            <param name="request">Odosielaná správa.</param>
+            <param name="channel">Odosielací kanál.</param>
+            <returns>
+             Žiadna korelácia - <c>null</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingInspector.AfterReceiveReply(System.ServiceModel.Channels.Message@,System.Object)">
+            <summary>
+            Zalogovanie správy po prijatí, ale ešte pred tým, než je odovzdaná klientskej aplikácii.
+            </summary>
+            <param name="reply">Prijatá správa.</param>
+            <param name="correlationState">Korelačný stav.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingInspector.AfterReceiveRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel,System.ServiceModel.InstanceContext)">
+            <summary>
+            Zalogovanie správy po prijatí, ale ešte pred tým, než je odovzdaná klientskej aplikácii.
+            </summary>
+            <param name="request">Prijatá správa.</param>
+            <param name="channel">Prijímací kanál.</param>
+            <param name="instanceContext">Inštancia služby.</param>
+            <returns>
+            Žiadna korelácia - <c>null</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageFileLoggingInspector.BeforeSendReply(System.ServiceModel.Channels.Message@,System.Object)">
+            <summary>
+            Zalogovanie správy predtým, než je odoslaná klientovi.
+            </summary>
+            <param name="reply">Odosielaná správa</param>
+            <param name="correlationState">Korelačný objekt.</param>
+        </member>
+        <member name="T:Cora.Web.Wcf.MessageLoggingInspector">
+            <summary>
+            Inšpektor WCF správ, ktorý loguje obsah zasielaných a prijímaných správ pomocou <see cref="T:Cora.Web.WebLogging"/>
+            (od úrovne <see cref="!:Cora.Utils.LogLevel.Debug"/>).
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingInspector.AfterReceiveReply(System.ServiceModel.Channels.Message@,System.Object)">
+            <summary>
+            Zalogovanie správy po prijatí, ale ešte pred tým, než je odovzdaná klientskej aplikácii.
+            </summary>
+            <param name="reply">Prijatá správa.</param>
+            <param name="correlationState">Korelačný stav.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingInspector.BeforeSendRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel)">
+            <summary>
+            Zalogovanie správy predtým, než je odoslaná službe.
+            </summary>
+            <param name="request">Odosielaná správa.</param>
+            <param name="channel">Odosielací kanál.</param>
+            <returns>
+             Žiadna korelácia - <c>null</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingInspector.AfterReceiveRequest(System.ServiceModel.Channels.Message@,System.ServiceModel.IClientChannel,System.ServiceModel.InstanceContext)">
+            <summary>
+            Zalogovanie správy po prijatí, ale ešte pred tým, než je odovzdaná klientskej aplikácii.
+            </summary>
+            <param name="request">Prijatá správa.</param>
+            <param name="channel">Prijímací kanál.</param>
+            <param name="instanceContext">Inštancia služby.</param>
+            <returns>
+            Žiadna korelácia - <c>null</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingInspector.BeforeSendReply(System.ServiceModel.Channels.Message@,System.Object)">
+            <summary>
+            Zalogovanie správy predtým, než je odoslaná klientovi.
+            </summary>
+            <param name="reply">Odosielaná správa</param>
+            <param name="correlationState">Korelačný objekt.</param>
+        </member>
+        <member name="T:Cora.Web.Wcf.MessageLoggingBehavior">
+            <summary>
+            Behavior WCF endpointu, ktorý zapisuje obsah prijatých a odoslaných správ do aplikačného logu. 
+            Používa sa na logovanie na strane služby aj klienta. Zároveň plní konfiguračnú úlohu
+            ako <see cref="T:System.ServiceModel.Configuration.BehaviorExtensionElement"/>.
+            <example>Príklad zaradenia <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u pomocou konfigurácie:
+            <code language="other">
+            &lt;system.serviceModel&gt;
+            	&lt;bindings&gt;
+            		&lt;basicHttpBinding&gt;
+            			&lt;binding name="BasicHttpBinding_client" /&gt;
+            		&lt;/basicHttpBinding&gt;
+            	&lt;/bindings&gt;
+            	&lt;client&gt;
+            		&lt;endpoint ... /&gt;
+            	&lt;/client&gt;
+            	&lt;behaviors&gt;
+            		&lt;endpointBehaviors&gt;
+            			&lt;behavior&gt;
+            				&lt;messageLoggingBehavior /&gt;
+            			&lt;/behavior&gt;
+            		&lt;/endpointBehaviors&gt;
+            	&lt;/behaviors&gt;
+            	&lt;extensions&gt;
+            		&lt;behaviorExtensions&gt;
+            			&lt;add name="messageLoggingBehavior" type="Cora.Web.Wcf.MessageLoggingBehavior, Cora.Web, Version=4.3.0.0, Culture=neutral, PublicKeyToken=80AB63AD4CD8C4BF"/&gt;
+            		&lt;/behaviorExtensions&gt;
+            	&lt;/extensions&gt;
+            &lt;/system.serviceModel&gt;
+            </code>
+            </example>
+            </summary>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingBehavior.AddBindingParameters(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Channels.BindingParameterCollection)">
+            <summary>
+            Implement to pass data at runtime to bindings to support custom behavior.
+            </summary>
+            <param name="endpoint">The endpoint to modify.</param>
+            <param name="bindingParameters">The objects that binding elements require to support the behavior.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingBehavior.ApplyClientBehavior(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Dispatcher.ClientRuntime)">
+            <summary>
+            Pridanie logovania správ klientského endpoint-u.
+            </summary>
+            <param name="endpoint">The endpoint that is to be customized.</param>
+            <param name="clientRuntime">The client runtime to be customized.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingBehavior.ApplyDispatchBehavior(System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Dispatcher.EndpointDispatcher)">
+            <summary>
+            Pridanie inšpektora logovania správ endpoint-u služby.
+            </summary>
+            <param name="endpoint">The endpoint that exposes the contract.</param>
+            <param name="endpointDispatcher">The endpoint dispatcher to be modified or extended.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingBehavior.Validate(System.ServiceModel.Description.ServiceEndpoint)">
+            <summary>
+            Implement to confirm that the endpoint meets some intended criteria.
+            </summary>
+            <param name="endpoint">The endpoint to validate.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingBehavior.AddBindingParameters(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase,System.Collections.ObjectModel.Collection{System.ServiceModel.Description.ServiceEndpoint},System.ServiceModel.Channels.BindingParameterCollection)">
+            <summary>
+            Provides the ability to pass custom data to binding elements to support the contract implementation.
+            </summary>
+            <param name="serviceDescription">The service description of the service.</param>
+            <param name="serviceHostBase">The host of the service.</param>
+            <param name="endpoints">The service endpoints.</param>
+            <param name="bindingParameters">Custom objects to which binding elements have access.</param>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingBehavior.ApplyDispatchBehavior(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase)">
+            <summary>
+            Pridanie inšpektora logovania správ endpoint-om služby.
+            </summary>
+            <param name="serviceDescription">The service description.</param>
+            <param name="serviceHostBase">The host that is currently being built.</param>
+            <exception cref="T:System.NotImplementedException"></exception>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingBehavior.Validate(System.ServiceModel.Description.ServiceDescription,System.ServiceModel.ServiceHostBase)">
+            <summary>
+            Provides the ability to inspect the service host and the service description to confirm that the service can run successfully.
+            </summary>
+            <param name="serviceDescription">The service description.</param>
+            <param name="serviceHostBase">The service host that is currently being constructed.</param>
+        </member>
+        <member name="P:Cora.Web.Wcf.MessageLoggingBehavior.BehaviorType">
+            <summary>
+            Získanie typu <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u.
+            </summary>
+            <returns>Typ <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u.</returns>
+        </member>
+        <member name="M:Cora.Web.Wcf.MessageLoggingBehavior.CreateBehavior">
+            <summary>
+            Vytvorenie rozšírenia <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u.
+            </summary>
+            <returns>
+            Nová inštancia <see cref="T:Cora.Web.Wcf.MessageLoggingBehavior"/>-u.
+            </returns>
+        </member>
+        <member name="T:Cora.Web.Wcf.NamespaceDoc">
+            <summary>
+            Obsahuje triedy použiteľné vo frameworku Windows Communication Foundation.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.Wcf.SortDescription">
+            <summary>
+            Popis triedenia.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.SortDescription.ColumnName">
+            <summary>
+            Názov stĺpca dát.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.Wcf.SortDescription.Direction">
+            <summary>
+            Smer triediacej operácie.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.WebApi.Filters.AuthorizeCapabilitiesAttribute">
+            <summary>
+            Autorizačný filter vyžadujúci od prihláseného používateľa capability.
+            </summary>
+            <remarks>
+            <para>
+            Autorizačný filter autorizuje používateľa, ktorý vlastní aspoň jednu capability zo zoznamu (spojenie OR).
+            Pri viacnásobnom výskyte filtra musí používateľa autorizovať každá uvedená inštancia (spojenie AND).
+            V prípade, že controller alebo akcia je odekorovaný atribútom <see cref="T:System.Web.Http.AllowAnonymousAttribute"/>, 
+            filter sa neaplikuje.
+            Ak nie je nastavený <see cref="P:System.Threading.Thread.CurrentPrincipal"/> alebo nie je autentifikovaný, autorizácia sa nepovolí.
+            </para><para>
+            Filter pracuje s capability manažérom <see cref="P:Cora.Web.Security.CapabilityManager.Default"/>. 
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.WebApi.Filters.AuthorizeCapabilitiesAttribute.#ctor(System.String[])">
+            <summary>
+            Vytvorí inštanciu autorizačného filtra pre capabilities.
+            </summary>
+            <param name="capabilityList">Zoznam capabilities.</param>
+        </member>
+        <member name="P:Cora.Web.WebApi.Filters.AuthorizeCapabilitiesAttribute.CapabilityList">
+            <summary>
+            Vráti zoznam požadovaných capabilities.
+            </summary>
+        </member>
+        <member name="M:Cora.Web.WebApi.Filters.AuthorizeCapabilitiesAttribute.OnAuthorization(System.Web.Http.Controllers.HttpActionContext)">
+            <summary>
+            Urobí autorizačné rozhodnutie.
+            </summary>
+            <param name="actionContext">Action context.</param>
+            <exception cref="T:System.ArgumentNullException">actionContext</exception>
+        </member>
+        <member name="T:Cora.Web.WebApi.Filters.HandleSpecificExceptionsFilterAttribute">
+            <summary>
+            Filter ošetrujúci bežné typy výnimiek v ASP.NET Web API pretavením do určitých HTTP status kódov resp. logovaním.
+            </summary>
+            <remarks>
+            Registruje sa do kolekcie <see cref="P:System.Web.Http.HttpConfiguration.Filters"/>.
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.WebApi.Filters.HandleSpecificExceptionsFilterAttribute.OnException(System.Web.Http.Filters.HttpActionExecutedContext)">
+            <summary>
+            Ošetruke výnimku z kontextu.
+            </summary>
+            <param name="context">Kontext volania akcie.</param>
+        </member>
+        <member name="T:Cora.Web.WebApi.Handlers.AddApiVersionHandler">
+            <summary>
+            Handler pridávajúci do HTTP response custom header s verziou projektu.
+            </summary>
+            <remarks>
+            Za verziu projektu sa považuje číslo verzie uvedené v atribúte <see cref="T:System.Reflection.AssemblyFileVersionAttribute"/>.
+            v hlavnej assembly projektu. Je tiež možné dodať vlastný identifikátor pre verziu.
+            </remarks>
+        </member>
+        <member name="F:Cora.Web.WebApi.Handlers.AddApiVersionHandler.RESPONSE_HEADER">
+            <summary>Response header pre uvedenie verzie.</summary>
+        </member>
+        <member name="M:Cora.Web.WebApi.Handlers.AddApiVersionHandler.#ctor(System.String)">
+            <summary>
+            Vytvorí inštanciu handlera s určením vlastného identifikátora pre verziu.
+            </summary>
+            <param name="customApiVersion">Verzia.</param>
+        </member>
+        <member name="M:Cora.Web.WebApi.Handlers.AddApiVersionHandler.#ctor(System.Reflection.Assembly)">
+            <summary>
+            Vytvorí inštanciu handlera s určením hlavnej assembly projektu, z ktorej sa čerpá identifikátor verzie.
+            </summary>
+            <param name="mainAssembly">Hlavná assembly projektu.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="mainAssembly"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Web.WebApi.Handlers.AddApiVersionHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Sends HTTP request message asynchronously.
+            </summary>
+            <param name="request">Request.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Web.WebApi.Handlers.LoggingHandler">
+            <summary>
+            Handler logujúci diagnostické údaje z requestu a responsu v ASP.NET Web API.
+            </summary>
+            <remarks>
+            Diagnostické údaje sa logujú s prioritou <see cref="F:Cora.Utils.Logger.LogLevel.Debug"/> a <see cref="F:Cora.Utils.Logger.LogLevel.Finest"/>.
+            Handler sa registruje do kolekcie <see cref="P:System.Web.Http.HttpConfiguration.MessageHandlers"/>.
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.WebApi.Handlers.LoggingHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Táto metóda preťažuje <see cref="M:System.Net.Http.HttpMessageHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/>.
+            </summary>
+            <param name="request">Request.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Web.WebApi.Handlers.SessionAuthenticationHandler">
+            <summary>
+            Handler autentifikujúci užívateľa na základe session tokenu.
+            </summary>
+            <remarks>
+            <para>
+             Session token klient poskytuje v HTTP header-i "WWW-Authenticate: SessionToken [token]".
+             Autentifikácia spočíva v overení jeho platnosti a nastavení identity  používateľa patriaceho k danej
+             session (<see cref="P:System.Threading.Thread.CurrentPrincipal"/> a <see cref="P:System.Web.HttpContext.User"/>).
+             Za správu sessions, refresh a politiku ich expirácie je zodpovedný session provider poskytnutý 
+             pri konštrukcii tejto triedy.
+            </para><para>
+             Handler sa registruje do kolekcie <see cref="P:System.Web.Http.HttpConfiguration.MessageHandlers"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Web.WebApi.Handlers.SessionAuthenticationHandler.GetSessionToken(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Vráti session token z HTTP requestu.
+            </summary>
+            <param name="request">HTTP request.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Web.WebApi.Handlers.SessionAuthenticationHandler.#ctor(Cora.Global.Session.ISessionProvider{System.Security.Principal.IPrincipal})">
+            <summary>
+            Vytvorí novú inštanciu handlera.
+            </summary>
+            <param name="sessionProvider">Trieda pre autentifikáciu, správu a udržiavanie sessions.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="sessionProvider"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Web.WebApi.Handlers.SessionAuthenticationHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Táto metóda preťažuje <see cref="M:System.Net.Http.HttpMessageHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/>.
+            </summary>
+            <param name="request">Request.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Web.WebApi.NamespaceDoc">
+            <summary>
+            Obsahuje triedy použiteľné vo frameworku ASP.NET Web API.
+            </summary>
+        </member>
+        <member name="T:Cora.Web.WebApi.Controllers.SessionControllerBase`1">
+            <summary>
+            Základná trieda pre controller na vytvorenie a zrušenie používateľskej session.
+            </summary>
+            <typeparam name="T">Typ principal-a autentifikovaného používateľa, s ktorým pracuje 
+            	<see cref="T:Cora.Global.Session.ISessionProvider`1"/>.</typeparam>
+        </member>
+        <member name="F:Cora.Web.WebApi.Controllers.SessionControllerBase`1.USER_PARAM">
+            <summary>POST parameter pre prihlasovacie meno používateľa.</summary>
+        </member>
+        <member name="F:Cora.Web.WebApi.Controllers.SessionControllerBase`1.PW_PARAM">
+            <summary>POST parameter pre prihlasovacie heslo používateľa.</summary>
+        </member>
+        <member name="M:Cora.Web.WebApi.Controllers.SessionControllerBase`1.#ctor(Cora.Global.Session.ISessionProvider{`0})">
+            <summary>
+            Vytvorí novú inštanciu základnej triedy pre controller na vytvorenie a zrušenie používateľskej session.
+            </summary>
+            <param name="sessionProvider">Poskytovateľ session.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="sessionProvider"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Web.WebApi.Controllers.SessionControllerBase`1.Post(System.Net.Http.Formatting.FormDataCollection)">
+            <summary>
+            Vytvorí používateľskú session na základe prihlasovacích údajov.
+            Konkrétnu odpoveď implementuje dedič preťažením <see cref="M:Cora.Web.WebApi.Controllers.SessionControllerBase`1.CreateResponseAfterSessionCreated(Cora.Global.Session.Session,`0)"/>.
+            </summary>
+            <param name="data">Prihlasovacie údaje.</param>
+            <returns></returns>
+            <exception cref="T:System.Security.SecurityException">V prípade neúspešného prihlásenia.</exception>
+        </member>
+        <member name="M:Cora.Web.WebApi.Controllers.SessionControllerBase`1.Delete(System.String)">
+            <summary>
+            Zruší používateľskú session.
+            </summary>
+            <param name="token">Session token.</param>
+            <exception cref="T:System.Security.SecurityException">V prípade že požadovaná session nepatrí prihlásenému používateľovi.</exception>
+        </member>
+        <member name="M:Cora.Web.WebApi.Controllers.SessionControllerBase`1.CreateResponseAfterSessionCreated(Cora.Global.Session.Session,`0)">
+            <summary>
+            Vytvorí odpoveď po úspešnom vytvorení session.
+            Odpoveď bude typicky obsahovať session token a informácie o autentifikovanom používateľovi.
+            </summary>
+            <param name="session">Vytvorená session.</param>
+            <param name="authenticatedPrincipal">Authentifikovaný používateľ.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Web.WebConfig">
+            <summary>Trieda na uľahčenie čítania nastavení z web.config-u.</summary>
+        </member>
+        <member name="F:Cora.Web.WebConfig.RequestEncoding">
+            <summary>Kódovania request-u nastavené vo web.config-u. Nie je <c>null</c>.</summary>
+        </member>
+        <member name="F:Cora.Web.WebConfig.ResponseEncoding">
+            <summary>Kódovania response-u nastavené vo web.config-u. Nie je <c>null</c>.</summary>
+        </member>
+        <member name="M:Cora.Web.WebConfig.GetWebSection(System.String)">
+            <summary>
+            Získanie podsekcie konfiguračného uzla <c>system.web</c> so zadaným menom.
+            </summary>
+            <param name="webSectionName">Názov hľadanej sekcie.</param>
+            <returns>Podsekcia uzla <c>system.web</c> so zadaným menom.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="webSectionName"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Web.WebConfig.#cctor">
+            <summary>Statický konštruktor.</summary>
+        </member>
+        <member name="F:Cora.Web.WebLogging.SECTION_NAME">
+            <summary>Názov config sekcie app.config-u, z ktorej čerpáme nastavenia loggera.</summary>
+        </member>
+        <member name="P:Cora.Web.WebLogging.Logger">
+            <summary>
+            Vráti logger pre logovanie v triedach knižnice Cora.Web. 
+            </summary>
+            <remarks>
+            <para>
+            Logger sa vyrába podľa parametrov uvedených v config sekcii <see cref="F:Cora.Web.WebLogging.SECTION_NAME"/> app.config-u,
+            Ak chýba takáto konfigurácia, metóda vracia <see cref="P:Cora.Web.WebLogging.Logger"/>.
+            </para>
+            </remarks>
+            <returns>Logger podľa nastavení v aplikačnom configu, alebo <see cref="P:Cora.Web.WebLogging.Logger"/>, ak nie je nastavený.</returns>
+        </member>
+        <member name="T:Cora.Web.WebServiceClientConfig">
+            <summary>
+            Trieda slúžiaca na konfiguráciu klientov webových služieb.
+            </summary>
+            <example>
+            Konfiguračná sekcia môže vyzerať nasledovne, default názov je <see cref="F:Cora.Web.WebServiceClientConfig.DEFAULT_SECTION_NAME"/> (WebServiceClientConfig):
+            <code>
+            &lt;WebServiceClientConfig Url=&quot;http://server/WebService.asmx&quot; Timeout=&quot;100&quot;
+            	UserName=&quot;user&quot; Password=&quot;pwd&quot; Domain=&quot;domain&quot;&gt;
+            	&lt;WebProxy HostName=&quot;proxyhost&quot; HostPort=&quot;8080&quot;
+            		UserName=&quot;proxyuser&quot; Password=&quot;proxypwd&quot; Domain=&quot;proxydomain&quot;/&gt;
+            &lt;/WebServiceClientConfig&gt;
+            </code>
+            </example>
+        </member>
+        <member name="F:Cora.Web.WebServiceClientConfig.DEFAULT_SECTION_NAME">
+            <summary>Defaultný názov konfiguračnej sekcie (WebServiceClientConfig).</summary>
+        </member>
+        <member name="F:Cora.Web.WebServiceClientConfig.URL">
+            <summary>Názov atribútu pre URL web služby (Url).</summary>
+        </member>
+        <member name="F:Cora.Web.WebServiceClientConfig.TIMEOUT">
+            <summary>Názov atribútu pre timeout odpovede web služby (Timeout).</summary>
+        </member>
+        <member name="F:Cora.Web.WebServiceClientConfig.WEB_PROXY">
+            <summary>Názov uzlu pre nastavenie proxy web služby (WebProxy).</summary>
+        </member>
+        <member name="F:Cora.Web.WebServiceClientConfig.HOST_NAME">
+            <summary>Názov atribútu pre názov proxy stroja (HostName).</summary>
+        </member>
+        <member name="F:Cora.Web.WebServiceClientConfig.HOST_PORT">
+            <summary>Názov atribútu pre port proxy (HostPort).</summary>
+        </member>
+        <member name="F:Cora.Web.WebServiceClientConfig.USER_NAME">
+            <summary>Názov atribútu pre meno používateľa (UserName).</summary>
+        </member>
+        <member name="F:Cora.Web.WebServiceClientConfig.PASSWORD">
+            <summary>Názov atribútu pre heslo používateľa (Password).</summary>
+        </member>
+        <member name="F:Cora.Web.WebServiceClientConfig.DOMAIN">
+            <summary>Názov atribútu pre doménu používateľa (Domain).</summary>
+        </member>
+        <member name="M:Cora.Web.WebServiceClientConfig.Create">
+            <summary>
+            Vytvorenie novej inštancie <see cref="T:Cora.Web.WebServiceClientConfig"/>-u podľa defaultného názvu sekcie (<see cref="F:Cora.Web.WebServiceClientConfig.DEFAULT_SECTION_NAME"/>).
+            </summary>
+            <returns><see cref="T:Cora.Web.WebServiceClientConfig"/> nastavený podľa defaultného názvu sekcie.</returns>
+        </member>
+        <member name="M:Cora.Web.WebServiceClientConfig.Create(System.String)">
+            <summary>
+            Vytvorenie novej inštancie <see cref="T:Cora.Web.WebServiceClientConfig"/>-u podľa zadaného názvu sekcie.
+            </summary>
+            <param name="sectionName">Názov sekcie, z ktorej sa nastavenia prečítajú.</param>
+            <returns><see cref="T:Cora.Web.WebServiceClientConfig"/> nastavený podľa zadaného názvu sekcie.</returns>
+        </member>
+        <member name="M:Cora.Web.WebServiceClientConfig.Create(System.String,System.Boolean)">
+            <summary>
+            Vytvorenie novej inštancie <see cref="T:Cora.Web.WebServiceClientConfig"/>-u podľa zadaného názvu sekcie.
+            </summary>
+            <param name="sectionName">Názov sekcie, z ktorej sa nastavenia prečítajú.</param>
+            <param name="throwIfNotFound">Vyhodiť výnimku, ak je sekcia nenájdená (<c>true</c>), alebo vrátiť <c>null</c>(pri <c>false</c>)?</param>
+            <returns><see cref="T:Cora.Web.WebServiceClientConfig"/> nastavený podľa zadaného názvu sekcie alebo <c>null</c>.</returns>
+        </member>
+        <member name="M:Cora.Web.WebServiceClientConfig.#ctor">
+            <summary>
+            Vytvorenie novej inštancie <see cref="T:Cora.Web.WebServiceClientConfig"/>-u.
+            </summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.Url">
+            <summary>URL web služby.</summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.Timeout">
+            <summary>Timeout (v sekundách) pre odpoveď webovej služby. Default: 100 sekúnd.</summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.Credentials_UserName">
+            <summary>Meno používateľa.</summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.Credentials_Password">
+            <summary>Heslo používateľa (uložené v kryptovanom tvare so soľou).</summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.Credentials_Domain">
+            <summary>Doména používateľa.</summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.WebProxy_HostName">
+            <summary>Názov proxy stroja.</summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.WebProxy_HostPort">
+            <summary>Port proxy.</summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.WebProxy_UserName">
+            <summary>Meno používateľa proxy.</summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.WebProxy_Password">
+            <summary>Heslo používateľa proxy (uložené v kryptovanom tvare so soľou).</summary>
+        </member>
+        <member name="P:Cora.Web.WebServiceClientConfig.WebProxy_Domain">
+            <summary>Doména používateľa proxy.</summary>
+        </member>
+        <member name="M:Cora.Web.WebServiceClientConfig.DeserializeSection(System.Xml.XmlReader)">
+            <summary>
+            Nastavenie inštancie <see cref="T:Cora.Web.WebServiceClientConfig"/>-u podľa sekcie v config-u.</summary>
+            <param name="reader">The <see cref="T:System.Xml.XmlReader"/> object, which reads from the configuration file.</param>
+            <exception cref="T:System.Configuration.ConfigurationErrorsException">
+            	<paramref name="reader"/> found no elements in the configuration file.</exception>
+        </member>
+        <member name="M:Cora.Web.WebServiceClientConfig.CreateInner(System.Xml.XmlNode)">
+            <summary>
+            Nastavenie inštancie <see cref="T:Cora.Web.WebServiceClientConfig"/>-u podľa sekcie v config-u.</summary>
+            <param name="section"><see cref="T:System.Xml.XmlNode"/> konfiguračnej sekcie.</param>
+            <returns>Konfiguračný objekt.</returns>
+        </member>
+        <member name="M:Cora.Web.WebServiceClientConfig.Configure(System.Web.Services.Protocols.WebClientProtocol)">
+            <summary>
+            Nastavenie zadaného klienta web service-y podľa načítanej konfigurácie. Ak je klient <see cref="T:System.Web.Services.Protocols.HttpWebClientProtocol"/>,
+            môže sa konfigurovať aj jeho <see cref="P:System.Web.Services.Protocols.HttpWebClientProtocol.Proxy"/>.
+            </summary>
+            <param name="webServiceClient">Nastavovaný klient web service-y. Nesmie byť <c>null</c>.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="webServiceClient"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Web.WebServiceClientConfig.Configure``1(System.ServiceModel.ClientBase{``0})">
+            <summary>
+            Nastavenie zadaného (WCF) klienta web service-y podľa načítanej konfigurácie.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="webServiceClient">Nastavovaný klient web service-y. Nesmie byť <c>null</c>.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="webServiceClient" /> je <c>null</c>.</exception>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Schedule</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Schedule.IScheduleRun">
+            <summary>
+            Intefface pre spúšťanie naplánovaných úloch
+            </summary>
+        </member>
+        <member name="M:Cora.Schedule.IScheduleRun.Run">
+            <summary>
+            Spustenie naplánovanej úlohy
+            </summary>
+        </member>
+        <member name="T:Cora.Schedule.ScheduleManager">
+            <summary>
+            Riadenie naplánovaných úloh
+            </summary>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleManager.Run(Cora.Schedule.ScheduleRunBase)">
+            <summary>
+            Spustenie naplánovanej úlohy.
+            </summary>
+            <param name="schedRun">Objekt, ktorý spracuje(spustí) naplánovanú úlohu.</param>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleManager.Run(Cora.Schedule.ScheduleRunBase,Cora.Schedule.ScheduleManager.WriteLog,System.Int32)">
+            <summary>
+            Spustenie naplánovanej úlohy.
+            </summary>
+            <param name="schedRun">Objekt, ktorý spracuje(spustí) naplánovanú úlohu.</param>
+            <param name="writeLog">Delegát pre zápis záznamu do LOG-u.</param>
+            <param name="idScheduleDef">ID naplánovania úlohy.</param>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleManager.CanRun(Cora.Schedule.ScheduleTestInfo)">
+            <summary>
+            Test na to, či sa može spustiť naplánovaná úloha.
+            </summary>
+            <param name="schedInfo">Informácie o naplánovanej úlohe.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleManager.CanRun_RazZaNTyzdnov(Cora.Schedule.ScheduleTestInfo,System.Int32)">
+            <summary>
+            Test na to, či sa može spustiť naplánovaná úloha (cyklus raz za N týždňov).
+            </summary>
+            <param name="schedInfo">Informácie o naplánovanej úlohe.</param>
+            <param name="pocetTyzdnov">Počet týždňov.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleManager.CanRun_RazZaNMesiacov(Cora.Schedule.ScheduleTestInfo,System.Int32)">
+            <summary>
+            Test na to, či sa može spustiť naplánovaná úloha (cyklus raz za N mesiacov).
+            </summary>
+            <param name="schedInfo">Informácie o naplánovanej úlohe.</param>
+            <param name="pocetMesiacov">Počet mesiacov.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleManager.CanRun_RazZaNRokov(Cora.Schedule.ScheduleTestInfo,System.Int32)">
+            <summary>
+            Test na to, či sa može spustiť naplánovaná úloha (cyklus raz za N rokov).
+            </summary>
+            <param name="schedInfo">Informácie o naplánovanej úlohe.</param>
+            <param name="pocetRokov">Počet rokov.</param>
+            <returns></returns>
+        </member>
+        <member name="T:Cora.Schedule.ScheduleManager.WriteLog">
+            <summary>
+            Delegát pre zápis záznamu do LOG-u (zápis informácie o spustení naplánovanej úlohy).
+            Vstupným parametrom pre delegáta je ID naplánovania úlohy.
+            </summary>
+        </member>
+        <member name="T:Cora.Schedule.ScheduleRunBase">
+            <summary>
+            Základná (abstraktná) trieda pre spúšťanie naplánovaných úloch
+            </summary>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleRunBase.Run">
+            <summary>
+            Spustenie naplánovanej úlohy
+            </summary>
+        </member>
+        <member name="F:Cora.Schedule.ScheduleRunBase._classParam">
+            <summary>
+            Parameter pre triedu - pre spracovanie(spustenie) úlohy
+            </summary>
+        </member>
+        <member name="P:Cora.Schedule.ScheduleRunBase.ClassParam">
+            <summary>
+            Parameter pre triedu - pre spracovanie(spustenie) úlohy
+            </summary>
+        </member>
+        <member name="T:Cora.Schedule.ScheduleTestInfo">
+            <summary>
+            Popis naplánovanej úlohy.
+            </summary>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleTestInfo.#ctor(System.Int32,System.Int32,System.DateTime)">
+            <summary>
+            Konštruktor
+            </summary>
+            <param name="idScheduleType">ID typu naplánovania úlohy</param>
+            <param name="typeValue">Hodnota súvisiaca s ID typu naplánovania úlohy
+            	(napr. ak ide o typ "Raz za mesiac", určuje deň v mesiaci).
+            </param>
+            <param name="dateLastRun">Dátum (a čas) posledného spustenia.</param>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleTestInfo.#ctor(System.Int32,System.DateTime)">
+            <summary>
+            Konštruktor
+            </summary>
+            <param name="idScheduleType">ID typu naplánovania úlohy.</param>
+            <param name="dateLastRun">Dátum (a čas) posledného spustenia.</param>
+        </member>
+        <member name="M:Cora.Schedule.ScheduleTestInfo.#ctor">
+            <summary>
+            Zneplatnený default konštruktor.
+            </summary>
+        </member>
+        <member name="P:Cora.Schedule.ScheduleTestInfo.IdScheduleType">
+            <summary>
+            ID typu naplánovania úlohy.
+            </summary>
+        </member>
+        <member name="P:Cora.Schedule.ScheduleTestInfo.TypeValue">
+            <summary>
+            Hodnota súvisiaca s ID typu naplánovania úlohy
+            	(napr. ak ide o typ "Raz za mesiac", určuje deň v mesiaci).
+            </summary>
+        </member>
+        <member name="P:Cora.Schedule.ScheduleTestInfo.DateLastRun">
+            <summary>
+            Dátum (a čas) posledného spustenia.
+            </summary>
+        </member>
+        <member name="T:Cora.Schedule.ScheduleTypeEnum">
+            <summary>
+            Typy naplánovania
+            </summary>
+        </member>
+        <member name="F:Cora.Schedule.ScheduleTypeEnum.Vzdy">
+            <summary>Spustiť vždy</summary>
+        </member>
+        <member name="F:Cora.Schedule.ScheduleTypeEnum.Nikdy">
+            <summary>Nespúšťať nikdy</summary>
+        </member>
+        <member name="F:Cora.Schedule.ScheduleTypeEnum.RazZaTyzden">
+            <summary>Spustiť raz za týždeň</summary>
+        </member>
+        <member name="F:Cora.Schedule.ScheduleTypeEnum.RazZaMesiac">
+            <summary>Spustiť raz za mesiac</summary>
+        </member>
+        <member name="F:Cora.Schedule.ScheduleTypeEnum.RazZaStvrtrok">
+            <summary>Spustiť raz za štvrťrok</summary>
+        </member>
+        <member name="F:Cora.Schedule.ScheduleTypeEnum.RazZaPolrok">
+            <summary>Spustiť raz za polrok</summary>
+        </member>
+        <member name="F:Cora.Schedule.ScheduleTypeEnum.RazZaRok">
+            <summary>Spustiť raz za rok</summary>
+        </member>
+    </members>
+</doc>

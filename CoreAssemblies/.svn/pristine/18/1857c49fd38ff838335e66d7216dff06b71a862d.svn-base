@@ -1,0 +1,1480 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Desktop.Controls</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Desktop.Controls.AutoGreyableImage">
+            <summary>
+            Obrázok s automatickým prepnutím do odtieňov šedej keď je disablovaný.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.BusyIndicatorCycleHelper">
+            <summary>
+            Pomocná trieda pre riadenie cyklu zanepráznenosti. 
+            </summary>
+            <remarks>
+            Môže použiť sa použiť pri implementácii <see cref="M:Cora.Desktop.Controls.IBusyIndicator.BusyIndication"/>.
+            </remarks>
+        </member>
+        <member name="M:Cora.Desktop.Controls.BusyIndicatorCycleHelper.#ctor(Cora.Desktop.IBusyIndicatorWorker)">
+            <summary>
+            Vytvorenie inštancie triedy pre riadenie cyklu zanepráznenosti.
+            Pri svojom vytvorení zapne na riadenom objekte indikáciu zaneprázdnenosti.
+            </summary>
+            <param name="worker">Riadený objekt implementujúci skutočnú indikáciu.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.BusyIndicatorCycleHelper.Dispose">
+            <summary>
+            Vypne na riadenom objekte indikáciu zaneprázdnenosti. Druhé a ďalšie volania tejto metódy nerobia nič.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.ChartControl">
+            <summary>
+            Interaction logic for ChartControl.xaml
+            </summary>
+            <summary>
+            ChartControl
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.ChartControl.Chart">
+            <summary>Objekt <see cref="P:Cora.Desktop.Controls.ChartControl.Chart"/>, ktorý realizuje generovanie grafu.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.ChartControl.ShowBtnMaximize">
+            <summary>
+            Príznak či sa má zobraziť lupa
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.ChartControl.EnlargeByXValues">
+            <summary>
+            Má sa zväčšiť graf tak, aby boli vsetky X hodnoty čitateľné na osi?
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.ChartControl.XValuesCount">
+            <summary>
+            Počet rôznych hondôt na osi X
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.ChartControl.PointSortOrder">
+            <summary>
+            Určuje smer sortovania.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.ChartControl.SortBy">
+            <summary>
+            Reťazec určuje podľa čoho sortovať (napr.'X', 'Y','AxisLabel' ...)
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.ChartControl.YSortSeriesName">
+            <summary>
+            Názov Y radu, podľa ktorého sa sortuje.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.ChartControl.IsWindowOpened">
+            <summary>
+            Príznak či je otvorené max. okno.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.ChartControl.AttributesXml">
+            <summary>
+            Reťazec vo forme XML určuje dodatočné vlastnosti grafu
+            napr. v tvare: "<Chart> <ChartAreas> <ChartArea Name="chartArea"> <Area3DStyle Enable3D="True" /> </ChartArea>  </ChartAreas> </Chart>"
+            Vlastnosti sa aplikujú až na konci Load-u kontrolu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ChartControl.#ctor">
+            <summary>
+            Konštruktor kontrolu pre graf
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ChartControl.ChartControl_Click(System.Object,System.EventArgs)">
+            <summary>
+            Obsluha kliku na graf.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ChartControl.SetDefaults">
+            <summary>
+            Nastavenie default vlastností grafu, data musia už existovať.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ChartControl.SetAttributesXml">
+            <summary>
+            Nastavenie vlastností grafu podľa reťazca v AttributesXml
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ChartControl.SetHeightOrWidth">
+            <summary>
+            Nastavenie sirky alebo vysky tak aby boli citatelne vsetky popisky na osi X v grafe (pozor image sa zvacsuje).  
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.ChartControl._Chart">
+            <summary>Objekt <see cref="P:Cora.Desktop.Controls.ChartControl.Chart"/>, ktorý realizuje generovanie grafu.</summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.ChartControl._showBtnMaximize">
+            <summary>
+            Ma sa zobrazit lupa
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.ChartControl._enlargeByXValues">
+            <summary>
+            Má sa zväčšiť graf tak, aby boli vsetky X hodnoty čitateľné na osi?
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.ChartControl._xValuesCount">
+            <summary>
+            Počet rôznych hondôt na osi X
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ChartControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.ChartWindow">
+            <summary>
+            Okno grafu.
+            </summary>
+            <summary>
+            ChartWindow
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ChartWindow.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.ChartWindow"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ChartWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.ClickableImage">
+            <summary>
+            Klikateľný obrázok. Je založený na "presnom" obrázku (<see cref="T:Cora.Desktop.Controls.SharpImage"/>).
+            </summary>
+            <remarks>
+            Defaultný štýl obrázka mení kurzor na "ruku" po presune kurzora myši nad obrázok.
+            </remarks>
+            <summary>
+            ClickableImage
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.ClickableImage.ClickEvent">
+            <summary>
+            Identifikuje routovanú udalosť <see cref="E:Cora.Desktop.Controls.ClickableImage.Click"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ClickableImage.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Cora.Desktop.Controls.ClickableImage"/> class.
+            </summary>
+        </member>
+        <member name="E:Cora.Desktop.Controls.ClickableImage.Click">
+            <summary>
+            Udalosť kliku na klikateľný obrázok.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ClickableImage.OnMouseLeftButtonDown(System.Windows.Input.MouseButtonEventArgs)">
+            <summary>
+            Invoked when an unhandled <see cref="E:System.Windows.UIElement.MouseLeftButtonDown"/> routed event is raised on this element.
+            </summary>
+            <param name="e">The <see cref="T:System.Windows.Input.MouseButtonEventArgs"/> that contains the event data. The event data reports that the left mouse button was pressed.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ClickableImage.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Converters.AnythingToBool">
+            <summary>
+            Konvertor ľubovoľnej hodnoty na logickú hodnotu (zodpovedá správaniu <see cref="M:Cora.Convert.Parser.GetBool(System.Object)"/>).
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Converters.AnythingToBool.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Konvertuje ľubovoľný objekt na logickú hodnotu.
+            </summary>
+            <param name="value">Konvertovaná hodnota.</param>
+            <param name="targetType">Typ cieľovej property bindingu (ignoruje sa).</param>
+            <param name="parameter">Parameter konverzie (ignoruje sa).</param>
+            <param name="culture">Kultúra použitá v konvertori (ignoruje sa).</param>
+            <returns>Konvertovaná logická hodnota.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Converters.AnythingToBool.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Metóda nie je v tomto konvertori podporovaná.
+            </summary>
+            <param name="value"></param>
+            <param name="targetType"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+            <exception cref="T:System.NotSupportedException">Vždy.</exception>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Converters.CountToPolozka">
+            <summary>
+            Konvertor celého čísla (počtu) na správny jazykový tvar slova "položka".
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Converters.CountToPolozka.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Konvertuje celé číslo na správny tvar slova položka (položka,položky,položiek).
+            </summary>
+            <param name="value">Počet položiek.</param>
+            <param name="targetType">Typ cieľovej property bindingu.</param>
+            <param name="parameter">Parameter konverzie (ignoruje sa).</param>
+            <param name="culture">Kultúra použitá v konvertori.</param>
+            <returns>Tvar slova položka.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Converters.CountToPolozka.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Metóda nie je v tomto konvertori podporovaná.
+            </summary>
+            <param name="value"></param>
+            <param name="targetType"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+            <exception cref="T:System.NotSupportedException">Vždy.</exception>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Converters.ExpandedToActionName">
+            <summary>
+            Konvertor hodnoty "je expandovaný" na popis možnej akcie (zbaliť/rozbaliť).
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Converters.ExpandedToActionName.Convert(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Konvertuje boolean hodnotu zbalenosti na popis možnej akcie.
+            </summary>
+            <param name="value">Hodnota zbalenosti.</param>
+            <param name="targetType">Typ cieľovej property bindingu.</param>
+            <param name="parameter">Parameter konverzie (ignoruje sa).</param>
+            <param name="culture">Kultúra použitá v konvertori.</param>
+            <returns>Popis možnej akcie.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Converters.ExpandedToActionName.ConvertBack(System.Object,System.Type,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Metóda nie je v tomto konvertori podporovaná.
+            </summary>
+            <param name="value"></param>
+            <param name="targetType"></param>
+            <param name="parameter"></param>
+            <param name="culture"></param>
+            <returns></returns>
+            <exception cref="T:System.NotSupportedException">Vždy.</exception>
+        </member>
+        <member name="T:Cora.Desktop.Controls.DataGridControl">
+            <summary>
+            Grid odvodený od <see cref="T:Xceed.Wpf.DataGrid.DataGridControl"/> obohatený o ďalšiu funkčnosť.
+            </summary>
+            <remarks>
+            Ďalšia funkčnosť:
+            <list type="bullet">
+            		<item>možnosť značiť riadky ťahaním myši bez stlačenia Ctrl alebo Shift</item>
+            		<item>lokalizácia do slovenského jazyka</item>
+            		<item>zbaľovanie/rozbaľovanie súrodeneckých skupín pri grupovaní</item>
+            	</list>
+            Pre lokalizáciu autofiltra je treba manuálny zásah, viď komentár k <see cref="F:Cora.Desktop.Controls.DataGridControl.AUTO_FILTER_CONTROL_STYLE"/>.
+            </remarks>
+        </member>
+        <member name="F:Cora.Desktop.Controls.DataGridControl.AUTO_FILTER_CONTROL_STYLE">
+            <summary>
+            Lokalizovaný štýl pre autofilter - nefunguje ako defaultný štýl, ale ho treba priradiť každému stĺpcu
+            (<see cref="F:Xceed.Wpf.DataGrid.ColumnBase.AutoFilterControlStyleProperty"/>).
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.DataGridControl.ExpandCollapseSiblingGroups">
+            <summary>
+            Príkaz na expandovanie alebo kolabovanie súrodeneckých skupín pri grupovaní (viď custom DataTemplate
+            pre <see cref="T:Xceed.Wpf.DataGrid.Group"/>). Parametrom príkazuu je inštancia <see cref="T:Xceed.Wpf.DataGrid.Group"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DataGridControl.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.DataGridControl"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DataGridControl.GetDataRowUnderMouse(System.Windows.Input.MouseEventArgs)">
+            <summary>
+            Vráti dátový riadok, na ktorý je namierená myš.
+            </summary>
+            <param name="e">The <see cref="T:System.Windows.Input.MouseEventArgs"/> instance containing the event data.</param>
+            <returns>Dátový riadok.</returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.DataRoutedEventArgs`1">
+            <summary>
+            Generická trieda pre argumenty route-ovanej udalosti s pridanými dátami zadaného typu.
+            </summary>
+            <typeparam name="T">Typ dát, ktoré sú pridané do argumentov route-ovanej udalosti.</typeparam>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DataRoutedEventArgs`1.#ctor(System.Windows.RoutedEvent,System.Object,`0)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.DataRoutedEventArgs`1"/>.
+            </summary>
+            <param name="routedEvent">Udalosť, ktorej dáta patria.</param>
+            <param name="source">Zdroj udalosti.</param>
+            <param name="data">Dáta udalosti.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DataRoutedEventArgs`1.#ctor(System.Windows.RoutedEvent,`0)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.DataRoutedEventArgs`1"/>.
+            </summary>
+            <param name="routedEvent">Udalosť, ktorej dáta patria.</param>
+            <param name="data">Dáta udalosti.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DataRoutedEventArgs`1.#ctor(`0)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.DataRoutedEventArgs`1"/>.
+            </summary>
+            <param name="data">Dáta udalosti.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DataRoutedEventArgs`1.#ctor(System.Windows.RoutedEventArgs,`0)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.DataRoutedEventArgs`1"/>.
+            </summary>
+            <param name="e">Argumenty zdrojovej route-ovanej udalosti.</param>
+            <param name="data">Dáta udalosti.</param>
+        </member>
+        <member name="P:Cora.Desktop.Controls.DataRoutedEventArgs`1.Data">
+            <summary>Dáta udalosti.</summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.DataRoutedEventHandler`1">
+            <summary>
+            Delegát route-ovanej udalosti s argumentami, ktoré majú pridané dáta zadaného typu.
+            </summary>
+            <typeparam name="T">Typ dát, ktoré sú pridané do argumentov route-ovanej udalosti.</typeparam>
+            <param name="sender">Odosielateľ udalosti.</param>
+            <param name="e">Argumenty udalosti.</param>
+        </member>
+        <member name="T:Cora.Desktop.Controls.DatePicker">
+            <summary>
+            Prvok pre výber dátumu. Upravený <see cref="T:Xceed.Wpf.Controls.DatePicker"/> pre naše potreby.
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.DatePicker.SelectedDateChangedEvent">
+            <summary>
+            Registrácia udalosti zmeny hodnoty vybratého dátumu <see cref="P:Xceed.Wpf.Controls.DatePicker.SelectedDate"/>.
+            </summary>
+        </member>
+        <member name="E:Cora.Desktop.Controls.DatePicker.SelectedDateChanged">
+            <summary>Udalosť zmeny hodnoty vybratého dátumu (<see cref="P:Xceed.Wpf.Controls.DatePicker.SelectedDate"/>).</summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DatePicker.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Oznámenie o zmene hodnoty vlastností tohto <see cref="T:System.Windows.FrameworkElement"/>-u.
+            </summary>
+            <param name="e">Dáta zmeny.</param>
+        </member>
+        <member name="T:Cora.Desktop.Controls.DropDownButton">
+            <summary>
+            Tlačidlo obsahujúce obrázok s vyrolovateľným zoznamom položiek, ktoré sú klikateľné.
+            </summary>
+            <remarks>
+            Klik na položku zoznamu oznamuje udajosť <see cref="E:Cora.Desktop.Controls.DropDownButton.DataSelected"/>.
+            </remarks>
+        </member>
+        <member name="E:Cora.Desktop.Controls.DropDownButton.DataSelected">
+            <summary>
+            Udalosť vybratia položky zo zoznamu. <see cref="P:Cora.Desktop.Controls.DataRoutedEventArgs`1.Data"/> vracia kľúč danej položky.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DropDownButton.#ctor(System.Windows.Media.Imaging.BitmapSource,System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.DropDownButton"/>-u bez zoznamu.
+            </summary>
+            <param name="bitmap">Obrázok tlačidla.</param>
+            <param name="tooltipText">Tooltip tlačidla.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DropDownButton.#ctor(System.Windows.Media.Imaging.BitmapSource,System.String,Cora.Global.Structures.StringsKeyValuePairList)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.DropDownButton"/>-u.
+            </summary>
+            <param name="bitmap">Obrázok tlačidla.</param>
+            <param name="tooltipText">Tooltip tlačidla.</param>
+            <param name="keyValuePairList">Zoznam reťazcových dvojíc - kľúč, hodnota.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="keyValuePairList"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DropDownButton.#ctor(System.Windows.Media.Imaging.BitmapSource,System.String,Cora.Desktop.Controls.KeyTextIconTripletList)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.DropDownButton"/>-u s obrázkami.
+            </summary>
+            <param name="bitmap">Obrázok tlačidla.</param>
+            <param name="tooltipText">Tooltip tlačidla.</param>
+            <param name="keyTextIconTripletList">Zoznam trojíc - kľúč, hodnota a obrázok (ikona).</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="keyTextIconTripletList"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DropDownButton.OnMenuItemClickedEvent(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Prepísaná metóda volaná po udalosti klik-u na položku vo výbere možností.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.DropDownButton.DropDownButton_ItemClick(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Spracovanie udalosti klik-u na položku vo výbere možností.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.ExtensionMethods">
+            <summary>
+            Extension metódy pre triedy súvisiace s WFP.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ExtensionMethods.FindParentOfType``1(System.Windows.FrameworkElement)">
+            <summary>
+            Nájdenie hierarchicky nadradeného WPF elementu zadaného typu <typeparamref name="TParent"/>, alebo jeho dediča.
+            </summary>
+            <typeparam name="TParent">Typ hľadaného hierarchicky nadradeného WPF elementu.</typeparam>
+            <param name="frameworkElement">WPF element, ktorého hierarchicky nadradený WPF element sa hľadá.</param>
+            <returns>Hierarchicky nadradený WPF element zadaného typu (alebo jeho dediča), alebo <c>null</c>, ak taký neexistuje.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="frameworkElement"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ExtensionMethods.FindVisualParentOfType``1(System.Windows.Media.Visual)">
+            <summary>
+            Nájdenie vizuálne hierarchicky nadradeného WPF elementu zadaného typu <typeparamref name="TParent"/>, alebo jeho dediča.
+            </summary>
+            <typeparam name="TParent">Typ hľadaného hierarchicky nadradeného WPF elementu.</typeparam>
+            <param name="visual">WPF element, ktorého vizuálne hierarchicky nadradený WPF element sa hľadá.</param>
+            <returns>Hierarchicky nadradený WPF element zadaného typu (alebo jeho dediča), alebo <c>null</c>, ak taký neexistuje.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="visual"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ExtensionMethods.FindChildrenOfType``1(System.Windows.UIElement)">
+            <summary>
+            Nájdenie všetkých prvkov zadaného typu <typeparamref name="TChild"/> (alebo jeho dediča, príp. implementátora)
+            podradených zadanému <paramref name="rootElement"/>-u.
+            </summary>
+            <typeparam name="TChild">Typ, ktorý musí hľadaný podradený prvok dediť, príp. implementovať.</typeparam>
+            <param name="rootElement">Element, ktorého podradené prvky sa prehľadávajú.</param>
+            <returns>Zoznam prvkov typu <typeparamref name="TChild"/> podradených <paramref name="rootElement"/>-u.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ExtensionMethods.FindChildrenOfType``1(System.Windows.UIElement,System.Predicate{``0})">
+            <summary>
+            Nájdenie všetkých prvkov typu <typeparamref name="TChild"/> (alebo jeho dediča, príp. implementátora)
+            podradených zadanému <paramref name="rootElement"/>-u, ktoré spĺňajú zadaný <paramref name="predicate"/>.
+            </summary>
+            <typeparam name="TChild">Typ hľadaných podradených prvkov. Typ stačí dediť príp. implementovať.</typeparam>
+            <param name="rootElement">Element, ktorého podradené prvky sa prehľadávajú. Nesmie byť <c>null</c>.</param>
+            <param name="predicate">Predikát, ktorý musia podradené prvky spĺňať, aby boli zaradené
+            do výsledného zoznamu (podmienka zaradenia do výsledkého zoznamu). Ak je <c>null</c>, nevyhodnocuje sa.</param>
+            <returns>
+            Zoznam prvkov typu <typeparamref name="TChild"/> podradených <paramref name="rootElement"/>-u,
+            ktoré spĺňajú zadaný <paramref name="predicate"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="rootElement"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ExtensionMethods.FindVisualChildrenOfType``1(System.Windows.Media.Visual)">
+            <summary>
+            Nájdenie všetkých prvkov zadaného typu <typeparamref name="TChild"/> (alebo jeho dediča, príp. implementátora)
+            vizuálne podradených zadanému <paramref name="rootVisual"/>-u (často len de-facto zobrazených).
+            </summary>
+            <typeparam name="TChild">Typ, ktorý musí hľadaný podradený prvok dediť, príp. implementovať.</typeparam>
+            <param name="rootVisual">Element, ktorého podradené prvky sa prehľadávajú.</param>
+            <returns>Zoznam prvkov typu <typeparamref name="TChild"/> podradených <paramref name="rootVisual"/>-u.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ExtensionMethods.FindVisualChildrenOfType``1(System.Windows.Media.Visual,System.Predicate{``0})">
+            <summary>
+            Nájdenie všetkých prvkov typu <typeparamref name="TChild"/> (alebo jeho dediča, príp. implementátora)
+            vizuálne podradených zadanému <paramref name="rootVisual"/>-u (často len de-facto zobrazených),
+            ktoré spĺňajú zadaný <paramref name="predicate"/>.
+            </summary>
+            <typeparam name="TChild">Typ hľadaných podradených prvkov. Typ stačí dediť príp. implementovať.</typeparam>
+            <param name="rootVisual">Element, ktorého podradené prvky sa prehľadávajú. Nesmie byť <c>null</c>.</param>
+            <param name="predicate">Predikát, ktorý musia podradené prvky spĺňať, aby boli zaradené
+            do výsledného zoznamu (podmienka zaradenia do výsledkého zoznamu). Ak je <c>null</c>, nevyhodnocuje sa.</param>
+            <returns>
+            Zoznam prvkov typu <typeparamref name="TChild"/> podradených <paramref name="rootVisual"/>-u,
+            ktoré spĺňajú zadaný <paramref name="predicate"/>.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="rootVisual"/> je <c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Desktop.Controls.FakeBusyIndicator">
+            <summary>
+            Null objekt implementujúci <see cref="T:Cora.Desktop.Controls.IBusyIndicator"/> - miesto indikácie zaneprázdnenosti nerobí nič.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.FakeBusyIndicator.BusyIndication">
+            <summary>
+            Vstúpi do cyklu indikácie zaneprázdnenosti.
+            </summary>
+            <returns>
+            Objekt, ktorý v svojej metóde <see cref="M:System.IDisposable.Dispose"/> zariadi koniec indikácie zaneprázdnenosti.
+            </returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.IBusyIndicator">
+            <summary>
+            Rozhranie pre objekty schopné nejakým spôsobom indikovať zaneprázdnenosť.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.IBusyIndicator.BusyIndication">
+            <summary>
+            Vstúpi do cyklu indikácie zaneprázdnenosti.
+            </summary>
+            <remarks>
+             <para>
+              Typické použitie je volať túto metódu v klauzule <c>using</c>, pričom zaneprázdnenosť bude indikovaná
+              až do skončenia bloku. Výhodou je vstavaný <c>try</c>..<c>finally</c> blok, ktorý zabezpečí koniec indikácie
+              zaneprázdnenosti aj keď vznikne vo vnútri using bloku výnimka.
+             </para><para>
+              Tiež je možná asynchrónna implementácia - zapnúť indikáciu a odložiť si výsledok volania tejto metódy, 
+              dlhotrvajúcu operáciu pustiť v inom vlákne a po jej ukončení na vrátenom objekte explicitne volať 
+              <see cref="M:System.IDisposable.Dispose"/>.
+             </para><para>
+              Implementujúca trieda môže vrátiť <see cref="T:Cora.Desktop.Controls.BusyIndicatorCycleHelper"/>, ktorému dodá triedu implementujúcu
+              skutočné zapnutie/vypnutie indikácie.
+             </para>
+            </remarks>
+            <example>
+             <code>
+              using ( BusyIndicator.BusyIndication() ) 
+              {
+            	// nejaka dlhsie trvajuca operacia
+              }
+             </code>
+            </example>
+            <returns>
+            Objekt, ktorý v svojej metóde <see cref="M:System.IDisposable.Dispose"/> zariadi koniec indikácie zaneprázdnenosti.
+            </returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.IDataInputElement`1">
+            <summary>
+            Rozhranie pre (vizuálny) prvok, pomocou ktorého je možné vybrať údaje zadaného typu <typeparamref name="T"/>.
+            To je oznamované pomocou udalosti <see cref="E:Cora.Desktop.Controls.IDataInputElement`1.DataSelected"/>.
+            </summary>
+            <typeparam name="T">Typ údajov, ktoré sa vyberajú.</typeparam>
+        </member>
+        <member name="E:Cora.Desktop.Controls.IDataInputElement`1.DataSelected">
+            <summary>
+            Udalosť vybratia údajov. Vybraté údaje sú uložené do <see cref="P:Cora.Desktop.Controls.DataRoutedEventArgs`1.Data"/>.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.IDataInputElement">
+            <summary>
+            Rozhranie pre (vizuálny) prvok, pomocou ktorého je možné vybrať reťazcové údaje.
+            To je oznamované pomocou udalosti <see cref="E:Cora.Desktop.Controls.IDataInputElement.DataSelected"/>.
+            </summary>
+        </member>
+        <member name="E:Cora.Desktop.Controls.IDataInputElement.DataSelected">
+            <summary>
+            Udalosť vybratia údajov. Vybraté údaje sú uložené do <see cref="P:Cora.Desktop.Controls.DataRoutedEventArgs`1.Data"/>.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.ImageButton">
+            <summary>
+            Tlačidlo obsahujúce obrázok a text.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ImageButton.#ctor(System.String,System.Windows.Media.Imaging.BitmapSource,System.String,System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.ImageButton"/>.
+            </summary>
+            <param name="name">Meno tlačidla.</param>
+            <param name="bitmap">Obrázok tlačidla. Môže byť <c>null</c>.</param>
+            <param name="text">Text tlačidla. Môže byť <c>null</c>.</param>
+            <param name="toolTip">Tooltip tlačidla.</param>
+        </member>
+        <member name="T:Cora.Desktop.Controls.ImageSourceProvider">
+            <summary>
+            Pomocná trieda pre prácu s objektom zdroja obrázka (<see cref="T:System.Windows.Media.ImageSource"/>).
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ImageSourceProvider.FromResource(System.Reflection.Assembly,System.String)">
+            <summary>
+            Vráti <see cref="T:System.Windows.Media.ImageSource"/> obrázka nachádzajúceho sa v resourcoch knižnice.
+            Preferovaný override pre získanie obrázka z rovnakej knižnice ako volajúci objekt.
+            </summary>
+            <param name="assembly">Knižnica, kde sa nachádza obrázok.</param>
+            <param name="resourcePath">Relatívna cesta k obrázku v resourcoch knižnice(napr. Images/obr.gif).</param>
+            <remarks>
+            Metódu sa používa pri priradení cesty k controlu obrázku v kóde (C#):
+            	<code>
+            		using System.Windows.Controls;
+            		
+            		Image img = new Image();
+            		img.Source = ImageSourceProvider.FromResource(typeof(MenoTriedyZKniznice).Assembly, "Images/obr.gif");
+            	</code>
+            
+            Referencovaný obrázok musí mať pri kompilácii danej knižnice nastavenú Build Action na "Resource".
+            </remarks>
+            <exception cref="T:System.UriFormatException">Pri nesprávnej <paramref name="resourcePath"/>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ImageSourceProvider.FromResource(System.String,System.String)">
+            <summary>
+            Vráti <see cref="T:System.Windows.Media.ImageSource"/> obrázka nachádzajúceho sa v resourcoch knižnice.
+            Preferovaný override pre získanie obrázka z inej knižnice ako je volajúci objekt.
+            </summary>
+            <param name="assemblyName">Meno knižnice, kde sa nachádza obrázok (napr. "Cora.Desktop.Controls").</param>
+            <param name="resourcePath">Relatívna cesta k obrázku v resourcoch knižncice (napr. Images/obr.gif).</param>
+            <remarks>
+            Metódu sa používa pri priradení cesty k controlu obrázku v kóde (C#):
+            	<code>
+            		using System.Windows.Controls;
+            		
+            		Image img = new Image();
+            		img.Source = ImageSourceProvider.FromResource("Cora.Desktop.Controls", "Images/obr.gif");
+            	</code>
+            
+            Referencovaný obrázok musí mať pri kompilácii danej knižnice nastavenú Build Action na "Resource".
+            </remarks>
+            <exception cref="T:System.UriFormatException">Pri nesprávnej <paramref name="assemblyName"/> alebo
+            	<paramref name="resourcePath"/>.</exception>
+        </member>
+        <member name="T:Cora.Desktop.Controls.KeyTextIconTripletList">
+            <summary>
+            Zoznam s trojicami kľúč, hodnota a obrázok (ikona).
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.KeyTextIconTripletList.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.KeyTextIconTripletList"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.KeyTextIconTripletList.#ctor(System.Int32)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.KeyTextIconTripletList"/> so zadanou počiatočnou kapacitou.
+            </summary>
+            <param name="capacity">Počiatočná kapacita zoznamu.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.KeyTextIconTripletList.#ctor(System.Collections.Generic.IEnumerable{Cora.Global.Structures.Triplet{System.String,System.String,System.Windows.Media.ImageSource}})">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.KeyTextIconTripletList"/> podľa zdrojového zoznamu.
+            </summary>
+            <param name="sourceCollection">Zdrojový zoznam, na základe ktorého sa tento zoznam vytvorí.</param>
+        </member>
+        <member name="T:Cora.Desktop.Controls.MouseBusyIndicator">
+            <summary>
+            Objekt indikujúci zaneprázdnenosť zmenou kurzora myši.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.MouseBusyIndicator.BusyIndication">
+            <summary>
+            Vstúpi do cyklu indikácie zaneprázdnenosti.
+            </summary>
+            <returns>
+            Objekt, ktorý v svojej metóde <see cref="M:System.IDisposable.Dispose"/> zariadi koniec indikácie zaneprázdnenosti.
+            </returns>
+            <remarks>
+            <para>
+            Typické použitie je volať túto metódu v klauzule <c>using</c>, pričom zaneprázdnenosť bude indikovaná
+            až do skončenia bloku. Výhodou je vstavaný <c>try</c>..<c>finally</c> blok, ktorý zabezpečí koniec indikácie
+            zaneprázdnenosti aj keď vznikne vo vnútri using bloku výnimka.
+            </para>
+            </remarks>
+            <example>
+            	<code>
+            using ( BusyIndicator.BusyIndication() )
+            {
+            // nejaka dlhsie trvajuca operacia
+            }
+            </code>
+            </example>
+        </member>
+        <member name="T:Cora.Desktop.Controls.MouseBusyIndicatorWorker">
+            <summary>
+            Objekt implementujúce zapnutie a vypnutie indikácie zaneprázdnenosti zmenou kurzora myši.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.MouseBusyIndicatorWorker.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.MouseBusyIndicatorWorker"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.MouseBusyIndicatorWorker.#ctor(System.Windows.Input.Cursor)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.MouseBusyIndicatorWorker"/> s určením želaného kurzora pre stav zaneprázdnenosti.
+            </summary>
+            <param name="busyCursor">Kurzor v stave zaneprázdnenosti.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.MouseBusyIndicatorWorker.BeginBusyIndication">
+            <summary>
+            Začne indikovať zaneprázdnenosť zmenou kurzora na <see cref="P:System.Windows.Input.Cursors.Wait"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.MouseBusyIndicatorWorker.EndBusyIndication">
+            <summary>
+            Vypne indikáciu zaneprázdnenosti zmenou kurzora na <see cref="P:System.Windows.Input.Cursors.Arrow"/>.
+            </summary>
+            <remarks>
+            Ak bola <see cref="M:Cora.Desktop.Controls.MouseBusyIndicatorWorker.BeginBusyIndication"/> volaná viackrát za sebou, indikácia je vypnutá, 
+            až keď je táto metóda volaná tiež príslušný počet krát.
+            </remarks>
+        </member>
+        <member name="T:Cora.Desktop.Controls.NamespaceDoc">
+            <summary>
+            <para>
+            Namespace <see cref="N:Cora.Desktop.Controls"/> slúži na uloženie spoločných rozhraní a tried súvisiacimi s WFP.
+            </para>
+            <para>
+            Defaultné štýly používané controlmi tejto knižnice sú nadefinované v <c>Styles/Default.xaml</c>.
+            Tento súbor treba naincludovať do ResourceDictionary aplikácie, ktorá knižnicu používa.
+            Príklad použitia v aplikácii (v <c>MojeAplikacneStyly.xaml</c> môžu byť jednotlivé kľúče predefinované)
+            <code>
+            	<![CDATA[
+            	<Application x:Class="Cora.MojaAplikacia"
+            		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+            		<Application.Resources>
+            			<ResourceDictionary>
+            				<ResourceDictionary.MergedDictionaries>
+            					<ResourceDictionary Source="/Cora.Desktop.Controls;component/Styles/Default.xaml" />
+            					<ResourceDictionary Source="Styles\MojeAplikacneStyly.xaml" />
+            				</ResourceDictionary.MergedDictionaries>
+            			</ResourceDictionary>
+            		</Application.Resources>
+            	</Application>
+            	]]>
+            </code>
+            </para>
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.OpenSaveWindow">
+            <summary>
+            Okno pre zobrazenie, príp. uloženie obsahu zadaného stream-u. Okno sa otvára volaním metódy <see cref="M:Cora.Desktop.Controls.OpenSaveWindow.ShowDialogWithStream(System.IO.Stream,System.String,System.String)"/>.
+            </summary>
+            <summary>
+            OpenSaveWindow
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.OpenSaveWindow.ALL_FILES_FILTER">
+            <summary>Reťazec, ktorý je filtrom "Všetky súbory" pre dialógy uloženia a otvorenia súboru.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.OpenSaveWindow.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.OpenSaveWindow"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.OpenSaveWindow.ShowDialogWithStream(System.IO.Stream,System.String,System.String)">
+            <summary>
+            Zobrazenie dialógu pre zobrazenie, príp. uloženie obsahu zadaného <paramref name="contentStream"/>-u.
+            </summary>
+            <param name="contentStream">Stream, ktorého obsah sa zobrazí, príp. uloží. Volajúci je zodpovedný za jeho uvoľnenie.</param>
+            <param name="fileName">Návrh mena súboru.</param>
+            <param name="contentType">Typ obsahu stream-u, napr. MIME.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="contentStream"/> je <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Desktop.Controls.OpenSaveWindow.IsStreamSet">
+            <summary>Obsahuje trieda stream, s ktorým môže pracovať?</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.OpenSaveWindow.FileName">
+            <summary>Návrh mena súboru.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.OpenSaveWindow.ContentType">
+            <summary>Typ obsahu stream-u, napr. MIME.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.OpenSaveWindow.ContentLength">
+            <summary>Dĺžka obsahu stream-u.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.OpenSaveWindow.Save(System.String)">
+            <summary>
+            Uloženie obsahu do súboru so zadaným menom.
+            </summary>
+            <param name="fileName">Meno súboru.</param>
+            <returns>Bolo uloženie úspešné?</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.OpenSaveWindow.CloseDialog">
+            <summary>
+            Zatvorenie dialógu pre zobrazenie, príp. uloženie obsahu zadaného stream-u.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.OpenSaveWindow.ShowError(System.String)">
+            <summary>
+            Zobrazenie chybovej hlášky s chybovou ikonou.
+            </summary>
+            <param name="message">Chybová hláška.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.OpenSaveWindow.ShowError(System.String,System.Windows.MessageBoxImage)">
+            <summary>
+            Zobrazenie chybovej hlášky.
+            </summary>
+            <param name="message">Chybová hláška.</param>
+            <param name="icon">Zobrazená ikona.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.OpenSaveWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.PaddedGrid">
+            <summary>
+            <see cref="T:System.Windows.Controls.Grid"/> doplnený o možnosť definovať padding medzi bunkami.
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.PaddedGrid.PaddingProperty">
+            <summary>
+            Identifikuje dependency property <see cref="P:Cora.Desktop.Controls.PaddedGrid.Padding"/>.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.PaddedGrid.Padding">
+            <summary>
+            Vráti alebo nastaví padding buniek gridu. Je dependency property.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.PaddedGrid.OnVisualChildrenChanged(System.Windows.DependencyObject,System.Windows.DependencyObject)">
+            <summary>
+            Called when the visual children of a <see cref="T:System.Windows.Controls.Grid"/> element change.
+            </summary>
+            <param name="visualAdded">Identifies the visual child that's added.</param>
+            <param name="visualRemoved">Identifies the visual child that's removed.</param>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.OpenSaveWindow_SaveDirError">
+            <summary>
+              Looks up a localized string similar to Zadaný adresár nenájdený..
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.OpenSaveWindow_SaveEmptyFileNameError">
+            <summary>
+              Looks up a localized string similar to Zadané prázdne meno súboru..
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.OpenSaveWindow_SaveError">
+            <summary>
+              Looks up a localized string similar to Uloženie súboru neúspešné..
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.OpenSaveWindow_SaveErrorTitle">
+            <summary>
+              Looks up a localized string similar to Chyba ukladania súboru.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.OpenSaveWindow_SaveIOError">
+            <summary>
+              Looks up a localized string similar to Chyba pri zápise údajov..
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.OpenSaveWindow_SaveSecurityError">
+            <summary>
+              Looks up a localized string similar to Bezpečnostná chyba..
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.OpenSaveWindow_SaveUnauthorizedError">
+            <summary>
+              Looks up a localized string similar to Prístup odmietnutý pri pokuse o zápis údajov..
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.OpenSaveWindow_TempFileError">
+            <summary>
+              Looks up a localized string similar to Uloženie dočasného súboru neúspešné..
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Properties.Resources.OpenSaveWindow_TempFileOpenError">
+            <summary>
+              Looks up a localized string similar to Otvorenie dočasného súboru neúspešné..
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.PropertyChangeNotifier">
+            <summary>
+            Pomocný objekt pre snímanie a informovanie o zmene hodnôt ľubovoľnej dependency property.
+            </summary>
+            <remarks>
+             <para>
+              Častým riešením potreby obslúžiť zmenu hodnoty dependency property je použitie 
+              <see cref="T:System.ComponentModel.PropertyDescriptor"/>-a
+              (resp. <see cref="T:System.ComponentModel.DependencyPropertyDescriptor"/>-a) a danej property a pridanie  
+              vlastného handlera metódou <see cref="M:System.ComponentModel.DependencyPropertyDescriptor.AddValueChanged(System.Object,System.EventHandler)"/>.
+              Nevýhodou je, že takto vznikne "strong" GC root na objekt ktorý poskytuje event handler, čo môže viesť 
+              k memory leakom pokiaľ 
+             </para><para>
+              Táto trieda sníma zmeny cieľovej property pomocou bindingu na vlastnú dependency property.
+              Využíva fakt, že binding medzi dependency properties používa interne slabé referencie.
+              Odkaz na cieľový objekt sa drží tiež iba pomocou <see cref="T:System.WeakReference"/>. 
+             </para><para>
+              POZOR!!! Odkaz na inštanciu tejto triedy si musí používajúca trieda držať počas celej doby keď má byť
+              zmena snímaná, inak <see cref="E:Cora.Desktop.Controls.PropertyChangeNotifier.ValueChanged"/> nebude firovať!
+             </para><para>
+              Credits: http://agsmith.wordpress.com/2008/04/07/propertydescriptor-addvaluechanged-alternative/
+             </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Desktop.Controls.PropertyChangeNotifier.#ctor(System.Windows.DependencyObject,System.String)">
+            <summary>
+            Vytvorí inštanciu objektu na snímanie zmien hodnoty dependency property.
+            </summary>
+            <param name="propertySource">Zdrojový objekt so snímanou property.</param>
+            <param name="path">Cesta k property.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="propertySource"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.Controls.PropertyChangeNotifier.#ctor(System.Windows.DependencyObject,System.Windows.DependencyProperty)">
+            <summary>
+            Vytvorí inštanciu objektu na snímanie zmien hodnoty dependency property.
+            </summary>
+            <param name="propertySource">Zdrojový objekt so snímanou property.</param>
+            <param name="property">Snímaná property.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="propertySource"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Desktop.Controls.PropertyChangeNotifier.#ctor(System.Windows.DependencyObject,System.Windows.PropertyPath)">
+            <summary>
+            Vytvorí inštanciu objektu na snímanie zmien hodnoty dependency property.
+            </summary>
+            <param name="propertySource">Zdrojový objekt so snímanou property.</param>
+            <param name="property">Snímaná property.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="propertySource"/> alebo <paramref name="property"/> <c>null</c>.</exception>
+        </member>
+        <member name="E:Cora.Desktop.Controls.PropertyChangeNotifier.ValueChanged">
+            <summary>
+            Udalosť zmeny hodnoty snímanej property.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.PropertyChangeNotifier.PropertySource">
+            <summary>
+            Vráti zdrojový objekt so snímanou property.
+            </summary>
+            <value>The property source, alebo <c>null</c> ak už objekt bol garbage kolektovaný.</value>
+        </member>
+        <member name="F:Cora.Desktop.Controls.PropertyChangeNotifier.ValueProperty">
+            <summary>
+            Identifikuje dependency property <see cref="P:Cora.Desktop.Controls.PropertyChangeNotifier.Value"/>.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.PropertyChangeNotifier.Value">
+            <summary>
+            Vráti alebo nastaví hodnotu snímanej property. 
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.PropertyChangeNotifier.Dispose">
+            <summary>
+            Uvoľní binding zo snímanej property.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.ScrollableTabControl">
+            <summary>
+            Záložkový control so scrollovateľnými záložkami v jednom rade.
+            </summary>
+            <remarks>
+            Pozor, (zatiaľ) podporuje iba defaultné usporiadanie
+            <see cref="P:System.Windows.Controls.TabControl.TabStripPlacement"/>==<see cref="F:System.Windows.Controls.Dock.Top"/>.
+            </remarks>
+            <summary>
+            ScrollableTabControl
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ScrollableTabControl.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.ScrollableTabControl"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.ScrollableTabControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.SharpImage">
+            <summary>
+            "Presný" obrázok (bez anti-aliasingu a umiestnený zarovnaním na najbližší celý pixel). Viď Remarks.
+            </summary>
+            <remarks>
+            <para>
+            	Keďže WPF nepoužíva pixelové, ale logické rozmery, obyčajné obrázky (<see cref="T:System.Windows.Controls.Image"/>) sú často
+            	zobrazované rozmazane (viď http://msdn.microsoft.com/en-us/library/aa970908.aspx).
+            </para>
+            <para>
+            	Predpoklady použitia tejto triedy:
+            	<list type="bullet">
+            	<item>.NET 3.5 ServicePack 1</item>
+            	<item>Pri renderovaní obrázka pixelové rozmery iné ako sú jeho natívne bude neprirodzene "kockatý".
+            		  TODO: stáva sa toto pri iných DPI ako defaultných 96?</item>
+            	</list>
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Desktop.Controls.SharpImage.#ctor">
+            <summary>
+            Vytvorenie inštancie "presného" obrázku.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Toolbar">
+            <summary>
+            Toolbar, do ktorého je možné zaraďovať tlačidlá apod.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Toolbar"/>-u.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.PridajTlacidlo(System.String,System.Windows.Media.Imaging.BitmapSource,System.String,System.String,System.Boolean,System.Windows.RoutedEventHandler)">
+            <summary>
+            Vytvorí a pridá tlačidlo.
+            </summary>
+            <param name="name">Meno tlačidla (tvorí identifikátor tlačidla v toolbara).</param>
+            <param name="bitmap">Obrázok tlačidla. Môže byť <c>null</c>.</param>
+            <param name="text">Text tlačidla. Môže byť <c>null</c>.</param>
+            <param name="toolTip">Tooltip tlačidla.</param>
+            <param name="enabled">Je tlačidlo enable-ované?</param>
+            <param name="clickEventHandler">Handler kliknutia na tlačidlo.</param>
+            <returns>Pridané tlačidlo.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.PridajTlacidlo(System.Windows.Controls.Button)">
+            <summary>
+            Pridá existujúce tlačidlo.
+            </summary>
+            <param name="btn">Tlačidlo.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.PridajSeparator">
+            <summary>
+            Pridanie separátora.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.PridajDropDown(System.String,System.Windows.Media.Imaging.BitmapSource,System.String,System.Boolean,Cora.Desktop.Controls.DataRoutedEventHandler{System.String},Cora.Global.Structures.StringsKeyValuePairList)">
+            <summary>
+            Pridanie výberového tlačidla (dropdown-u).
+            </summary>
+            <param name="name">Meno tlačidla (tvorí identifikátor tlačidla v toolbara).</param>
+            <param name="bitmap">Obrázok tlačidla. Môže byť <c>null</c>.</param>
+            <param name="toolTip">Tooltip tlačidla.</param>
+            <param name="enabled">Je tlačidlo enable-ované?</param>
+            <param name="clickEventHandler">Handler kliknutia na tlačidlo (výberu).</param>
+            <param name="keyValuePairList">Zoznam dvojíc hodnôt a textov do výberu.</param>
+            <returns>Pridané výberové tlačidlo.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.PridajDropDownWithIcons(System.String,System.Windows.Media.Imaging.BitmapSource,System.String,System.Boolean,Cora.Desktop.Controls.DataRoutedEventHandler{System.String},Cora.Desktop.Controls.KeyTextIconTripletList)">
+            <summary>
+            Pridanie výberového tlačidla (dropdown-u) s obrázkami.
+            </summary>
+            <param name="name">Meno tlačidla (tvorí identifikátor tlačidla v toolbara).</param>
+            <param name="bitmap">Obrázok tlačidla. Môže byť <c>null</c>.</param>
+            <param name="toolTip">Tooltip tlačidla.</param>
+            <param name="enabled">Je tlačidlo enable-ované?</param>
+            <param name="clickEventHandler">Handler kliknutia na tlačidlo (výberu).</param>
+            <param name="keyTextIconTripletList">Zoznam trojíc kľúč, hodnota a obrázok (ikona) do výberu.</param>
+            <returns>Pridané výberové tlačidlo.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.OdoberVsetkyTlacidla">
+            <summary>
+            Odobratie všetky tlačidlá.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.NajdiTlacidlo(System.String)">
+            <summary>
+            Nájdenie WPF elementu podľa zadaného mena.
+            </summary>
+            <param name="name">Meno hľadaného WPF elementu.</param>
+            <returns>WPF element so zadaným menom, alebo <c>null</c>, ak taký neexistuje.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.NajdiTlacidlo``1(System.String)">
+            <summary>
+            Nájdenie WPF elementu podľa zadaného mena a typu.
+            </summary>
+            <typeparam name="T">Typ hľadaného WPF elementu, napr. <see cref="T:Cora.Desktop.Controls.ImageButton"/>.</typeparam>
+            <param name="name">Meno hľadaného WPF elementu.</param>
+            <returns>WPF element typu <typeparamref name="T"/> so zadaným menom, alebo <c>null</c>, ak taký neexistuje.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.OnApplyTemplate">
+            <summary>
+            When overridden in a derived class, is invoked whenever application code
+            or internal processes call <see cref="M:System.Windows.FrameworkElement.ApplyTemplate"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.Repaint">
+            <summary>
+            Metóda, ktorou riešime problém prvého nevykreslenia pridaných prvkov.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.OnItemsChanged(System.Collections.Specialized.NotifyCollectionChangedEventArgs)">
+            <summary>
+            Called when the <see cref="P:System.Windows.Controls.ItemsControl.Items"/> property changes.
+            </summary>
+            <param name="e">The arguments for the <see cref="E:System.Collections.Specialized.INotifyCollectionChanged.CollectionChanged"/> event.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Toolbar.UpdateOverflowPanel(System.Object,System.EventArgs)">
+            <summary>
+            Upravené riešenie chyby kreslenia popísanej v:
+            http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/30f780ec-40e7-48dd-94c7-2831de210b12
+            (problém chýbajúcich "overflow" prvkov po odstránení niektorého prvku z toolbaru)
+            </summary>
+            <param name="sender"></param>
+            <param name="args"></param>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Tooltip">
+            <summary>
+            Tooltip obsahujúci popis a obrázok, vybieha pri podržaní myši nad ovládacím prvkom.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Tooltip.#ctor(System.String,System.Windows.Media.Imaging.BitmapSource)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Tooltip"/>.
+            </summary>
+            <param name="tooltip">Textový reťazec obsahujúci bližší popis. Pomocou <see cref="F:Cora.Global.Text.DELIMITER"/> je možné v reťazci oddeliť Titulok, Popis a Pätu výsledného tooltipu.</param>
+            <param name="bitmap">Obrázok.</param>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.DateValidator">
+            <summary>
+            Validátor dátumu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.DateValidator.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.DateValidator"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.DateValidator.GetIsValid(System.String)">
+            <summary>
+            Samotné zistenie validnosti reťazcovej hodnoty (overenia dĺžky validovanej hodnoty (ako reťazca)).
+            </summary>
+            <param name="dateTime">Validovaná nie-<c>null</c> ani <see cref="F:System.String.Empty"/> hodnota.</param>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.CustomValidator">
+            <summary>
+            Validátor s vlastným validačným pravidlom.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.CustomValidator.ValidationEventArgs">
+            <summary>
+            Argumenty volania vlastnej validácie.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.CustomValidator.ValidationEventArgs.#ctor(System.Object,System.Boolean)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.CustomValidator.ValidationEventArgs"/>.
+            </summary>
+            <param name="value">Validovaná hodnota.</param>
+            <param name="isValid">Výsledok vlastnej validácie (počiatočné nastavenie).</param>
+        </member>
+        <member name="F:Cora.Desktop.Controls.Validation.CustomValidator.ValidationEventArgs.Value">
+            <summary>Validovaná hodnota.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.CustomValidator.ValidationEventArgs.IsValid">
+            <summary>Výsledok vlastnej validácie.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.CustomValidator.#ctor(System.EventHandler{Cora.Desktop.Controls.Validation.CustomValidator.ValidationEventArgs})">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.CustomValidator"/>-a so zadaním vlastného validačného pravidla.
+            </summary>
+            <param name="validationRequiredEventHandler">Delegát volania, v ktorom používateľ triedy uskutoční vlastnú validáciu.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.CustomValidator.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.CustomValidator"/>-a s vlastným validačným pravidlom.
+            </summary>
+        </member>
+        <member name="E:Cora.Desktop.Controls.Validation.CustomValidator.ValidationRequired">
+            <summary>Delegát volania, v ktorom používateľ triedy uskutoční vlastnú validáciu.
+            Je najlepšie nastaviť ho ešte pred nastavením binding-u pre validáciu (pred volaním <see cref="M:Cora.Desktop.Controls.Validation.IValidator.Bind(System.Object,System.String)"/>).</summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.CustomValidator.GetIsValid">
+            <summary>
+            Samotné zistenie validnosti (výsledok <c>true</c>) alebo porušenia (výsledok <c>false</c>)
+            validačného pravidla - zavolanie delegáta 
+            </summary>
+            <returns>Výsledok validácie.</returns>
+            <exception cref="T:System.InvalidOperationException">Ak delegát validácie <see cref="E:Cora.Desktop.Controls.Validation.CustomValidator.ValidationRequired"/> nie je nastavený.</exception>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.IValidator">
+            <summary>
+            Rozhranie validátora.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.IValidator.ErrorMessage">
+            <summary>Chybová hláška validátora.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.IValidator.ValidateOnDemand">
+            <summary>Nastavenie, či validácia prebieha len na požiadanie (<c>true</c>, volaním <see cref="M:Cora.Desktop.Controls.Validation.IValidator.Validate"/>),
+            alebo vždy pri zmene validovanej zdrojovej hodnoty (<c>false</c>, default).</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.IValidator.Value">
+            <summary>Hodnota, ktorú validátor validuje.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.IValidator.IsValid">
+            <summary>Je pravidlo validátora platné (<c>true</c>), alebo porušené (<c>false</c>)?</summary>
+        </member>
+        <member name="E:Cora.Desktop.Controls.Validation.IValidator.IsValidChanged">
+            <summary>Udalosť zmeny platnosti validátora.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.IValidator.Bind(System.Object,System.String)">
+            <summary>
+            Nastavenie binding-u pre validáciu (pomocou neho sa získava hodnota pre validáciu). Od jeho zavolania validátor "ožije".
+            </summary>
+            <param name="source">Zdrojový objekt, ktorý sa validuje.</param>
+            <param name="path">Vlastnosť zdrojového objektu, ktorá sa validuje.</param>
+            <returns>Binding nastavený tak, aby sa získavala hodnota pre vykonanie validácie.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.IValidator.Validate">
+            <summary>
+            Ručné vyvolanie validácie.
+            </summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.RegularExpressionValidator">
+            <summary>
+            Validátor hodnoty (ako reťazca) podľa regulárneho výrazu.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.RegularExpressionValidator.#ctor(System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.RegularExpressionValidator"/>.
+            </summary>
+            <param name="regularExpression">Regulárny výraz pre validáciu.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.RegularExpressionValidator.#ctor(System.String,System.Text.RegularExpressions.RegexOptions)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.RegularExpressionValidator"/>.
+            </summary>
+            <param name="regularExpression">Regulárny výraz pre validáciu.</param>
+            <param name="regexOptions">Nastavenia regulárneho výrazu pre validáciu.</param>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.RegularExpressionValidator.RegularExpression">
+            <summary>Regulárny výraz, podľa ktorého validujeme hodnotu (ako reťazec).</summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.RegularExpressionValidator.GetIsValid(System.String)">
+            <summary>
+            Ručné vyvolanie validácie voči <see cref="P:Cora.Desktop.Controls.Validation.RegularExpressionValidator.RegularExpression"/>.
+            </summary>
+            <param name="notNullNorEmptyStringValue">Validovaná nie-<c>null</c> ani <see cref="F:System.String.Empty"/> hodnota.</param>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.RequiredValidator">
+            <summary>
+            Validátor vyplnenosti hodnoty prvku.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.RequiredValidator.GetIsValid">
+            <summary>
+            Samotné zistenie vyplnenosti hodnoty.
+            </summary>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.MaxLenghtValidator">
+            <summary>
+            Validátor maximálnej dĺžky hodnoty (ako reťazca).
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.MaxLenghtValidator.#ctor(System.Int32)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.MaxLenghtValidator"/>.
+            </summary>
+            <param name="maxLength">Maximálna dĺžka hodnoty (ako reťazca).</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je zadaná hodnota <paramref name="maxLength"/> menšia ako 1.</exception>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.MaxLenghtValidator.MaxLength">
+            <summary>Maximálna dĺžka hodnoty (ako reťazca). Validačné pravidlo je porušené, ak je prekročená. Platná hodnota je aspoň 1.</summary>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak je zadaná hodnota menšia ako 1.</exception>
+            <remarks>Po nastavení hodnoty môže byť potrebné zavolať <see cref="M:Cora.Desktop.Controls.Validation.IValidator.Validate"/>.</remarks>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.MaxLenghtValidator.GetIsValid(System.String)">
+            <summary>
+            Samotné zistenie validnosti reťazcovej hodnoty (overenia dĺžky validovanej hodnoty (ako reťazca)).
+            </summary>
+            <param name="notNullNorEmptyStringValue">Validovaná nie-<c>null</c> ani <see cref="F:System.String.Empty"/> hodnota.</param>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.NotNullNorEmptyStringValidator">
+            <summary>
+            Abstraktný validátor, ktorý validuje neprázdne reťazcové hodnoty. Prázdne a <c>null</c> reťazcové hodnoty sú vždy validné.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.NotNullNorEmptyStringValidator.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.NotNullNorEmptyStringValidator"/>-a.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.NotNullNorEmptyStringValidator.GetIsValid">
+            <summary>
+            Samotné zistenie validnosti (výsledok <c>true</c>) alebo porušenia (výsledok <c>false</c>) validačného pravidla.
+            Prázdne reťazcové hodnoty sú vždy validné, ostatné sa validujú pomocou <see cref="M:Cora.Desktop.Controls.Validation.NotNullNorEmptyStringValidator.GetIsValid(System.String)"/>,
+            ktorú implementuje dedič.
+            </summary>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.NotNullNorEmptyStringValidator.GetIsValid(System.String)">
+            <summary>
+            Samotné zistenie validnosti reťazcovej hodnoty (výsledok <c>true</c>) alebo porušenia (výsledok <c>false</c>)
+            validačného pravidla. Implementuje dedič.
+            </summary>
+            <param name="notNullNorEmptyStringValue">Validovaná nie-<c>null</c> ani <see cref="F:System.String.Empty"/> hodnota.</param>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.ValidationManager">
+            <summary>
+            Statická trieda pre správu validácie. 
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidationManager.Validate(System.Windows.UIElement)">
+            <summary>
+            Validovanie všetkých validátorov pod zadaným <paramref name="validationRootElement"/>-om a získanie výsledku validácie.
+            </summary>
+            <param name="validationRootElement"><see cref="T:System.Windows.UIElement"/>, pod ktorým sa validátory hľadajú.</param>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidationManager.IsValidNoValidate(System.Windows.UIElement)">
+            <summary>
+            Získanie výsledku validácie všetkých validátorov pod zadaným <paramref name="validationRootElement"/>-om. 
+            Pozor, výsledok odráža aktuálny stav validátorov, nespúšťa ich validáciu.
+            </summary>
+            <param name="validationRootElement"><see cref="T:System.Windows.UIElement"/>, pod ktorým sa validátory hľadajú.</param>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.ValidationResult">
+            <summary>
+            Trieda pre uloženie výsledkov validácie.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidationResult.#ctor(Cora.Desktop.Controls.Validation.IValidator[])">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.ValidationResult"/>.
+            </summary>
+            <param name="brokenValidators">Zoznam validátorov, ktorých validačné pravidlo bolo v okamihu validácie porušené.
+            Pre úspešnú validáciu (<see cref="P:Cora.Desktop.Controls.Validation.ValidationResult.IsValid"/> == <c>true</c>) musí byť <c>null</c>, alebo prázdny zoznam.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidationResult.#ctor(System.Collections.Generic.IEnumerable{Cora.Desktop.Controls.Validation.IValidator})">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.ValidationResult"/>.
+            </summary>
+            <param name="brokenValidators">Zoznam validátorov, ktorých validačné pravidlo bolo v okamihu validácie porušené.
+            Pre úspešnú validáciu musí byť <c>null</c>, alebo prázdny zoznam.</param>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.ValidationResult.IsValid">
+            <summary>Bola validácia úspešná?</summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.Validation.ValidationResult.BrokenValidators">
+            <summary>Zoznam validátorov, ktorých validačné pravidlo bolo v okamihu validácie porušené.</summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidationResult.GetValidationErrors">
+            <summary>
+            Získanie reťazca so všetkými validačnými chybami. Jednotlivé reťazce sú v nových riadkoch.
+            </summary>
+            <returns>Reťazec so všetkými validačnými chybami.</returns>
+        </member>
+        <member name="T:Cora.Desktop.Controls.Validation.ValidatorBase">
+            <summary>
+            Základná (abstraktná) trieda validátorov.
+            </summary>
+        </member>
+        <member name="F:Cora.Desktop.Controls.Validation.ValidatorBase.ValueProperty">
+            <summary>
+            Dependency property pre podporu vlastnosti <see cref="P:Cora.Desktop.Controls.Validation.ValidatorBase.Value"/>.
+            </summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.ValidatorBase.ErrorMessage">
+            <summary>Chybová hláška validátora.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.ValidatorBase.ValidateOnDemand">
+            <summary>Nastavenie, či validácia prebieha len na požiadanie (<c>true</c>, volaním <see cref="M:Cora.Desktop.Controls.Validation.ValidatorBase.Validate"/>),
+            alebo vždy pri zmene validovanej zdrojovej hodnoty (<c>false</c>, default).</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.ValidatorBase.Value">
+            <summary>Validovaná hodnota.</summary>
+        </member>
+        <member name="P:Cora.Desktop.Controls.Validation.ValidatorBase.IsValid">
+            <summary>Je pravidlo validátora platné (<c>true</c>), alebo porušené (<c>false</c>)?</summary>
+        </member>
+        <member name="E:Cora.Desktop.Controls.Validation.ValidatorBase.IsValidChanged">
+            <summary>
+            Udalosť zmeny platnosti validátora.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidatorBase.Bind(System.Object,System.String)">
+            <summary>
+            Nastavenie binding-u pre validáciu (pomocou neho sa získava hodnota pre validáciu). Od jeho zavolania validátor "ožije".
+            </summary>
+            <param name="source">Zdrojový objekt, ktorý sa validuje.</param>
+            <param name="path">Vlastnosť zdrojového objektu, ktorá sa validuje.</param>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidatorBase.Validate">
+            <summary>
+            Ručné vyvolanie validácie.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidatorBase.GetIsValid">
+            <summary>
+            Samotné zistenie validnosti (výsledok <c>true</c>) alebo porušenia (výsledok <c>false</c>) validačného pravidla. Implementuje dedič.
+            </summary>
+            <returns>Výsledok validácie.</returns>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidatorBase.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Desktop.Controls.Validation.ValidatorBase"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.Validation.ValidatorBase.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Spracovanie zmeny hodnoty dependency property. Pri zmene <see cref="F:Cora.Desktop.Controls.Validation.ValidatorBase.ValueProperty"/> spustíme validáciu.
+            </summary>
+            <param name="e">Dáta udalosti zmeny hodnoty.</param>
+        </member>
+        <member name="F:Cora.Desktop.Controls.Validation.ValidatorBase._ValidationBinding">
+            <summary>Binding pre validáciu. Pomocou nej sa získava hodnota pre validáciu.</summary>
+        </member>
+        <member name="T:Cora.Desktop.Controls.XceedDeploymentLicense">
+            <summary>
+            Trieda registrujúca licencie Xceed produktov.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.Controls.XceedDeploymentLicense.SetLicense">
+            <summary>
+            Nastaví licenciu Xceed produktov.
+            </summary>
+            <remarks>
+            <para>
+            To license (unlock) your component, set the LicenseKey property with your 
+            license key in the entry point of the application. This will ensure the component
+            is licensed before any of its methods are called.
+            </para><para>
+            If the component is used in a DLL project (no entry point is available), it is 
+            recommended that the LicenseKey property be set in a static constructor of a 
+            class that will be accessed systematically before any component is instantiated,
+            or you can simply set the LicenseKey property immediately BEFORE 
+            instantiation of the component. 
+            </para>
+            </remarks>
+        </member>
+        <member name="T:Cora.Desktop.IBusyIndicatorWorker">
+            <summary>
+            Rozhranie pre objekty implementujúce zapnutie a vypnutie indikácie zaneprázdnenosti.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.IBusyIndicatorWorker.BeginBusyIndication">
+            <summary>
+            Začne indikovať zaneprázdnenosť.
+            </summary>
+        </member>
+        <member name="M:Cora.Desktop.IBusyIndicatorWorker.EndBusyIndication">
+            <summary>
+            Vypne indikáciu zaneprázdnenosti.
+            </summary>
+        </member>
+        <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
+            <summary>
+            GeneratedInternalTypeHelper
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateInstance(System.Type,System.Globalization.CultureInfo)">
+            <summary>
+            CreateInstance
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.GetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            GetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.SetPropertyValue(System.Reflection.PropertyInfo,System.Object,System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            SetPropertyValue
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.CreateDelegate(System.Type,System.Object,System.String)">
+            <summary>
+            CreateDelegate
+            </summary>
+        </member>
+        <member name="M:XamlGeneratedNamespace.GeneratedInternalTypeHelper.AddEventHandler(System.Reflection.EventInfo,System.Object,System.Delegate)">
+            <summary>
+            AddEventHandler
+            </summary>
+        </member>
+    </members>
+</doc>

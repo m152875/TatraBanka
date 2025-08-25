@@ -1,0 +1,2070 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Utils</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Utils.Logger.AppLogging">
+            <summary>
+            Statická trieda sprístupňujúca aplikačný logger podľa nastavení v app.config-u aplikácie.
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.AppLogging.SECTION_NAME">
+            <summary>Názov config sekcie app.config-u, z ktorej čerpáme nastavenia loggera.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.AppLogging.Logger">
+            <summary>
+            Vráti logger pre logovanie v aplikácii. 
+            </summary>
+            <remarks>
+            <para>
+            Logger sa vyrába podľa parametrov uvedených v config sekcii <see cref="F:Cora.Utils.Logger.AppLogging.SECTION_NAME"/> app.config-u,
+            pričom tento rozširuje o pridanie identity užívateľa do logovaného záznamu, ak je známa (viď <see cref="T:Cora.Utils.Logger.IdentityAddingLogger"/>).
+            Ak chýba takáto konfigurácia, metóda vracia <see cref="T:Cora.Utils.Logger.FakeLogger"/>.
+            </para><para>
+            Na mobilnej platforme vracia metóda vždy <see cref="T:Cora.Utils.Logger.FakeLogger"/>.
+            </para>
+            </remarks>
+            <returns>Logger podľa nastavení v aplikačnom configu, alebo <see cref="T:Cora.Utils.Logger.FakeLogger"/>, ak nie je nastavený.</returns>
+        </member>
+        <member name="P:Cora.Utils.Logger.AppLogging.CustomLoggersPresent">
+            <summary>
+            Je aplikačné logovanie rozšírené o vlastné loggery?
+            </summary>
+            <value><c>false</c> ak sa loguje iba loggerom z app.config-u; inak <c>true</c>.</value>
+        </member>
+        <member name="M:Cora.Utils.Logger.AppLogging.AddCustomLogger(Cora.Utils.Logger.ILogger)">
+            <summary>
+            Rozšíri aplikačné logovanie o ďalší (vlastný) logger. Manažment pridaného vlastného loggera (nastavovanie 
+            úrovne logovania, <see cref="!:DebugMode"/>-u apod.) zostáva zodpovednosťou toho, kto vlastný logger pridáva.
+            Aplikačný <see cref="P:Cora.Utils.Logger.AppLogging.Logger"/> zmeny svojich nastavení do pridaných vlastných loggerov nepropaguje.
+            </summary>
+            <param name="logger">Logger.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.AppLogging.RemoveCustomLoggers">
+            <summary>
+            Odoberie všetky vlastné loggery, t.j. bude logovať iba loggerom z app.config-u.
+            </summary>
+        </member>
+        <member name="T:Cora.Utils.Logger.AppLoggingConfig">
+            <summary>
+            Trieda reprezentujúca config sekciu pre <see cref="T:Cora.Utils.Logger.AppLogging"/> v app.config-u.
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.AppLoggingConfig.XPATH_LOGGER">
+            <summary>XPath k nastaveniu aplikačného loggera.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.AppLoggingConfig.Create(System.Object,System.Object,System.Xml.XmlNode)">
+            <summary>
+            Creates a configuration section handler.
+            </summary>
+            <param name="parent">Parent object.</param>
+            <param name="configContext">Configuration context object.</param>
+            <param name="section">Section XML node.</param>
+            <returns>The created section handler object.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.AppLoggingConfig.DeserializeSection(System.Xml.XmlReader)">
+            <summary>
+            Prečítanie podkladov pre aplikačné logovanie z XML.
+            </summary>
+            <param name="reader"><see cref="T:System.Xml.XmlReader"/>.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.AppLoggingConfig.Logger">
+            <summary>
+            Konfigurácia aplikačného loggera ako <see cref="T:System.Xml.XmlNode"/>.
+            </summary>
+            <value>Konfigurácia aplikačného loggera, alebo <c>null</c> ak nie je uvedená.</value>
+        </member>
+        <member name="T:Cora.Utils.Logger.BufferedLogger">
+            <summary>
+            Logger s podporou bufferovania (záznamy z buffera sa zapisujú v inom threade a iba raz za čas).
+            </summary>
+            <remarks>
+            Tento logger je vhodné použiť tam, kde sa nechceme zdržiavať čakaním na zápis správ do logu.
+            Pokiaľ sa priveľa krát nepodarí zápis záznamu, alebo fronta presiahne svoju kapacitu, záznam sa zahodí
+            - celkový počet zahodených záznamov je <see cref="P:Cora.Utils.Logger.BufferedLogger.DroppedRecords"/>.
+            Na rozdiel od verzie 1.6 tento objekt už nepodporuje filtrovanie rovnakých správ.
+            Toto správanie je lepšie v loggeroch implementovať nezávisle od bufferovania, napríklad ako filter.
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.DEFAULT_MAX_RECORDS_IN_BUFFER">
+            <summary>Default kapacita buffera (100000). Pri prekročení sa záznamy zahadzujú.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.DEFAULT_MAX_ERRORS_PER_RECORD">
+            <summary>Default maximálny počet chýb pri zápise jedného záznamu z buffera (10). Pri prekročení sa záznam zahadzuje.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.MAX_SLEEP_SECONDS">
+            <summary>Maximálny čas čakania medzi zápismi v sekundách (3600).</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.MIN_SLEEP_SECONDS">
+            <summary>Minimálny čas čakania medzi zápismi v sekundách (1).</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.DEFAULT_SLEEP_SECONDS">
+            <summary>Default čas čakania medzi zápismi v sekundách (20).</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.MAX_WRITE_SECONDS_TIME_ON_PROCESS_EXIT">
+            <summary>Maximálny čas strávený pri vyprázdňovaní buffera pri skončení procesu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.XPATH_LOGLEVEL">
+            <summary>XPath k parametru LogLevel pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.XPATH_SLEEPSECONDS">
+            <summary>XPath k parametru SleepSeconds pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.XPATH_MAXRECORDSINBUFFER">
+            <summary>XPath k parametru MaxRecordsInBuffer pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.XPATH_MAXERRORSPERRECORD">
+            <summary>XPath k parametru MaxErrorsPerRecord pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.XPATH_FILTERS">
+            <summary>XPath k parametrom Filter pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.XPATH_WRITER">
+            <summary>XPath k parametru Writer pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.XPATH_ERRORLOGGER">
+            <summary>XPath k parametru ErrorLogger pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.BufferedLogger.XPATH_DEBUGMODE">
+            <summary>XPath k parametru DebugMode pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLogger.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí logger podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov. 
+            Môžu byť nimi parametre konštruktora (povinný je <see cref="F:Cora.Utils.Logger.BufferedLogger.XPATH_LOGLEVEL"/>) alebo properties - nepovinné.</param>
+            <returns>Inštancia loggera zadaných atribútov.</returns>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="config"/> nezodpovedá požadovanému tvaru.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLogger.#ctor(Cora.Utils.Logger.LogLevel,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.BufferedLogger"/>.
+            </summary>
+            <param name="logLevel">Úroveň závažnosti, od ktorej logger zapisuje.</param>
+            <param name="sleepSeconds">Interval (čas čakania) medzi zápismi bufferovaných záznamov v sekundách.</param>
+            <param name="maxRecordsInBuffer">Kapacita buffera. Pri prekročení sa záznamy zahadzujú.</param>
+            <param name="maxErrorsPerRecord">Maximálny počet chýb pri zápise jedného záznamu. Pri prekročení sa záznam zahadzuje.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLogger.#ctor(Cora.Utils.Logger.LogLevel)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.BufferedLogger"/> s default hodnotami.
+            </summary>
+            <param name="logLevel">Úroveň závažnosti, od ktorej logger zapisuje.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.BufferedLogger.SleepSeconds">
+            <summary>
+            Vráti alebo nastaví interval (čas čakania) medzi zápismi bufferovaných záznamov v sekundách.
+            Default: <see cref="F:Cora.Utils.Logger.BufferedLogger.DEFAULT_SLEEP_SECONDS"/>.
+            Pri nastavení sa dbá na rozsah <see cref="F:Cora.Utils.Logger.BufferedLogger.MIN_SLEEP_SECONDS"/> - <see cref="F:Cora.Utils.Logger.BufferedLogger.MAX_SLEEP_SECONDS"/>.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.BufferedLogger.DroppedRecords">
+            <summary>
+            Vráti počet zahodených záznamov (napr. preto že pri ich zápise opakovane vznikli chyby alebo pretože buffer pretiekol).
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLogger.DumpBuffer(System.Int32)">
+            <summary>
+            Zápis všetkých čakajúcich záznamov z buffer-a s timeout-om.
+            </summary>
+            <param name="maxWaitSeconds">Maximálny čas zápisu (v sekundách).</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLogger.PassLogRecordToWriter(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Uloží záznam do buffera na zápis. Urobí tak i v prípade že zapisovač logov je <c>null</c>,
+            pretože medzi uložením do buffera a zápisom ho ešte niekto môže nastaviť.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.BufferedLoggerHelper">
+            <summary>
+            Pomocná "worker" trieda pre bufferovanie logovaných záznamov.
+            </summary>
+            <remarks>
+            Trieda po konštrukcii naštartuje separátny thread, kde zhromažďuje prijaté záznamy a v pravidelných 
+            intervaloch tieto záznamy zapisuje do <see cref="T:Cora.Utils.Logger.ILogWriter"/>-a a odstraňuje z fronty.
+            Pokiaľ sa priveľa krát nepodarí zápis záznamu, alebo fronta presiahne svoju kapacitu, záznam sa zahodí.
+            </remarks>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLoggerHelper.#ctor(Cora.Utils.Logger.ILogger,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.BufferedLoggerHelper"/>.
+            </summary>
+            <param name="logger">Logger, pre ktorý trieda pracuje. Využíva jeho <see cref="P:Cora.Utils.Logger.ILogger.Writer"/> na zápis záznamov
+            	a <see cref="P:Cora.Utils.Logger.ILogger.ErrorLogger"/> na logovanie vzniknutých chýb.</param>
+            <param name="sleepSeconds">Interval (čas čakania) medzi zápismi bufferovaných záznamov v sekundách.</param>
+            <param name="maxRecordsInBuffer">Kapacita buffera. Pri prekročení sa záznamy zahadzujú.</param>
+            <param name="maxErrorsPerRecord">Maximálny počet chýb pri zápise jedného záznamu. Pri prekročení sa záznam zahadzuje.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="logger"/>	<c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Utils.Logger.BufferedLoggerHelper.SleepSeconds">
+            <summary>
+            Vráti alebo nastaví interval (počet sekúnd) medzi zápismi.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.BufferedLoggerHelper.DroppedRecords">
+            <summary>
+            Vráti počet zahodených záznamov (napr. preto že pri ich zápise opakovane vznikli chyby alebo pretože buffer pretiekol).
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLoggerHelper.WriteToBuffer(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Uloženie záznamu do buffer-a na zápis.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <returns><c>true</c>, ak bol záznam uložený do bufferu, <c>false</c> ak buffer prekročil maximálnu
+            kapacitu a záznam bol zahodený.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/>	<c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLoggerHelper.DumpBuffer(System.Int32)">
+            <summary>
+            Zápis buffer-ovaných záznamov. Pokiaľ sa záznam nepodarí priveľa krát zapísať alebo pretečie fronta, záznamy sa dropujú.
+            </summary>
+            <param name="maxWaitSeconds">Maximálny čas zápisu (v sekundách).</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLoggerHelper.MainWorkingLoop">
+            <summary>
+            Hlavná výkonná slučka - periodický zápis buffer-ovaných záznamov v intervaloch <see cref="P:Cora.Utils.Logger.BufferedLoggerHelper.SleepSeconds"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLoggerHelper.WriteRecordLocked">
+            <summary>
+            Zápis buffer-ovaného záznamu (buffer musí byť v uzamknutom stave!).
+            Neúspešný zápis (vznikla pre výnimka, alebo _Logger nemá Writer-a) => záznam ostane v bufferi.
+            </summary>
+            <returns><c>true</c>, v prípade že zápis bol úspešný, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLoggerHelper.DropRecordLocked">
+            <summary>
+            Zmazanie záznamu z buffer-a (buffer musí byť v uzamknutom stave!).
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.BufferedLoggerHelper.SafelyLogException(System.Exception)">
+            <summary>
+            Metóda pre logovanie výnimiek vzniknutých pri logovaní. Ak má logger, pre ktorý pracujeme, nenulový <see cref="P:Cora.Utils.Logger.ILogger.ErrorLogger"/>,
+            zaloguje sa a prípadné pri tom novovzniknuté výnimky sa už zahodia.
+            </summary>
+            <param name="ex">Výnimka.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.ConsoleLogWriter">
+            <summary>
+            Zapisovač logu na konzolu.
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.ConsoleLogWriter.DEFAULT_RECORD_FORMAT">
+            <summary>Format string logovaného záznamu pre textový výstup.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.ConsoleLogWriter.XPATH_RECORDFORMATSTRING">
+            <summary>XPath k parametru RecordFormatString pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.ConsoleLogWriter.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí zapisovač logu podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov konštruktora.</param>
+            <returns>Inštancia zapisovača zadaných atribútov.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.ConsoleLogWriter.#ctor(System.String)">
+            <summary>
+            Vytvorenie inštancie zapisovača logu na konzolu s formátom záznamu <paramref name="recordFormatString"/>
+            </summary>
+            <param name="recordFormatString">Formátovací reťazec pre <see cref="M:System.String.Format(System.String,System.Object[])"/>, ktorým sa naformátuje 
+            záznam. Formátujú sa atribúty <see cref="P:Cora.Utils.Logger.ILogRecord.Timestamp"/>, <see cref="T:Cora.Utils.Logger.LogLevel"/> a <see cref="P:Cora.Utils.Logger.ILogRecord.Message"/>
+            (v tomto poradí). Ďalšie atribúty (<see cref="P:Cora.Utils.Logger.ILogRecord.CustomContent"/>) sa formátujú ako Key=Value oddelené čiarkou.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.ConsoleLogWriter.#ctor">
+            <summary>
+            Vytvorenie inštancie zapisovača logu na konzolu s formátom záznamu <see cref="F:Cora.Utils.Logger.ConsoleLogWriter.DEFAULT_RECORD_FORMAT"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.ConsoleLogWriter.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam na systémovú konzolu.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.EventLogWriter">
+            <summary>
+            Zapisovač logu do aplikačného eventlogu MS Windows.
+            </summary>
+            <remarks>
+            Ak proces beží pod účtom bez administrátorských oprávnení, pri zápise za normálnych okolností vznikne chyba.
+            Workaround viď: http://www.neovolve.com/post/2008/11/12/Creating-event-log-sources-without-administrative-rights.aspx
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.EventLogWriter.DATETIME_FORMAT">
+            <summary>Formát dátumu do log-u.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.EventLogWriter.XPATH_EVENTSOURCE">
+            <summary>XPath k parametru EventSource pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.EventLogWriter.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí zapisovač logu podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov konštruktora.</param>
+            <returns>Inštancia zapisovača zadaných atribútov.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.EventLogWriter.#ctor(System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.EventLogWriter"/>.
+            </summary>
+            <param name="eventSource">Názov zdroja do aplikačného event log-u.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.EventLogWriter.EventSource">
+            <summary>
+            Názov zdroja do aplikačného event log-u.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.EventLogWriter.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/>
+            	<c>null</c>.</exception>
+            <exception cref="T:System.Exception">Ak vznikla chyba pri zápise.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.EventLogWriter.LogLevel2LogEntryType(Cora.Utils.Logger.LogLevel)">
+            <summary>
+            Prevedie úroveň závažnosti <see cref="T:Cora.Utils.Logger.LogLevel"/> na <see cref="T:System.Diagnostics.EventLogEntryType"/> do systémového eventlogu.
+            Keďže <see cref="T:System.Diagnostics.EventLogEntryType"/> obsahuje len tri úrovne, deliacou úrovňou je <see cref="F:Cora.Utils.Logger.LogLevel.Warning"/>.
+            </summary>
+            <param name="level">Úroveň závažnosti.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.FakeLogger">
+            <summary>
+            Logger, ktorý nerobí nič (zapisované správy ignoruje).
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.FakeLogger.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.FakeLogger"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.FakeLogger.PassLogRecordToWriter(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Nerobí nič.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.FileLogWriterBase">
+            <summary>
+            Abstraktná trieda implementujúca spoločnú funkčnosť zapisovačov logu do súboru.
+            </summary>
+            <remarks>
+            Táto trieda rieši konvenciu pomenovania log súborov (viď <see cref="M:Cora.Utils.Logger.FileLogWriterBase.GetCurrentLogName(System.Boolean)"/>).
+            Ich názov nie je fixný, ale môže vzniknúť dvojako: 
+            <list type="bullet">
+            	<item>buď je požadovaná maximálna veľkosť súboru, vtedy sa zapisuje sa do súborov pre daný rok s poradovým číslom 
+            	      zvyšujúcim sa vždy po naplnení logu na maximálnu veľkosť</item>
+            	<item>alebo nie je požadovaná maximálna veľkosť a nový log súbor vzniká každý deň</item>
+            </list>
+            Otvorenie súboru a zápis do neho implementuje dedič.
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PATH">
+            <summary>Default cesta k log súboru (.\). Použije sa <see cref="P:Cora.Global.Environment.AssemblyProbePath"/>.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PREFIX">
+            <summary>Default prefix názvu log súboru (Log).</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_EXTENSION">
+            <summary>Default koncovka názvu log súboru (log).</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.FileLogWriterBase.XPATH_LOGPATH">
+            <summary>XPath k parametru LogPath pri vytváraní inštancie dediča podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.FileLogWriterBase.XPATH_LOGNAMEPREFIX">
+            <summary>XPath k parametru LogNamePrefix pri vytváraní inštancie dediča podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.FileLogWriterBase.XPATH_MAXLOGFILESIZEKB">
+            <summary>XPath k parametru MaxLogFileSizeKB pri vytváraní inštancie dediča podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.FileLogWriterBase.XPATH_NOCOMPRESS">
+            <summary>XPath k príznaku NoCompress pri vytváraní inštancie dediča podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.FileLogWriterBase.#ctor(System.String,System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.FileLogWriterBase"/>.
+            </summary>
+            <param name="logPath">Cesta k log súboru (adresár). Ak je prázdna, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PATH"/>.
+            	Pozor, pri relatívnej ceste viď poznámky k <see cref="M:Cora.Global.Environment.ResolveRelativeToAssemblyProbePath(System.String)"/>.</param>
+            <param name="logNamePrefix">Prefix názvu log súboru. Ak je prázdny, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PREFIX"/>.</param>
+            <param name="logNameExtension">Koncovka názvu log súboru. Ak je prázdna, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_EXTENSION"/>.</param>
+            <param name="maxLogFileSizeKB">Maximálna veľkosť log súboru. Hodnota 0 a menej znamená bez kontroly veľkosti.</param>
+            <param name="compressOld">Komprimovať staré súbory? Parameter sa aplikuje len pri nenulovom <paramref name="maxLogFileSizeKB"/>.</param>
+            <exception cref="T:System.IO.DirectoryNotFoundException">Ak adresár ktorý označuje <paramref name="logPath"/> nebol nájdený.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.FileLogWriterBase.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam. Dedič pri preťažení metódy dá pozor na ošetrenie prípadného prístupu z viacerých vláken.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/> <c>null</c>.</exception>
+            <exception cref="T:System.Exception">Ak vznikla chyba pri zápise.</exception> 
+        </member>
+        <member name="M:Cora.Utils.Logger.FileLogWriterBase.GetCurrentLogName(System.Boolean)">
+            <summary>
+            Získanie názvu log súboru po zohľadnení prefixu, koncovky, cesty a maximálnej veľkosti.
+            Ak je požadovaná komprimácia a nastanú potrebné podmienky, skomprimuje tiež starý súbor.
+            </summary>
+            <param name="forceNewLogName">Má sa pripraviť nový názov súboru, aj keď by mohol vyhovovať už existujúci súbor?</param>
+            <returns>Názov súboru pre zápis záznamov.</returns>
+            <exception cref="T:System.Exception">Pri I/O chybe.</exception>
+        </member>
+        <member name="T:Cora.Utils.Logger.IdentityAddingLogger">
+            <summary>
+            Rozširujúci logger pridávajúci do záznamu údaje o identite prihláseného užívateľa 
+            (<see cref="T:Cora.Global.Session.IIdentity"/>), ak je známa.
+            </summary>
+            <remarks>
+            Trieda ukladá identitu do záznamu pod kľúčmi <see cref="F:Cora.Utils.Logger.IdentityAddingLogger.USERID_KEY"/> a <see cref="F:Cora.Utils.Logger.IdentityAddingLogger.CONNID_KEY"/>.
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.IdentityAddingLogger.USERID_KEY">
+            <summary>Kľúč do <see cref="P:Cora.Utils.Logger.ILogRecord.CustomContent"/>, pod ktorým sa pridá <see cref="P:Cora.Global.Session.IIdentity.I_UZ"/>.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.IdentityAddingLogger.CONNID_KEY">
+            <summary>Kľúč do <see cref="P:Cora.Utils.Logger.ILogRecord.CustomContent"/>, pod ktorým sa pridá <see cref="P:Cora.Global.Session.IIdentity.ConnId"/></summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.IdentityAddingLogger.CURRENTUSER_KEY">
+            <summary>Kľúč do <see cref="P:Cora.Utils.Logger.ILogRecord.CustomContent"/>, pod ktorým sa pridá meno current principal-a.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.IdentityAddingLogger.SEE_NEXT">
+            <summary>Hodnota "Viď nasledujúci záznam."</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.IdentityAddingLogger.#ctor(Cora.Utils.Logger.ILogger)">
+            <summary>
+            Vytvorenie inštancie rozširujúceho loggera pridávajúceho do záznamu údaje o identite prihláseného užívateľa.
+            </summary>
+            <param name="worker">Logger, ktorý bude použitý pre zápis.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="worker"/>	<c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.IdentityAddingLogger.ProcessLogRecord(Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Pridá do <paramref name="record"/> informácie o identite, ak sa dajú získať.
+            </summary>
+            <param name="record">Pôvodný záznam do logu.</param>
+            <returns>Pôvodný záznam do logu s pridanými informáciami o identite užívateľa.</returns>
+        </member>
+        <member name="F:Cora.Utils.Logger.IdentityAddingLogger._IsRetrievingAppSession">
+            <summary>Označenie, že toto vlákno sa už pokúša o získanie <see cref="T:Cora.Global.Session.AppSession"/>. Pri volaní
+            <see cref="M:Cora.Global.Session.AppSession.RetrieveAppSessionIfExists"/> môže prísť ďalší záznam do logu a hrozí zacyklenie.
+            Je označené <see cref="T:System.ThreadStaticAttribute"/>, aby každé vlákno malo svoju vlastnú hodnotu.</summary>
+        </member>
+        <member name="T:Cora.Utils.Logger.ILogFilter">
+            <summary>
+            Rozhranie pre filter obmedzujúci logovanie záznamov.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILogFilter.Passes(Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Je logovaný záznam akceptovaný filtrom?
+            </summary>
+            <param name="record">Záznam do logu.</param>
+            <returns><c>true</c> ak záznam spĺňa podmieky filtra; inak <c>false</c>.</returns>
+        </member>
+        <member name="T:Cora.Utils.Logger.LogLevel">
+            <summary>
+            Úroveň závažnosti logovanej správy. Čím nižšia úroveň, tým vyššia závažnosť.
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LogLevel.Critical">
+            <summary>
+            Kritické chyby, systém nie je ďalej použiteľný (úroveň 0).
+            Príklad: "Nepodarilo sa pripojiť na aplikačný server na adrese localhost:9091. Ukončujem program."
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LogLevel.Error">
+            <summary>
+            Chyby (najmä tie, ktoré vedú k strate dát) a výnimky, systém je schopný ďalej pokračovať (úroveň 10).
+            Príklad: "Nepodarilo sa vytvoriť nového užívateľa 'fero' (ORA-00001: unique constraint violated)."
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LogLevel.Warning">
+            <summary>
+            Upozornenia na stavy odchyľujúce sa od normálu a potenciálne problémy (úroveň 100).
+            Príklad: "Na stránke existuje viacero WindowManager-ov. Používa sa iba prvý z nich."
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LogLevel.Info">
+            <summary>
+            Informačné hlášky (úroveň 500).
+            Príklad: "Užívateľ 'fero' sa prihlásil do systému (IP=192.168.1.2)."
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LogLevel.InfoDetail">
+            <summary>
+            Informačné hlášky s detailnejším popisom (úroveň 600).
+            Príklad: "Užívateľ 'fero' sa prihlásil do systému (IP=192.168.1.2, overenie pomocou hesla)."
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LogLevel.Debug">
+            <summary>
+            Detailné informácie o behu programu používané na odlaďovanie (úroveň 1000).
+            Príklad: "Otváram konfiguračný súbor 'D:\config\fero.txt'."
+            !POZOR! Na logovanie týchto hlášok vhodné používať <see cref="M:Cora.Utils.Logger.ILogger.Log(Cora.Utils.Logger.LogLevel,System.Func{Cora.Utils.Logger.ILogRecord})"/>!
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LogLevel.Finest">
+            <summary>
+            Detailné informácie o behu programu používané na odlaďovanie, u ktorých je predpoklad že by sa v logu objavovali príliš často 
+            a tým ho zneprehľadňovali (úroveň 10000).
+            Príklad: "Vykonávam príkaz SELECT * FROM DUAL."
+            !POZOR! Na logovanie týchto hlášok bezpodmienečne používať <see cref="M:Cora.Utils.Logger.ILogger.Log(Cora.Utils.Logger.LogLevel,System.Func{Cora.Utils.Logger.ILogRecord})"/>!
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LogLevel.None">
+            <summary>Hodnota "nič nelogovať" (úroveň <see cref="F:System.Int32.MinValue"/>).</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LogLevel.All">
+            <summary>Hodnota "logovať všetko" (úroveň <see cref="F:System.Int32.MaxValue"/>).</summary>
+        </member>
+        <member name="T:Cora.Utils.Logger.ILogger">
+            <summary>
+            Rozhranie pre logger (front-end).
+            </summary>
+            <remarks>
+            Logger prijíma záznamy udalostí vznikajúcich za behu systému a posúva ich špecifickému <see cref="T:Cora.Utils.Logger.ILogWriter"/>-u (back-end),
+            ktorý ich môže písať na rôzne miesta v rôznych formátoch (do súboru, databázy, logu operačného systému etc.).
+            Každý logger má priradený level, čo je minimálna závažnosť záznamov, ktorú logger zapisuje (ostatné ignoruje).
+            Triedy implementujúce toto rozhranie tiež môžu filtrovať alebo bufferovať správy podľa vhodnej logiky,
+            a až následne ich posúvať <see cref="T:Cora.Utils.Logger.ILogWriter"/>-u.
+            </remarks>
+        </member>
+        <member name="P:Cora.Utils.Logger.ILogger.LogLevel">
+            <summary>
+            Vráti alebo nastaví úroveň závažnosti, od ktorej logger zapisuje.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.ILogger.Writer">
+            <summary>
+            Vráti alebo nastaví zapisovača logov.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.ILogger.ErrorLogger">
+            <summary>
+            Logger pre zaznamenávanie chýb vzniknutých pri logovaní. 
+            Ak nie je nastavený, chyby sa potichu ignorujú (resp. vyhadzujú ak <see cref="P:Cora.Utils.Logger.ILogger.DebugMode"/> je <c>true</c>.)
+            </summary>
+            <exception cref="T:System.ArgumentException">Pri priradení <c>this</c> alebo vzniku cyklického odkazu.</exception>
+        </member>
+        <member name="P:Cora.Utils.Logger.ILogger.DebugMode">
+            <summary>
+            Vráti alebo nastaví hodnotu uľahčujúcu hľadanie chýb pri logovaní.
+            Ak je <c>true</c>, výnimky vzniknuté pri logovaní sa neignorujú, ale vyhadzujú.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILogger.IsLoggable(Cora.Utils.Logger.LogLevel)">
+            <summary>
+            Zistí, či by záznam so zadanou úrovňou závažnosti bol logovaný.
+            </summary>
+            <param name="level">Zisťovaná úroveň závažnosti.</param>
+            <returns><c>true</c>, ak je <paramref name="level"/> rovnako alebo viac závažný ako <see cref="P:Cora.Utils.Logger.ILogger.LogLevel"/>, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILogger.Log(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Loguje záznam (ak má aspoň takú závažnosť ako <see cref="P:Cora.Utils.Logger.ILogger.LogLevel"/>).
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILogger.Log(Cora.Utils.Logger.LogLevel,System.String)">
+            <summary>
+            Loguje správu - jednoduchý text (ak má aspoň takú závažnosť ako <see cref="P:Cora.Utils.Logger.ILogger.LogLevel"/>).
+            </summary>
+            <remarks>Poznámka k implementácii: pretypovaním <paramref name="message"/> na <see cref="T:Cora.Utils.Logger.MessageLogRecord"/> 
+            sa môže zavolanť <see cref="M:Cora.Utils.Logger.ILogger.Log(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)"/>. Táto metóda je tu len preto, aby sa ušetrilo písanie užívateľom.</remarks>
+            <param name="level">Úroveň závažnosti správy.</param>
+            <param name="message">Zapisovaná správa.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILogger.Log(Cora.Utils.Logger.LogLevel,System.Func{Cora.Utils.Logger.ILogRecord})">
+            <summary>
+            Loguje záznam ktorý je výsledkom volania delegáta (ak má aspoň takú závažnosť ako <see cref="P:Cora.Utils.Logger.ILogger.LogLevel"/>).
+            </summary>
+            <remarks>
+            Túto metódu je vhodné použiť pre záznamy, ktorých výroba je "drahá" a bolo by neefektívne vytvárať inštanciu záznamu
+            ktorá by sa nakoniec nelogovala kvôli tomu že je menej závažná ako logger loguje. Tu sa delegát zavolá iba v prípade 
+            že sa skutočne bude logovať. Pre volanie viď príklad.
+            </remarks>
+            <example><code>
+            	MyLogger.Log(LogLevel.Debug, delegate()	{ 
+            												return LogRecordVytvorenyVelmiDrahymVypoctom(); 
+            											} );
+            </code></example>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="recordDelegate">Delegát, ktorý poskytne záznam.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILogger.Log(Cora.Utils.Logger.LogLevel,System.Func{System.String})">
+            <summary>
+            Loguje správu, ktorá je výsledkom volania delegáta (ak má aspoň takú závažnosť ako <see cref="P:Cora.Utils.Logger.ILogger.LogLevel"/>).
+            </summary>
+            <remarks>
+            Túto metódu je vhodné použiť pre správy, ktorých výroba je "drahá" a bolo by neefektívne vytvárať inštanciu záznamu
+            ktorá by sa nakoniec nelogovala kvôli tomu že je menej závažná ako logger loguje. Tu sa delegát zavolá iba v prípade 
+            že sa skutočne bude logovať. Pre volanie viď príklad.
+            </remarks>
+            <example><code>
+            	MyLogger.Log(LogLevel.Debug, delegate()	{ 
+            												return StringVytvorenaVelmiDrahymVypoctom(); 
+            											} );
+            </code></example>
+            <param name="level">Úroveň závažnosti správy.</param>
+            <param name="messageDelegate">Delegát, ktorý poskytne správu.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.ILoggerExtensions">
+            <summary>
+            Extension metódy pre <see cref="T:Cora.Utils.Logger.ILogger"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILoggerExtensions.SafelyLogException(Cora.Utils.Logger.ILogger,System.Exception)">
+            <summary>
+            Metóda pre logovanie výnimiek pri logovaní.
+            Ak existuje <see cref="P:Cora.Utils.Logger.ILogger.ErrorLogger"/>, použije ho pre zápis textu a stacktrace výnimky
+            s prioritou <see cref="F:Cora.Utils.Logger.LogLevel.Error"/>. Prípadné pri tom vzniknuté výnimky už potichu ignoruje.
+            </summary>
+            <param name="logger">The logger.</param>
+            <param name="ex">The ex.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILoggerExtensions.Log(Cora.Utils.Logger.ILogger,Cora.Utils.Logger.LogLevel,System.String,System.Object[])">
+            <summary>
+            Loguje správu - jednoduchý text formátovaný pomocou <see cref="M:System.String.Format(System.String,System.Object[])"/>.
+            </summary>
+            <param name="logger">Logger.</param>
+            <param name="level">Úroveň závažnosti správy.</param>
+            <param name="formatMessage">Zapisovaná správa obsahujúca formátovanie.</param>
+            <param name="args">Argumenty formátované do správy.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.ILogRecord">
+            <summary>
+            Rozhranie pre záznam do logu.
+            </summary>
+            <remarks>
+            Referenčnú a najjednoduchšiu implementáciu rozhrania tvorí <see cref="T:Cora.Utils.Logger.MessageLogRecord"/>.
+            Implementujúce triedy je treba označiť atribútom <see cref="T:System.SerializableAttribute"/>, 
+            aby bolo možné aj remote logovanie.
+            </remarks>
+        </member>
+        <member name="P:Cora.Utils.Logger.ILogRecord.Timestamp">
+            <summary>Vráti čas vytvorenia záznamu.</summary>
+            <remarks>Implementujúca trieda nastavuje v konštruktore na <see cref="P:System.DateTime.Now"/>.</remarks>
+        </member>
+        <member name="P:Cora.Utils.Logger.ILogRecord.Message">
+            <summary>Vráti správu pre logovaný záznam.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.ILogRecord.CustomContent">
+            <summary>Vráti slovník atribútov záznamu a ich hodnôt.</summary>
+            <remarks>
+              <para>
+            	Implementujúca trieda v tejto property musí sprístupniť všetky atribúty logovaného záznamu, ktoré má zapisovač
+            	logov (<see cref="T:Cora.Utils.Logger.ILogWriter"/>) zapísať. Hodnoty atribútov majú svoj pôvodný dátový typ, pričom samotný zapisovač
+            	rozhodne, či použije ich pôvodný typ (napr. zapisovač do databázy) alebo ich stringovú reprezentáciu 
+            	(napr. zapisovač do textového súboru). Ako mená atribútov sa spravidla použijú mená properties danej 
+            	implementujúcej triedy.
+              </para>
+              <para>
+              	Well-known atribúty <see cref="P:Cora.Utils.Logger.ILogRecord.Timestamp"/> a <see cref="P:Cora.Utils.Logger.ILogRecord.Message"/> sa v tomto slovníku nenachádzajú, 
+              	napriek tomu sú ako mená atribútov rezervované (zakázané použiť) reťazce Timestamp a Message.
+              </para>
+            </remarks>
+            <value>Slovník atribútov záznamu.</value>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILogRecord.ContentEquals(Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Má aktuálny záznam rovnaký obsah s porovnávaným? 
+            </summary>
+            <param name="record">Porovnávaný záznam.</param>
+            <returns>
+            	<c>true</c>, ak má aktuálny záznam rovnaký obsah s porovnávaným, inak <c>false</c>. 
+            	POZOR: Atribút <see cref="P:Cora.Utils.Logger.ILogRecord.Timestamp"/> nie je predmetom porovnávania.
+            </returns>
+        </member>
+        <member name="T:Cora.Utils.Logger.ILogWriter">
+            <summary>
+            Rozhranie pre zapisovač logu (back-end).
+            </summary>
+            <remarks>
+            Zapisovač prijíma záznamy od <see cref="T:Cora.Utils.Logger.ILogger"/>-a a zapisuje ich na určené miesto v určenom formáte.
+            Príklady, kam môžu implementujúce triedy zapisovať: do súboru, databázy, logu operačného systému etc.
+            </remarks>
+        </member>
+        <member name="M:Cora.Utils.Logger.ILogWriter.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/> <c>null</c>.</exception>
+            <exception cref="T:System.Exception">Ak vznikla chyba pri zápise.</exception>
+        </member>
+        <member name="T:Cora.Utils.Logger.IMonitoringRecord">
+            <summary>
+            Rozhranie pre záznam pre monitorovanie.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.MonitorTyp">
+            <summary>ID typu monitorovania.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.Application">
+            <summary>ID aplikácie. Hodnota -1 znamená nenastavené.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.User">
+            <summary>ID používateľa. Hodnota -1 znamená nenastavené.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.ConnId">
+            <summary>ID pripojenia.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.CompIp">
+            <summary>IP adresa počítača.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.Value1">
+            <summary>Parameter 1.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.Value2">
+            <summary>Parameter 2.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.Value3">
+            <summary>Parameter 3.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.Value4">
+            <summary>Parameter 4.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.Value5">
+            <summary>Parameter 5.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.IMonitoringRecord.ValuesXml">
+            <summary>Parametre, alebo popis parametrov vo formate XML.</summary>
+        </member>
+        <member name="T:Cora.Utils.Logger.IWcfLogWriterService">
+            <summary>
+            Rozhranie pre WCF službu na zápis logov.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.IWcfLogWriterService.Write(Cora.Utils.Logger.LogLevel,System.String)">
+            <summary>
+            Zapíše záznam.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="xmlSerializedLogRecord">XML serializovaný logovaný záznam.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.Logger">
+            <summary>
+            Logger univerzálny.
+            </summary>
+            <remarks>
+            Všetky správy dosahujúce potrebnú úroveň hneď odovzdá svojmu <see cref="P:Cora.Utils.Logger.LoggerBase.Writer"/>-u na zápis.
+            Môže mať nastavený vlastný ErrorLogger, kam bude logovať chyby ktoré prípadne vzniknú pri samotnom logovaní.
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.Logger.XPATH_LOGLEVEL">
+            <summary>XPath k parametru LogLevel pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.Logger.XPATH_FILTERS">
+            <summary>XPath k parametrom Filter pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.Logger.XPATH_WRITER">
+            <summary>XPath k parametru Writer pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.Logger.XPATH_ERRORLOGGER">
+            <summary>XPath k parametru ErrorLogger pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.Logger.XPATH_DEBUGMODE">
+            <summary>XPath k parametru DebugMode pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.Logger.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí logger podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov. 
+            Môžu byť nimi parametre konštruktora (povinný je <see cref="F:Cora.Utils.Logger.Logger.XPATH_LOGLEVEL"/>) alebo properties - nepovinné.</param>
+            <returns>Inštancia loggera zadaných atribútov.</returns>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="config"/> nezodpovedá požadovanému tvaru.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.Logger.#ctor(Cora.Utils.Logger.LogLevel)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.Logger"/>.
+            </summary>
+            <param name="logLevel">Úroveň závažnosti, od ktorej logger zapisuje.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.Logger.PassLogRecordToWriter(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Odovzdá záznam svojmu zapisovaču, ak existuje.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.LoggerBase">
+            <summary>
+            Abstraktná trieda implementujúca spoločnú funkčnosť loggerov (filtrovanie správ podľa priority a filtrov).
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerBase.#ctor(Cora.Utils.Logger.LogLevel)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.LoggerBase"/> s nastavením <see cref="P:Cora.Utils.Logger.LoggerBase.LogLevel"/>.
+            </summary>
+            <param name="level">Úroveň závažnosti, od ktorej logger zapisuje.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.LoggerBase.Filters">
+            <summary>
+            Vráti zoznam filtrov obmedzujúcich logovanie záznamov (záznam sa zapíše iba ak vyhovuje všetkým filtrom v zozname).
+            </summary>
+            <value>Zoznam filtrov.</value>
+        </member>
+        <member name="P:Cora.Utils.Logger.LoggerBase.LogLevel">
+            <summary>
+            Vráti úroveň závažnosti, od ktorej logger zapisuje.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.LoggerBase.Writer">
+            <summary>
+            Vráti alebo nastaví zapisovača logov.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.LoggerBase.ErrorLogger">
+            <summary>
+            Logger pre zaznámenávanie chýb vzniknutých pri logovaní.
+            </summary>
+            <exception cref="T:System.ArgumentException">Pri priradení <c>this</c> alebo vzniku cyklického odkazu.</exception>
+        </member>
+        <member name="P:Cora.Utils.Logger.LoggerBase.DebugMode">
+            <summary>
+            Vráti alebo nastaví hodnotu uľahčujúcu hľadanie chýb pri logovaní.
+            Ak je <c>true</c>, výnimky vzniknuté pri logovaní sa neignorujú, ale vyhadzujú.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerBase.IsLoggable(Cora.Utils.Logger.LogLevel)">
+            <summary>
+            Zistí, či by záznam so zadanou úrovňou závažnosti bol logovaný.
+            </summary>
+            <param name="level">Zisťovaná úroveň závažnosti.</param>
+            <returns>
+            	<c>true</c>, ak je <paramref name="level"/> rovnako alebo viac závažný ako <see cref="P:Cora.Utils.Logger.LoggerBase.LogLevel"/>, inak <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerBase.Log(Cora.Utils.Logger.LogLevel,System.String)">
+            <summary>
+            Loguje správu - jednoduchý text (ak má aspoň takú závažnosť ako <see cref="P:Cora.Utils.Logger.LoggerBase.LogLevel"/>).
+            </summary>
+            <param name="level">Úroveň závažnosti správy.</param>
+            <param name="message">Zapisovaná správa.</param>
+            <remarks>Poznámka k implementácii: pretypovaním <paramref name="message"/> na <see cref="T:Cora.Utils.Logger.MessageLogRecord"/>
+            sa môže zavolanť <see cref="M:Cora.Utils.Logger.LoggerBase.Log(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)"/>. Táto metóda je tu len preto, aby sa ušetrilo písanie užívateľom.</remarks>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerBase.Log(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Loguje záznam (ak má aspoň takú závažnosť ako <see cref="P:Cora.Utils.Logger.LoggerBase.LogLevel"/>).
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerBase.Log(Cora.Utils.Logger.LogLevel,System.Func{Cora.Utils.Logger.ILogRecord})">
+            <summary>
+            Loguje záznam ktorý je výsledkom volania delegáta (ak má aspoň takú závažnosť ako <see cref="P:Cora.Utils.Logger.LoggerBase.LogLevel"/>).
+            </summary>
+            <remarks>
+            Túto metódu je vhodné použiť pre záznamy, ktorých výroba je "drahá" a bolo by neefektívne vytvárať inštanciu záznamu
+            ktorá by sa nakoniec nelogovala kvôli tomu že je menej závažná ako logger loguje. Tu sa delegát zavolá iba v prípade 
+            že sa skutočne bude logovať. Pre volanie viď príklad.
+            </remarks>
+            <example><code>
+            	MyLogger.Log(LogLevel.Debug, delegate()	{ 
+            												return LogRecordVytvorenyVelmiDrahymVypoctom(); 
+            											} );
+            </code></example>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="recordDelegate">Delegát, ktorý poskytne záznam.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerBase.Log(Cora.Utils.Logger.LogLevel,System.Func{System.String})">
+            <summary>
+            Loguje správu, ktorá je výsledkom volania delegáta (ak má aspoň takú závažnosť ako <see cref="P:Cora.Utils.Logger.LoggerBase.LogLevel"/>).
+            </summary>
+            <remarks>
+            Túto metódu je vhodné použiť pre správy, ktorých výroba je "drahá" a bolo by neefektívne vytvárať inštanciu záznamu
+            ktorá by sa nakoniec nelogovala kvôli tomu že je menej závažná ako logger loguje. Tu sa delegát zavolá iba v prípade 
+            že sa skutočne bude logovať. Pre volanie viď príklad.
+            </remarks>
+            <example><code>
+            	MyLogger.Log(LogLevel.Debug, delegate()	{ 
+            												return StringVytvorenaVelmiDrahymVypoctom(); 
+            											} );
+            </code></example>
+            <param name="level">Úroveň závažnosti správy.</param>
+            <param name="messageDelegate">Delegát, ktorý poskytne správu.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerBase.PassLogRecordToWriter(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Metóda pre samotné odovzdanie záznamu zapisovaču. Implementuje dedič.
+            </summary>
+            <remarks>
+             Základná trieda garantuje, že táto metóda sa zavolá len v prípadoch, že
+             <list type="bullet">
+            	<item>pre <paramref name="level"/> platí <see cref="M:Cora.Utils.Logger.LoggerBase.IsLoggable(Cora.Utils.Logger.LogLevel)"/>==<c>true</c>.</item>
+            	<item><paramref name="record"/> nie je <c>null</c>.</item>
+             </list>
+             Ak pri vykonávaní metódy vznikne výnimka, táto sa zaloguje do <see cref="P:Cora.Utils.Logger.LoggerBase.ErrorLogger"/> (ak existuje),
+             a prípadné ďalšie pri tom vzniknuté výnimky sa už potichu ignorujú.
+            </remarks>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.LoggerFactory">
+            <summary>
+            Factory na výrobu <see cref="T:Cora.Utils.Logger.ILogger"/>-ov, <see cref="T:Cora.Utils.Logger.ILogWriter"/>-ov a <see cref="T:Cora.Utils.Logger.ILogFilter"/>-ov.
+            </summary>
+            <remarks>
+            Pomocou reflexie vie vyrobiť aj (dopredu neznáme) inštancie umiestnené v iných assemblies.
+            Podmienkou je, aby daná trieda mala public static metódu <c>Create(XmlNode)</c>
+            s návratovou hodnotou príslušného rozhrania schopnú vytvoriť a 
+            vrátiť novú inštanciu podľa XML configu.
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.LoggerFactory.XMLATTR_TYPE">
+            <summary>Názov atribútu mena triedy pri vytváraní inštancie zapisovača podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.LoggerFactory.XMLATTR_ASSEMBLY">
+            <summary>Názov atribútu mena knižnice pri vytváraní inštancie loggera podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerFactory.CreateLogger(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí logger podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorý tvorí config loggera. Meno výslednej triedy udáva atribút <see cref="F:Cora.Utils.Logger.LoggerFactory.XMLATTR_TYPE"/>.
+            Ak je trieda súčasťou tejto knižnice, môže byť v jednoduchom tvare , v opačnom prípade musí byť full qualified
+            (t.j. vrátane namespace) a dodatočný atribút <see cref="F:Cora.Utils.Logger.LoggerFactory.XMLATTR_ASSEMBLY"/> označí meno knižnice (notácia - viď
+            <see cref="M:System.Reflection.Assembly.Load(System.String)"/>. Poduzly tvoria parametre konštruktora/properties špecifické pre danú triedu.</param>
+            <returns>Logger zadaných parametrov.</returns>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="config"/> nezodpovedá požadovanému tvaru.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerFactory.CreateLogWriter(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí zapisovač logu podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorý tvorí config zapisovača. Meno výslednej triedy udáva atribút <see cref="F:Cora.Utils.Logger.LoggerFactory.XMLATTR_TYPE"/>.
+            Ak je trieda súčasťou tejto knižnice, môže byť v jednoduchom tvare , v opačnom prípade musí byť full qualified
+            (t.j. vrátane namespace) a dodatočný atribút <see cref="F:Cora.Utils.Logger.LoggerFactory.XMLATTR_ASSEMBLY"/> označí meno knižnice (notácia - viď
+            <see cref="M:System.Reflection.Assembly.Load(System.String)"/>. Poduzly tvoria parametre konštruktora/properties špecifické pre danú triedu.</param>
+            <returns>Zapisovač logu zadaných parametrov..</returns>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="config"/> nezodpovedá požadovanému tvaru.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerFactory.CreateLogFilter(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí filter obmedzujúci logované záznamy podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorý tvorí config zapisovača. Meno výslednej triedy udáva atribút <see cref="F:Cora.Utils.Logger.LoggerFactory.XMLATTR_TYPE"/>.
+            Ak je trieda súčasťou tejto knižnice, môže byť v jednoduchom tvare , v opačnom prípade musí byť full qualified
+            (t.j. vrátane namespace) a dodatočný atribút <see cref="F:Cora.Utils.Logger.LoggerFactory.XMLATTR_ASSEMBLY"/> označí meno knižnice (notácia - viď
+            <see cref="M:System.Reflection.Assembly.Load(System.String)"/>. Poduzly tvoria parametre konštruktora/properties špecifické pre danú triedu.</param>
+            <returns>Filter logovaných záznamov podľa zadaných parametrov.</returns>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="config"/> nezodpovedá požadovanému tvaru.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerFactory.TryGetNodeText(System.Xml.XmlNode,System.String,System.Int32)">
+            <summary>
+            Vráti innertext hľadaného XML uzla ako int, alebo default hodnotu ak nebol nájdený.
+            </summary>
+            <param name="fragment">XML fragment, v ktorom sa hľadá.</param>
+            <param name="nodeXPath">XPath k uzlu v <paramref name="fragment"/>.</param>
+            <param name="defaultValue">Defaultná hodnota.</param>
+            <returns>Hodnota uzla <param nameref="nodeXPath"/>, alebo <paramref name="defaultValue"/> ak nebol nájdený.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.LoggerFactory.TryGetNodeText(System.Xml.XmlNode,System.String,System.String)">
+            <summary>
+            Vráti innertext hľadaného XML uzla ako string, alebo default hodnotu ak nebol nájdený.
+            </summary>
+            <param name="fragment">XML fragment, v ktorom sa hľadá.</param>
+            <param name="nodeXPath">XPath k uzlu v <paramref name="fragment"/>.</param>
+            <param name="defaultValue">Defaultná hodnota.</param>
+            <returns>Hodnota uzla <param nameref="nodeXPath"/>, alebo <paramref name="defaultValue"/> ak nebol nájdený.</returns>
+        </member>
+        <member name="T:Cora.Utils.Logger.LogRecordWithLevel">
+            <summary>
+            Prepravka obsahujúca <see cref="T:Cora.Utils.Logger.ILogRecord"/> a jeho úroveň závažnosti.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.LogRecordWithLevel.#ctor(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.LogRecordWithLevel"/>.
+            </summary>
+            <param name="level">Úroveň závažnosti.</param>
+            <param name="record">Logovaný záznam.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.LogRecordWithLevel.Level">
+            <summary>
+            Úroveň závažnosti.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.LogRecordWithLevel.Record">
+            <summary>
+            Logovaný záznam.
+            </summary>
+        </member>
+        <member name="T:Cora.Utils.Logger.MessageContainsFilter">
+            <summary>
+            Filter logovaných záznamov podľa reťazca v ich správe (<see cref="P:Cora.Utils.Logger.ILogRecord.Message"/>).
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.MessageContainsFilter.XPATH_SUBSTRING">
+            <summary>XPath k parametru Substring pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.MessageContainsFilter.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí filter logovaných záznamov podľa reťazca v ich správe.
+            </summary>
+            <param name="config">XML uzol, ktorého atribúty tvoria zoznam parametrov.</param>
+            <returns>Inštancia filtra.</returns>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="config"/> nezodpovedá požadovanému tvaru.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.MessageContainsFilter.#ctor(System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.MessageContainsFilter"/>.
+            </summary>
+            <param name="substring">Podreťazec správy, ktorý tento filter akceptuje.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.MessageContainsFilter.Passes(Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Je logovaný záznam akceptovaný filtrom?
+            </summary>
+            <param name="record">Záznam do logu.</param>
+            <returns><c>true</c> ak záznam obsahuje daný substring; inak <c>false</c>.</returns>
+        </member>
+        <member name="T:Cora.Utils.Logger.MessageLogRecord">
+            <summary>
+            Záznam do logu obsahujúci jednoduchú hlášku.
+            </summary>
+            <remarks>
+            Pri dedení triedy je dôrazne odporúčané obsah prípadných ďalších properties ukladať do slovníka 
+            <see cref="P:Cora.Utils.Logger.MessageLogRecord.CustomContent"/>. V taktomto prípade bude aj odvodená trieda serializovateľná pomocou
+            <see cref="T:System.Xml.Serialization.XmlSerializer"/>-a bez akejkoľvek zmeny. Pre serializáciu sa vyžaduje bezparametrický konštruktor.
+            </remarks>
+        </member>
+        <member name="M:Cora.Utils.Logger.MessageLogRecord.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.MessageLogRecord"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.MessageLogRecord.#ctor(System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.MessageLogRecord"/> s určením textu hlášky.
+            </summary>
+            <param name="message">Správa (text) logovaného záznamu.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.MessageLogRecord.Timestamp">
+            <summary>
+            Vráti čas vytvorenia záznamu.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MessageLogRecord.Message">
+            <summary>
+            Vráti alebo nastaví správu pre logovaný záznam.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MessageLogRecord.CustomContent">
+            <summary>
+            Vráti slovník atribútov záznamu a ich hodnôt. 
+            </summary>
+            <value>Slovník atribútov záznamu.</value>
+            <remarks>
+            Keďže táto trieda nemá iné atribúty okrem implementovaných z rozhrania <see cref="T:Cora.Utils.Logger.ILogWriter"/>, slovník je prázdny.
+            </remarks>
+        </member>
+        <member name="M:Cora.Utils.Logger.MessageLogRecord.ContentEquals(Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Má aktuálny záznam rovnaký obsah s porovnávaným?
+            </summary>
+            <param name="record">Porovnávaný záznam.</param>
+            <returns><c>true</c>, ak má aktuálny záznam rovnaký atribút <see cref="P:Cora.Utils.Logger.MessageLogRecord.Message"/> ako porovnávaný, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.MessageLogRecord.GetSchema">
+            <summary>
+            This method is reserved and should not be used. When implementing the IXmlSerializable interface, you should return null (Nothing in Visual Basic) from this method, and instead, if specifying a custom schema is required, apply the <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> to the class.
+            </summary>
+            <returns>
+            An <see cref="T:System.Xml.Schema.XmlSchema"/> that describes the XML representation of the object that is produced by the <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/> method and consumed by the <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/> method.
+            </returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.MessageLogRecord.ReadXml(System.Xml.XmlReader)">
+            <summary>
+            Generates an object from its XML representation.
+            </summary>
+            <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.MessageLogRecord.WriteXml(System.Xml.XmlWriter)">
+            <summary>
+            Converts an object into its XML representation.
+            </summary>
+            <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.MonitoringRecord">
+            <summary>
+            Záznam pre monitorovanie.
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET">
+            <summary>Hodnota pre nenastavené hodnoty <see cref="P:Cora.Utils.Logger.MonitoringRecord.Application"/> a <see cref="P:Cora.Utils.Logger.MonitoringRecord.User"/>.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.MonitoringRecord.#ctor(System.Int32,System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Vytvorenie záznamu pre monitorovanie.
+            </summary>
+            <param name="monitorTyp">ID typu monitorovania.</param>
+            <param name="application">ID aplikácie, alebo <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/>.</param>
+            <param name="user">ID používateľa, alebo <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/>.</param>
+            <param name="connId">ID pripojenia.</param>
+            <param name="compIp">IP adresa počítača.</param>
+            <param name="value1">Parameter 1.</param>
+            <param name="value2">Parameter 2.</param>
+            <param name="value3">Parameter 3.</param>
+            <param name="value4">Parameter 4.</param>
+            <param name="value5">Parameter 5.</param>
+            <param name="valuesXml">Parametre, alebo popis parametrov vo formáte XML.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.MonitoringRecord.#ctor(System.Int32,System.Int32,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String,System.String,System.Xml.XmlDocument)">
+            <summary>
+            Vytvorenie záznamu pre monitorovanie.
+            </summary>
+            <param name="monitorTyp">ID typu monitorovania.</param>
+            <param name="application">ID aplikácie, alebo <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/>.</param>
+            <param name="user">ID používateľa, alebo <see cref="F:Cora.Utils.Logger.MonitoringRecord.VALUE_NOT_SET"/>.</param>
+            <param name="connId">ID pripojenia.</param>
+            <param name="compIp">IP adresa počítača.</param>
+            <param name="value1">Parameter 1.</param>
+            <param name="value2">Parameter 2.</param>
+            <param name="value3">Parameter 3.</param>
+            <param name="value4">Parameter 4.</param>
+            <param name="value5">Parameter 5.</param>
+            <param name="valuesXml">Parametre, alebo popis parametrov vo formáte XML.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.Timestamp">
+            <summary>
+            Vráti čas vytvorenia záznamu.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.Message">
+            <summary>
+            Vráti <c>null</c> - trieda nevyužíva tento agrument.
+            </summary>
+            <value><c>null</c></value>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.CustomContent">
+            <summary>
+            Vráti slovník atribútov záznamu a ich hodnôt. 
+            Sú v ňom uložené všetky atribúty rozhrania <see cref="T:Cora.Utils.Logger.IMonitoringRecord"/>, kľúče v slovníku sú ich názvy.
+            </summary>
+            <value>Slovník atribútov záznamu.</value>
+        </member>
+        <member name="M:Cora.Utils.Logger.MonitoringRecord.ContentEquals(Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Porovnanie obsahu (jednotlivých položiek) zadaného záznamu.
+            </summary>
+            <param name="record">Porovnávaný záznam.</param>
+            <returns>
+            	<c>true</c>, ak má aktuálny záznam rovnaký obsah s porovnávaným, inak <c>false</c>. 
+            	POZOR: Atribút <see cref="P:Cora.Utils.Logger.MonitoringRecord.Timestamp"/> nie je predmetom porovnávania.
+            </returns>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.MonitorTyp">
+            <summary>ID typu monitorovania.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.Application">
+            <summary>ID aplikácie.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.User">
+            <summary>ID používateľa.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.ConnId">
+            <summary>ID pripojenia.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.CompIp">
+            <summary>IP adresa počítača.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.Value1">
+            <summary>Parameter 1.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.Value2">
+            <summary>Parameter 2.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.Value3">
+            <summary>Parameter 3.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.Value4">
+            <summary>Parameter 4.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.Value5">
+            <summary>Parameter 5.</summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.MonitoringRecord.ValuesXml">
+            <summary>Parametre, alebo popis parametrov vo formáte XML.</summary>
+        </member>
+        <member name="T:Cora.Utils.Logger.MultiLogWriter">
+            <summary>
+            Zapisovač logov posúvajúci správy na zápis ľubovoľnému počtu loggerov. 
+            </summary>
+            <remarks>
+             <para>
+              Zapisovač funguje ako replikátor logovaných správ - podradené loggery (<see cref="P:Cora.Utils.Logger.MultiLogWriter.Loggers"/>) 
+              môžu na zapisované správy aplikovať vlastné filtrovanie a zapisovať ich do rôznych destinácií.
+             </para><para>
+              Pozor: pokiaľ ten-ktorý podradený logger nemá nastavený vlastný <see cref="P:Cora.Utils.Logger.ILogger.ErrorLogger"/>, 
+              správa o chybe sa potichu "stratí", t.j. neprevezme ju errorlogger loggera, ktorého zapisovačom je inštancia
+              tejto triedy.
+             </para>
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.MultiLogWriter.XPATH_LOGGERS">
+            <summary>XPath k parametrom Logger pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.MultiLogWriter.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí zapisovač logu podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov konštruktora.</param>
+            <returns>Inštancia zapisovača zadaných atribútov.</returns>
+        </member>
+        <member name="P:Cora.Utils.Logger.MultiLogWriter.Loggers">
+            <summary>
+            Vráti zoznam loggerov, ktorým zapisovač posúva správy.
+            </summary>
+            <value>Zoznam loggerov.</value>
+        </member>
+        <member name="M:Cora.Utils.Logger.MultiLogWriter.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam každým zo zoznamu loggerov.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/>	<c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Utils.Logger.NamespaceDoc">
+            <summary>
+            <para>
+            Namespace obsahuje rozhrania a triedy pre logovanie v aplikácii a podporu celoaplikačného logovania.
+            </para>
+            <para>
+            Logovanie je rozčlenené na front-end (<see cref="T:Cora.Utils.Logger.ILogger"/>), ktorý prijíma záznamy na logovanie 
+            a back-end (<see cref="T:Cora.Utils.Logger.ILogWriter"/>), ktorý je zodpovedný za zápis správ do rôznych destinácií.
+            Implementovaný je jednoduchý (<see cref="T:Cora.Utils.Logger.Logger"/>) a bufferovaný logger (<see cref="T:Cora.Utils.Logger.BufferedLogger"/>).
+            Záznamy môžu byť zapisované do systémového eventlogu (<see cref="T:Cora.Utils.Logger.EventLogWriter"/>), na konzolu
+            (<see cref="T:Cora.Utils.Logger.ConsoleLogWriter"/>) alebo do súboru (<see cref="T:Cora.Utils.Logger.TextFileLogWriter"/> a <see cref="T:Cora.Utils.Logger.XmlFileLogWriter"/>).
+            Logovať sa môžu rôzne typy záznamov (<see cref="T:Cora.Utils.Logger.ILogRecord"/>) - okrem dátumu a času
+            vytvorenia môžu obsahovať voliteľný počet atribútov, ktorých formát zápisu je na konkrétnom zapisovači.
+            Najjednoduchšie implementácie sú <see cref="T:Cora.Utils.Logger.MessageLogRecord"/> a <see cref="T:Cora.Utils.Logger.UserMessageLogRecord"/>.
+            </para>
+            <para>
+            Aplikačné logovanie je riešené triedou <see cref="T:Cora.Utils.Logger.AppLogging"/>, ktorá podľa nastavení v App.config-u
+            aplikácie nakonfiguruje príslušný logger a zapisovač. Tieto môžu pochádzať aj z iných knižníc, pokiaľ
+            implementujú rozhrania <see cref="T:Cora.Utils.Logger.ILogger"/>, resp. <see cref="T:Cora.Utils.Logger.ILogWriter"/> (v tom prípade sa konštruujú
+            reflexiou). Aplikačné logovanie tým pádom centrálne zhromažďuje správy z rôznych knižníc.
+            </para>
+            <para>
+            Logovanie pomocou <see cref="P:Cora.Utils.Logger.AppLogging.Logger"/> k logovanému záznamu pridá aj informáciu o identite
+            užívateľa. Využíva sa tu front-end-processing (viď triedy <see cref="T:Cora.Utils.Logger.ProcessingLoggerBase"/> a 
+            <see cref="T:Cora.Utils.Logger.IdentityAddingLogger"/>), ktorý sa dá reťaziť a pomocou neho implementovať ľubovoľne 
+            komplexné filtre alebo modifikátory logovaných záznamov.
+            </para>
+            <para>
+            POZN: Zapisovače logov DbLogWriter a MonitoringLogWriter sa nenachádzajú v tejto knižnici, ale
+            	  v Cora.Data.DBProvider!
+            </para>
+            </summary>
+        </member>
+        <member name="T:Cora.Utils.Logger.ProcessingLoggerBase">
+            <summary>
+            Základná trieda pre loggery rozširujúce ľubovoľný <see cref="T:Cora.Utils.Logger.ILogger"/> o možnosť logované správy 
+            tesne pred zápisom spracovať.
+            </summary>
+            <remarks>
+             <para>
+              Implementuje GoF "Decorator" pattern, všetky volania teda posúva na dekorovaný logger, pričom tesne pred
+              samotným zápisom záznamu dáva dedičovi možnosť spracovať logovanú správu v metóde <see cref="M:Cora.Utils.Logger.ProcessingLoggerBase.ProcessLogRecord(Cora.Utils.Logger.ILogRecord)"/>.
+             </para><para>
+              V prípade metód pracujúcich s delegátmi poskytujúcimi záznamy (<see cref="M:Cora.Utils.Logger.ProcessingLoggerBase.Log(Cora.Utils.Logger.LogLevel,System.Func{Cora.Utils.Logger.ILogRecord})"/>)
+              sa zachováva pôvodná myšlienka, že delegát sa zavolá iba v prípade, ak je predpoklad že správa sa bude skutočne
+              logovať (t.j. závažnosť správy je vyššia alebo rovná úrovni logovania, je nastavený <see cref="P:Cora.Utils.Logger.ProcessingLoggerBase.Writer"/> atď.).
+             </para><para>
+              Možnosť dekorovať ľubovoľný logger implementujúci <see cref="T:Cora.Utils.Logger.ILogger"/>, čiže aj inštanciu dedičov tejto
+              triedy, dovoľuje reťazenie a tým implementáciu komplexných front-end filtrov správ.
+             </para>
+            </remarks>
+        </member>
+        <member name="M:Cora.Utils.Logger.ProcessingLoggerBase.#ctor(Cora.Utils.Logger.ILogger)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.ProcessingLoggerBase"/>.
+            </summary>
+            <param name="worker">Logger, ktorý bude použitý pre zápis.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="worker"/> <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Utils.Logger.ProcessingLoggerBase.LogLevel">
+            <summary>
+            Vráti alebo nastaví úroveň závažnosti, od ktorej logger zapisuje.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.ProcessingLoggerBase.Writer">
+            <summary>
+            Vráti alebo nastaví zapisovača logov.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.ProcessingLoggerBase.ErrorLogger">
+            <summary>
+            Logger pre zaznámenávanie chýb vzniknutých pri logovaní. Ak nie je nastavený, chyby sa potichu ignorujú.
+            </summary>
+            <exception cref="T:System.ArgumentException">Pri priradení <c>this</c> alebo vzniku cyklického odkazu.</exception>
+        </member>
+        <member name="P:Cora.Utils.Logger.ProcessingLoggerBase.DebugMode">
+            <summary>
+            Vráti alebo nastaví hodnotu uľahčujúcu hľadanie chýb pri logovaní.
+            Ak je <c>true</c>, výnimky vzniknuté pri logovaní sa neignorujú, ale vyhadzujú.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.ProcessingLoggerBase.IsLoggable(Cora.Utils.Logger.LogLevel)">
+            <summary>
+            Zistí, či by záznam so zadanou úrovňou závažnosti bol logovaný.
+            </summary>
+            <param name="level">Zisťovaná úroveň závažnosti.</param>
+            <returns><c>true</c>, ak je <paramref name="level"/> rovnako alebo viac závažný ako <see cref="P:Cora.Utils.Logger.ILogger.LogLevel"/>, inak <c>false</c>.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.ProcessingLoggerBase.Log(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Loguje záznam (so spracovaním).
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.ProcessingLoggerBase.Log(Cora.Utils.Logger.LogLevel,System.String)">
+            <summary>
+            Loguje správu - jednoduchý text (so spracovaním).
+            </summary>
+            <param name="level">Úroveň závažnosti správy.</param>
+            <param name="message">Zapisovaná správa.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.ProcessingLoggerBase.Log(Cora.Utils.Logger.LogLevel,System.Func{Cora.Utils.Logger.ILogRecord})">
+            <summary>
+            Loguje záznam ktorý je výsledkom volania delegáta (so spracovaním).
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="recordDelegate">Delegát, ktorý poskytne záznam.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.ProcessingLoggerBase.Log(Cora.Utils.Logger.LogLevel,System.Func{System.String})">
+            <summary>
+            Loguje správu, ktorá je výsledkom volania delegáta (so spracovaním).
+            </summary>
+            <param name="level">Úroveň závažnosti správy.</param>
+            <param name="messageDelegate">Delegát, ktorý poskytne správu.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.ProcessingLoggerBase.ProcessLogRecord(Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            V tejto metóde dedič implementuje spracovanie záznamu pred logovaním.
+            </summary>
+            <remarks>
+             <para>
+              Spracovanie môže spočívať v odfiltrovaní záznamu ako celku (metóda vráti <c>null</c>), 
+              alebo zmene/doplnení/odobratí určitých atribútov záznamu (viď <see cref="P:Cora.Utils.Logger.ILogRecord.CustomContent"/>).
+              Metóda môže vrátiť upravenú inštanciu záznamu, alebo vytvoriť úplne inú inštanciu.
+             </para><para>
+              Ak vznikne v tejto metóde výnimka, logovanie záznamu sa zruší a výnimka zapíše štandardným postupom
+              na <see cref="P:Cora.Utils.Logger.ProcessingLoggerBase.ErrorLogger"/>, ak je nastavený, v opačnom prípade sa potichu ignoruje.
+             </para>
+            </remarks>
+            <param name="record">Pôvodný záznam do logu.</param>
+            <returns>Záznam do logu po spracovaní, ktorý sa bude skutočne logovať; alebo <c>null</c>.</returns>
+        </member>
+        <member name="T:Cora.Utils.Logger.RichTextBoxWriter">
+            <summary>
+            Zapisovač logov do <see cref="T:System.Windows.Forms.RichTextBox"/>-u (GUI).
+            </summary>
+            <remarks>
+            Vytvorenie tohto zapisovača je podporované iba z programu, z config-u nemá zmysel, pretože je
+            potrebné naviazať ho na konkrétny textbox.
+            </remarks>
+        </member>
+        <member name="M:Cora.Utils.Logger.RichTextBoxWriter.#ctor(System.Windows.Forms.RichTextBox)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.RichTextBoxWriter"/>.
+            </summary>
+            <param name="outputBox">Textbox, kam sa bude zapisovať.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.RichTextBoxWriter.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/>	<c>null</c>.</exception>
+            <exception cref="T:System.Exception">Ak vznikla chyba pri zápise.</exception>
+        </member>
+        <member name="T:Cora.Utils.Logger.SerializableDictionary`2">
+            <summary>
+            Dictionary serializovateľný pomocou <see cref="T:System.Xml.Serialization.XmlSerializer"/>-a.
+            </summary>
+            <remarks>
+            Pretože serializácia obyčajného dictionary <see cref="T:System.Xml.Serialization.XmlSerializer"/>-om nie je podporovaná,
+            v tejto triede explicitne implementujeme rozhranie <see cref="T:System.Xml.Serialization.IXmlSerializable"/>.
+            </remarks>
+            <typeparam name="TKey">Typ kľúča.</typeparam>
+            <typeparam name="TValue">Typ hodnoty.</typeparam>
+        </member>
+        <member name="M:Cora.Utils.Logger.SerializableDictionary`2.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.SerializableDictionary`2"/> s prázdnym obsahom a
+            defaultným komparátorom pre typ kľúča.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.SerializableDictionary`2.#ctor(System.Collections.Generic.IEqualityComparer{`0})">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.SerializableDictionary`2"/> s prázdnym obsahom a
+            dodaným komparátorom pre typ kľúča.
+            </summary>
+            <param name="comparer">Komparátor pre typ kľúča.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.SerializableDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1})">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.SerializableDictionary`2"/> s prvkami skopírovanými
+            z dodaného slovníka a defaultným komparátorom pre typ kľúča.
+            </summary>
+            <exception cref="T:System.ArgumentNullException">Ak je<paramref name="dictionary"/>  is <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="dictionary"/> obsahuje duplicitné kľúče.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.SerializableDictionary`2.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Deserializačný konštruktor.
+            </summary>
+            <param name="info">The info.</param>
+            <param name="context">The context.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.SerializableDictionary`2.GetSchema">
+            <summary>
+            This method is reserved and should not be used. When implementing the IXmlSerializable interface, you should return null (Nothing in Visual Basic) from this method, and instead, if specifying a custom schema is required, apply the <see cref="T:System.Xml.Serialization.XmlSchemaProviderAttribute"/> to the class.
+            </summary>
+            <returns>
+            An <see cref="T:System.Xml.Schema.XmlSchema"/> that describes the XML representation of the object that is produced by the <see cref="M:System.Xml.Serialization.IXmlSerializable.WriteXml(System.Xml.XmlWriter)"/> method and consumed by the <see cref="M:System.Xml.Serialization.IXmlSerializable.ReadXml(System.Xml.XmlReader)"/> method.
+            </returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.SerializableDictionary`2.ReadXml(System.Xml.XmlReader)">
+            <summary>
+            Generates an object from its XML representation.
+            </summary>
+            <param name="reader">The <see cref="T:System.Xml.XmlReader"/> stream from which the object is deserialized.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.SerializableDictionary`2.WriteXml(System.Xml.XmlWriter)">
+            <summary>
+            Converts an object into its XML representation.
+            </summary>
+            <param name="writer">The <see cref="T:System.Xml.XmlWriter"/> stream to which the object is serialized.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.TextFileLogWriter">
+            <summary>
+            Zapisovač logu do textového súboru, každému záznamu zodpovedá jeden riadok.
+            </summary>
+            <remarks>
+            Viď <see cref="T:Cora.Utils.Logger.FileLogWriterBase"/> pre konvencie pomenovania log súborov.
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.TextFileLogWriter.DEFAULT_RECORD_FORMAT">
+            <summary>Format string logovaného záznamu pre textový výstup.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.TextFileLogWriter.XPATH_LOGNAMEEXTENSION">
+            <summary>XPath k parametru LogNameExtension pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.TextFileLogWriter.XPATH_RECORDFORMATSTRING">
+            <summary>XPath k parametru RecordFormatString pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.TextFileLogWriter.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí zapisovač logu podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov konštruktora.</param>
+            <returns>Inštancia zapisovača zadaných atribútov.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.TextFileLogWriter.#ctor(System.String,System.String,System.String,System.Int32,System.Boolean,System.String)">
+            <summary>
+            Vytvorenie inštancie zapisovača logu do textového súboru.
+            </summary>
+            <param name="logPath">Cesta k log súboru (adresár). Ak je prázdna, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PATH"/>.
+            	Pozor, pri relatívnej ceste viď poznámky k <see cref="M:Cora.Global.Environment.ResolveRelativeToAssemblyProbePath(System.String)"/>.</param> 
+            <param name="logNamePrefix">Prefix názvu log súboru. Ak je prázdny, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PREFIX"/>.</param>
+            <param name="logNameExtension">Koncovka názvu log súboru. Ak je prázdna, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_EXTENSION"/>.</param>
+            <param name="maxLogFileSizeKB">Maximálna veľkosť log súboru. Hodnota 0 a menej znamená bez kontroly veľkosti.</param>
+            <param name="compressOld">Komprimovať staré súbory? Parameter sa aplikuje len pri nenulovom <paramref name="maxLogFileSizeKB"/>.</param>
+            <param name="recordFormatString">Formátovací reťazec pre <see cref="M:System.String.Format(System.String,System.Object[])"/>, ktorým sa naformátuje 
+            záznam. Formátujú sa atribúty <see cref="P:Cora.Utils.Logger.ILogRecord.Timestamp"/>, <see cref="T:Cora.Utils.Logger.LogLevel"/> a <see cref="P:Cora.Utils.Logger.ILogRecord.Message"/>
+            (v tomto poradí). Ďalšie atribúty (<see cref="P:Cora.Utils.Logger.ILogRecord.CustomContent"/>) sa formátujú ako Key=Value oddelené čiarkou.</param>
+            <exception cref="T:System.IO.DirectoryNotFoundException">Ak adresár ktorý označuje <paramref name="logPath"/> nebol nájdený.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.TextFileLogWriter.#ctor(System.String,System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+            Vytvorenie inštancie zapisovača logu do textového súboru s formátom záznamu <see cref="F:Cora.Utils.Logger.TextFileLogWriter.DEFAULT_RECORD_FORMAT"/>.
+            </summary>
+            <param name="logPath">Cesta k log súboru (adresár). Ak je prázdna, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PATH"/>.</param>
+            <param name="logNamePrefix">Prefix názvu log súboru. Ak je prázdny, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PREFIX"/>.</param>
+            <param name="logNameExtension">Koncovka názvu log súboru. Ak je prázdna, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_EXTENSION"/>.</param>
+            <param name="maxLogFileSizeKB">Maximálna veľkosť log súboru. Hodnota 0 a menej znamená bez kontroly veľkosti.</param>
+            <param name="compressOld">Komprimovať staré súbory? Parameter sa aplikuje len pri nenulovom <paramref name="maxLogFileSizeKB"/>.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.TextFileLogWriter.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam ako riadok textu.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/> <c>null</c>.</exception>
+            <exception cref="T:System.Exception">Ak vznikla chyba pri zápise.</exception> 
+        </member>
+        <member name="T:Cora.Utils.Logger.UserIdFilter">
+            <summary>
+            Filter logovaných záznamov podľa ID užívateľa v správe.
+            </summary>
+            <remarks>
+            Filter nezisťuje identitu užívateľa z aplikačnej session, ale filtruje atribút UserId v logovanej správe.
+            Jednoduchý spôsob doplniť tento atribút do správy je logovanie pomocou dekorátora <see cref="T:Cora.Utils.Logger.IdentityAddingLogger"/>
+            (trieda <see cref="T:Cora.Utils.Logger.AppLogging"/> toto robí automaticky).
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.UserIdFilter.XPATH_USERID">
+            <summary>XPath k parametru Id pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.UserIdFilter.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí filter logovaných záznamov podľa ID užívateľa v správe.
+            </summary>
+            <param name="config">XML uzol, ktorého atribúty tvoria zoznam parametrov.</param>
+            <returns>Inštancia filtra.</returns>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="config"/> nezodpovedá požadovanému tvaru.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.UserIdFilter.#ctor(System.Int32)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.UserIdFilter"/>.
+            </summary>
+            <param name="userId">ID užívateľa, ktorý tento filter akceptuje.</param>
+        </member>
+        <member name="M:Cora.Utils.Logger.UserIdFilter.Passes(Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Je logovaný záznam akceptovaný filtrom?
+            </summary>
+            <param name="record">Záznam do logu.</param>
+            <returns><c>true</c> ak záznam obsahuje atribút ID daného užívateľa; inak <c>false</c>.</returns>
+        </member>
+        <member name="T:Cora.Utils.Logger.UserMessageLogRecord">
+            <summary>
+            Záznam do logu obsahujúci hlášku a identifikáciu používateľa (meno a počítač).
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.UserMessageLogRecord.USER_KEY">
+            <summary>Kľúč pre hodnotu "User" v <see cref="P:Cora.Utils.Logger.ILogRecord.CustomContent"/>.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.UserMessageLogRecord.MACHINE_KEY">
+            <summary>Kľúč pre hodnotu "Machine" v <see cref="P:Cora.Utils.Logger.ILogRecord.CustomContent"/>.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.UserMessageLogRecord.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.MessageLogRecord"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.UserMessageLogRecord.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.UserMessageLogRecord"/>.
+            </summary>
+            <param name="user">Užívateľ.</param>
+            <param name="machine">Počítač.</param>
+            <param name="message">Správa (text) logovaného záznamu.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.UserMessageLogRecord.User">
+            <summary>
+            Užívateľ.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Logger.UserMessageLogRecord.Machine">
+            <summary>
+            Počítač.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.UserMessageLogRecord.ContentEquals(Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Má aktuálny záznam rovnaký obsah s porovnávaným?
+            </summary>
+            <param name="record">Porovnávaný záznam.</param>
+            <returns><c>true</c>, ak má aktuálny záznam rovnaké všetky atribúty ako porovnávaný, inak <c>false</c>.</returns>
+        </member>
+        <member name="T:Cora.Utils.Logger.WcfLogForwarder">
+            <summary>
+            Zapisovač logu na logovaciu WCF službu <see cref="T:Cora.Utils.Logger.WcfLogWriterService"/>.
+            </summary>
+            <remarks>
+            Zapisovač spracováva iba logované záznamy odvodené od <see cref="T:Cora.Utils.Logger.MessageLogRecord"/>, ostatné potichu zahadzuje.
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.WcfLogForwarder.XPATH_SERVICE_URL">
+            <summary>XPath k parametru ServiceUrl pri vytváraní inštancie podľa XML configu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.WcfLogForwarder.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí zapisovač logu podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov konštruktora.</param>
+            <returns>Inštancia zapisovača zadaných atribútov.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.WcfLogForwarder.#ctor(System.String)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.WcfLogForwarder"/>.
+            </summary>
+            <param name="serviceUrl">URL služby zapisujúcej logy.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.WcfLogForwarder.ServiceUrl">
+            <summary>
+            Vráti alebo nastaví URL služby zapisujúcej logy.
+            </summary>
+            <value>URL služby.</value>
+        </member>
+        <member name="M:Cora.Utils.Logger.WcfLogForwarder.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Odošle záznam na WCF službu.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/> <c>null</c>.</exception>
+        </member>
+        <member name="T:Cora.Utils.Logger.WcfLogWriterConfig">
+            <summary>
+            Trieda reprezentujúca config sekciu pre <see cref="T:Cora.Utils.Logger.WcfLogWriterService"/> v app.config-u.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.WcfLogWriterConfig.DeserializeSection(System.Xml.XmlReader)">
+            <summary>
+            Prečítanie podkladov pre aplikačné logovanie z XML.
+            </summary>
+            <param name="reader"><see cref="T:System.Xml.XmlReader"/>.</param>
+        </member>
+        <member name="P:Cora.Utils.Logger.WcfLogWriterConfig.LogWriter">
+            <summary>
+            Konfigurácia zapisovača logov ako <see cref="T:System.Xml.XmlNode"/>.
+            </summary>
+            <value>Konfigurácia zapisovača logov.</value>
+        </member>
+        <member name="T:Cora.Utils.Logger.WcfLogWriterService">
+            <summary>
+            Trieda pre WCF službu na zápis logovaných záznamov.
+            </summary>
+            <remarks>
+            Trieda vie deserializovať iba logované záznamy odvodené od <see cref="T:Cora.Utils.Logger.MessageLogRecord"/>.
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.WcfLogWriterService.SECTION_NAME">
+            <summary>Názov config sekcie app.config-u, z ktorej čerpáme nastavenia zapisovača.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.WcfLogWriterService.#ctor">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.WcfLogWriterService"/>.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.WcfLogWriterService.Write(Cora.Utils.Logger.LogLevel,System.String)">
+            <summary>
+            Zapíše záznam.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="xmlSerializedLogRecord">XML serializovaný logovaný záznam. Musí byť odvodený od <see cref="T:Cora.Utils.Logger.MessageLogRecord"/>.</param>
+        </member>
+        <member name="T:Cora.Utils.Logger.XmlFileLogWriter">
+            <summary>
+            Zapisovač logu do XML súboru, každému záznamu zodpovedá jeden XML uzol.
+            </summary>
+            <remarks>
+            Viď <see cref="T:Cora.Utils.Logger.FileLogWriterBase"/> pre konvencie pomenovania log súborov.
+            </remarks>
+        </member>
+        <member name="F:Cora.Utils.Logger.XmlFileLogWriter.DATETIME_FORMAT">
+            <summary>Formát dátumu do log-u.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.XmlFileLogWriter.XML_EXTENSION">
+            <summary>Prípona XML súboru.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.XmlFileLogWriter.ROOT_NODE">
+            <summary>Názov koreňového uzla logu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Logger.XmlFileLogWriter.RECORD_NODE">
+            <summary>Názov uzla pre záznam logu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Logger.XmlFileLogWriter.Create(System.Xml.XmlNode)">
+            <summary>
+            Vytvorí zapisovač logu podľa jeho configu v XML notácii.
+            </summary>
+            <param name="config">XML uzol, ktorého poduzly tvoria zoznam parametrov konštruktora.</param>
+            <returns>Inštancia zapisovača zadaných atribútov.</returns>
+        </member>
+        <member name="M:Cora.Utils.Logger.XmlFileLogWriter.#ctor(System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+            Vytvorenie inštancie <see cref="T:Cora.Utils.Logger.XmlFileLogWriter"/>.
+            </summary>
+            <param name="logPath">Cesta k log súboru (adresár). Ak je prázdna, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PATH"/>.
+            	Pozor, pri relatívnej ceste viď poznámky k <see cref="M:Cora.Global.Environment.ResolveRelativeToAssemblyProbePath(System.String)"/>.</param> 
+            <param name="logNamePrefix">Prefix názvu log súboru. Ak je prázdny, použije sa <see cref="F:Cora.Utils.Logger.FileLogWriterBase.DEFAULT_LOG_PREFIX"/>.</param>
+            <param name="maxLogFileSizeKB">Maximálna veľkosť log súboru. Hodnota 0 a menej znamená bez kontroly veľkosti.</param>
+            <param name="compressOld">Komprimovať staré súbory? Parameter sa aplikuje len pri nenulovom <paramref name="maxLogFileSizeKB"/>.</param>
+            <exception cref="T:System.IO.DirectoryNotFoundException">Ak adresár ktorý označuje <paramref name="logPath"/> nebol nájdený.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.XmlFileLogWriter.Write(Cora.Utils.Logger.LogLevel,Cora.Utils.Logger.ILogRecord)">
+            <summary>
+            Zapíše záznam ako XML uzol.
+            </summary>
+            <param name="level">Úroveň závažnosti záznamu.</param>
+            <param name="record">Zapisovaný záznam.</param>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="record"/>	<c>null</c>.</exception>
+            <exception cref="T:System.Exception">Ak vznikla chyba pri zápise.</exception>
+        </member>
+        <member name="M:Cora.Utils.Logger.XmlFileLogWriter.CreateNewFile(System.String)">
+            <summary>
+            Vytvorí nový súbor, zapíše doňho root uzol a uloží.
+            </summary>
+            <param name="fileName">Meno súboru.</param>
+        </member>
+        <member name="T:Cora.Utils.Marking.IMarkedChildObject">
+            <summary>
+            Rozhranie pre označený objekt (rozlíšiteľný značkou) v hierarchii.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Marking.IMarkedChildObject.ParentMark">
+            <summary>Značka nadradeného označeného objektu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Marking.IMarkedChildObject.SetMark(System.String,System.String)">
+            <summary>
+            Nastavenie značky objektu v hierarchii.
+            </summary>
+            <param name="parentMark">Značka nadradeného označeného objektu (môže byť <c>null</c>).</param>
+            <param name="levelMark">Značka v rámci úrovne.</param>
+        </member>
+        <member name="M:Cora.Utils.Marking.IMarkedChildObject.GetChildMark(System.String,System.String[])">
+            <summary>
+            Získanie značky podradeného objektu v hierarchii.
+            </summary>
+            <param name="childLevelMark">Značka podradeného objektu.</param>
+            <param name="grandChildLevelMarks">Značky ďalších podradených označených objektov v rámci ich úrovne (nepovinné).</param>
+            <returns>Značka podradeného objektu v hierarchii.</returns>
+        </member>
+        <member name="M:Cora.Utils.Marking.IMarkedChildObject.GetSiblingMark(System.String)">
+            <summary>
+            Získanie značky súrodeneckého objektu v hierarchii (vedľa na tej istej úrovni).
+            </summary>
+            <param name="siblingLevelMark">Značka súrodeneckého objektu v rámci úrovne.</param>
+            <returns>Značka súrodeneckého objektu v hierarchii.</returns>
+        </member>
+        <member name="T:Cora.Utils.Marking.IMarkedObject">
+            <summary>
+            Rozhranie pre označený objekt (rozlíšiteľný značkou).
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Marking.IMarkedObject.Mark">
+            <summary>Značka objektu.</summary>
+        </member>
+        <member name="T:Cora.Utils.Marking.MarkedChildObjectBase">
+            <summary>
+            Summary description for MarkedChildObjectBase.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Marking.MarkedChildObjectBase.Mark">
+            <summary>Značka objektu, readonly. Na nastavenie hodnoty slúži metóda <see cref="M:Cora.Utils.Marking.MarkedChildObjectBase.SetMark(System.String,System.String)"/>.</summary>
+        </member>
+        <member name="P:Cora.Utils.Marking.MarkedChildObjectBase.ParentMark">
+            <summary>Značka nadradeného pomenovaného objektu.</summary>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkedChildObjectBase.SetMark(System.String,System.String)">
+            <summary>
+            Nastavenie značky objektu v hierarchii.
+            </summary>
+            <param name="parentMark">Značka nadradeného pomenovaného objektu.</param>
+            <param name="levelMark">Značka objektu v rámci úrovne.</param>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkedChildObjectBase.GetChildMark(System.String,System.String[])">
+            <summary>
+            Získanie značky podradeného objektu v hierarchii.
+            </summary>
+            <param name="childLevelMark">Značka podradeného objektu.</param>
+            <param name="grandChildLevelMarks">Značky ďalších podradených označených objektov v rámci ich úrovne (nepovinné).</param>
+            <returns>Značka podradeného objektu v hierarchii.</returns>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkedChildObjectBase.GetSiblingMark(System.String)">
+            <summary>
+            Získanie značky súrodeneckého objektu v hierarchii (vedľa na tej istej úrovni).
+            </summary>
+            <param name="siblingLevelMark">Značka súrodeneckého objektu objektu v rámci úrovne.</param>
+            <returns>Značka súrodeneckého objektu v hierarchii.</returns>
+        </member>
+        <member name="T:Cora.Utils.Marking.MarkedObjectBase">
+            <summary>
+            Základná (abstract) trieda označených objektov (rozlíšiteľných značkou).
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Marking.MarkedObjectBase.Mark">
+            <summary>Značka objektu.</summary>
+        </member>
+        <member name="F:Cora.Utils.Marking.MarkedObjectBase._Mark">
+            <summary>Značka objektu.</summary>
+        </member>
+        <member name="T:Cora.Utils.Marking.MarkHelper">
+            <summary>
+            Pomocná (statická) trieda pre prácu so značkami a označenými objektami (implementujúce <see cref="T:Cora.Utils.Marking.IMarkedObject"/>).
+            Obsahuje aj extension metódy pre <see cref="T:Cora.Utils.Marking.IMarkedObject"/> a <see cref="T:Cora.Utils.Marking.IMarkedChildObject"/>.
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Marking.MarkHelper.DEFAULT_MARK_DELIMITER">
+            <summary>Default oddeľovač značiek (-).</summary>
+        </member>
+        <member name="F:Cora.Utils.Marking.MarkHelper.LEVEL_MARK_VALIDATOR_REGEXP">
+            <summary>Regulárny výraz pre validáciu čiastočných značiek (^[a-zA-Z]\w*$). Začína písmenom a môže obsahovať 
+            písmená, čísla a podčiarnik. Značka sa skladá z čiastočných značiek oddelelných delimiterom.</summary>
+        </member>
+        <member name="F:Cora.Utils.Marking.MarkHelper.MARK_VALIDATOR_REGEXP">
+            <summary>Regulárny výraz pre validáciu značky objektu (^[a-zA-Z]\w*(-[a-zA-Z]\w*)*$).</summary>
+            <remarks>Pozri <see cref="F:Cora.Utils.Marking.MarkHelper.LEVEL_MARK_VALIDATOR_REGEXP"/>.</remarks>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.GetBaseMark(Cora.Utils.Marking.IMarkedObject)">
+            <summary>
+            Získanie základnej značky (default prefixu) označeného objeku.
+            </summary>
+            <param name="markedObject">Označený objekt.</param>
+            <returns>Základná značka označeného objeku.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="markedObject"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.CheckMark(Cora.Utils.Marking.IMarkedObject)">
+            <summary>
+            Kontrola na správnosť značky objektu.
+            </summary>
+            <param name="markedObject">Kontrolovaný označený objekt.</param>
+            <returns>Je značka objektu správna?</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="markedObject"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.CheckMark(System.String)">
+            <summary>
+            Kontrola na správnosť značky objektu.
+            </summary>
+            <param name="mark">Kontrolovaná značka objektu.</param>
+            <returns>Je značka správna?</returns>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.GetChildMark(Cora.Utils.Marking.IMarkedObject,System.String,System.String[])">
+            <summary>
+            Získanie značky podradeného označeného objektu.
+            </summary>
+            <param name="parentMarkedObject">Nadradený označený objekt (môže byť <c>null</c>).</param>
+            <param name="childLevelMark">Značka podradeného označeného objektu v rámci úrovne (odlišuje jednotlivé podradené objekty).</param>
+            <param name="grandChildLevelMarks">Značky ďalších podradených označených objektov v rámci ich úrovne (nepovinné).</param>
+            <returns>Značka podradeného označeného objektu.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="markedObject"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.GetChildMark(System.String,System.String,System.String[])">
+            <summary>
+            Získanie značky podradeného označeného objektu.
+            </summary>
+            <param name="parentMark">Značka nadradeného označeného objektu (môže byť <c>null</c>).</param>
+            <param name="childLevelMark">Značka podradeného označeného objektu v rámci úrovne (odlišuje jednotlivé podradené objekty).</param>
+            <param name="grandChildLevelMarks">Značky ďalších podradených označených objektov v rámci ich úrovne (nepovinné).</param>
+            <returns>Značka podradeného označeného objektu n-tej úrovne.</returns>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.ParseParentMark(Cora.Utils.Marking.IMarkedObject)">
+            <summary>
+            Získanie značky nadradeného označeného objektu (rozložením značky podľa oddeľovača).
+            </summary>
+            <param name="markedObject">Podradený označený objekt (nesmie byť <c>null</c>).</param>
+            <returns>Značka nadradeného označeného objektu.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="markedObject"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.GetSiblingMark(Cora.Utils.Marking.IMarkedChildObject,System.String)">
+            <summary>
+            Získanie značky súrodeneckého objektu v hierarchii (vedľa na tej istej úrovni).
+            </summary>
+            <param name="markedChildObject">Označený objekt v hierarchii, vedľa ktorého značku zisťujeme.</param>
+            <param name="siblingLevelMark">Značka súrodeneckého objektu v rámci úrovne.</param>
+            <returns>Značka súrodeneckého objektu v hierarchii.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="markedObject"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.GetMarkLevel(Cora.Utils.Marking.IMarkedObject)">
+            <summary>
+            Zistenie úrovne značky označeného objektu (rozložením podľa delimiter-a).
+            </summary>
+            <param name="markedObject">Označený objekt.</param>
+            <returns>Úroveň značky.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="markedObject"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.GetMarkLevel(System.String)">
+            <summary>
+            Zistenie úrovne značky (rozložením podľa delimiter-a). Root je 0.
+            </summary>
+            <param name="mark">Značka.</param>
+            <returns>Úroveň značky.</returns>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.SplitMark(System.String)">
+            <summary>
+            Rozdelenie značky podľa delimiter-a na značky v rámci úrovní.
+            </summary>
+            <param name="mark">Značka, ak je <c>null</c>, výsledok je <c>null</c>.</param>
+            <returns>Pole značiek v rámci úrovní.</returns>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.GetRootMark(Cora.Utils.Marking.IMarkedObject)">
+            <summary>
+            Získanie značky koreňového objektu (rozložením podľa delimiter-a).
+            </summary>
+            <param name="markedObject">Označený objekt.</param>
+            <returns>Značka koreňového objektu.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="markedObject"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.GetRootMark(System.String)">
+            <summary>
+            Získanie značky koreňového objektu (rozložením podľa delimiter-a).
+            </summary>
+            <param name="mark">Značka, ak je <c>null</c>, výsledok je <c>null</c>.</param>
+            <returns>Značka koreňového objektu.</returns>
+        </member>
+        <member name="M:Cora.Utils.Marking.MarkHelper.#cctor">
+            <summary>
+            Statický konštruktor.
+            </summary>
+        </member>
+        <member name="T:Cora.Utils.Resolver.AssemblyLoader">
+            <summary>
+            Trieda starajúca o nahrávanie knižníc (assemblies).
+            </summary>
+        </member>
+        <member name="F:Cora.Utils.Resolver.AssemblyLoader.ExecutingPath">
+            <summary>Adresár aplikácie (zisťuje sa z aktuálnej aplikačnej domény v statickom konštruktore).</summary>
+        </member>
+        <member name="M:Cora.Utils.Resolver.AssemblyLoader.ResolveRelativePath(System.String)">
+            <summary>
+            Získanie absolútnej cesty z relatívnej (začínajúca na .\ znamená aktuálny adresár, ..\ nadradený)
+            vzhľadom na <see cref="F:Cora.Utils.Resolver.AssemblyLoader.ExecutingPath"/>.
+            </summary>
+            <param name="relativePath">Relatívna cesta (môže byť aj absolútna).</param>
+            <returns>Získaná absolútna cesta.</returns>
+        </member>
+        <member name="M:Cora.Utils.Resolver.AssemblyLoader.#ctor">
+            <summary>
+            Vytvorenie AssemblyLoader-a. Default sa prehľadáva celá aplikačná doména.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Resolver.AssemblyLoader.#ctor(System.Boolean)">
+            <summary>
+            Vytvorenie AssemblyLoader-a s nastavením <see cref="P:Cora.Utils.Resolver.AssemblyLoader.SearchAppDomain"/>.
+            </summary>
+            <param name="searchAppDomain">Nastavenie, či sa má prehľadávať celá aplikačná doména.</param>
+        </member>
+        <member name="P:Cora.Utils.Resolver.AssemblyLoader.SearchAppDomain">
+            <summary>
+            Nastavenie, či sa má prehľadávať celá aplikačná doména.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Resolver.AssemblyLoader.LoadedAssemblies">
+            <summary>
+            Zoznam nahratých knižníc.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Resolver.AssemblyLoader.LoadOrGetAssembly(System.String)">
+            <summary>
+            Nahranie, alebo získanie už nahratej knižnice (assembly).
+            </summary>
+            <param name="assemblyPath">Cesta ku knižnici. Môže byť aj relatívna, "prepočíta" sa
+            pomocou <see cref="M:Cora.Utils.Resolver.AssemblyLoader.ResolveRelativePath(System.String)"/>.</param>
+            <returns>Získaná knižnica, alebo <c>null</c>, ak neúspešné.</returns>
+        </member>
+        <member name="M:Cora.Utils.Resolver.AssemblyLoader.LoadOrGetAssembly(System.String,System.Boolean)">
+            <summary>
+            Nahranie, alebo získanie už nahratej knižnice (assembly).
+            </summary>
+            <param name="assemblyPath">Cesta ku knižnici. Môže byť aj relatívna, "prepočíta" sa
+            pomocou <see cref="M:Cora.Utils.Resolver.AssemblyLoader.ResolveRelativePath(System.String)"/>.</param>
+            <param name="keepInfo">Majú sa informácie o knižnici uschovať na neskôr?</param>
+            <returns>Získaná knižnica, alebo <c>null</c>, ak neúspešné.</returns>
+        </member>
+        <member name="M:Cora.Utils.Resolver.AssemblyLoader.#cctor">
+            <summary>
+            Statický konštruktor nastavuje adresár aplikácie (zisťuje sa z aktuálnej aplikačnej domény).
+            </summary>
+        </member>
+        <member name="T:Cora.Utils.Resolver.TypeResolver">
+            <summary>
+            Resolver typov, trieda pre vyhladavanie typov. Moze vyhladavat v zadanom 
+            AssemblyLoader-i, alebo v celej aplikacnej domene.
+            </summary>
+        </member>
+        <member name="P:Cora.Utils.Resolver.TypeResolver.DefaultResolver">
+            <summary>
+            Default-ny resolver typov.
+            </summary>
+            <remarks>Je vytvoreny (thread-safe sposobom) pri prvej poziadavke, takze "vzdy" existuje.</remarks>
+        </member>
+        <member name="M:Cora.Utils.Resolver.TypeResolver.#ctor">
+            <summary>
+            Vytvorenie resolver-a typov bez urcenia AssemblyLoader-a.
+            </summary>
+            <remarks>AssemblyLoader bude vytvarany podla potreby (ale vzdy novy).</remarks>
+        </member>
+        <member name="M:Cora.Utils.Resolver.TypeResolver.#ctor(Cora.Utils.Resolver.AssemblyLoader)">
+            <summary>
+            Vytvorenie resolver-a typov.
+            </summary>
+            <param name="assemblyLoader">AssemblyLoader, ktory bude pouzity.</param>
+        </member>
+        <member name="P:Cora.Utils.Resolver.TypeResolver.AssemblyLoader">
+            <summary>
+            AssemblyLoader, ktory trieda pouziva. Moze byt null.
+            </summary>
+        </member>
+        <member name="M:Cora.Utils.Resolver.TypeResolver.GetType(System.String,System.String)">
+            <summary>
+            Najdenie typu v zadanej kniznici (assembly).
+            </summary>
+            <param name="typeName">Nazov typu.</param>
+            <param name="assemblyPath">Cesta ku kniznici. Pravidla su ako
+            pri <see cref="M:Cora.Utils.Resolver.AssemblyLoader.LoadOrGetAssembly(System.String)"/>.</param>
+            <returns>Vysledny typ.</returns>
+        </member>
+        <member name="M:Cora.Utils.Resolver.TypeResolver.FindTypeAppDomain(System.String)">
+            <summary>
+            Najdenie typu (v celej aplikacnej domene).
+            </summary>
+            <param name="typeName">Nazov typu.</param>
+            <returns>Vysledny typ.</returns>
+        </member>
+        <member name="M:Cora.Utils.Resolver.TypeResolver.FindType(System.String)">
+            <summary>
+            Najdenie typu v zadanom AssemblyLoader-i.
+            </summary>
+            <param name="typeName">Nazov typu.</param>
+            <returns>Vysledny typ.</returns>
+        </member>
+        <member name="M:Cora.Utils.Resolver.TypeResolver.FindType(System.String,Cora.Utils.Resolver.AssemblyLoader)">
+            <summary>
+            Najdenie typu v knizniciach zadaneho AssemblyLoader-a.
+            </summary>
+            <param name="typeName">Nazov typu.</param>
+            <param name="assemblyLoader">AssemblyLoader, ktory sa na hladanie pouzije. Ak je null,
+            vyhladva sa v celej aplikacnej domene.</param>
+            <returns>Vysledny typ.</returns>
+        </member>
+        <member name="T:Cora.Utils.WcfLogForwarderProxy.LogService">
+            <remarks/>
+        </member>
+        <member name="M:Cora.Utils.WcfLogForwarderProxy.LogService.#ctor">
+            <remarks/>
+        </member>
+        <member name="E:Cora.Utils.WcfLogForwarderProxy.LogService.WriteCompleted">
+            <remarks/>
+        </member>
+        <member name="M:Cora.Utils.WcfLogForwarderProxy.LogService.Write(Cora.Utils.Logger.LogLevel,System.Boolean,System.String)">
+            <remarks/>
+        </member>
+        <member name="M:Cora.Utils.WcfLogForwarderProxy.LogService.WriteAsync(Cora.Utils.Logger.LogLevel,System.Boolean,System.String)">
+            <remarks/>
+        </member>
+        <member name="M:Cora.Utils.WcfLogForwarderProxy.LogService.WriteAsync(Cora.Utils.Logger.LogLevel,System.Boolean,System.String,System.Object)">
+            <remarks/>
+        </member>
+        <member name="M:Cora.Utils.WcfLogForwarderProxy.LogService.CancelAsync(System.Object)">
+            <remarks/>
+        </member>
+        <member name="T:Cora.Utils.WcfLogForwarderProxy.WriteCompletedEventHandler">
+            <remarks/>
+        </member>
+    </members>
+</doc>

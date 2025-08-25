@@ -1,0 +1,543 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Cora.Crypt</name>
+    </assembly>
+    <members>
+        <member name="T:Cora.Crypt.Algoritmus">
+            <summary>Typy použiteľných kódovacích a hash-ovacích algoritmov.</summary>
+        </member>
+        <member name="F:Cora.Crypt.Algoritmus.Symmetric_DES">
+            <summary> Kódovací algoritmus DES (64 bit).</summary>
+        </member>
+        <member name="F:Cora.Crypt.Algoritmus.Symmetric_RC2">
+            <summary> Kódovací algoritmus RC2.</summary>
+        </member>
+        <member name="F:Cora.Crypt.Algoritmus.Symmetric_Rijndael">
+            <summary> Kódovací algoritmus Rijndael (128 bit).</summary>
+        </member>
+        <member name="F:Cora.Crypt.Algoritmus.Hash_MD5">
+            <summary> Hash-ovací algoritmus MD5 (128 bit).</summary>
+        </member>
+        <member name="F:Cora.Crypt.Algoritmus.Hash_SHA1">
+            <summary> Hash-ovací algoritmus SHA1 (160 bit).</summary>
+        </member>
+        <member name="F:Cora.Crypt.Algoritmus.Hash_SHA1_UTF8">
+            <summary> Hash-ovací algoritmus SHA1 + UTF8 kódovanie.</summary>
+        </member>
+        <member name="F:Cora.Crypt.Algoritmus.Hash_SHA256">
+            <summary> Hash-ovací algoritmus SHA256 (256 bit).</summary>
+        </member>
+        <member name="T:Cora.Crypt.CertificateHelper">
+            <summary>
+            Trieda zaobaľujúca prácu s certifikátmi (asymetrické kryptovanie, dekryptovanie, podpisovanie).
+            </summary>
+        </member>
+        <member name="F:Cora.Crypt.CertificateHelper.XML_ENCRYPTED_NAMESPACE">
+            <summary>Namespace kryptovaných dát http://www.w3.org/2001/04/xmlenc#</summary>
+        </member>
+        <member name="F:Cora.Crypt.CertificateHelper.XML_ENCRYPTED_DATA_ELEMENT">
+            <summary>Názov elementu kryptovaných dát (EncryptedData).</summary>
+        </member>
+        <member name="F:Cora.Crypt.CertificateHelper.XML_ENCRYPTED_KEY_ELEMENT">
+            <summary>Názov elementu kryptovacieho kľúča (EncryptedKey).</summary>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.FindCertificateInStore(System.Security.Cryptography.X509Certificates.StoreName,System.Security.Cryptography.X509Certificates.StoreLocation,System.Security.Cryptography.X509Certificates.X509FindType,System.Object,System.Boolean)">
+            <summary>
+            Nájdenie certifikátu v určenom Certificate Store podľa určených kritérií. Ak spĺňa kritériá viacero certifikátov, berie sa len prvý.
+            </summary>
+            <param name="storeName">Názov Certificate Store-u.</param>
+            <param name="storeLocation">Uloženie Certificate Store-u.</param>
+            <param name="findType">Typ hľadania.</param>
+            <param name="findValue">Hodnota pre hľadanie.</param>
+            <param name="validOnly">Nájsť iba platné certifikáty?.</param>
+            <returns>Nájdený certifikát zaobalený do <see cref="T:Cora.Crypt.CertificateHelper"/>.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.FindCertificateByThumbprint(System.Security.Cryptography.X509Certificates.StoreName,System.Security.Cryptography.X509Certificates.StoreLocation,System.String,System.Boolean)">
+            <summary>
+            Nájdenie certifikátu v určenom Certificate Store podľa odtlačku. Ak spĺňa kritériá viacero certifikátov, berie sa len prvý.
+            </summary>
+            <param name="storeName">Názov Certificate Store-u.</param>
+            <param name="storeLocation">Uloženie Certificate Store-u.</param>
+            <param name="thumbprint">Hodnota odtlačku pre hľadanie.</param>
+            <param name="validOnly">Nájsť iba platné certifikáty?.</param>
+            <returns>Nájdený certifikát zaobalený do <see cref="T:Cora.Crypt.CertificateHelper"/>.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.#ctor(System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Vytvorenie triedy <see cref="T:Cora.Crypt.CertificateHelper"/> pre zadaný certifikát.
+            </summary>
+            <param name="certificate">Zaobaľovaný certifikát.</param>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="certificate"/> je <c>null</c>.</exception>
+        </member>
+        <member name="P:Cora.Crypt.CertificateHelper.Certificate">
+            <summary>
+            Zaobalený certifikát.
+            </summary>
+        </member>
+        <member name="P:Cora.Crypt.CertificateHelper.CanDecrypt">
+            <summary>
+            Je možné certifikátom dekryptovať? T.j. obsahuje pár kľúčov typu KeyExchange?
+            </summary>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.DecryptElement(System.Xml.XmlElement,System.Text.Encoding)">
+            <summary>
+            Dekryptovanie zakryptovaného elementu <c>xenc:EncryptedData</c> vnoreného v zadanom <paramref name="containingXmlElement" />-e.
+            </summary>
+            <param name="containingXmlElement">XML element, v ktorom je zakryptovaný element <c>xenc:EncryptedData</c>.</param>
+            <param name="dataEncoding">Kódovanie, ktorým je XML element pri kryptovaní prevedený na binárne dáta.
+            Ak nie je zadané, berie sa <see cref="P:System.Text.Encoding.UTF8"/>.</param>
+            <returns>
+            Dekryptovaný XML element.
+            </returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="containingXmlElement" /> alebo jeho
+            <see cref="P:System.Xml.XmlElement.OwnerDocument" /> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.DecryptKey(System.Security.Cryptography.Xml.EncryptedKey)">
+            <summary>
+            Decrypts the key.
+            </summary>
+            <param name="encryptedKey">The encrypted key.</param>
+            <returns></returns>
+            <exception cref="T:System.InvalidOperationException">Ak zaobalený <see cref="P:Cora.Crypt.CertificateHelper.Certificate"/> neobsahuje kryptovací pár kľúčov.
+            Certifikát musí byť pre účely kryptovania a dekryptovania generovaný aj s párom kľúčov typu KeyExchange
+            (http://stackoverflow.com/a/496738/286114).</exception>
+            <exception cref="T:System.Security.Cryptography.CryptographicException">Viď výnimky pre <see cref="M:System.Security.Cryptography.RSACryptoServiceProvider.Decrypt(System.Byte[],System.Boolean)"/>.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.ComputeSignatureSha1(System.Byte[])">
+            <summary>
+            Vypočítanie podpisu SHA1 hash-u zaobaleným certifikátom.
+            </summary>
+            <param name="data">Hash-ované a  podpisované dáta.</param>
+            <returns>Výsledný podpis.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.ComputeSignatureSha1(System.String,System.Text.Encoding)">
+            <summary>
+            Vypočítanie podpisu SHA1 hash-u zaobaleným certifikátom.
+            </summary>
+            <param name="data">Hash-ované a  podpisované dáta.</param>
+            <param name="dataEncoding">Kódovanie, ktorým sú dáta pri hash-ovaní prevedené na binárne dáta.
+            Ak nie je zadané, berie sa <see cref="P:System.Text.Encoding.UTF8"/>.</param>
+            <returns>Výsledný podpis kódovaný pomocou Base64.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.ComputeSignatureSha256(System.String,System.Text.Encoding)">
+            <summary>
+            Vypočítanie podpisu SHA256 hash-u zaobaleným certifikátom.
+            </summary>
+            <param name="data">Hash-ované a  podpisované dáta.</param>
+            <param name="dataEncoding">Kódovanie, ktorým sú dáta pri hash-ovaní prevedené na binárne dáta.
+            Ak nie je zadané, berie sa <see cref="P:System.Text.Encoding.UTF8"/>.</param>
+            <returns>Výsledný podpis kódovaný pomocou Base64.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.ComputeSignatureSha256(System.Byte[])">
+            <summary>
+            Vypočítanie podpisu SHA256 hash-u zaobaleným certifikátom.
+            </summary>
+            <param name="data">Hash-ované a podpisované dáta.</param>
+            <returns>Výsledný podpis.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.ComputeSignatureSha256(System.Xml.XmlDocument)">
+            <summary>
+            Vypočítanie podpisu SHA256 <see cref="T:System.Xml.XmlDocument"/>-u zaobaleným certifikátom.
+            </summary>
+            <param name="xmlDoc">Zdrojový <see cref="T:System.Xml.XmlDocument"/>.</param>
+            <returns>Výsledný podpis vo forme  <see cref="T:System.Xml.XmlElement"/>.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CertificateHelper.ComputeSignatureSha256(System.Xml.XmlElement)">
+            <summary>
+            Vypočítanie podpisu SHA256 <see cref="T:System.Xml.XmlElement"/>-u zaobaleným certifikátom.
+            </summary>
+            <param name="xmlElem">Zdrojový <see cref="T:System.Xml.XmlElement"/>.</param>
+            <returns>Výsledný podpis vo forme  <see cref="T:System.Xml.XmlElement"/>.</returns>
+        </member>
+        <member name="T:Cora.Crypt.CCrypt">
+            <summary>
+            Trieda pre staré reverzibilné CORA-cke kodovanie použité napríklad v CG ISS.
+            </summary>
+        </member>
+        <member name="M:Cora.Crypt.CCrypt.Code(System.String)">
+            <summary>
+            Zakóduje špecifikovaný reťazec.
+            </summary>
+            <param name="plainText">Reťazec na zakódovanie.</param>
+            <returns>Zakódovaný reťazec.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak je <paramref name="plainText"/> <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CCrypt.TryDecode(System.String,System.String@)">
+            <summary>
+            Pokúsi sa dekódovať špecifikovaný reťazec.
+            </summary>
+            <param name="codedText">Zakódovaný reťazec.</param>
+            <param name="plainText">Reťazec pod odkódovaní.</param>
+            <returns><c>true</c> v prípade úspechu (ak kódovaný reťazec zodpovedá správnemu tvaru); inak <c>false</c>.</returns>
+        </member>
+        <member name="T:Cora.Crypt.Hash">
+            <summary>
+            Trieda pre generovanie hash-ov (kontrolných súčtov alebo jednoznačných a jedinečných odtlačkov). Slúži na overovanie integrity údajov.
+            </summary>
+        </member>
+        <member name="M:Cora.Crypt.Hash.GenerateHash(System.String)">
+            <summary>
+            Výpočet hash-u zo zadaného reťazca pomocou <see cref="F:Cora.Crypt.Algoritmus.Hash_SHA256"/>.
+            </summary>
+            <param name="message">Správa - reťazec.</param>
+            <returns>Hash zadaného reťazca.</returns>
+        </member>
+        <member name="M:Cora.Crypt.Hash.GenerateHash(System.String,Cora.Crypt.Algoritmus)">
+            <summary>
+            Výpočet hash-u zo zadaného reťazca zadaným algoritmom.
+            </summary>
+            <param name="message">Správa - reťazec. Prevod do binárneho tvaru je pomocou UTF8.</param>
+            <param name="algoritmus">Požadovaný algoritmus (<see cref="F:Cora.Crypt.Algoritmus.Hash_SHA1_UTF8"/> alebo odporúčaný <see cref="F:Cora.Crypt.Algoritmus.Hash_SHA256"/>).</param>
+            <returns>Hash zadaného reťazca.</returns>
+        </member>
+        <member name="M:Cora.Crypt.Hash.GenerateHash(System.Byte[],Cora.Crypt.Algoritmus)">
+            <summary>
+            Výpočet hash-u zo zadanej správy zadaným algoritmom.
+            </summary>
+            <param name="message">Správa.</param>
+            <param name="algoritmus">Požadovaný algoritmus (<see cref="F:Cora.Crypt.Algoritmus.Hash_SHA1_UTF8"/> alebo odporúčaný <see cref="F:Cora.Crypt.Algoritmus.Hash_SHA256"/>).</param>
+            <returns>Hash zadanej správy.</returns>
+        </member>
+        <member name="M:Cora.Crypt.Hash.GetHashAlgorithm(Cora.Crypt.Algoritmus)">
+            <summary>
+            Vrátenie a prípadné prvé vytvorenie hash algoritmu.
+            </summary>
+            <param name="algoritmus">Požadovaný hash algoritmus.</param>
+            <returns>Požadovaný hash algoritmus (<see cref="F:Cora.Crypt.Algoritmus.Hash_SHA1_UTF8"/> alebo odporúčaný <see cref="F:Cora.Crypt.Algoritmus.Hash_SHA256"/>).</returns>
+            <exception cref="T:System.NotImplementedException">Neznámy požadovaný hash algoritmus.</exception>
+        </member>
+        <member name="T:Cora.Crypt.KeyedHash">
+            <summary>
+            Trieda pre generovanie hash-ov s tajným kľúčom (kontrolných súčtov alebo jednoznačných a jedinečných odtlačkov s heslom).
+            Slúži na overenie integrity údajov a zároveň správnosti hesla.
+            </summary>
+        </member>
+        <member name="M:Cora.Crypt.KeyedHash.GenerateHash(System.String,System.String)">
+            <summary>
+            Výpočet hash-u s kľúčom zo zadaného reťazca pomocou <see cref="F:Cora.Crypt.Algoritmus.Hash_SHA256"/>.
+            </summary>
+            <param name="message">Správa - reťazec.</param>
+            <param name="key">Kľúč. Pri hodnote <c>null</c> sa použije built-in kľúč.</param>
+            <returns>Hash s tajným kľúčom zadaného reťazca.</returns>
+        </member>
+        <member name="M:Cora.Crypt.KeyedHash.GenerateHash(System.String,System.String,Cora.Crypt.Algoritmus)">
+            <summary>
+            Výpočet hash-u s kľúčom zo zadaného reťazca zadaným algoritmom.
+            </summary>
+            <param name="message">Správa - reťazec. Prevod do binárneho tvaru je pomocou UTF8.</param>
+            <param name="key">Kľúč. Prevod do binárneho tvaru je pomocou UTF8. Pri hodnote <c>null</c> sa použije built-in kľúč.</param>
+            <param name="algoritmus">Požadovaný algoritmus (<see cref="F:Cora.Crypt.Algoritmus.Hash_SHA1_UTF8"/> alebo odporúčaný <see cref="F:Cora.Crypt.Algoritmus.Hash_SHA256"/>).</param>
+            <returns>Hash zadaného reťazca.</returns>
+        </member>
+        <member name="M:Cora.Crypt.KeyedHash.GenerateHash(System.Byte[],System.Byte[])">
+            <summary>
+            Výpočet hash-u s kľúčom zo zadanej správy pomocou <see cref="F:Cora.Crypt.Algoritmus.Hash_SHA256"/>.
+            </summary>
+            <param name="message">Správa.</param>
+            <param name="key">Kľúč. Pri hodnote <c>null</c> sa použije built-in kľúč.</param>
+            <returns>Hash zadanej správy.</returns>
+        </member>
+        <member name="M:Cora.Crypt.KeyedHash.GenerateHash(System.Byte[],System.Byte[],Cora.Crypt.Algoritmus)">
+            <summary>
+            Výpočet hash-u s kľúčom zo zadanej správy zadaným algoritmom.
+            </summary>
+            <param name="message">Správa.</param>
+            <param name="key">Kľúč. Pri hodnote <c>null</c> sa použije built-in kľúč.</param>
+            <param name="algoritmus">Požadovaný algoritmus (<see cref="F:Cora.Crypt.Algoritmus.Hash_SHA1_UTF8"/> alebo odporúčaný <see cref="F:Cora.Crypt.Algoritmus.Hash_SHA256"/>).</param>
+            <returns>Hash zadanej správy.</returns>
+        </member>
+        <member name="M:Cora.Crypt.KeyedHash.GetHashAlgorithm(Cora.Crypt.Algoritmus,System.Byte[])">
+            <summary>
+            Vrátenie a prípadné prvé vytvorenie hash algoritmu s kľúčom .
+            </summary>
+            <param name="algoritmus">Požadovaný hash algoritmus.</param>
+            <param name="key">Kľúč. Pri hodnote <c>null</c> sa použije built-in kľúč.</param>
+            <returns>Požadovaný hash algoritmus (<see cref="F:Cora.Crypt.Algoritmus.Hash_SHA1_UTF8"/> alebo odporúčaný <see cref="F:Cora.Crypt.Algoritmus.Hash_SHA256"/>).</returns>
+            <exception cref="T:System.NotImplementedException">Neznámy požadovaný hash algoritmus.</exception>
+        </member>
+        <member name="T:Cora.Crypt.CryptWithSalt">
+            <summary>
+            Trieda pre kryptovanie a dekryptovanie so soľou. Implementácia sa drží odporúčaní RFC 2898.
+            </summary>
+        </member>
+        <member name="F:Cora.Crypt.CryptWithSalt.DEFAULT_SALT_LENGTH">
+            <summary>Odporúčaná dĺžka soli v bajtoch (8).</summary>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.ChooseSalt(System.Int32,System.Byte[])">
+            <summary>
+            Zvolenie soli so zadanou dĺžkou za pomoci zadanej pomôcky.
+            </summary>
+            <param name="length">Dĺžka soli. Zmysel majú hodnoty v rozsahu od 1 do 32. Odporúčaná hodnota je 8 (<see cref="F:Cora.Crypt.CryptWithSalt.DEFAULT_SALT_LENGTH"/>).</param>
+            <param name="hint">Pomôcka pre výber soli. Môže byť <c>null</c>.</param>
+            <returns>Soľ so zadanou dĺžkou.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak <paramref name="length"/> nie je v rozsahu 1-32.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.ChooseSalt(System.Int32,System.String)">
+            <summary>
+            Zvolenie soli so zadanou dĺžkou za pomoci zadanej pomôcky.
+            </summary>
+            <param name="length">Dĺžka soli. Zmysel majú hodnoty v rozsahu od 1 do 32. Odporúčaná hodnota je 8 (<see cref="F:Cora.Crypt.CryptWithSalt.DEFAULT_SALT_LENGTH"/>).</param>
+            <param name="hint">Pomôcka pre výber soli. Môže byť <c>null</c>.</param>
+            <returns>Soľ so zadanou dĺžkou.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">Ak <paramref name="length"/> nie je v rozsahu 1-32.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.GetCryptoTransform(Cora.Crypt.Algoritmus,System.Byte[])">
+            <summary>
+            Vytvorenie kryptovacej transformácie.
+            </summary>
+            <param name="algoritmus">Požadovaná kryptovacia transformácia.</param>
+            <param name="salt">Soľ. Nesmie byť <c>null</c>, ani prázdne pole. Odporúčaná dĺžka je 8 bajtov (<see cref="F:Cora.Crypt.CryptWithSalt.DEFAULT_SALT_LENGTH"/>).</param>
+            <returns>Požadovaný algoritmus.</returns>
+            <exception cref="T:System.NotImplementedException">Neznáma požadovaná kryptovacia transformácia.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.GetDecryptoTransform(Cora.Crypt.Algoritmus,System.Byte[])">
+            <summary>
+            Vytvorenie dekryptovacej transformácie.
+            </summary>
+            <param name="algoritmus">Požadovaná kryptovacia transformácia.</param>
+            <param name="salt">Soľ. Nesmie byť <c>null</c>, ani prázdne pole. Odporúčaná dĺžka je 8 bajtov (<see cref="F:Cora.Crypt.CryptWithSalt.DEFAULT_SALT_LENGTH"/>).</param>
+            <returns>Požadovaný algoritmus.</returns>
+            <exception cref="T:System.NotImplementedException">Neznáma požadovaná kryptovacia transformácia.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.EncryptString(System.String)">
+            <summary>
+            Zakódovanie reťazca algoritmom <see cref="F:Cora.Crypt.Algoritmus.Symmetric_Rijndael"/>. Soľ sa zvolí.
+            </summary>
+            <param name="message">Správa. Ak je <c>null</c>, alebo prázdny reťazec, výsledok je <c>null</c>.</param>
+            <returns>Zakódovaný vstupný reťazec.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.EncryptString(System.String,Cora.Crypt.Algoritmus)">
+            <summary>
+            Zakódovanie reťazca zadaným algoritmom. Soľ sa zvolí.
+            </summary>
+            <param name="message">Správa. Ak je <c>null</c>, alebo prázdny reťazec, výsledok je <c>null</c>.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Zakódovaný vstupný reťazec.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.EncryptString(System.String,System.String,Cora.Crypt.Algoritmus)">
+            <summary>
+            Zakódovanie reťazca zadaným algoritmom so soľou.
+            </summary>
+            <param name="message">Správa. Ak je <c>null</c>, alebo prázdny reťazec, výsledok je <c>null</c>.</param>
+            <param name="salt">Soľ. Nesmie byť <c>null</c>, ani prázdny reťazec. Odporúčaná dĺžka je 8 bajtov
+            (<see cref="F:Cora.Crypt.CryptWithSalt.DEFAULT_SALT_LENGTH"/>, čo je 8 anglických znakov pri kódovaní UTF8).</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Zakódovaný vstupný reťazec.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="salt"/> je <c>null</c>.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.EncryptString(System.String,System.Byte[],Cora.Crypt.Algoritmus)">
+            <summary>
+            Zakódovanie reťazca zadaným algoritmom so soľou.
+            </summary>
+            <param name="message">Správa. Ak je <c>null</c>, alebo prázdny reťazec, výsledok je <c>null</c>.</param>
+            <param name="salt">Soľ. Nesmie byť <c>null</c>, ani pole s dĺžkou menej než 1. Odporúčaná dĺžka je 8 bajtov (<see cref="F:Cora.Crypt.CryptWithSalt.DEFAULT_SALT_LENGTH"/>).</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Zakódovaný vstupný reťazec.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.Encrypt(System.Byte[],Cora.Crypt.Algoritmus)">
+            <summary>
+            Zakódovanie poľa dát zadaným algoritmom. Soľ sa zvolí.
+            </summary>
+            <param name="message">Správa. Ak je <c>null</c>, výsledok je tiež <c>null</c>.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Zakódované pole dát.</returns>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.Encrypt(System.Byte[],System.Byte[],Cora.Crypt.Algoritmus)">
+            <summary>
+            Zakódovanie poľa dát zadaným algoritmom so soľou.
+            </summary>
+            <param name="message">Správa. Ak je <c>null</c>, výsledok je tiež <c>null</c>.</param>
+            <param name="salt">Soľ. Nesmie byť <c>null</c>, ani pole s dĺžkou menej než 1. Odporúčaná dĺžka je 8 bajtov (<see cref="F:Cora.Crypt.CryptWithSalt.DEFAULT_SALT_LENGTH"/>).</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Zakódované pole dát.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="salt"/> je <c>null</c>.</exception>
+            <exception cref="T:System.ArgumentException">Ak <paramref name="salt"/> je pole s dĺžkou menej než 1.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.DecryptString(System.String)">
+            <summary>
+            Rozkódovanie reťazca algoritmom <see cref="F:Cora.Crypt.Algoritmus.Symmetric_Rijndael"/>.
+            </summary>
+            <param name="code">Kódovaná správa. Ak je <c>null</c>, alebo prázdne pole, výsledok je <c>null</c>.</param>
+            <returns>Rozkódovaná správa.</returns>
+            <exception cref="T:System.FormatException">Ak <see cref="!:code"/> nie je vo formáte Base64.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.DecryptString(System.String,Cora.Crypt.Algoritmus)">
+            <summary>
+            Rozkódovanie reťazca zadaným algoritmom.
+            </summary>
+            <param name="code">Kódovaná správa. Ak je <c>null</c>, alebo prázdne pole, výsledok je <c>null</c>.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Rozkódovaná správa.</returns>
+            <exception cref="T:System.FormatException">Ak <see cref="!:code"/> nie je vo formáte Base64.</exception>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.Decrypt(System.Byte[],Cora.Crypt.Algoritmus)">
+            <summary>
+            Rozkódovanie poľa dát zadaným algoritmom.
+            </summary>
+            <param name="code">Kódovaná správa. Ak je <c>null</c>, alebo prázdne pole, výsledok je <c>null</c>.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Rozkódovaná správa.</returns>
+            <exception cref="T:System.ArgumentException">Ak dĺžka kódu <paramref name="code"/> je menšia, než očakávaná (prvý bajt).</exception>
+        </member>
+        <member name="M:Cora.Crypt.CryptWithSalt.DeriveKey(System.Int32,System.Byte[])">
+            <summary>
+            Príprava (odvodenie) kryptovacieho/dekryptovacieho kľúča.
+            </summary>
+            <param name="length">Dĺžka odvodeného kľúča. Zmysel má pre hodnoty 8 - 20.</param>
+            <param name="salt">Soľ. Nesmie byť <c>null</c>, ani prázdne pole. Odporúčaná dĺžka je 8 bajtov (<see cref="F:Cora.Crypt.CryptWithSalt.DEFAULT_SALT_LENGTH"/>).</param>
+            <returns>Kľúč odvodený zo soli a pôvodného hesla.</returns>
+            <exception cref="T:System.ArgumentNullException">Ak <paramref name="salt"/> je <c>null</c> alebo prázdne pole.</exception>
+        </member>
+        <member name="T:Cora.CoraCryptNET.Algoritmus">
+            <summary>Typy použiteľných kódovacích a hash-ovacích algoritmov.</summary>
+        </member>
+        <member name="F:Cora.CoraCryptNET.Algoritmus.Symmetric_DES">
+            <summary> Kódovací algoritmus DES (64 bit).</summary>
+        </member>
+        <member name="F:Cora.CoraCryptNET.Algoritmus.Symmetric_RC2">
+            <summary> Kódovací algoritmus RC2.</summary>
+        </member>
+        <member name="F:Cora.CoraCryptNET.Algoritmus.Hash_MD5">
+            <summary> Hash-ovací algoritmus MD5 (128 bit).</summary>
+        </member>
+        <member name="F:Cora.CoraCryptNET.Algoritmus.Hash_SHA1">
+            <summary> Hash-ovací algoritmus SHA1 (160 bit).</summary>
+        </member>
+        <member name="F:Cora.CoraCryptNET.Algoritmus.Hash_SHA1_UTF8">
+            <summary> Hash-ovací algoritmus SHA1 + UTF8 kódovanie.</summary>
+        </member>
+        <member name="T:Cora.CoraCryptNET.Crypt">
+            <summary>
+            Trieda pre kódovanie a hash-ovanie reťazcov.
+            </summary>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.GenerateHash(System.String)">
+            <summary>
+            Výpočet hash-u zo zadaného reťazca pomocou <see cref="F:Cora.CoraCryptNET.Algoritmus.Hash_MD5"/>.
+            </summary>
+            <param name="strSource">Hash-ovaný reťazec.</param>
+            <returns>Hash zadaného reťazca.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.GenerateHash(System.String,Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Výpočet hash-u zo zadaného reťazca zadaným algoritmom.
+            </summary>
+            <param name="strSource">Hash-ovaný reťazec.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Hash zadaného reťazca.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.GenerateHash(System.Byte[],Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Výpočet hash-u zo zadaného poľa zadaným algoritmom.
+            </summary>
+            <param name="byteArray">Hash-ované pole dát.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Hash zadaného poľa.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.GenerateHash(System.IO.Stream,Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Výpočet hash-u zo zadaného stream-u zadaným algoritmom.
+            </summary>
+            <param name="stream">Hash-ovaný stream.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Hash zadaného poľa.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.GetHashAlgorithm(Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Vrátenie a prípadné prvé vytvorenie hash algoritmu.
+            </summary>
+            <param name="algoritmus">Požadovaný hash algoritmus.</param>
+            <returns>Požadovaný algoritmus.</returns>
+            <exception cref="T:System.NotImplementedException">Neznámy požadovaný hash algoritmus.</exception>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.GetCryptoTransform(Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Vrátenie a prípadné prvé vytvorenie kryptovacej transformácie.
+            </summary>
+            <param name="algoritmus">Požadovaná kryptovacia transformácia.</param>
+            <returns>Požadovaný algoritmus.</returns>
+            <exception cref="T:System.NotImplementedException">Neznáma požadovaná kryptovacia transformácia.</exception>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.GetDecryptoTransform(Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Vrátenie a prípadné prvé vytvorenie dekryptovacej transformácie.
+            </summary>
+            <param name="algoritmus">Požadovaná dekryptovacia transformácia.</param>
+            <returns>Požadovaný algoritmus.</returns>
+            <exception cref="T:System.NotImplementedException">Neznáma požadovaná kryptovacia transformácia.</exception>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.GetCryptoStream(Cora.CoraCryptNET.Algoritmus,System.IO.Stream,System.Boolean)">
+            <summary>
+            Vytvorenie kryptovacieho / dekryptovacieho stream-u v móde <see cref="F:System.Security.Cryptography.CryptoStreamMode.Read"/>.
+            </summary>
+            <param name="algoritmus">Požadovaný kryptovací / dekryptovací algoritmus.</param>
+            <param name="inputStream">Vstupný stream pre prípad kryptovania, príp. dekryptovania.</param>
+            <param name="encrypt">Nastavenie kryptovania / dekryptovania: <c>true</c> znamená kryptovanie,
+            <c>false</c> znamená dekryptovanie.</param>
+            <returns>Kryptovací / dekryptovací stream.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.EncryptString(System.String)">
+            <summary>
+            Zakódovanie reťazca algoritmom <see cref="F:Cora.CoraCryptNET.Algoritmus.Symmetric_DES"/>.
+            </summary>
+            <param name="strSource">Vstupný reťazec.</param>
+            <returns>Zakódovaný vstupný reťazec.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.EncryptString(System.String,Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Zakódovanie reťazca zadaným algoritmom.
+            </summary>
+            <param name="strSource">Vstupný reťazec.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Zakódovaný vstupný reťazec.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.Encrypt(System.Byte[],Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Zakódovanie poľa dát zadaným algoritmom.
+            </summary>
+            <param name="byteArray">Vstupné pole dát.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Zakódované pole dát.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.Encrypt(System.IO.Stream,Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Zakódovanie stream-u dát zadaným algoritmom.
+            </summary>
+            <param name="stream">Vstupný stream dát.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Zakódované pole dát.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.DecryptString(System.String)">
+            <summary>
+            Rozkódovanie reťazca algoritmom <see cref="F:Cora.CoraCryptNET.Algoritmus.Symmetric_DES"/>.
+            </summary>
+            <param name="strSource">Vstupný reťazec.</param>
+            <returns>Rozkódovaný vstupný reťazec.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.DecryptString(System.String,Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Rozkódovanie reťazca zadaným algoritmom.
+            </summary>
+            <param name="strSource">Vstupný reťazec.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Rozkódovaný vstupný reťazec.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.Decrypt(System.Byte[],Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Rozkódovanie poľa dát zadaným algoritmom.
+            </summary>
+            <param name="byteArray">Vstupné pole dát.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Rozkódované pole dát.</returns>
+        </member>
+        <member name="M:Cora.CoraCryptNET.Crypt.Decrypt(System.IO.Stream,Cora.CoraCryptNET.Algoritmus)">
+            <summary>
+            Rozkódovanie stream-u dát zadaným algoritmom.
+            </summary>
+            <param name="stream">Vstupný stream dát.</param>
+            <param name="algoritmus">Požadovaný algoritmus.</param>
+            <returns>Rozkódované pole dát.</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,4 @@
+﻿<?xml version="1.0"?>
+<instructions description="Inštalovanie knižníc Desktop do GAC">
+	<os_command file_name="install_dlls.bat" arguments="" start_directory="@(ActivityDirectory)" />
+</instructions>
