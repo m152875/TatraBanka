@@ -61,7 +61,7 @@ jobs:
         run: nuget restore Cora.CommIss.sln
 
       - name: Build solution with MSBuild
-        run: msbuild TatraBankaTest.sln /p:Configuration=Release
+        run: msbuild Cora.CommIss.sln /p:Configuration=Release
 
       - name: End SonarCloud Analysis
         env:
