@@ -19,7 +19,7 @@ namespace Cora.CommIss.Iss.Impl
 			try
 			{
 				//volanie zaregistrovanej COM kniznice VISUAL FOX PRO (publikovanej JDr)
-				foxtlarchiv.foxtlarchiv vfpWorker = new foxtlarchiv.foxtlarchiv();
+				/*foxtlarchiv.foxtlarchiv vfpWorker = new foxtlarchiv.foxtlarchiv();
 				string filepath = vfpWorker.FoxGenPDF(pnI_tl_dat, pnI_uz);
 
 				// uvolni objekt
@@ -59,6 +59,7 @@ namespace Cora.CommIss.Iss.Impl
 				res.Length = fInfo.Length;
 				res.Extension = fInfo.Extension;
 				res.Success = true;
+				*/
 			}
 			catch ( Exception e )
 			{
